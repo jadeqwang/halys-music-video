@@ -66,27 +66,29 @@ def run(src, name, t0=None, t1=None, prompt=None, extra=None):
         print(f"[whisper] attempt {attempt + 1} failed: {json.dumps(res.get('errors'))[:400]}", file=sys.stderr)
         time.sleep(5 * (attempt + 1))
     dt = time.time() - t_start
+    OUT.mkdir(parents=True, exist_ok=True)
+    p = OUT / f"{name}.json"
+    logged = {k: v for k, v in inp.items() if k != "audio"}
+    logged["audio"] = f"<{os.path.relpath(src, ROOT)} {t0 if t0 is not None else 0:.2f}-{t1 if t1 is not None else 'end'} s, 16k mono mp3, {len(audio)} bytes>"
+    LOG.parent.mkdir(parents=True, exist_ok=True)
+    with open(LOG, "a") as f:  # log every paid call, before anything can fail
+        f.write(json.dumps({"t": time.strftime("%Y-%m-%dT%H:%M:%S"), "tag": f"lyrics-align:{name}", "model": MODEL,
+                            "input": logged, "out": [os.path.relpath(p, ROOT)] if res.get("success") else [],
+                            "secs": round(dt, 1)}) + "\n")
     if not res.get("success"):
         raise RuntimeError(json.dumps(res)[:1000])
     out = res["result"]
     off = t0 or 0.0
-    for s in out.get("segments", []):  # shift to song time
+    for s in out.get("segments") or []:  # shift to song time
         s["start"] = round(s["start"] + off, 3)
         s["end"] = round(s["end"] + off, 3)
-        for w in s.get("words", []):
+        s["words"] = s.get("words") or []
+        for w in s["words"]:
             w["start"] = round(w["start"] + off, 3)
             w["end"] = round(w["end"] + off, 3)
     out["_meta"] = {"src": os.path.relpath(src, ROOT), "t0": t0, "t1": t1, "prompt": prompt, "model": MODEL}
-    OUT.mkdir(parents=True, exist_ok=True)
-    p = OUT / f"{name}.json"
     p.write_text(json.dumps(out, indent=1))
-    logged = {k: v for k, v in inp.items() if k != "audio"}
-    logged["audio"] = f"<{os.path.relpath(src, ROOT)} {t0 if t0 is not None else 0:.2f}-{t1 if t1 is not None else 'end'} s, 16k mono mp3, {len(audio)} bytes>"
-    LOG.parent.mkdir(parents=True, exist_ok=True)
-    with open(LOG, "a") as f:
-        f.write(json.dumps({"t": time.strftime("%Y-%m-%dT%H:%M:%S"), "tag": f"lyrics-align:{name}", "model": MODEL,
-                            "input": logged, "out": [os.path.relpath(p, ROOT)], "secs": round(dt, 1)}) + "\n")
-    print(f"[whisper] {name}: {len(out.get('segments', []))} segments ({dt:.1f}s) -> {p}")
+    print(f"[whisper] {name}: {len(out.get('segments') or [])} segments ({dt:.1f}s) -> {p}")
     return out
 
 

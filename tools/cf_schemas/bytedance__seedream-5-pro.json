@@ -1,0 +1,57 @@
+{
+ "input": {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+   "prompt": {
+    "type": "string"
+   },
+   "image": {
+    "anyOf": [
+     {
+      "type": "string"
+     },
+     {
+      "minItems": 1,
+      "maxItems": 10,
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     }
+    ]
+   },
+   "size": {
+    "type": "string"
+   },
+   "watermark": {
+    "default": false,
+    "description": "Whether to add an AI-generated watermark to the output image",
+    "type": "boolean"
+   }
+  },
+  "required": [
+   "prompt",
+   "watermark"
+  ],
+  "additionalProperties": false
+ },
+ "output": {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+   "images": {
+    "minItems": 1,
+    "type": "array",
+    "items": {
+     "type": "string",
+     "format": "uri"
+    }
+   }
+  },
+  "required": [
+   "images"
+  ],
+  "additionalProperties": false
+ }
+}

@@ -1,0 +1,106 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 13,
+  "duration_after_vad": 13
+ },
+ "text": "There's no death, no death, no death, no death, no death, no death.",
+ "word_count": 13,
+ "segments": [
+  {
+   "start": 255.5,
+   "end": 266.74,
+   "text": " There's no death, no death, no death, no death, no death, no death.",
+   "temperature": 0,
+   "avg_logprob": -0.8233695496683535,
+   "compression_ratio": 2.392857142857143,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " There's",
+     "start": 255.5,
+     "end": 256.06
+    },
+    {
+     "word": " no",
+     "start": 256.06,
+     "end": 256.8
+    },
+    {
+     "word": " death,",
+     "start": 256.8,
+     "end": 257.7
+    },
+    {
+     "word": " no",
+     "start": 259.54,
+     "end": 260.1
+    },
+    {
+     "word": " death,",
+     "start": 260.1,
+     "end": 260.84
+    },
+    {
+     "word": " no",
+     "start": 261.64,
+     "end": 261.74
+    },
+    {
+     "word": " death,",
+     "start": 261.74,
+     "end": 261.74
+    },
+    {
+     "word": " no",
+     "start": 262.6,
+     "end": 263.38
+    },
+    {
+     "word": " death,",
+     "start": 263.38,
+     "end": 263.8
+    },
+    {
+     "word": " no",
+     "start": 263.8,
+     "end": 263.8
+    },
+    {
+     "word": " death,",
+     "start": 263.8,
+     "end": 264.96
+    },
+    {
+     "word": " no",
+     "start": 264.96,
+     "end": 264.96
+    },
+    {
+     "word": " death.",
+     "start": 264.96,
+     "end": 266.74
+    }
+   ],
+   "word_count": 13
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:00.560\n There's\n\n00:00.560 --> 00:01.300\n no\n\n00:01.300 --> 00:02.200\n death,\n\n00:04.040 --> 00:04.600\n no\n\n00:04.600 --> 00:05.340\n death,\n\n00:06.140 --> 00:06.240\n no\n\n00:06.240 --> 00:06.240\n death,\n\n00:07.100 --> 00:07.880\n no\n\n00:07.880 --> 00:08.300\n death,\n\n00:08.300 --> 00:08.300\n no\n\n00:08.300 --> 00:09.460\n death,\n\n00:09.460 --> 00:09.460\n no\n\n00:09.460 --> 00:11.240\n death.\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 10.1032181692
+ },
+ "_meta": {
+  "src": "media/stems/sep/kimvoc2_vocals.wav",
+  "t0": 255.5,
+  "t1": 268.5,
+  "prompt": "",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

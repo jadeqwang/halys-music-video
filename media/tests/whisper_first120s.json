@@ -1,0 +1,538 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 120,
+  "duration_after_vad": 120
+ },
+ "text": "Lydians and Medes Thank you. The river hae leaves on the sixth year of the war Lydians and Mates slew each other on the shore Sun burning on the bronze, exchanging turns and strikes when light went strange A halo in the sky Warrior's art By the vacant eye of a god Daylight turn to shade Eye of gods above Throw down your blade Go home to the ones you love You",
+ "word_count": 72,
+ "segments": [
+  {
+   "start": 29.599999999999998,
+   "end": 29.98,
+   "text": " Lydians and Medes",
+   "temperature": 0,
+   "avg_logprob": -0.2912326388888889,
+   "compression_ratio": 0.68,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Lydians",
+     "start": 29.599999999999998,
+     "end": 29.84
+    },
+    {
+     "word": " and",
+     "start": 29.84,
+     "end": 29.86
+    },
+    {
+     "word": " Medes",
+     "start": 29.86,
+     "end": 29.98
+    }
+   ],
+   "word_count": 3
+  },
+  {
+   "start": 30,
+   "end": 31.08,
+   "text": " Thank you.",
+   "temperature": 0,
+   "avg_logprob": -0.3258463491996129,
+   "compression_ratio": 0.5555555555555556,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Thank",
+     "start": 30,
+     "end": 30.84
+    },
+    {
+     "word": " you.",
+     "start": 30.84,
+     "end": 31.08
+    }
+   ],
+   "word_count": 2
+  },
+  {
+   "start": 67.08,
+   "end": 73.12,
+   "text": " The river hae leaves on the sixth year of the war",
+   "temperature": 0.2,
+   "avg_logprob": -0.31438091086844605,
+   "compression_ratio": 1.408,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " The",
+     "start": 67.08,
+     "end": 68.14
+    },
+    {
+     "word": " river",
+     "start": 68.14,
+     "end": 68.66
+    },
+    {
+     "word": " hae",
+     "start": 68.66,
+     "end": 69.36
+    },
+    {
+     "word": " leaves",
+     "start": 69.36,
+     "end": 69.9
+    },
+    {
+     "word": " on",
+     "start": 69.9,
+     "end": 70.38
+    },
+    {
+     "word": " the",
+     "start": 70.38,
+     "end": 70.58
+    },
+    {
+     "word": " sixth",
+     "start": 70.58,
+     "end": 70.94
+    },
+    {
+     "word": " year",
+     "start": 70.94,
+     "end": 71.62
+    },
+    {
+     "word": " of",
+     "start": 71.62,
+     "end": 72.16
+    },
+    {
+     "word": " the",
+     "start": 72.16,
+     "end": 72.32
+    },
+    {
+     "word": " war",
+     "start": 72.32,
+     "end": 73.12
+    }
+   ],
+   "word_count": 11
+  },
+  {
+   "start": 74.36,
+   "end": 80,
+   "text": " Lydians and Mates slew each other on the shore",
+   "temperature": 0.2,
+   "avg_logprob": -0.31438091086844605,
+   "compression_ratio": 1.408,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Lydians",
+     "start": 74.36,
+     "end": 75.42
+    },
+    {
+     "word": " and",
+     "start": 75.42,
+     "end": 75.86
+    },
+    {
+     "word": " Mates",
+     "start": 75.86,
+     "end": 76.44
+    },
+    {
+     "word": " slew",
+     "start": 76.44,
+     "end": 77.22
+    },
+    {
+     "word": " each",
+     "start": 77.22,
+     "end": 77.66
+    },
+    {
+     "word": " other",
+     "start": 77.66,
+     "end": 78.44
+    },
+    {
+     "word": " on",
+     "start": 78.44,
+     "end": 79.08
+    },
+    {
+     "word": " the",
+     "start": 79.08,
+     "end": 79.24
+    },
+    {
+     "word": " shore",
+     "start": 79.24,
+     "end": 80
+    }
+   ],
+   "word_count": 9
+  },
+  {
+   "start": 82.18,
+   "end": 89.38,
+   "text": " Sun burning on the bronze, exchanging turns and strikes when light went strange",
+   "temperature": 0.2,
+   "avg_logprob": -0.31438091086844605,
+   "compression_ratio": 1.408,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Sun",
+     "start": 82.18,
+     "end": 82.72
+    },
+    {
+     "word": " burning",
+     "start": 82.72,
+     "end": 83.78
+    },
+    {
+     "word": " on",
+     "start": 83.78,
+     "end": 84.3
+    },
+    {
+     "word": " the",
+     "start": 84.3,
+     "end": 84.48
+    },
+    {
+     "word": " bronze,",
+     "start": 84.48,
+     "end": 84.96
+    },
+    {
+     "word": " exchanging",
+     "start": 85.2,
+     "end": 86.1
+    },
+    {
+     "word": " turns",
+     "start": 86.1,
+     "end": 86.72
+    },
+    {
+     "word": " and",
+     "start": 86.72,
+     "end": 87.16
+    },
+    {
+     "word": " strikes",
+     "start": 87.16,
+     "end": 87.64
+    },
+    {
+     "word": " when",
+     "start": 87.64,
+     "end": 87.96
+    },
+    {
+     "word": " light",
+     "start": 87.96,
+     "end": 88.36
+    },
+    {
+     "word": " went",
+     "start": 88.36,
+     "end": 88.66
+    },
+    {
+     "word": " strange",
+     "start": 88.66,
+     "end": 89.38
+    }
+   ],
+   "word_count": 13
+  },
+  {
+   "start": 89.38,
+   "end": 91.2,
+   "text": " A halo in the sky",
+   "temperature": 0,
+   "avg_logprob": -0.30765625298023225,
+   "compression_ratio": 1.2820512820512822,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " A",
+     "start": 89.38,
+     "end": 89.92
+    },
+    {
+     "word": " halo",
+     "start": 89.92,
+     "end": 90.32
+    },
+    {
+     "word": " in",
+     "start": 90.32,
+     "end": 90.6
+    },
+    {
+     "word": " the",
+     "start": 90.6,
+     "end": 90.76
+    },
+    {
+     "word": " sky",
+     "start": 90.76,
+     "end": 91.2
+    }
+   ],
+   "word_count": 5
+  },
+  {
+   "start": 91.2,
+   "end": 92.84,
+   "text": " Warrior's art",
+   "temperature": 0,
+   "avg_logprob": -0.30765625298023225,
+   "compression_ratio": 1.2820512820512822,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Warrior's",
+     "start": 91.2,
+     "end": 92.46
+    },
+    {
+     "word": " art",
+     "start": 92.46,
+     "end": 92.84
+    }
+   ],
+   "word_count": 2
+  },
+  {
+   "start": 92.84,
+   "end": 96.02,
+   "text": " By the vacant eye of a god",
+   "temperature": 0,
+   "avg_logprob": -0.30765625298023225,
+   "compression_ratio": 1.2820512820512822,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " By",
+     "start": 92.84,
+     "end": 93.14
+    },
+    {
+     "word": " the",
+     "start": 93.14,
+     "end": 93.34
+    },
+    {
+     "word": " vacant",
+     "start": 93.34,
+     "end": 94
+    },
+    {
+     "word": " eye",
+     "start": 94,
+     "end": 94.68
+    },
+    {
+     "word": " of",
+     "start": 94.68,
+     "end": 94.98
+    },
+    {
+     "word": " a",
+     "start": 94.98,
+     "end": 95.18
+    },
+    {
+     "word": " god",
+     "start": 95.18,
+     "end": 96.02
+    }
+   ],
+   "word_count": 7
+  },
+  {
+   "start": 96.74,
+   "end": 98.78,
+   "text": " Daylight turn to shade",
+   "temperature": 0,
+   "avg_logprob": -0.30765625298023225,
+   "compression_ratio": 1.2820512820512822,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Daylight",
+     "start": 96.74,
+     "end": 97.54
+    },
+    {
+     "word": " turn",
+     "start": 97.54,
+     "end": 98
+    },
+    {
+     "word": " to",
+     "start": 98,
+     "end": 98.26
+    },
+    {
+     "word": " shade",
+     "start": 98.26,
+     "end": 98.78
+    }
+   ],
+   "word_count": 4
+  },
+  {
+   "start": 98.78,
+   "end": 102.14,
+   "text": " Eye of gods above",
+   "temperature": 0,
+   "avg_logprob": -0.30765625298023225,
+   "compression_ratio": 1.2820512820512822,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Eye",
+     "start": 98.78,
+     "end": 100.56
+    },
+    {
+     "word": " of",
+     "start": 100.56,
+     "end": 101.04
+    },
+    {
+     "word": " gods",
+     "start": 101.04,
+     "end": 101.56
+    },
+    {
+     "word": " above",
+     "start": 101.56,
+     "end": 102.14
+    }
+   ],
+   "word_count": 4
+  },
+  {
+   "start": 103.28,
+   "end": 106.04,
+   "text": " Throw down your blade",
+   "temperature": 0,
+   "avg_logprob": -0.30765625298023225,
+   "compression_ratio": 1.2820512820512822,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Throw",
+     "start": 103.28,
+     "end": 104.32
+    },
+    {
+     "word": " down",
+     "start": 104.32,
+     "end": 104.8
+    },
+    {
+     "word": " your",
+     "start": 104.8,
+     "end": 105.08
+    },
+    {
+     "word": " blade",
+     "start": 105.08,
+     "end": 106.04
+    }
+   ],
+   "word_count": 4
+  },
+  {
+   "start": 106.04,
+   "end": 110.72,
+   "text": " Go home to the ones you love",
+   "temperature": 0,
+   "avg_logprob": -0.30765625298023225,
+   "compression_ratio": 1.2820512820512822,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Go",
+     "start": 106.04,
+     "end": 106.94
+    },
+    {
+     "word": " home",
+     "start": 106.94,
+     "end": 107.74
+    },
+    {
+     "word": " to",
+     "start": 107.74,
+     "end": 108.32
+    },
+    {
+     "word": " the",
+     "start": 108.32,
+     "end": 108.54
+    },
+    {
+     "word": " ones",
+     "start": 108.54,
+     "end": 109.58
+    },
+    {
+     "word": " you",
+     "start": 109.58,
+     "end": 110.16
+    },
+    {
+     "word": " love",
+     "start": 110.16,
+     "end": 110.72
+    }
+   ],
+   "word_count": 7
+  },
+  {
+   "start": 119.38,
+   "end": 119.48,
+   "text": " You",
+   "temperature": 0,
+   "avg_logprob": -0.7070312350988388,
+   "compression_ratio": 0.2727272727272727,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " You",
+     "start": 119.38,
+     "end": 119.48
+    }
+   ],
+   "word_count": 1
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:29.600 --> 00:29.840\n Lydians\n\n00:29.840 --> 00:29.860\n and\n\n00:29.860 --> 00:29.980\n Medes\n\n00:30.000 --> 00:30.840\n Thank\n\n00:30.840 --> 00:31.080\n you.\n\n01:07.080 --> 01:08.140\n The\n\n01:08.140 --> 01:08.660\n river\n\n01:08.660 --> 01:09.360\n hae\n\n01:09.360 --> 01:09.900\n leaves\n\n01:09.900 --> 01:10.380\n on\n\n01:10.380 --> 01:10.580\n the\n\n01:10.580 --> 01:10.940\n sixth\n\n01:10.940 --> 01:11.620\n year\n\n01:11.620 --> 01:12.160\n of\n\n01:12.160 --> 01:12.320\n the\n\n01:12.320 --> 01:13.120\n war\n\n01:14.360 --> 01:15.420\n Lydians\n\n01:15.420 --> 01:15.860\n and\n\n01:15.860 --> 01:16.440\n Mates\n\n01:16.440 --> 01:17.220\n slew\n\n01:17.220 --> 01:17.660\n each\n\n01:17.660 --> 01:18.440\n other\n\n01:18.440 --> 01:19.080\n on\n\n01:19.080 --> 01:19.240\n the\n\n01:19.240 --> 01:20.000\n shore\n\n01:22.180 --> 01:22.720\n Sun\n\n01:22.720 --> 01:23.780\n burning\n\n01:23.780 --> 01:24.300\n on\n\n01:24.300 --> 01:24.480\n the\n\n01:24.480 --> 01:24.960\n bronze,\n\n01:25.200 --> 01:26.100\n exchanging\n\n01:26.100 --> 01:26.720\n turns\n\n01:26.720 --> 01:27.160\n and\n\n01:27.160 --> 01:27.640\n strikes\n\n01:27.640 --> 01:27.960\n when\n\n01:27.960 --> 01:28.360\n light\n\n01:28.360 --> 01:28.660\n went\n\n01:28.660 --> 01:29.380\n strange\n\n01:29.380 --> 01:29.920\n A\n\n01:29.920 --> 01:30.320\n halo\n\n01:30.320 --> 01:30.600\n in\n\n01:30.600 --> 01:30.760\n the\n\n01:30.760 --> 01:31.200\n sky\n\n01:31.200 --> 01:32.460\n Warrior's\n\n01:32.460 --> 01:32.840\n art\n\n01:32.840 --> 01:33.140\n By\n\n01:33.140 --> 01:33.340\n the\n\n01:33.340 --> 01:34.000\n vacant\n\n01:34.000 --> 01:34.680\n eye\n\n01:34.680 --> 01:34.980\n of\n\n01:34.980 --> 01:35.180\n a\n\n01:35.180 --> 01:36.020\n god\n\n01:36.740 --> 01:37.540\n Daylight\n\n01:37.540 --> 01:38.000\n turn\n\n01:38.000 --> 01:38.260\n to\n\n01:38.260 --> 01:38.780\n shade\n\n01:38.780 --> 01:40.560\n Eye\n\n01:40.560 --> 01:41.040\n of\n\n01:41.040 --> 01:41.560\n gods\n\n01:41.560 --> 01:42.140\n above\n\n01:43.280 --> 01:44.320\n Throw\n\n01:44.320 --> 01:44.800\n down\n\n01:44.800 --> 01:45.080\n your\n\n01:45.080 --> 01:46.040\n blade\n\n01:46.040 --> 01:46.940\n Go\n\n01:46.940 --> 01:47.740\n home\n\n01:47.740 --> 01:48.320\n to\n\n01:48.320 --> 01:48.540\n the\n\n01:48.540 --> 01:49.580\n ones\n\n01:49.580 --> 01:50.160\n you\n\n01:50.160 --> 01:50.720\n love\n\n01:59.380 --> 01:59.480\n You\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 93.26047540799999
+ }
+}

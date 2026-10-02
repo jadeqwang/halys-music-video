@@ -1,0 +1,9 @@
+{
+  "name": "halys-lookdev-lab",
+  "private": true,
+  "type": "module",
+  "description": "HALYS look-development lab: four materials (BRONZE, CORONA, MARBLE, INK) drawn from one analysis of a plate, rendered headlessly in Chromium.",
+  "dependencies": {
+    "playwright-core": "1.56.1"
+  }
+}

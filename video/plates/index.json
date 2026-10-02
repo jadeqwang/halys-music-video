@@ -1,0 +1,16 @@
+{
+ "smoke_seedance": {
+  "n": 97,
+  "mattes": 49,
+  "depth": 49,
+  "fields": 97,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "media/tests/seedance25_test_480p_4s.mp4",
+  "src_w": 854,
+  "src_h": 480,
+  "dur": 4.042,
+  "gain": 1.723
+ }
+}

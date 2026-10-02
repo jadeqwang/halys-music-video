@@ -1,0 +1,2777 @@
+[
+ {
+  "model_id": "assemblyai/universal-3-pro",
+  "name": "AssemblyAI Universal-3 Pro",
+  "task": "Automatic Speech Recognition",
+  "pricing": {
+   "Per audio minute": 0.0035
+  },
+  "metadata": {
+   "Multilingual": "Yes"
+  },
+  "supports_async": false,
+  "description": "AssemblyAI's Universal 3 Pro speech recognition model for high-accuracy transcription."
+ },
+ {
+  "model_id": "assemblyai/universal-3.5-pro",
+  "name": "AssemblyAI Universal-3.5 Pro",
+  "task": "Automatic Speech Recognition",
+  "pricing": {
+   "Per audio minute": 0.0035,
+   "Per minute (speaker diarization)": 0.0003,
+   "Per minute (key terms)": 0.00083,
+   "Per minute (medical)": 0.0025
+  },
+  "metadata": {
+   "Languages": "18",
+   "Input": "Pre-recorded audio and video"
+  },
+  "supports_async": false,
+  "description": "AssemblyAI's Universal-3.5 Pro speech recognition model for fast, high-accuracy transcription."
+ },
+ {
+  "model_id": "anthropic/claude-fable-5",
+  "name": "Claude Fable 5",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 10,
+   "Output tokens (per 1M)": 50,
+   "Cached input tokens (per 1M)": 1,
+   "Cache creation tokens (per 1M)": 12.5
+  },
+  "metadata": {
+   "Adaptive Thinking": "Yes",
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "Claude Fable 5 is Anthropic's most capable widely released model, built for the most demanding reasoning and long-horizon agentic work. Adaptive thinking is always on, and the model supports a 1M token context window with up to 128k output tokens per request."
+ },
+ {
+  "model_id": "anthropic/claude-fable-5.1",
+  "name": "Claude Fable 5.1",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 10,
+   "Output tokens (per 1M)": 50,
+   "Cached input tokens (per 1M)": 0.25,
+   "Cache creation tokens (per 1M)": 12.5
+  },
+  "metadata": {
+   "Adaptive Thinking": "Yes",
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "Claude Fable 5.1 is Anthropic's next model in the Fable family, with improvements in agentic coding, long-running agentic workflows, knowledge work, front-end and visual code generation, and finance and analysis tasks. It supports adaptive thinking and a 1M token context window."
+ },
+ {
+  "model_id": "anthropic/claude-haiku-4.5",
+  "name": "Claude Haiku 4.5",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 1,
+   "Output tokens (per 1M)": 5,
+   "Cached input tokens (per 1M)": 0.1,
+   "Cache creation tokens (per 1M)": 1.25
+  },
+  "metadata": {
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "Claude Haiku 4.5 delivers similar levels of coding performance at one-third the cost and more than twice the speed of larger models."
+ },
+ {
+  "model_id": "anthropic/claude-opus-4.5",
+  "name": "Claude Opus 4.5",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 5,
+   "Output tokens (per 1M)": 25,
+   "Cached input tokens (per 1M)": 0.5,
+   "Cache creation tokens (per 1M)": 6.25
+  },
+  "metadata": {
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "Claude Opus 4.5 brings further reasoning, coding, and agentic improvements over Opus 4.1, with stronger tool use and tighter instruction following."
+ },
+ {
+  "model_id": "anthropic/claude-opus-4.6",
+  "name": "Claude Opus 4.6",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 5,
+   "Output tokens (per 1M)": 25,
+   "Cached input tokens (per 1M)": 0.5,
+   "Cache creation tokens (per 1M)": 6.25
+  },
+  "metadata": {
+   "Architecture": "Transformer",
+   "Extended Thinking": "Yes"
+  },
+  "supports_async": false,
+  "description": "Claude Opus 4.6 is Anthropic's flagship language model built for complex, multi-step work in coding, financial analysis, and legal reasoning. It uses extended thinking to work through complex problems carefully and features a one million token context window."
+ },
+ {
+  "model_id": "anthropic/claude-opus-4.7",
+  "name": "Claude Opus 4.7",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 5,
+   "Output tokens (per 1M)": 25,
+   "Cached input tokens (per 1M)": 0.5,
+   "Cache creation tokens (per 1M)": 6.25
+  },
+  "metadata": {
+   "Adaptive Thinking": "Yes",
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "Claude Opus 4.7 is Anthropic's most capable generally available model, with a step-change improvement in agentic coding over Claude Opus 4.6. It uses adaptive thinking to calibrate reasoning per task and supports a one million token context window at standard pricing."
+ },
+ {
+  "model_id": "anthropic/claude-opus-4.8",
+  "name": "Claude Opus 4.8",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 5,
+   "Output tokens (per 1M)": 25,
+   "Cached input tokens (per 1M)": 0.5,
+   "Cache creation tokens (per 1M)": 6.25
+  },
+  "metadata": {
+   "Adaptive Thinking": "Yes",
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "Claude Opus 4.8 is Anthropic's most capable generally available model, with a step-change improvement in agentic coding over Claude Opus 4.7. It uses adaptive thinking to calibrate reasoning per task and supports a one million token context window at standard pricing."
+ },
+ {
+  "model_id": "anthropic/claude-opus-5",
+  "name": "Claude Opus 5",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 5,
+   "Output tokens (per 1M)": 25,
+   "Cached input tokens (per 1M)": 0.5,
+   "Cache creation tokens (per 1M)": 6.25
+  },
+  "metadata": {
+   "Adaptive Thinking": "Yes",
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "Claude Opus 5 is Anthropic's model for complex agentic coding and enterprise work, delivering intelligence close to Claude Fable 5 at half the price. It uses adaptive thinking to calibrate reasoning per task and supports a one million token context window at standard pricing. Unlike Fable 5, Opus 5 has no data retention requirements for general access."
+ },
+ {
+  "model_id": "anthropic/claude-opus-5.5",
+  "name": "Claude Opus 5.5",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 4,
+   "Output tokens (per 1M)": 20,
+   "Cached input tokens (per 1M)": 0.2,
+   "Cache creation tokens (per 1M)": 5
+  },
+  "metadata": {
+   "Adaptive Thinking": "Always on",
+   "Architecture": "Transformer",
+   "Default Effort": "Medium",
+   "Knowledge Cutoff": "June 2026"
+  },
+  "supports_async": false,
+  "description": "Claude Opus 5.5 is Anthropic's model for long-running agentic coding and knowledge work. It combines a one million token context window with adaptive thinking that is always on, a 128K token maximum output, and a medium default effort level."
+ },
+ {
+  "model_id": "anthropic/claude-sonnet-4.5",
+  "name": "Claude Sonnet 4.5",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 3,
+   "Output tokens (per 1M)": 15,
+   "Cached input tokens (per 1M)": 0.3,
+   "Cache creation tokens (per 1M)": 3.75
+  },
+  "metadata": {
+   "Architecture": "Transformer",
+   "Extended Thinking": "Yes"
+  },
+  "supports_async": false,
+  "description": "Claude Sonnet 4.5 is the best coding model to date, with significant improvements across the entire development lifecycle."
+ },
+ {
+  "model_id": "anthropic/claude-sonnet-4.6",
+  "name": "Claude Sonnet 4.6",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 3,
+   "Output tokens (per 1M)": 15,
+   "Cached input tokens (per 1M)": 0.3,
+   "Cache creation tokens (per 1M)": 3.75
+  },
+  "metadata": {
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "Claude Sonnet 4.6 is Anthropic's latest balanced model offering strong coding, reasoning, and agentic capabilities with improved instruction following."
+ },
+ {
+  "model_id": "anthropic/claude-sonnet-5",
+  "name": "Claude Sonnet 5",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 2,
+   "Output tokens (per 1M)": 10,
+   "Cached input tokens (per 1M)": 0.2,
+   "Cache creation tokens (per 1M)": 2.5
+  },
+  "metadata": {
+   "Adaptive Thinking": "Yes",
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "Claude Sonnet 5 is Anthropic's most agentic Sonnet model yet, built for coding, tool use, reasoning, and long-horizon professional work at lower cost than Opus-class models."
+ },
+ {
+  "model_id": "deepseek/deepseek-v4-pro",
+  "name": "DeepSeek V4 Pro",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 1.74,
+   "Output tokens (per 1M)": 3.48,
+   "Cached input tokens (per 1M)": 0.145
+  },
+  "metadata": {
+   "Architecture": "Mixture of Experts"
+  },
+  "supports_async": false,
+  "description": "DeepSeek V4 Pro is a high-capability reasoning model from DeepSeek, served via Fireworks infrastructure for production-grade inference."
+ },
+ {
+  "model_id": "elevenlabs/eleven-flash-v2-5",
+  "name": "Eleven Flash v2.5",
+  "task": "Text-to-Speech",
+  "pricing": {
+   "Per character": 5e-05,
+   "Default (per second)": 5e-05
+  },
+  "metadata": {
+   "Latency": "Optimized for fast generation",
+   "Output Formats": "MP3, WAV, PCM, Opus, u-law, A-law",
+   "Voices": "Supports ElevenLabs voice IDs"
+  },
+  "supports_async": false,
+  "description": "ElevenLabs' low-latency Flash v2.5 text-to-speech model for fast multilingual speech generation."
+ },
+ {
+  "model_id": "elevenlabs/eleven-multilingual-v2",
+  "name": "Eleven Multilingual v2",
+  "task": "Text-to-Speech",
+  "pricing": {
+   "Per character": 0.0001,
+   "Default (per second)": 0.0001
+  },
+  "metadata": {
+   "Languages": "Multilingual speech generation",
+   "Output Formats": "MP3, WAV, PCM, Opus, u-law, A-law",
+   "Voices": "Supports ElevenLabs voice IDs"
+  },
+  "supports_async": false,
+  "description": "ElevenLabs' multilingual text-to-speech model for generating natural speech across many languages with ElevenLabs voices."
+ },
+ {
+  "model_id": "elevenlabs/eleven-turbo-v2-5",
+  "name": "Eleven Turbo v2.5",
+  "task": "Text-to-Speech",
+  "pricing": {
+   "Per character": 5e-05,
+   "Default (per second)": 5e-05
+  },
+  "metadata": {
+   "Languages": "32",
+   "Latency": "Low (~250-300ms)",
+   "Output Formats": "MP3, WAV, PCM, Opus, u-law, A-law",
+   "Voices": "Supports ElevenLabs voice IDs"
+  },
+  "supports_async": false,
+  "description": "ElevenLabs' Turbo v2.5 text-to-speech model balancing high-quality voice generation with low latency across 32 languages."
+ },
+ {
+  "model_id": "elevenlabs/eleven-v3",
+  "name": "Eleven v3",
+  "task": "Text-to-Speech",
+  "pricing": {
+   "Per character": 0.0001,
+   "Default (per second)": 0.0001
+  },
+  "metadata": {
+   "Output Formats": "MP3, WAV, PCM, Opus, u-law, A-law",
+   "Voice Control": "Voice settings, seed, text normalization",
+   "Voices": "Supports ElevenLabs voice IDs"
+  },
+  "supports_async": false,
+  "description": "ElevenLabs' latest text-to-speech model for highly expressive, natural speech generation with advanced voice control."
+ },
+ {
+  "model_id": "elevenlabs/music-v2",
+  "name": "ElevenLabs Music v2",
+  "task": "Music Generation",
+  "pricing": {
+   "output_audio_seconds": 0.0025,
+   "Default (per second)": 0.0025
+  },
+  "metadata": {
+   "Controls": "Prompt, duration, seed, instrumental mode",
+   "Max Duration": "Up to 10 minutes",
+   "Output Formats": "MP3, PCM, Opus, u-law, A-law"
+  },
+  "supports_async": false,
+  "description": "ElevenLabs Music v2 composes songs and instrumental tracks from a prompt or detailed composition plan."
+ },
+ {
+  "model_id": "black-forest-labs/flux-3-video",
+  "name": "FLUX 3 Video",
+  "task": "Text-to-Video",
+  "pricing": {
+   "hd": 0.17,
+   "fhd": 0.29,
+   "v2v_hd": 0.41,
+   "v2v_fhd": 0.53,
+   "hd_draft": 0.06,
+   "v2v_hd_draft": 0.12
+  },
+  "metadata": {
+   "Audio Generation": "Yes",
+   "Max Duration": "20s",
+   "Max Resolution": "FHD",
+   "Modes": "Text-to-video, image-to-video, video continuation"
+  },
+  "supports_async": false,
+  "description": "FLUX 3 Video is Black Forest Labs' video generation model. It generates video from a text prompt (t2v), animates one or more reference images (i2v), or continues an existing clip (v2v), with synchronized audio, up to fhd resolution, and 5-20 second durations."
+ },
+ {
+  "model_id": "black-forest-labs/flux-video-upscale",
+  "name": "FLUX Video Upscale",
+  "task": "video-to-video",
+  "pricing": {
+   "Precise (per megapixel-second)": 0.07,
+   "Creative (per megapixel-second)": 0.1
+  },
+  "metadata": {
+   "Maximum Source Duration": "20 seconds",
+   "Maximum Source Resolution": "2560 x 1440",
+   "Maximum Source Size": "50 MB",
+   "Output Audio": "Preserved",
+   "Pricing": "$0.07 precise or $0.10 creative per megapixel-second"
+  },
+  "supports_async": false,
+  "description": "FLUX Video Upscale increases video resolution with a precise mode for source-faithful results and a creative mode for stronger detail enhancement. It accepts clips up to 20 seconds and preserves audio."
+ },
+ {
+  "model_id": "black-forest-labs/flux-1-kontext-max",
+  "name": "FLUX.1 Kontext [max]",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.08
+  },
+  "metadata": {
+   "Max Reference Images": "1",
+   "Output Formats": "JPEG, PNG",
+   "Pricing": "$0.08 per image"
+  },
+  "supports_async": false,
+  "description": "FLUX.1 Kontext [max] is Black Forest Labs' highest-quality Kontext model for text-to-image generation and context-aware image editing."
+ },
+ {
+  "model_id": "black-forest-labs/flux-1-kontext-pro",
+  "name": "FLUX.1 Kontext [pro]",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.04
+  },
+  "metadata": {
+   "Max Reference Images": "1",
+   "Output Formats": "JPEG, PNG",
+   "Pricing": "$0.04 per image"
+  },
+  "supports_async": false,
+  "description": "FLUX.1 Kontext [pro] creates and edits images from text prompts with strong character and style consistency."
+ },
+ {
+  "model_id": "black-forest-labs/flux-2-flex",
+  "name": "FLUX.2 [flex]",
+  "task": "Text-to-Image",
+  "pricing": {
+   "First output megapixel": 0.05,
+   "Per additional output megapixel": 0.05,
+   "Per input megapixel": 0.05
+  },
+  "metadata": {
+   "Architecture": "Flow matching transformer",
+   "Guidance Range": "1.5 \u2013 10",
+   "Max Reference Images": "8",
+   "Steps Range": "1 \u2013 50"
+  },
+  "supports_async": false,
+  "description": "FLUX.2 [flex] is Black Forest Labs' fine-grained control variant of FLUX.2 \u2014 exposes tunable inference steps, guidance, and prompt upsampling for typography-heavy and production workflows."
+ },
+ {
+  "model_id": "black-forest-labs/flux-2-max",
+  "name": "FLUX.2 [max]",
+  "task": "Text-to-Image",
+  "pricing": {
+   "First output megapixel": 0.07,
+   "Per additional output megapixel": 0.03,
+   "Per input megapixel": 0.03
+  },
+  "metadata": {
+   "Architecture": "Flow matching transformer",
+   "Grounding Search": "Yes",
+   "Max Reference Images": "8",
+   "Max Resolution": "4MP"
+  },
+  "supports_async": false,
+  "description": "FLUX.2 [max] is Black Forest Labs' highest-quality image model \u2014 top editing consistency, strongest prompt following, and grounding search for visualizations of real-time information."
+ },
+ {
+  "model_id": "black-forest-labs/flux-2-pro-preview",
+  "name": "FLUX.2 [pro]",
+  "task": "Text-to-Image",
+  "pricing": {
+   "First output megapixel": 0.03,
+   "Per additional output megapixel": 0.015,
+   "Per input megapixel": 0.015
+  },
+  "metadata": {
+   "Architecture": "Flow matching transformer",
+   "Max Reference Images": "8",
+   "Max Resolution": "4MP"
+  },
+  "supports_async": false,
+  "description": "FLUX.2 [pro] Preview is Black Forest Labs' recommended default for production image generation and editing \u2014 tracks the latest [pro] weights with strong multi-reference support."
+ },
+ {
+  "model_id": "openai/gpt-image-1.5",
+  "name": "GPT Image 1.5",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Input tokens (per 1M)": 5,
+   "Input image tokens (per 1M)": 8,
+   "Cached input tokens (per 1M)": 1.25,
+   "Cached input image tokens (per 1M)": 2,
+   "Output image tokens (per 1M)": 32,
+   "Output tokens (per 1M)": 10
+  },
+  "metadata": {
+   "Image Editing": "Yes",
+   "Quality": "low, medium, high, auto",
+   "Sizes": "256x256 to 1792x1024",
+   "Styles": "vivid, natural"
+  },
+  "supports_async": false,
+  "description": "OpenAI's image generation model that creates and edits images from text prompts, supporting multiple quality levels and output sizes."
+ },
+ {
+  "model_id": "openai/gpt-image-2",
+  "name": "GPT Image 2",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Cached input image tokens (per 1M)": 2,
+   "Cached input tokens (per 1M)": 1.25,
+   "Input image tokens (per 1M)": 8,
+   "Input tokens (per 1M)": 5,
+   "Output image tokens (per 1M)": 30,
+   "Output tokens (per 1M)": 10
+  },
+  "metadata": {
+   "Image Editing": "Yes",
+   "Output Formats": "png, webp, jpeg",
+   "Quality": "low, medium, high, auto",
+   "Sizes": "1024x1024, 1024x1536, 1536x1024, auto"
+  },
+  "supports_async": false,
+  "description": "OpenAI's next-generation image model that creates and edits images from text prompts, with support for multiple quality levels, sizes, and output formats. Note: transparent backgrounds are not supported \u2014 use openai/gpt-image-1.5 for transparent PNGs."
+ },
+ {
+  "model_id": "openai/gpt-image-2.5-flare",
+  "name": "GPT Image 2.5 Flare",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Cached input image tokens (per 1M)": 3,
+   "Cached input tokens (per 1M)": 1.25,
+   "Input image tokens (per 1M)": 8,
+   "Input tokens (per 1M)": 5,
+   "Output image tokens (per 1M)": 30
+  },
+  "metadata": {
+   "Image Editing": "Yes",
+   "Output Formats": "png, webp, jpeg",
+   "Quality": "low, medium, high, xhigh, max, auto",
+   "Sizes": "1024x1024, 1024x1536, 1536x1024, auto"
+  },
+  "supports_async": false,
+  "description": "OpenAI's fastest high-quality everyday image generation model. It accepts text and image inputs and produces images with low, medium, high, xhigh, max, and auto quality settings."
+ },
+ {
+  "model_id": "openai/gpt-image-2.5-sunburst",
+  "name": "GPT Image 2.5 Sunburst",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Cached input image tokens (per 1M)": 3,
+   "Cached input tokens (per 1M)": 1.25,
+   "Input image tokens (per 1M)": 8,
+   "Input tokens (per 1M)": 5,
+   "Output image tokens (per 1M)": 30
+  },
+  "metadata": {
+   "Image Editing": "Yes",
+   "Output Formats": "png, webp, jpeg",
+   "Quality": "low, medium, high, xhigh, max, auto",
+   "Sizes": "1024x1024, 1024x1536, 1536x1024, auto"
+  },
+  "supports_async": false,
+  "description": "OpenAI's most capable image generation and editing model. It accepts text and image inputs and produces images with low, medium, high, xhigh, max, and auto quality settings."
+ },
+ {
+  "model_id": "openai/gpt-4.1",
+  "name": "GPT-4.1",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 2,
+   "Output tokens (per 1M)": 8,
+   "Cached input tokens (per 1M)": 0.5
+  },
+  "metadata": {
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "OpenAI's flagship GPT model for complex tasks with a million-token context window."
+ },
+ {
+  "model_id": "openai/gpt-4.1-mini",
+  "name": "GPT-4.1 mini",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 0.4,
+   "Output tokens (per 1M)": 1.6,
+   "Cached input tokens (per 1M)": 0.1
+  },
+  "metadata": {
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "Fast, affordable version of GPT-4.1 with a million-token context window."
+ },
+ {
+  "model_id": "openai/gpt-4.1-nano",
+  "name": "GPT-4.1 nano",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 0.1,
+   "Output tokens (per 1M)": 0.4,
+   "Cached input tokens (per 1M)": 0.025
+  },
+  "metadata": {
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "GPT-4.1 Nano is OpenAI\u2019s smallest and cheapest GPT-4.1 variant, optimized for high-throughput, low-latency tasks."
+ },
+ {
+  "model_id": "openai/gpt-4o",
+  "name": "GPT-4o",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 1.25,
+   "Output tokens (per 1M)": 5,
+   "Cached input tokens (per 1M)": 0.625
+  },
+  "metadata": {
+   "Architecture": "Transformer (multimodal)"
+  },
+  "supports_async": false,
+  "description": "GPT-4o is OpenAI\u2019s multimodal flagship, accepting text and images and responding quickly across a wide range of tasks."
+ },
+ {
+  "model_id": "openai/gpt-4o-transcribe",
+  "name": "GPT-4o Transcribe",
+  "task": "Automatic Speech Recognition",
+  "pricing": {
+   "Per audio minute": 0.006
+  },
+  "metadata": {
+   "Context Window": "16,000 tokens",
+   "Knowledge Cutoff": "Jun 01, 2024",
+   "Max Output": "2,000 tokens"
+  },
+  "supports_async": false,
+  "description": "A speech-to-text model that uses GPT-4o to transcribe audio with improved word error rate and better language recognition compared to original Whisper models."
+ },
+ {
+  "model_id": "openai/gpt-4o-mini",
+  "name": "GPT-4o mini",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 0.075,
+   "Output tokens (per 1M)": 0.3,
+   "Cached input tokens (per 1M)": 0.0375
+  },
+  "metadata": {
+   "Architecture": "Transformer (multimodal)"
+  },
+  "supports_async": false,
+  "description": "GPT-4o Mini is the lightweight, low-cost variant of GPT-4o, well suited to high-volume tasks with multimodal inputs."
+ },
+ {
+  "model_id": "openai/gpt-5",
+  "name": "GPT-5",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 1.25,
+   "Output tokens (per 1M)": 10,
+   "Cached input tokens (per 1M)": 0.125
+  },
+  "metadata": {
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "OpenAI's model excelling at coding, writing, and reasoning."
+ },
+ {
+  "model_id": "openai/gpt-5-mini",
+  "name": "GPT-5 mini",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 0.25,
+   "Output tokens (per 1M)": 2,
+   "Cached input tokens (per 1M)": 0.025
+  },
+  "metadata": {
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "GPT-5 Mini is the lightweight, low-cost variant of GPT-5, well suited to high-volume coding and reasoning tasks."
+ },
+ {
+  "model_id": "openai/gpt-5-nano",
+  "name": "GPT-5 nano",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 0.05,
+   "Output tokens (per 1M)": 0.4,
+   "Cached input tokens (per 1M)": 0.005
+  },
+  "metadata": {
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "GPT-5 Nano is OpenAI\u2019s smallest GPT-5 variant, optimized for low latency and cheap, high-throughput tasks."
+ },
+ {
+  "model_id": "openai/gpt-5.1",
+  "name": "GPT-5.1",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 1.25,
+   "Output tokens (per 1M)": 10,
+   "Cached input tokens (per 1M)": 0.125
+  },
+  "metadata": {
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "GPT-5.1 is OpenAI\u2019s incremental improvement over GPT-5, with stronger coding, reasoning, and writing."
+ },
+ {
+  "model_id": "openai/gpt-5.4",
+  "name": "GPT-5.4",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 2.5,
+   "Output tokens (per 1M)": 15,
+   "Cached input tokens (per 1M)": 0.25
+  },
+  "metadata": {
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "GPT-5.4 is OpenAI's flagship model with strong coding, reasoning, and multimodal capabilities."
+ },
+ {
+  "model_id": "openai/gpt-5.4-mini",
+  "name": "GPT-5.4 mini",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 0.75,
+   "Output tokens (per 1M)": 4.5,
+   "Cached input tokens (per 1M)": 0.075
+  },
+  "metadata": {
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "GPT-5.4 mini is a smaller, faster, and more cost-efficient version of GPT-5.4 for lightweight tasks."
+ },
+ {
+  "model_id": "openai/gpt-5.4-nano",
+  "name": "GPT-5.4 nano",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 0.2,
+   "Output tokens (per 1M)": 1.25,
+   "Cached input tokens (per 1M)": 0.02
+  },
+  "metadata": {
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "GPT-5.4 nano is OpenAI's smallest and fastest model, optimized for edge and low-latency use cases."
+ },
+ {
+  "model_id": "openai/gpt-5.4-pro",
+  "name": "GPT-5.4 pro",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 30,
+   "Output tokens (per 1M)": 180
+  },
+  "metadata": {
+   "API": "Responses",
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "GPT-5.4 pro uses OpenAI's Responses API with built-in tools, improved reasoning, and stateful context management."
+ },
+ {
+  "model_id": "openai/gpt-5.5",
+  "name": "GPT-5.5",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 5,
+   "Output tokens (per 1M)": 30
+  },
+  "metadata": {
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "GPT-5.5 is OpenAI's flagship model with strong coding, reasoning, and multimodal capabilities."
+ },
+ {
+  "model_id": "openai/gpt-5.5-pro",
+  "name": "GPT-5.5 pro",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 30,
+   "Output tokens (per 1M)": 180
+  },
+  "metadata": {
+   "API": "Responses",
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "GPT-5.5 pro uses OpenAI's Responses API with built-in tools, improved reasoning, and stateful context management."
+ },
+ {
+  "model_id": "openai/gpt-5.6-luna",
+  "name": "GPT-5.6 Luna",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 0.2,
+   "Output tokens (per 1M)": 1.2,
+   "Cached input tokens (per 1M)": 0.02,
+   "Cache creation tokens (per 1M)": 0.25
+  },
+  "metadata": {
+   "API": "Responses",
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "GPT-5.6 Luna is an OpenAI GPT-5.6 model optimized for cost-sensitive workloads, using the Responses API for efficient text generation."
+ },
+ {
+  "model_id": "openai/gpt-5.6-sol",
+  "name": "GPT-5.6 Sol",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 2,
+   "Output tokens (per 1M)": 10,
+   "Cached input tokens (per 1M)": 0.25,
+   "Cache creation tokens (per 1M)": 3.125
+  },
+  "metadata": {
+   "API": "Responses",
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "GPT-5.6 Sol is OpenAI's frontier GPT-5.6 model for complex professional work, using the Responses API for reasoning and stateful context management."
+ },
+ {
+  "model_id": "openai/gpt-5.6-terra",
+  "name": "GPT-5.6 Terra",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 2,
+   "Output tokens (per 1M)": 12,
+   "Cached input tokens (per 1M)": 0.2,
+   "Cache creation tokens (per 1M)": 2.5
+  },
+  "metadata": {
+   "API": "Responses",
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "GPT-5.6 Terra is an OpenAI GPT-5.6 model that balances intelligence and cost, using the Responses API for reasoning and stateful context management."
+ },
+ {
+  "model_id": "openai/gpt-6-astra",
+  "name": "GPT-6 Astra",
+  "task": "Text Generation",
+  "pricing": {
+   "Long-context threshold (input tokens)": 272000,
+   "Short-context input (per 1M)": 10,
+   "Short-context cached input (per 1M)": 1,
+   "Short-context cache write (per 1M)": 12,
+   "Short-context output (per 1M)": 50,
+   "Long-context input (per 1M)": 20,
+   "Long-context cached input (per 1M)": 2,
+   "Long-context cache write (per 1M)": 25,
+   "Long-context output (per 1M)": 75
+  },
+  "metadata": {
+   "API": "Responses, Chat Completions",
+   "Architecture": "Transformer",
+   "Input modalities": "Text, image",
+   "Knowledge cutoff": "April 30, 2026"
+  },
+  "supports_async": false,
+  "description": "GPT-6 Astra is OpenAI's most capable model, built for complex reasoning, coding, computer use, research, and document creation."
+ },
+ {
+  "model_id": "openai/gpt-6-luna",
+  "name": "GPT-6 Luna",
+  "task": "Text Generation",
+  "pricing": {
+   "Short-context input (per 1M)": 0.1,
+   "Short-context cached input (per 1M)": 0.01,
+   "Short-context cache write (per 1M)": 0.125,
+   "Short-context output (per 1M)": 0.5,
+   "Long-context input (per 1M)": 0.2,
+   "Long-context cached input (per 1M)": 0.02,
+   "Long-context cache write (per 1M)": 0.25,
+   "Long-context output (per 1M)": 0.75
+  },
+  "metadata": {
+   "API": "Responses, Chat Completions",
+   "Architecture": "Transformer",
+   "Input modalities": "Text, image",
+   "Knowledge cutoff": "May 18, 2026"
+  },
+  "supports_async": false,
+  "description": "GPT-6 Luna is OpenAI's most efficient GPT-6 model, built for focused, high-volume tasks."
+ },
+ {
+  "model_id": "openai/gpt-6-sol",
+  "name": "GPT-6 Sol",
+  "task": "Text Generation",
+  "pricing": {
+   "Short-context input (per 1M)": 2,
+   "Short-context cached input (per 1M)": 0.2,
+   "Short-context cache write (per 1M)": 2.5,
+   "Short-context output (per 1M)": 10,
+   "Long-context input (per 1M)": 4,
+   "Long-context cached input (per 1M)": 0.4,
+   "Long-context cache write (per 1M)": 5,
+   "Long-context output (per 1M)": 15
+  },
+  "metadata": {
+   "API": "Responses, Chat Completions",
+   "Architecture": "Transformer",
+   "Input modalities": "Text, image",
+   "Knowledge cutoff": "April 20, 2026"
+  },
+  "supports_async": false,
+  "description": "GPT-6 Sol is OpenAI's mid-tier GPT-6 model, built to power complex coding and agentic workflows."
+ },
+ {
+  "model_id": "google/gemini-2.5-flash",
+  "name": "Gemini 2.5 Flash",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 0.3,
+   "Output tokens (per 1M)": 2.5,
+   "Cached input tokens (per 1M)": 0.03
+  },
+  "metadata": {
+   "Architecture": "Transformer (multimodal)",
+   "Thinking": "Yes"
+  },
+  "supports_async": false,
+  "description": "Google's fast multimodal Gemini 2.5 model with strong reasoning and a 1M token context window."
+ },
+ {
+  "model_id": "google/gemini-2.5-flash-lite",
+  "name": "Gemini 2.5 Flash Lite",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 0.1,
+   "Output tokens (per 1M)": 0.4,
+   "Cached input tokens (per 1M)": 0.01
+  },
+  "metadata": {
+   "Architecture": "Transformer (multimodal)"
+  },
+  "supports_async": false,
+  "description": "Google's lightest and most cost-efficient Gemini 2.5 model for high-throughput tasks."
+ },
+ {
+  "model_id": "google/gemini-2.5-pro",
+  "name": "Gemini 2.5 Pro",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 1.25,
+   "Output tokens (per 1M)": 10,
+   "Cached input tokens (per 1M)": 0.125
+  },
+  "metadata": {
+   "Architecture": "Transformer (multimodal)",
+   "Thinking": "Yes"
+  },
+  "supports_async": false,
+  "description": "Google's most capable Gemini 2.5 model with strong reasoning, thinking support, and a 1M token context window."
+ },
+ {
+  "model_id": "google/gemini-3-flash",
+  "name": "Gemini 3 Flash",
+  "task": "Text Generation",
+  "pricing": {
+   "Input <=200k (per 1M)": 0.5,
+   "Cached input <=200k (per 1M)": 0.05,
+   "Output <=200k (per 1M)": 3,
+   "Input >200k (per 1M)": 0.5,
+   "Cached input >200k (per 1M)": 0.05,
+   "Output >200k (per 1M)": 3
+  },
+  "metadata": {
+   "Architecture": "Transformer (multimodal)",
+   "Thinking": "Yes"
+  },
+  "supports_async": false,
+  "description": "Gemini 3 Flash is Google's fast multimodal model with frontier intelligence, superior search, and grounding capabilities."
+ },
+ {
+  "model_id": "google/gemini-3.1-flash-lite",
+  "name": "Gemini 3.1 Flash Lite",
+  "task": "Text Generation",
+  "pricing": {
+   "Input <=200k (per 1M)": 0.25,
+   "Cached input <=200k (per 1M)": 0.03,
+   "Output <=200k (per 1M)": 1.5,
+   "Input >200k (per 1M)": 0.25,
+   "Cached input >200k (per 1M)": 0.03,
+   "Output >200k (per 1M)": 1.5
+  },
+  "metadata": {
+   "Architecture": "Transformer (multimodal)"
+  },
+  "supports_async": false,
+  "description": "Google's lightest and most cost-efficient Gemini model for high-throughput tasks."
+ },
+ {
+  "model_id": "google/gemini-3.1-flash-tts",
+  "name": "Gemini 3.1 Flash TTS",
+  "task": "Text-to-Speech",
+  "pricing": {
+   "Input audio tokens (per 1M)": 3,
+   "Input text tokens (per 1M)": 0.75,
+   "output_audio_tokens": 12,
+   "output_text_tokens": 4.5
+  },
+  "metadata": {},
+  "supports_async": false,
+  "description": ""
+ },
+ {
+  "model_id": "google/gemini-3.1-pro",
+  "name": "Gemini 3.1 Pro",
+  "task": "Text Generation",
+  "pricing": {
+   "Input <=200k (per 1M)": 2,
+   "Cached input <=200k (per 1M)": 0.2,
+   "Output <=200k (per 1M)": 12,
+   "Input >200k (per 1M)": 4,
+   "Cached input >200k (per 1M)": 0.4,
+   "Output >200k (per 1M)": 18
+  },
+  "metadata": {
+   "Architecture": "Transformer (multimodal)",
+   "Thinking": "Yes (medium level)"
+  },
+  "supports_async": false,
+  "description": "Google's most intelligent Gemini model with improved reasoning, a medium thinking level, and a 1M token context window."
+ },
+ {
+  "model_id": "google/gemini-3.5-flash",
+  "name": "Gemini 3.5 Flash",
+  "task": "Text Generation",
+  "pricing": {
+   "Input <=200k (per 1M)": 1.5,
+   "Cached input <=200k (per 1M)": 0.15,
+   "Output <=200k (per 1M)": 9,
+   "Input >200k (per 1M)": 1.5,
+   "Cached input >200k (per 1M)": 0.15,
+   "Output >200k (per 1M)": 9
+  },
+  "metadata": {
+   "Architecture": "Transformer (multimodal)",
+   "Thinking": "Yes"
+  },
+  "supports_async": false,
+  "description": "Gemini 3.5 Flash is Google's fast multimodal model with frontier intelligence, superior search, and grounding capabilities."
+ },
+ {
+  "model_id": "google/gemini-3.5-flash-lite",
+  "name": "Gemini 3.5 Flash-Lite",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 0.3,
+   "Output tokens (per 1M)": 2.5,
+   "Cached input tokens (per 1M)": 0.03,
+   "Cache creation tokens (per 1M)": 0.03
+  },
+  "metadata": {
+   "Architecture": "Transformer (multimodal)"
+  },
+  "supports_async": false,
+  "description": "Gemini 3.5 Flash-Lite is a low-latency, cost-effective multimodal model optimized for high-throughput, low-cost execution for subagent tasks and document parsing."
+ },
+ {
+  "model_id": "google/gemini-3.6-flash",
+  "name": "Gemini 3.6 Flash",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 1.5,
+   "Output tokens (per 1M)": 7.5,
+   "Cached input tokens (per 1M)": 0.15,
+   "Cache creation tokens (per 1M)": 1.5
+  },
+  "metadata": {
+   "Architecture": "Transformer (multimodal)",
+   "Thinking": "Yes"
+  },
+  "supports_async": false,
+  "description": "Gemini 3.6 Flash provides sustained frontier-level intelligence optimized for real-world tasks at a higher speed and lower cost, excelling at code generation, agentic execution, and spatial reasoning."
+ },
+ {
+  "model_id": "google/gemini-3.7-flash",
+  "name": "Gemini 3.7 Flash",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 0.75,
+   "Output tokens (per 1M)": 3.75,
+   "Cached input tokens (per 1M)": 0.075
+  },
+  "metadata": {
+   "Architecture": "Transformer (multimodal)",
+   "Thinking": "Yes"
+  },
+  "supports_async": false,
+  "description": "Gemini 3.7 Flash is a highly capable, natively multimodal reasoning model optimized for agentic workflows and real-world tasks."
+ },
+ {
+  "model_id": "google/gemini-3.8-flash",
+  "name": "Gemini 3.8 Flash",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 0.75,
+   "Cached input tokens (per 1M)": 0.075,
+   "Output tokens (per 1M)": 3.75,
+   "Default (per second)": 0.75
+  },
+  "metadata": {
+   "Architecture": "Transformer (multimodal)",
+   "Default thinking level": "medium"
+  },
+  "supports_async": false,
+  "description": "Our most intelligent Flash model, engineered for long-horizon software engineering, autonomous agents, and complex enterprise workflows."
+ },
+ {
+  "model_id": "google/gemini-omni-flash",
+  "name": "Gemini Omni Flash",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Input text tokens (per 1M)": 1.5,
+   "Input image tokens (per 1M)": 1.5,
+   "Input audio tokens (per 1M)": 1.5,
+   "Input video tokens (per 1M)": 1.5,
+   "output_text_tokens": 9,
+   "Reasoning tokens (per 1M)": 9,
+   "output_video_tokens": 17.5,
+   "Default (per second)": 1.5
+  },
+  "metadata": {
+   "Audio Generation": "Yes",
+   "Input Modalities": "Text, image, audio, video",
+   "Resolutions": "360p, 720p, 1080p, 4k"
+  },
+  "supports_async": false,
+  "description": "Preview high-performance multimodal video generation and editing model with conversational controls and generated audio."
+ },
+ {
+  "model_id": "google/gemini-omni-1.1-flash",
+  "name": "Gemini Omni Flash 1.1",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Input audio tokens (per 1M)": 1.5,
+   "Input image tokens (per 1M)": 1.5,
+   "Input text tokens (per 1M)": 1.5,
+   "Input video tokens (per 1M)": 1.5,
+   "Reasoning tokens (per 1M)": 10,
+   "output_text_tokens": 9,
+   "output_video_tokens": 17.5
+  },
+  "metadata": {
+   "Audio Generation": "Yes",
+   "Input Modalities": "Text, image, audio, video",
+   "Resolutions": "360p, 720p, 1080p, 4k"
+  },
+  "supports_async": false,
+  "description": "High-performance multimodal video generation and editing model with conversational controls and generated audio."
+ },
+ {
+  "model_id": "xai/grok-4.20-multi-agent-0309",
+  "name": "Grok 4.20 Multi-Agent",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 2,
+   "Output tokens (per 1M)": 6,
+   "Cached input tokens (per 1M)": 0.2
+  },
+  "metadata": {
+   "API": "Responses",
+   "Architecture": "Transformer",
+   "Tool Use": "Yes"
+  },
+  "supports_async": false,
+  "description": "xAI's Grok 4.20 multi-agent model with a 2M-token context window. Multiple agents collaborate in parallel to perform deep research tasks, with function calling, structured outputs, and reasoning capabilities."
+ },
+ {
+  "model_id": "xai/grok-4.20-0309-non-reasoning",
+  "name": "Grok 4.20 Non-Reasoning",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 2,
+   "Output tokens (per 1M)": 6,
+   "Cached input tokens (per 1M)": 0.2
+  },
+  "metadata": {
+   "Architecture": "Transformer",
+   "Reasoning": "No"
+  },
+  "supports_async": false,
+  "description": "xAI's Grok 4.20 non-reasoning model. Skips the thinking trace for fast, single-pass responses while keeping the same training as the reasoning variant."
+ },
+ {
+  "model_id": "xai/grok-4.20-0309-reasoning",
+  "name": "Grok 4.20 Reasoning",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 2,
+   "Output tokens (per 1M)": 6,
+   "Cached input tokens (per 1M)": 0.2
+  },
+  "metadata": {
+   "Architecture": "Transformer",
+   "Reasoning": "Yes"
+  },
+  "supports_async": false,
+  "description": "xAI's Grok 4.20 reasoning model. Uses extended thinking to work through complex problems, returning a reasoning trace alongside the final answer."
+ },
+ {
+  "model_id": "xai/grok-4.3",
+  "name": "Grok 4.3",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 1.25,
+   "Output tokens (per 1M)": 2.5,
+   "Cached input tokens (per 1M)": 0.2
+  },
+  "metadata": {
+   "Architecture": "Transformer",
+   "Input Modalities": "Text, Image",
+   "Reasoning": "Configurable (none, low, medium, high)"
+  },
+  "supports_async": false,
+  "description": "xAI's Grok 4.3 model with a 1M-token context window and strong agentic tool calling with minimal hallucinations. Accepts text and image inputs, and supports function calling, structured outputs, and configurable reasoning effort (none, low, medium, high)."
+ },
+ {
+  "model_id": "xai/grok-4.5",
+  "name": "Grok 4.5",
+  "task": "Text Generation",
+  "pricing": {
+   "Input <200k (per 1M)": 2,
+   "Cached input <200k (per 1M)": 0.3,
+   "Output <200k (per 1M)": 6,
+   "Input >=200k (per 1M)": 4,
+   "Cached input >=200k (per 1M)": 0.6,
+   "Output >=200k (per 1M)": 12
+  },
+  "metadata": {
+   "Architecture": "Transformer",
+   "Input Modalities": "Text, Image",
+   "Reasoning": "Configurable (low, medium, high)"
+  },
+  "supports_async": false,
+  "description": "xAI's Grok 4.5, a frontier model built for coding, agentic tasks, and knowledge work. Accepts text and image inputs, and supports function calling, structured outputs, and configurable reasoning effort (low, medium, high)."
+ },
+ {
+  "model_id": "xai/grok-4.6",
+  "name": "Grok 4.6",
+  "task": "Text Generation",
+  "pricing": {
+   "Input <200k (per 1M)": 2,
+   "Cached input <200k (per 1M)": 0.5,
+   "Output <200k (per 1M)": 6,
+   "Input >=200k (per 1M)": 4,
+   "Cached input >=200k (per 1M)": 1,
+   "Output >=200k (per 1M)": 12
+  },
+  "metadata": {
+   "Architecture": "Transformer",
+   "Input Modalities": "Text, Image",
+   "Reasoning": "Yes"
+  },
+  "supports_async": false,
+  "description": "xAI's Grok 4.6, a flagship reasoning model for coding, agentic tasks, and visual work. Accepts text and image inputs, and supports function calling and structured outputs."
+ },
+ {
+  "model_id": "xai/grok-4.7",
+  "name": "Grok 4.7",
+  "task": "Text Generation",
+  "pricing": {
+   "Input <200k (per 1M)": 2,
+   "Cached input <200k (per 1M)": 0.5,
+   "Output <200k (per 1M)": 6,
+   "Input >=200k (per 1M)": 4,
+   "Cached input >=200k (per 1M)": 1,
+   "Output >=200k (per 1M)": 12
+  },
+  "metadata": {
+   "Architecture": "Transformer",
+   "Input Modalities": "Text, Image",
+   "Reasoning": "Configurable (low, medium, high, xhigh)"
+  },
+  "supports_async": false,
+  "description": "xAI's Grok 4.7, a frontier reasoning model for coding, agentic tasks, and knowledge work. Accepts text and image inputs, and supports function calling, structured outputs, and configurable reasoning effort (low, medium, high, xhigh)."
+ },
+ {
+  "model_id": "xai/grok-imagine-image",
+  "name": "Grok Imagine Image",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.02,
+   "Per input image": 0.002
+  },
+  "metadata": {
+   "Aspect Ratios": "1:1, 3:4, 4:3, 9:16, 16:9, 2:3, 3:2, 9:19.5, 19.5:9, 9:20, 20:9, 1:2, 2:1, auto",
+   "Resolutions": "1k, 2k",
+   "Response Formats": "url, b64_json",
+   "Text Rendering": "Yes"
+  },
+  "supports_async": false,
+  "description": "xAI's Grok Imagine image model. Generates and edits images from text and reference-image inputs with configurable aspect ratio and resolution."
+ },
+ {
+  "model_id": "xai/grok-imagine-image-2.0",
+  "name": "Grok Imagine Image 2.0",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.04,
+   "Per input image": 0.01
+  },
+  "metadata": {
+   "Aspect Ratios": "1:1, 16:9, 9:16, 4:3, 3:4, 3:2, 2:3, 9:19.5, 19.5:9, 9:20, 20:9, 2:1, 1:2, auto",
+   "Max Reference Images": "5",
+   "Quality": "low, medium",
+   "Resolutions": "1k, 2k",
+   "Text Rendering": "Yes"
+  },
+  "supports_async": false,
+  "description": "xAI's Grok Imagine Image 2.0 is a precise image generation and editing model for creative work, with strong instruction following, typography, layout, and reference-image preservation."
+ },
+ {
+  "model_id": "xai/grok-imagine-image-quality",
+  "name": "Grok Imagine Image Quality",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.05,
+   "Per input image": 0.01
+  },
+  "metadata": {
+   "Aspect Ratios": "1:1, 3:4, 4:3, 9:16, 16:9, 2:3, 3:2, 1:2, 2:1, auto (and more)",
+   "Max Images per Request": "10",
+   "Resolutions": "1k, 2k",
+   "Text Rendering": "Yes"
+  },
+  "supports_async": false,
+  "description": "xAI's higher-fidelity text-to-image model optimized for sharper details, more accurate compositions, and stronger text rendering. Supports image editing via reference images and masks. Trades speed for quality compared to grok-imagine-image. Default output at 2k resolution."
+ },
+ {
+  "model_id": "xai/grok-imagine-video",
+  "name": "Grok Imagine Video",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Default (per second)": 0.05,
+   "@480p (per second)": 0.05,
+   "@720p (per second)": 0.07
+  },
+  "metadata": {
+   "Aspect Ratios": "1:1, 16:9, 9:16, 4:3, 3:4, 3:2, 2:3",
+   "Input Modalities": "Text, Image, Video",
+   "Max Duration": "15 seconds",
+   "Resolutions": "480p, 720p"
+  },
+  "supports_async": false,
+  "description": "xAI's video generation model. Generates, edits, and extends videos from text and image inputs with native synchronized audio including dialogue, sound effects, and music. Supports multiple creative modes (normal, fun, custom)."
+ },
+ {
+  "model_id": "xai/grok-imagine-video-1.5-preview",
+  "name": "Grok Imagine Video 1.5 Preview",
+  "task": "Image-to-Video",
+  "pricing": {
+   "Default (per second)": 0.08,
+   "@480p (per second)": 0.08,
+   "@720p (per second)": 0.14
+  },
+  "metadata": {
+   "Aspect Ratios": "1:1, 16:9, 9:16, 4:3, 3:4, 3:2, 2:3",
+   "Input Modalities": "Text, Image, Video",
+   "Max Duration": "15 seconds",
+   "Resolutions": "480p, 720p"
+  },
+  "supports_async": false,
+  "description": "xAI's next-generation video generation model. Generates, edits, and extends videos from text and image inputs. Supports multiple aspect ratios and resolutions with improved quality over the previous generation."
+ },
+ {
+  "model_id": "xai/grok-stt",
+  "name": "Grok STT",
+  "task": "Automatic Speech Recognition",
+  "pricing": {
+   "Per audio minute": 0.001667,
+   "input_audio_minutes_streaming": 0.003334
+  },
+  "metadata": {
+   "Languages": "25 supported language codes (en, fr, de, ja, zh, ...)",
+   "Audio Formats": "wav, mp3, ogg, opus, flac, aac, mp4, m4a, mkv (+ raw pcm/mulaw/alaw)",
+   "Max File Size (xAI)": "500 MB",
+   "Max File Size (Gateway)": "25 MB"
+  },
+  "supports_async": false,
+  "description": "xAI's Grok speech-to-text model. Transcribes audio files into text across 25 languages with word-level timestamps, multichannel transcription, speaker diarization, and key-term biasing."
+ },
+ {
+  "model_id": "xai/grok-tts",
+  "name": "Grok TTS",
+  "task": "Text-to-Speech",
+  "pricing": {
+   "Per character": 1.5e-05
+  },
+  "metadata": {
+   "Voices": "eve, ara, rex, sal, leo (+ custom)",
+   "Languages": "20+ BCP-47 codes (en, fr, de, ja, zh, ...) plus auto-detect",
+   "Max Text Length": "15,000 characters",
+   "Output Formats": "MP3 (default), WAV, PCM, \u03bc-law, A-law"
+  },
+  "supports_async": false,
+  "description": "xAI's Grok text-to-speech model. Generates high-fidelity spoken audio in 5 expressive voices (eve, ara, rex, sal, leo) with 20+ supported languages. Supports inline speech tags for laughter, whispers, and pauses."
+ },
+ {
+  "model_id": "xai/grok-voice",
+  "name": "Grok Voice",
+  "task": "websocket",
+  "pricing": {
+   "total_audio_minutes": 0.05,
+   "input_text_messages": 0.004
+  },
+  "metadata": {
+   "Audio Format": "PCM16 24kHz",
+   "Latency": "Real-time",
+   "Turn Detection": "Server VAD"
+  },
+  "supports_async": false,
+  "description": "xAI's real-time voice conversation model with low-latency audio input and output streaming."
+ },
+ {
+  "model_id": "alibaba/hh1-i2v",
+  "name": "HappyHorse 1.0 I2V",
+  "task": "Image-to-Video",
+  "pricing": {
+   "Default (per second)": 0.28,
+   "@720p (per second)": 0.14,
+   "@1080p (per second)": 0.28
+  },
+  "metadata": {
+   "Input": "Image URL (no base64)",
+   "Max Duration": "15 seconds",
+   "Resolutions": "720P, 1080P"
+  },
+  "supports_async": false,
+  "description": "Alibaba's HappyHorse 1.0 image-to-video model. Animates a reference image with an optional text prompt. Supports 720P and 1080P output with durations from 3 to 15 seconds."
+ },
+ {
+  "model_id": "alibaba/hh1-t2v",
+  "name": "HappyHorse 1.0 T2V",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Default (per second)": 0.28,
+   "@720p (per second)": 0.14,
+   "@1080p (per second)": 0.28
+  },
+  "metadata": {
+   "Aspect Ratios": "16:9, 9:16, 1:1, 4:3, 3:4",
+   "Max Duration": "15 seconds",
+   "Resolutions": "720P, 1080P"
+  },
+  "supports_async": false,
+  "description": "Alibaba's HappyHorse 1.0 text-to-video model. Generates videos from a text prompt with configurable resolution, aspect ratio, and duration (3-15s)."
+ },
+ {
+  "model_id": "alibaba/hh1.1-i2v",
+  "name": "HappyHorse 1.1 I2V",
+  "task": "Image-to-Video",
+  "pricing": {
+   "Default (per second)": 0.18,
+   "@720p (per second)": 0.14,
+   "@1080p (per second)": 0.18
+  },
+  "metadata": {
+   "Input": "Image URL (no base64)",
+   "Max Duration": "15 seconds",
+   "Resolutions": "720P, 1080P"
+  },
+  "supports_async": false,
+  "description": "Alibaba's HappyHorse 1.1 image-to-video model. Animates a reference image with an optional text prompt, with smoother motion, natural skin textures, and improved close-up quality over 1.0. Supports 720P and 1080P output with durations from 3 to 15 seconds."
+ },
+ {
+  "model_id": "alibaba/hh1.1-r2v",
+  "name": "HappyHorse 1.1 R2V",
+  "task": "Image-to-Video",
+  "pricing": {
+   "Default (per second)": 0.18,
+   "@720p (per second)": 0.14,
+   "@1080p (per second)": 0.18
+  },
+  "metadata": {
+   "Aspect Ratios": "16:9, 9:16, 3:4, 4:3, 1:1, 21:9, 9:21, 5:4, 4:5",
+   "Input": "1-9 reference image URLs (no base64)",
+   "Max Duration": "15 seconds",
+   "Resolutions": "720P, 1080P"
+  },
+  "supports_async": false,
+  "description": "Alibaba's HappyHorse 1.1 reference-to-video model. Takes 1-9 reference images (characters and scenes) and a prompt that choreographs them into a single video, keeping each subject's identity consistent. Supports 720P and 1080P output with durations from 3 to 15 seconds."
+ },
+ {
+  "model_id": "alibaba/hh1.1-t2v",
+  "name": "HappyHorse 1.1 T2V",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Default (per second)": 0.18,
+   "@720p (per second)": 0.14,
+   "@1080p (per second)": 0.18
+  },
+  "metadata": {
+   "Aspect Ratios": "16:9, 9:16, 1:1, 4:3, 3:4",
+   "Max Duration": "15 seconds",
+   "Resolutions": "720P, 1080P"
+  },
+  "supports_async": false,
+  "description": "Alibaba's HappyHorse 1.1 text-to-video model. Generates videos from a text prompt with stronger dynamic expressiveness, better visual quality, and improved instruction following over 1.0. Configurable resolution, aspect ratio, and duration (3-15s)."
+ },
+ {
+  "model_id": "thinkingmachines/inkling",
+  "name": "Inkling",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 1.87,
+   "Output tokens (per 1M)": 4.68,
+   "Cached input tokens (per 1M)": 0.374,
+   "Cache creation tokens (per 1M)": 1.87
+  },
+  "metadata": {
+   "Architecture": "Mixture-of-Experts (MoE)",
+   "Thinking": "Yes"
+  },
+  "supports_async": false,
+  "description": "Inkling is Thinking Machines' open-weights hybrid reasoning model, built on a mixture-of-experts architecture. It reasons by default, exposing its chain-of-thought as leading thinking content blocks, with reasoning effort tunable via a Tinker-specific output_config.effort parameter. Available through Tinker's beta Anthropic Messages-compatible endpoint alongside tool use, streaming, and multi-turn conversations. Currently intended for low-traffic testing and internal use rather than high-throughput production deployments; prompt caching, citations, and audio input are not supported through this endpoint."
+ },
+ {
+  "model_id": "thinkingmachines/inkling-256k",
+  "name": "Inkling 256K",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 3.74,
+   "Output tokens (per 1M)": 9.36,
+   "Cached input tokens (per 1M)": 0.748,
+   "Cache creation tokens (per 1M)": 3.74
+  },
+  "metadata": {
+   "Architecture": "Mixture-of-Experts (MoE)",
+   "Thinking": "Yes"
+  },
+  "supports_async": false,
+  "description": "The 256K-context variant of Inkling, Thinking Machines' open-weights hybrid reasoning MoE model. Same hybrid reasoning, tool-use, and streaming support as the base model, with an extended context window for longer conversations and documents. Currently intended for low-traffic testing and internal use rather than high-throughput production deployments."
+ },
+ {
+  "model_id": "inworld/tts-1.5-max",
+  "name": "Inworld TTS 1.5 Max",
+  "task": "Text-to-Speech",
+  "pricing": {
+   "Per character": 3.5e-05
+  },
+  "metadata": {
+   "Languages": "15",
+   "Latency": "<200ms"
+  },
+  "supports_async": false,
+  "description": "Highest-quality text-to-speech with under 200ms latency, emotion control, and 15-language support."
+ },
+ {
+  "model_id": "inworld/tts-1.5-mini",
+  "name": "Inworld TTS 1.5 Mini",
+  "task": "Text-to-Speech",
+  "pricing": {
+   "Per character": 1.5e-05
+  },
+  "metadata": {
+   "Languages": "15",
+   "Latency": "~120ms"
+  },
+  "supports_async": false,
+  "description": "Ultra-fast, cost-efficient text-to-speech with approximately 120ms latency and 15-language support."
+ },
+ {
+  "model_id": "inworld/tts-2",
+  "name": "Inworld TTS 2",
+  "task": "Text-to-Speech",
+  "pricing": {
+   "Per character": 2.5e-05
+  },
+  "metadata": {
+   "Languages": "15 production + 90+ experimental",
+   "Steering": "Natural language"
+  },
+  "supports_async": false,
+  "description": "Inworld's most powerful and expressive text-to-speech model. Builds on TTS 1.5 with rich expressive speech, real-time latency, natural language steering (e.g. [whisper], [say excitedly]), and stronger multilingual support across 15 production languages plus 90+ experimental languages."
+ },
+ {
+  "model_id": "typesafe/jev",
+  "name": "Jev",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 0.042,
+   "Output tokens (per 1M)": 0,
+   "Cached input tokens (per 1M)": 0
+  },
+  "metadata": {
+   "Answer types": "Noul, Choice, and Score",
+   "Provider model": "jev-latest"
+  },
+  "supports_async": false,
+  "description": "Jev is TypeSafe's structured evaluation model. It evaluates one state against typed Noul, Choice, and Score questions and returns calibrated answers with probabilities and confidence."
+ },
+ {
+  "model_id": "moonshotai/kimi-k3",
+  "name": "Kimi K3",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 3,
+   "Output tokens (per 1M)": 15,
+   "Cached input tokens (per 1M)": 0.3
+  },
+  "metadata": {
+   "Architecture": "Kimi Delta Attention (Hybrid Linear)",
+   "Function Calling": "Yes",
+   "Parameters": "2.8T",
+   "Reasoning": "Yes (always-on)",
+   "Vision": "Yes"
+  },
+  "supports_async": false,
+  "description": "Kimi K3 is Moonshot's flagship 2.8 trillion-parameter model, built on Kimi Delta Attention (a hybrid linear attention mechanism) with Attention Residuals. It offers native visual understanding, always-on reasoning, and a 1M-token context window for long-horizon coding, knowledge work, and deep reasoning tasks."
+ },
+ {
+  "model_id": "krea/krea-2-large",
+  "name": "Krea 2 Large",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Default (per second)": 0.06,
+   "Per image": 0.06
+  },
+  "metadata": {
+   "Max Resolution": "1K",
+   "Max Style References": "10",
+   "Moodboards": "Yes",
+   "Style Transfer": "Yes",
+   "Price (text-to-image)": "$0.060",
+   "Price (with style references)": "$0.065",
+   "Price (with moodboards)": "$0.070"
+  },
+  "supports_async": false,
+  "description": "More than 2x the size of Medium, with softer post-training. Outputs are rawer, more textured, and more flexible \u2014 at its best, Large produces results Medium can't match. Strongest on photorealism, raw looks (motion blur, grain, low dynamic range), and expressive and artistic styles."
+ },
+ {
+  "model_id": "krea/krea-2-medium",
+  "name": "Krea 2 Medium",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Default (per second)": 0.03,
+   "Per image": 0.03
+  },
+  "metadata": {
+   "Max Resolution": "1K",
+   "Max Style References": "10",
+   "Moodboards": "Yes",
+   "Style Transfer": "Yes",
+   "Price (text-to-image)": "$0.030",
+   "Price (with style references)": "$0.035",
+   "Price (with moodboards)": "$0.040"
+  },
+  "supports_async": false,
+  "description": "Smaller, faster, more cost-efficient. Extensive post-training makes outputs especially stable and consistent across generations. Strongest on illustration, anime, painting, and other expressive or artistic styles."
+ },
+ {
+  "model_id": "krea/krea-2-medium-turbo",
+  "name": "Krea 2 Medium Turbo",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Default (per second)": 0.015,
+   "Per image": 0.015
+  },
+  "metadata": {
+   "Max Resolution": "1K",
+   "Max Style References": "10",
+   "Moodboards": "Yes",
+   "Style Transfer": "Yes",
+   "Generation Time": "~4 seconds",
+   "Price (text-to-image)": "$0.015",
+   "Price (with style references)": "$0.0175",
+   "Price (with moodboards)": "$0.020"
+  },
+  "supports_async": false,
+  "description": "The fastest Krea 2 model, built for low-cost iteration on expressive illustrations, style-driven concepts, and rapid visual exploration. Keeps the Krea 2 style system and expressive visual range but uses a distilled sampling schedule so you can move through ideas much faster. Especially useful for expressive illustration, graphic styles, typography experiments, and quick campaign or concept directions."
+ },
+ {
+  "model_id": "lightricks/ltx-2-5-fast",
+  "name": "LTX-2.5 Fast",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Default (per second)": 0.09,
+   "@720p (per second)": 0.09,
+   "@1080p (per second)": 0.15,
+   "@2k (per second)": 0.19,
+   "@4k (per second)": 0.37
+  },
+  "metadata": {
+   "Audio Generation": "Yes",
+   "Image-to-Video": "Yes",
+   "Max Duration": "20 seconds",
+   "Resolutions": "1280x720, 720x1280, 1920x1080, 1080x1920, 2560x1440, 1440x2560, 3840x2160, 2160x3840"
+  },
+  "supports_async": false,
+  "description": "Lightricks LTX-2.5 Fast is a fast video generation model for text-to-video and image-to-video workflows, with synchronized audio, configurable duration, resolution, and frame rate."
+ },
+ {
+  "model_id": "minimax/h3",
+  "name": "MiniMax H3",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Default (per second)": 0.08,
+   "@768p (per second)": 0.08,
+   "@2k (per second)": 0.13
+  },
+  "metadata": {
+   "Billing": "Pay-as-you-go, per output second",
+   "Duration": "4-15 seconds",
+   "Input Types": "Text, image, video, audio",
+   "Resolutions": "768P, 2K"
+  },
+  "supports_async": false,
+  "description": "A multimodal video generation model supporting text-to-video, first and last frame image-to-video, and reference-to-video generation with 768P and 2K output."
+ },
+ {
+  "model_id": "minimax/h3-max",
+  "name": "MiniMax H3 Max",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Default (per second)": 0.05,
+   "@480p (per second)": 0.05,
+   "@768p (per second)": 0.08
+  },
+  "metadata": {
+   "Billing": "Pay-as-you-go, per output second",
+   "Duration": "5-15 seconds",
+   "Input Types": "Text, image, video, audio",
+   "Resolutions": "480P, 768P"
+  },
+  "supports_async": false,
+  "description": "A fast multimodal video generation model supporting text-to-video and image-to-video generation at 480P and 768P."
+ },
+ {
+  "model_id": "minimax/hailuo-2.3",
+  "name": "MiniMax Hailuo 2.3",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Default (per second)": 0.047,
+   "6s @768p": 0.28,
+   "10s @768p": 0.56,
+   "6s @1080p": 0.49
+  },
+  "metadata": {
+   "Resolutions": "540p, 720p, 1080p"
+  },
+  "supports_async": false,
+  "description": "A high-fidelity video generation model optimized for realistic human motion, cinematic VFX, expressive characters, and strong prompt and style adherence across text-to-video and image-to-video workflows."
+ },
+ {
+  "model_id": "minimax/hailuo-2.3-fast",
+  "name": "MiniMax Hailuo 2.3 Fast",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Default (per second)": 0.032,
+   "6s @768p": 0.19,
+   "10s @768p": 0.32,
+   "6s @1080p": 0.33
+  },
+  "metadata": {
+   "Resolutions": "540p, 720p, 1080p"
+  },
+  "supports_async": false,
+  "description": "A lower-latency version of Hailuo 2.3 that preserves core motion quality, visual consistency, and stylization while enabling faster iteration."
+ },
+ {
+  "model_id": "minimax/m2.7",
+  "name": "MiniMax M2.7",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 0.3,
+   "Output tokens (per 1M)": 1.2,
+   "Cached input tokens (per 1M)": 0.06,
+   "Cache creation tokens (per 1M)": 0.375
+  },
+  "metadata": {
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "MiniMax's M2.7 language model with multilingual capabilities."
+ },
+ {
+  "model_id": "minimax/m3",
+  "name": "MiniMax M3",
+  "task": "Text Generation",
+  "pricing": {
+   "Input <=512k (per 1M)": 0.3,
+   "Cached input <=512k (per 1M)": 0.06,
+   "Output <=512k (per 1M)": 1.2,
+   "Input >512k (per 1M)": 0.6,
+   "Cached input >512k (per 1M)": 0.12,
+   "Output >512k (per 1M)": 2.4
+  },
+  "metadata": {
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "MiniMax's M3 language model with frontier coding and agentic capabilities, a 1M token context window, and multilingual support."
+ },
+ {
+  "model_id": "minimax/music-2.6",
+  "name": "MiniMax Music 2.6",
+  "task": "Music Generation",
+  "pricing": {
+   "Per track": 0.15,
+   "Per lyrics generation": 0.01
+  },
+  "metadata": {
+   "Audio Formats": "mp3, wav",
+   "Max Duration": "~6 minutes",
+   "Modes": "Vocals, Instrumental, Auto-Lyrics"
+  },
+  "supports_async": false,
+  "description": "MiniMax's music generation model that creates full-length songs with vocals from text prompts and lyrics, or instrumental tracks. Supports BPM/key control and auto-generated lyrics."
+ },
+ {
+  "model_id": "minimax/speech-2.8-hd",
+  "name": "MiniMax Speech 2.8 HD",
+  "task": "Text-to-Speech",
+  "pricing": {
+   "Per character": 0.0001
+  },
+  "metadata": {
+   "Emotion Control": "Yes",
+   "Languages": "40+",
+   "Voice Cloning": "Yes"
+  },
+  "supports_async": false,
+  "description": "MiniMax Speech 2.8 HD focuses on studio-grade audio generation with emotion control, multilingual support (40+ languages), and voice cloning."
+ },
+ {
+  "model_id": "minimax/speech-2.8-turbo",
+  "name": "MiniMax Speech 2.8 Turbo",
+  "task": "Text-to-Speech",
+  "pricing": {
+   "Per character": 6e-05
+  },
+  "metadata": {
+   "Emotion Control": "Yes",
+   "Languages": "40+",
+   "Voice Cloning": "Yes"
+  },
+  "supports_async": false,
+  "description": "MiniMax Speech 2.8 Turbo turns text into natural, expressive speech with voice cloning, emotion control, and 40+ language support at faster speeds."
+ },
+ {
+  "model_id": "google/nano-banana",
+  "name": "Nano Banana",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Input tokens (per 1M)": 0.3,
+   "Output tokens (per 1M)": 30,
+   "Cached input tokens (per 1M)": 0.03,
+   "Cache creation tokens (per 1M)": 0.083333
+  },
+  "metadata": {
+   "Output Format": "JPEG"
+  },
+  "supports_async": false,
+  "description": "Google's fast image generation model producing high-quality images from text prompts."
+ },
+ {
+  "model_id": "google/nano-banana-2",
+  "name": "Nano Banana 2",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Input tokens (per 1M)": 0.5,
+   "Output tokens (per 1M)": 60
+  },
+  "metadata": {
+   "Output Format": "JPEG"
+  },
+  "supports_async": false,
+  "description": "Google's second-generation image generation model with improved quality and speed."
+ },
+ {
+  "model_id": "google/nano-banana-2-lite",
+  "name": "Nano Banana 2 Lite",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Input tokens (per 1M)": 0.25,
+   "Output tokens (per 1M)": 30
+  },
+  "metadata": {
+   "Input Size Limit": "500 MB",
+   "Output Format": "JPEG or PNG"
+  },
+  "supports_async": false,
+  "description": "Google's fastest Gemini image generation model for rapid image creation and iteration."
+ },
+ {
+  "model_id": "google/nano-banana-pro",
+  "name": "Nano Banana Pro",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Input tokens (per 1M)": 2,
+   "Output tokens (per 1M)": 120
+  },
+  "metadata": {
+   "Output Format": "JPEG"
+  },
+  "supports_async": false,
+  "description": "Google's higher-quality image generation model with improved detail and prompt adherence."
+ },
+ {
+  "model_id": "pruna/p-image",
+  "name": "P-Image",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.005
+  },
+  "metadata": {
+   "Aspect Ratios": "1:1, 16:9, 9:16, 4:3, 3:4, 3:2, 2:3, custom",
+   "Output Formats": "jpg"
+  },
+  "supports_async": false,
+  "description": "Pruna's P-Image is an ultra-fast text-to-image model with automatic prompt enhancement and 2-stage refinement, combining exceptional speed with high-quality output and flexible aspect ratios."
+ },
+ {
+  "model_id": "pruna/p-image-try-on",
+  "name": "P-Image Try-On",
+  "task": "Image-to-Image",
+  "pricing": {
+   "Per image": 0.015,
+   "Per input image": 0.008
+  },
+  "metadata": {
+   "Garments": "1 required, up to 6 recommended, up to 11 supported",
+   "Input Modalities": "Image",
+   "Output Formats": "jpg, png, webp"
+  },
+  "supports_async": false,
+  "description": "Pruna's P-Image Try-On virtually fits one or more garments onto a person's photo. Provide a photo of a person plus garment reference images and the model realistically dresses the person in the provided garments."
+ },
+ {
+  "model_id": "pruna/p-image-edit",
+  "name": "P-Image-Edit",
+  "task": "Image-to-Image",
+  "pricing": {
+   "Per image": 0.01
+  },
+  "metadata": {
+   "Reference Images": "1-5",
+   "Output Formats": "jpg"
+  },
+  "supports_async": false,
+  "description": "Pruna's P-Image-Edit edits and composes 1-5 reference images with text instructions. It supports complex compositions, style transfers, and targeted edits with flexible output aspect ratios."
+ },
+ {
+  "model_id": "pruna/p-image-upscale",
+  "name": "P-Image-Upscale",
+  "task": "Image-to-Image",
+  "pricing": {
+   "Per image (1-4 MP)": 0.005,
+   "Per image (5-8 MP)": 0.01,
+   "Per image (9-16 MP)": 0.02,
+   "Per image (17-32 MP)": 0.04,
+   "Per image (33-64 MP)": 0.06,
+   "Per image (65-128 MP)": 0.12
+  },
+  "metadata": {
+   "Target Resolution": "1-128 MP",
+   "Output Formats": "jpg, png, webp"
+  },
+  "supports_async": false,
+  "description": "Pruna's P-Image-Upscale increases image resolution using AI, targeting 1-128 megapixels with optional detail and realism enhancement for sharper, cleaner results."
+ },
+ {
+  "model_id": "pruna/p-video",
+  "name": "P-Video",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Default (per second)": 0.02,
+   "@720p (per second)": 0.02,
+   "@1080p (per second)": 0.04,
+   "@720p draft (per second)": 0.005,
+   "@1080p draft (per second)": 0.01
+  },
+  "metadata": {
+   "Resolutions": "720p, 1080p",
+   "Frame Rates": "24, 48 fps",
+   "Max Duration": "20s"
+  },
+  "supports_async": false,
+  "description": "Pruna's P-Video is a premium video generation model supporting text-to-video, image-to-video, and audio-conditioned generation up to 1080p at 24 or 48 fps, with configurable duration up to 20 seconds."
+ },
+ {
+  "model_id": "pruna/p-video-animate",
+  "name": "P-Video-Animate",
+  "task": "Image-to-Video",
+  "pricing": {
+   "Default (per second)": 0.03,
+   "@720p (per second)": 0.03,
+   "@1080p (per second)": 0.06
+  },
+  "metadata": {
+   "Resolutions": "720p, 1080p",
+   "Input Modalities": "Video + Image"
+  },
+  "supports_async": false,
+  "description": "Pruna's P-Video-Animate takes a source video and a subject reference image, then animates the referenced subject using the motion and audio from the source video."
+ },
+ {
+  "model_id": "pruna/p-video-avatar",
+  "name": "P-Video-Avatar",
+  "task": "Image-to-Video",
+  "pricing": {
+   "Default (per second)": 0.025,
+   "@720p (per second)": 0.025,
+   "@1080p (per second)": 0.045
+  },
+  "metadata": {
+   "Resolutions": "720p, 1080p",
+   "Input Modalities": "Image + (script or audio)"
+  },
+  "supports_async": false,
+  "description": "Pruna's P-Video-Avatar generates talking-head videos from a single portrait image driven by a text script or audio file, with multiple voices, languages, and output resolutions."
+ },
+ {
+  "model_id": "pruna/p-video-replace",
+  "name": "P-Video-Replace",
+  "task": "Image-to-Video",
+  "pricing": {
+   "Default (per second)": 0.03,
+   "@720p (per second)": 0.03,
+   "@1080p (per second)": 0.06
+  },
+  "metadata": {
+   "Resolutions": "720p, 1080p",
+   "Reference Images": "1-3"
+  },
+  "supports_async": false,
+  "description": "Pruna's P-Video-Replace takes a source video and one or more identity reference images, then places the referenced person or people into the video while preserving the source motion and audio."
+ },
+ {
+  "model_id": "unbiased/pareto",
+  "name": "Pareto",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 2.5,
+   "Output tokens (per 1M)": 7.5,
+   "Cached input tokens (per 1M)": 0.25
+  },
+  "metadata": {
+   "Architecture": "Blended model",
+   "Modalities": "Text and vision",
+   "Provider": "Unbiased"
+  },
+  "supports_async": false,
+  "description": "Pareto is Unbiased's blended AI model. It engages multiple language models in parallel for each request, synthesizes one answer, and supports text and vision inputs through a single API response."
+ },
+ {
+  "model_id": "pixverse/v5.6",
+  "name": "Pixverse v5.6",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Default (per second)": 0.08,
+   "5s @360p": 0.175,
+   "5s @360p w/ audio": 0.4,
+   "8s @360p": 0.35,
+   "8s @360p w/ audio": 0.575,
+   "10s @360p": 0.385,
+   "10s @360p w/ audio": 0.61,
+   "5s @540p": 0.175,
+   "5s @540p w/ audio": 0.45,
+   "8s @540p": 0.35,
+   "8s @540p w/ audio": 0.575,
+   "10s @540p": 0.385,
+   "10s @540p w/ audio": 0.61,
+   "5s @720p": 0.225,
+   "5s @720p w/ audio": 0.4,
+   "8s @720p": 0.45,
+   "8s @720p w/ audio": 0.675,
+   "10s @720p": 0.495,
+   "10s @720p w/ audio": 0.72,
+   "5s @1080p": 0.375,
+   "5s @1080p w/ audio": 0.75,
+   "8s @1080p": 0.75,
+   "8s @1080p w/ audio": 0.975
+  },
+  "metadata": {
+   "Aspect Ratios": "16:9, 4:3, 1:1, 3:4, 9:16, 2:3, 3:2, 21:9",
+   "Audio Generation": "Yes",
+   "Image-to-Video": "Yes",
+   "Max Duration": "10 seconds",
+   "Resolutions": "360p, 540p, 720p, 1080p"
+  },
+  "supports_async": false,
+  "description": "Pixverse v5.6 is a video generation model supporting text-to-video and image-to-video with audio generation, customizable aspect ratios, and up to 1080p output."
+ },
+ {
+  "model_id": "pixverse/v6",
+  "name": "Pixverse v6",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Default (per second)": 0.06,
+   "@360p (per second)": 0.025,
+   "@540p (per second)": 0.035,
+   "@720p (per second)": 0.045,
+   "@1080p (per second)": 0.09,
+   "@360p w/ audio (per second)": 0.035,
+   "@540p w/ audio (per second)": 0.045,
+   "@720p w/ audio (per second)": 0.06,
+   "@1080p w/ audio (per second)": 0.115
+  },
+  "metadata": {
+   "Aspect Ratios": "16:9, 4:3, 1:1, 3:4, 9:16, 2:3, 3:2, 21:9",
+   "Audio Generation": "Yes",
+   "Image-to-Video": "Yes",
+   "Max Duration": "15 seconds",
+   "Resolutions": "360p, 540p, 720p, 1080p"
+  },
+  "supports_async": false,
+  "description": "Pixverse v6 is the latest Pixverse video model with support for up to 15-second videos, customizable duration from 1 to 15 seconds, and audio generation."
+ },
+ {
+  "model_id": "alibaba/qwen3-max",
+  "name": "Qwen 3 Max",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 1.2,
+   "Output tokens (per 1M)": 6
+  },
+  "metadata": {
+   "Architecture": "Transformer"
+  },
+  "supports_async": false,
+  "description": "Alibaba's Qwen 3 Max is a large language model with strong coding, reasoning, and multilingual capabilities, served via DashScope's OpenAI-compatible endpoint."
+ },
+ {
+  "model_id": "alibaba/qwen3.5-397b-a17b",
+  "name": "Qwen 3.5 397B A17B",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 0.6,
+   "Output tokens (per 1M)": 3.6
+  },
+  "metadata": {
+   "Architecture": "Transformer (MoE)",
+   "Parameters": "397B total, 17B active"
+  },
+  "supports_async": false,
+  "description": "Alibaba's Qwen 3.5 is a 397B-parameter mixture-of-experts model with 17B active parameters, offering strong reasoning capabilities with efficient inference."
+ },
+ {
+  "model_id": "alibaba/qwen3.7-max",
+  "name": "Qwen 3.7 Max",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 1.25,
+   "Output tokens (per 1M)": 3.75,
+   "Cached input tokens (per 1M)": 0.25
+  },
+  "metadata": {
+   "Context Window": "1M tokens"
+  },
+  "supports_async": false,
+  "description": "Alibaba's Qwen 3.7 Max is the largest and most capable model in the Qwen3.7 series, a next-generation flagship built for the agent-centric era with deep strengths in programming, office and productivity tasks, and long-term autonomous execution, served via DashScope's OpenAI-compatible endpoint."
+ },
+ {
+  "model_id": "alibaba/qwen3.7-plus",
+  "name": "Qwen 3.7 Plus",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 0.32,
+   "Output tokens (per 1M)": 1.28,
+   "Cached input tokens (per 1M)": 0.064
+  },
+  "metadata": {
+   "Context Window": "1M tokens"
+  },
+  "supports_async": false,
+  "description": "Alibaba's Qwen 3.7 Plus is the cost-effective member of the Qwen3.7 series, pairing strong text capabilities with image and video understanding and full-stack agent-level intelligence for coding, tool use, and GUI-based automation, served via DashScope's OpenAI-compatible endpoint."
+ },
+ {
+  "model_id": "alibaba/qwen3.8-max",
+  "name": "Qwen 3.8 Max",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 2,
+   "Output tokens (per 1M)": 6,
+   "Cached input tokens (per 1M)": 0.25
+  },
+  "metadata": {
+   "Architecture": "Transformer (MoE)",
+   "Context Window": "1M tokens"
+  },
+  "supports_async": false,
+  "description": "Alibaba's Qwen 3.8 Max is a 2.4-trillion-parameter MoE flagship built for professional-grade coding and long-horizon autonomous work, capable of delivering complete, production-grade projects spanning 10+ days across legal, financial, design, and other specialized domains. Native visual understanding of images and extended video runs through the full plan-execute-verify cycle, served via DashScope's OpenAI-compatible endpoint."
+ },
+ {
+  "model_id": "alibaba/qwen-image-3.0-pro",
+  "name": "Qwen Image 3.0 Pro",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.04,
+   "output_size_1k": 0.04,
+   "output_size_2k": 0.07,
+   "Default (per second)": 0.04
+  },
+  "metadata": {
+   "Max Images Per Call": "6",
+   "Negative Prompt": "Yes",
+   "Seed Control": "Yes",
+   "Size Format": "WxH (e.g. 2048x2048)"
+  },
+  "supports_async": false,
+  "description": "Alibaba's Qwen Image 3.0 Pro generates images from text prompts with a focus on complex layout generation, small-text precision, and multilingual font rendering. Supports up to 6 image variants per call, negative prompts, seed control, and optional prompt rewriting."
+ },
+ {
+  "model_id": "recraft/recraftv3",
+  "name": "Recraft V3",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.04
+  },
+  "metadata": {
+   "Resolution": "1024px",
+   "Text Rendering": "Yes"
+  },
+  "supports_async": false,
+  "description": "Recraft V3 is the previous-generation text-to-image model from Recraft, well-suited to design-quality compositions, brand-aware imagery, and accurate text rendering."
+ },
+ {
+  "model_id": "recraft/recraftv4",
+  "name": "Recraft V4",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.04
+  },
+  "metadata": {
+   "Resolution": "1024px",
+   "Text Rendering": "Yes"
+  },
+  "supports_async": false,
+  "description": "Recraft V4 generates art-directed images with strong composition, accurate text rendering, and design taste built in. Fast and cost-efficient at standard resolution."
+ },
+ {
+  "model_id": "recraft/recraftv4-pro",
+  "name": "Recraft V4 Pro",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.25
+  },
+  "metadata": {
+   "Resolution": "2048px+",
+   "Text Rendering": "Yes"
+  },
+  "supports_async": false,
+  "description": "Recraft V4 Pro generates high-resolution, art-directed images at 2048px+ with strong composition, text rendering, and design taste. Built for print and production work."
+ },
+ {
+  "model_id": "recraft/recraftv4-pro-vector",
+  "name": "Recraft V4 Pro SVG",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.3
+  },
+  "metadata": {
+   "Output Format": "SVG",
+   "Resolution": "2048px+"
+  },
+  "supports_async": false,
+  "description": "Generate detailed, production-ready SVG vector graphics from text prompts with fine geometry, scalable to any size for print and design work."
+ },
+ {
+  "model_id": "recraft/recraftv4-vector",
+  "name": "Recraft V4 SVG",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.08
+  },
+  "metadata": {
+   "Output Format": "SVG",
+   "Resolution": "1024px"
+  },
+  "supports_async": false,
+  "description": "Generate production-ready SVG vector graphics from text prompts with clean geometry, structured layers, and editable paths."
+ },
+ {
+  "model_id": "recraft/recraftv4-1",
+  "name": "Recraft V4.1",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.04
+  },
+  "metadata": {
+   "Resolution": "1024px",
+   "Text Rendering": "Yes"
+  },
+  "supports_async": false,
+  "description": "Recraft V4.1 generates art-directed images tuned for high aesthetics, with strong composition, accurate text rendering, and refined design taste. Fast and cost-efficient at standard resolution."
+ },
+ {
+  "model_id": "recraft/recraftv4-1-pro",
+  "name": "Recraft V4.1 Pro",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.25
+  },
+  "metadata": {
+   "Resolution": "2048px+",
+   "Text Rendering": "Yes"
+  },
+  "supports_async": false,
+  "description": "Recraft V4.1 Pro generates high-resolution, art-directed images at 2048px+ tuned for high aesthetics, with strong composition, text rendering, and refined design taste. Built for print and production work."
+ },
+ {
+  "model_id": "recraft/recraftv4-1-pro-vector",
+  "name": "Recraft V4.1 Pro SVG",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.3
+  },
+  "metadata": {
+   "Output Format": "SVG",
+   "Resolution": "2048px+"
+  },
+  "supports_async": false,
+  "description": "Generate detailed, high-resolution SVG vector graphics from text prompts with high aesthetic quality, fine geometry, scalable to any size for print and design work."
+ },
+ {
+  "model_id": "recraft/recraftv4-1-vector",
+  "name": "Recraft V4.1 SVG",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.08
+  },
+  "metadata": {
+   "Output Format": "SVG",
+   "Resolution": "1024px"
+  },
+  "supports_async": false,
+  "description": "Generate production-ready SVG vector graphics from text prompts with high aesthetic quality, clean geometry, structured layers, and editable paths."
+ },
+ {
+  "model_id": "recraft/recraftv4-1-utility",
+  "name": "Recraft V4.1 Utility",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.04
+  },
+  "metadata": {
+   "Resolution": "1024px",
+   "Text Rendering": "Yes"
+  },
+  "supports_async": false,
+  "description": "Recraft V4.1 Utility is a general-purpose text-to-image model balancing quality and flexibility for a wide range of everyday use cases at standard resolution."
+ },
+ {
+  "model_id": "recraft/recraftv4-1-utility-pro",
+  "name": "Recraft V4.1 Utility Pro",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.25
+  },
+  "metadata": {
+   "Resolution": "2048px+",
+   "Text Rendering": "Yes"
+  },
+  "supports_async": false,
+  "description": "Recraft V4.1 Utility Pro is a general-purpose text-to-image model producing high-resolution 2048px+ output for a wide range of production and print use cases."
+ },
+ {
+  "model_id": "recraft/recraftv4-1-utility-pro-vector",
+  "name": "Recraft V4.1 Utility Pro SVG",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.3
+  },
+  "metadata": {
+   "Output Format": "SVG",
+   "Resolution": "2048px+"
+  },
+  "supports_async": false,
+  "description": "Generate detailed, high-resolution SVG vector graphics from text prompts with a general-purpose model, scalable to any size for print and large-scale design work."
+ },
+ {
+  "model_id": "recraft/recraftv4-1-utility-vector",
+  "name": "Recraft V4.1 Utility SVG",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.08
+  },
+  "metadata": {
+   "Output Format": "SVG",
+   "Resolution": "1024px"
+  },
+  "supports_async": false,
+  "description": "Generate production-ready SVG vector graphics from text prompts with a general-purpose model suited for a wide range of design and illustration tasks."
+ },
+ {
+  "model_id": "runwayml/aleph-2",
+  "name": "RunwayML Aleph 2",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Default (per second)": 0.336
+  },
+  "metadata": {
+   "Input Modalities": "Text, Image, Video",
+   "Max Input Duration": "30 seconds",
+   "Max Keyframes": "5",
+   "Operation": "Video-to-Video Editing"
+  },
+  "supports_async": false,
+  "description": "RunwayML's video editing model. Edit one frame to update your whole video, make changes across multiple shots, and work with up to 30 seconds of video. Supports keyframe-guided editing for precise control over specific moments in the clip."
+ },
+ {
+  "model_id": "runwayml/gen-4.5",
+  "name": "RunwayML Gen-4.5",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Default (per second)": 0.12
+  },
+  "metadata": {
+   "Image-to-Video": "Yes",
+   "Max Duration": "10 seconds",
+   "Resolutions": "1280:720, 720:1280, 1104:832, 832:1104, 960:960, 1584:672"
+  },
+  "supports_async": false,
+  "description": "RunwayML's video generation model supporting both text-to-video and image-to-video with customizable duration, aspect ratio, and content moderation controls."
+ },
+ {
+  "model_id": "bytedance/seedance-2.0",
+  "name": "Seedance 2.0",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Default (per second)": 0.15,
+   "@480p video input (per second)": 0.172,
+   "@720p video input (per second)": 0.372,
+   "@1080p video input (per second)": 0.914,
+   "@4k video input (per second)": 1.866,
+   "@480p non-video input (per second)": 0.07,
+   "@720p non-video input (per second)": 0.15,
+   "@1080p non-video input (per second)": 0.37,
+   "@4k non-video input (per second)": 0.78
+  },
+  "metadata": {
+   "Aspect Ratios": "16:9, 4:3, 1:1, 3:4, 9:16, 21:9, 9:21",
+   "Max Duration": "12 seconds",
+   "Native Audio": "Yes",
+   "Resolutions": "480p, 720p, 1080p"
+  },
+  "supports_async": false,
+  "description": "ByteDance's next-generation video model with a unified multimodal architecture. Generates high-quality video with synchronized audio from text, images, video clips, and audio inputs. Supports multimodal references (up to 9 images, 3 videos, 3 audio files), native audio generation, video editing, video extension, intelligent duration, and adaptive aspect ratio."
+ },
+ {
+  "model_id": "bytedance/seedance-2.0-fast",
+  "name": "Seedance 2.0 Fast",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Default (per second)": 0.12,
+   "@480p video input (per second)": 0.132,
+   "@720p video input (per second)": 0.286,
+   "@480p non-video input (per second)": 0.06,
+   "@720p non-video input (per second)": 0.12
+  },
+  "metadata": {
+   "Aspect Ratios": "16:9, 4:3, 1:1, 3:4, 9:16, 21:9, 9:21",
+   "Max Duration": "12 seconds",
+   "Native Audio": "Yes",
+   "Resolutions": "480p, 720p"
+  },
+  "supports_async": false,
+  "description": "Faster variant of ByteDance's Seedance 2.0 video model. Trades some quality for speed while sharing the same multimodal architecture. Supports text-to-video, image-to-video, native audio generation, multimodal references (images, videos, audio), video editing, and video extension."
+ },
+ {
+  "model_id": "bytedance/seedance-2.0-mini",
+  "name": "Seedance 2.0 Mini",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Default (per second)": 0.09,
+   "@480p video input (per second)": 0.084,
+   "@720p video input (per second)": 0.182,
+   "@480p non-video input (per second)": 0.04,
+   "@720p non-video input (per second)": 0.09
+  },
+  "metadata": {
+   "Aspect Ratios": "16:9, 4:3, 1:1, 3:4, 9:16, 21:9, 9:21",
+   "Max Duration": "12 seconds",
+   "Native Audio": "Yes",
+   "Resolutions": "480p, 720p"
+  },
+  "supports_async": false,
+  "description": "ByteDance's compact, cost-efficient video generation model from the Seedance 2.0 family. Supports text-to-video, image-to-video, reference video, and reference audio for background music. Ideal for high-volume workloads where speed and cost matter."
+ },
+ {
+  "model_id": "bytedance/seedance-2.5",
+  "name": "Seedance 2.5",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Default (per second)": 0.2312,
+   "@480p video input (per second)": 0.4304,
+   "@720p video input (per second)": 0.9676,
+   "@480p non-video input (per second)": 0.1028,
+   "@720p non-video input (per second)": 0.2312
+  },
+  "metadata": {
+   "Aspect Ratios": "16:9, 4:3, 1:1, 3:4, 9:16, 21:9, adaptive",
+   "Max Duration": "30 seconds",
+   "Max Reference Audio Clips": "10",
+   "Max Reference Images": "30",
+   "Max Reference Videos": "10",
+   "Native Audio": "Yes",
+   "Resolutions": "480p, 720p"
+  },
+  "supports_async": false,
+  "description": "ByteDance's next-generation video model with a unified multimodal reference-to-video architecture. Generates video from text, up to 30 reference images, 10 reference videos, and 10 reference audio clips \u2014 including audio-only input with no image or video required. Supports first/last-frame image-to-video, video editing, video extension, intelligent duration (including automatic selection), and adaptive aspect ratio."
+ },
+ {
+  "model_id": "bytedance/seedream-4.0",
+  "name": "Seedream 4.0",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.03
+  },
+  "metadata": {
+   "Editing": "Yes (single-sentence)",
+   "Max Resolution": "4K"
+  },
+  "supports_async": false,
+  "description": "Seedream 4.0 is ByteDance's image creation model that combines text-to-image generation and image editing into a single architecture, offering fast, high-resolution output up to 4K."
+ },
+ {
+  "model_id": "bytedance/seedream-4.5",
+  "name": "Seedream 4.5",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.04
+  },
+  "metadata": {
+   "Max Images": "15",
+   "Multi-Reference": "Yes",
+   "Sequential Generation": "Yes"
+  },
+  "supports_async": false,
+  "description": "Seedream 4.5 builds on 4.0 with multi-reference image support, batch generation, and sequential image generation."
+ },
+ {
+  "model_id": "bytedance/seedream-5-lite",
+  "name": "Seedream 5 Lite",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.035
+  },
+  "metadata": {
+   "Max Images": "15",
+   "Multi-Reference": "Yes",
+   "Output Formats": "JPEG, PNG, WebP"
+  },
+  "supports_async": false,
+  "description": "Seedream 5 Lite is a lighter, faster version of the Seedream 5 family with multi-reference and batch generation support."
+ },
+ {
+  "model_id": "bytedance/seedream-5-pro",
+  "name": "Seedream 5 Pro",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.045,
+   "Per input image": 0.03,
+   "Default (per second)": 0.045
+  },
+  "metadata": {
+   "Max Reference Images": "10",
+   "Output Sizes": "1K, 2K, custom WIDTHxHEIGHT",
+   "Reference Image Formats": "JPEG, PNG, WebP, BMP, TIFF, GIF, HEIC, HEIF"
+  },
+  "supports_async": false,
+  "description": "Seedream 5 Pro is ByteDance's high-quality image generation and editing model with text prompts, up to 10 reference images, and 1K, 2K, or explicit pixel-size output controls."
+ },
+ {
+  "model_id": "openai/tts-1",
+  "name": "TTS-1",
+  "task": "Text-to-Speech",
+  "pricing": {
+   "Per character": 1.5e-05
+  },
+  "metadata": {
+   "Voices": "alloy, echo, fable, onyx, nova, shimmer"
+  },
+  "supports_async": false,
+  "description": "OpenAI's text-to-speech model optimized for real-time use with low latency."
+ },
+ {
+  "model_id": "openai/tts-1-hd",
+  "name": "TTS-1 HD",
+  "task": "Text-to-Speech",
+  "pricing": {
+   "Per character": 3e-05
+  },
+  "metadata": {
+   "Voices": "alloy, echo, fable, onyx, nova, shimmer"
+  },
+  "supports_async": false,
+  "description": "OpenAI's high-definition text-to-speech model producing higher quality audio output."
+ },
+ {
+  "model_id": "google/veo-3.1",
+  "name": "Veo 3.1",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Default (per second)": 0.4,
+   "@720p (per second)": 0.2,
+   "@1080p (per second)": 0.2,
+   "@4k (per second)": 0.4,
+   "@720p w/ audio (per second)": 0.4,
+   "@1080p w/ audio (per second)": 0.4,
+   "@4k w/ audio (per second)": 0.6
+  },
+  "metadata": {
+   "Audio Generation": "Yes",
+   "Max Duration": "8 seconds",
+   "Resolutions": "720p, 1080p"
+  },
+  "supports_async": false,
+  "description": "Google's latest video generation model with improved quality, motion, and audio generation."
+ },
+ {
+  "model_id": "google/veo-3.1-fast",
+  "name": "Veo 3.1 Fast",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Default (per second)": 0.08,
+   "@720p (per second)": 0.08,
+   "@1080p (per second)": 0.1,
+   "@4k (per second)": 0.25,
+   "@720p w/ audio (per second)": 0.1,
+   "@1080p w/ audio (per second)": 0.12,
+   "@4k w/ audio (per second)": 0.3
+  },
+  "metadata": {
+   "Audio Generation": "Yes",
+   "Max Duration": "8 seconds",
+   "Resolutions": "720p, 1080p"
+  },
+  "supports_async": false,
+  "description": "A faster version of Veo 3.1 optimized for lower latency while maintaining high-quality video and audio output."
+ },
+ {
+  "model_id": "vidu/q3-pro",
+  "name": "Vidu Q3 Pro",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Default (per second)": 0.125,
+   "@540p (per second)": 0.05,
+   "@720p (per second)": 0.125,
+   "@1080p (per second)": 0.15
+  },
+  "metadata": {
+   "Aspect Ratios": "16:9, 9:16, 3:4, 4:3, 1:1",
+   "Audio Generation": "Yes",
+   "Image-to-Video": "Yes",
+   "Max Duration": "16 seconds",
+   "Resolutions": "540p, 720p, 1080p"
+  },
+  "supports_async": false,
+  "description": "Vidu Q3 Pro is a high-quality video generation model supporting text-to-video, image-to-video, and start/end-frame-to-video workflows with audio and up to 16-second clips."
+ },
+ {
+  "model_id": "vidu/q3-turbo",
+  "name": "Vidu Q3 Turbo",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Default (per second)": 0.06,
+   "@540p (per second)": 0.04,
+   "@720p (per second)": 0.06,
+   "@1080p (per second)": 0.07
+  },
+  "metadata": {
+   "Aspect Ratios": "16:9, 9:16, 3:4, 4:3, 1:1",
+   "Audio Generation": "Yes",
+   "Image-to-Video": "Yes",
+   "Max Duration": "16 seconds",
+   "Resolutions": "540p, 720p, 1080p"
+  },
+  "supports_async": false,
+  "description": "Vidu Q3 Turbo is a faster version of Vidu Q3 optimized for lower latency video generation while maintaining audio support and up to 16-second clips."
+ },
+ {
+  "model_id": "alibaba/wan-2.6-image",
+  "name": "Wan 2.6 Image",
+  "task": "Text-to-Image",
+  "pricing": {
+   "Per image": 0.03
+  },
+  "metadata": {
+   "Negative Prompt": "Yes",
+   "Size Format": "WxH (e.g. 1024x1024)"
+  },
+  "supports_async": false,
+  "description": "Alibaba's Wan 2.6 text-to-image model generating images from text prompts with optional negative prompts and customizable dimensions."
+ },
+ {
+  "model_id": "alibaba/wan-2.7-i2v",
+  "name": "Wan 2.7 I2V",
+  "task": "Image-to-Video",
+  "pricing": {
+   "Default (per second)": 0.1,
+   "@720p (per second)": 0.1,
+   "@1080p (per second)": 0.15
+  },
+  "metadata": {
+   "Input": "Image URL (no base64)",
+   "Max Duration": "15 seconds",
+   "Resolutions": "720P, 1080P"
+  },
+  "supports_async": false,
+  "description": "Alibaba's Wan 2.7 image-to-video model that generates videos from a reference image with optional text prompts. Supports 720P and 1080P output with durations from 2 to 15 seconds."
+ },
+ {
+  "model_id": "alibaba/wan-3.0-prime",
+  "name": "Wan 3.0 Prime Video",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Default (per second)": 0.068,
+   "@480p (per second)": 0.068,
+   "@720p (per second)": 0.14,
+   "@1080p (per second)": 0.28
+  },
+  "metadata": {
+   "Aspect Ratio": "Adaptive",
+   "Duration": "1-15 seconds",
+   "Resolutions": "480P, 720P, 1080P"
+  },
+  "supports_async": false,
+  "description": "Alibaba's Wan 3.0 Prime text-to-video model. Generates cinematic videos from text prompts with adaptive aspect ratio, 480P, 720P, or 1080P resolution, and configurable duration."
+ },
+ {
+  "model_id": "alibaba/wan-3.0",
+  "name": "Wan 3.0 Video",
+  "task": "Text-to-Video",
+  "pricing": {
+   "Default (per second)": 0.05,
+   "@480p (per second)": 0.05,
+   "@720p (per second)": 0.1,
+   "@1080p (per second)": 0.2
+  },
+  "metadata": {
+   "Aspect Ratio": "Adaptive",
+   "Duration": "1-15 seconds",
+   "Resolutions": "480P, 720P, 1080P"
+  },
+  "supports_async": false,
+  "description": "Alibaba's Wan 3.0 text-to-video model. Generates cinematic videos from text prompts with adaptive aspect ratio, 480P, 720P, or 1080P resolution, and configurable duration."
+ },
+ {
+  "model_id": "openai/o3",
+  "name": "o3",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 2,
+   "Output tokens (per 1M)": 8,
+   "Cached input tokens (per 1M)": 0.5
+  },
+  "metadata": {
+   "Architecture": "Transformer",
+   "Thinking": "Yes"
+  },
+  "supports_async": false,
+  "description": "o3 is OpenAI\u2019s general-purpose reasoning model, balancing strong analytical performance with reasonable latency and cost."
+ },
+ {
+  "model_id": "openai/o3-mini",
+  "name": "o3-mini",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 1.1,
+   "Output tokens (per 1M)": 4.4,
+   "Cached input tokens (per 1M)": 0.55
+  },
+  "metadata": {
+   "Architecture": "Transformer",
+   "Thinking": "Yes"
+  },
+  "supports_async": false,
+  "description": "o3-mini is the lightweight, low-cost reasoning variant of o3, well suited to quick analytical tasks at scale."
+ },
+ {
+  "model_id": "openai/o4-mini",
+  "name": "o4-mini",
+  "task": "Text Generation",
+  "pricing": {
+   "Input tokens (per 1M)": 1.1,
+   "Output tokens (per 1M)": 4.4,
+   "Cached input tokens (per 1M)": 0.275
+  },
+  "metadata": {
+   "Architecture": "Transformer",
+   "Reasoning": "Chain-of-thought"
+  },
+  "supports_async": false,
+  "description": "OpenAI's fast, lightweight reasoning model optimized for multi-step problem solving at lower cost."
+ }
+]

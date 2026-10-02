@@ -1,0 +1,71 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 17.5,
+  "duration_after_vad": 17.5
+ },
+ "text": "Halo, in the, sky, sky, sky.",
+ "word_count": 6,
+ "segments": [
+  {
+   "start": 140.1,
+   "end": 145.04,
+   "text": " Halo, in the, sky, sky, sky.",
+   "temperature": 0,
+   "avg_logprob": -0.44614955357142855,
+   "compression_ratio": 1.037037037037037,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Halo,",
+     "start": 140.1,
+     "end": 141.1
+    },
+    {
+     "word": " in",
+     "start": 141.1,
+     "end": 141.1
+    },
+    {
+     "word": " the,",
+     "start": 141.1,
+     "end": 141.6
+    },
+    {
+     "word": " sky,",
+     "start": 142.02,
+     "end": 142.06
+    },
+    {
+     "word": " sky,",
+     "start": 143.62,
+     "end": 144.32
+    },
+    {
+     "word": " sky.",
+     "start": 144.72,
+     "end": 145.04
+    }
+   ],
+   "word_count": 6
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:01.600 --> 00:02.600\n Halo,\n\n00:02.600 --> 00:02.600\n in\n\n00:02.600 --> 00:03.100\n the,\n\n00:03.520 --> 00:03.560\n sky,\n\n00:05.120 --> 00:05.820\n sky,\n\n00:06.220 --> 00:06.540\n sky.\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 13.600485997
+ },
+ "_meta": {
+  "src": "media/stems/sep/kimvoc2_vocals.wav",
+  "t0": 138.5,
+  "t1": 156.0,
+  "prompt": "Halo, in the, sky, sky. Halo, in the, sky, sky.",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

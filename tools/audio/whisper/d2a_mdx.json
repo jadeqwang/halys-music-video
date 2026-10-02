@@ -1,0 +1,66 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 18,
+  "duration_after_vad": 18
+ },
+ "text": "To the ones you love.",
+ "word_count": 5,
+ "segments": [
+  {
+   "start": 213.0,
+   "end": 215.86,
+   "text": " To the ones you love.",
+   "temperature": 0,
+   "avg_logprob": -0.5785590277777778,
+   "compression_ratio": 0.7241379310344828,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " To",
+     "start": 213.0,
+     "end": 213.1
+    },
+    {
+     "word": " the",
+     "start": 213.1,
+     "end": 213.26
+    },
+    {
+     "word": " ones",
+     "start": 213.26,
+     "end": 214.32
+    },
+    {
+     "word": " you",
+     "start": 214.32,
+     "end": 215.02
+    },
+    {
+     "word": " love.",
+     "start": 215.02,
+     "end": 215.86
+    }
+   ],
+   "word_count": 5
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:00.100\n To\n\n00:00.100 --> 00:00.260\n the\n\n00:00.260 --> 00:01.320\n ones\n\n00:01.320 --> 00:02.020\n you\n\n00:02.020 --> 00:02.860\n love.\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 13.9890713112
+ },
+ "_meta": {
+  "src": "media/stems/sep/kimvoc2_vocals.wav",
+  "t0": 213.0,
+  "t1": 231.0,
+  "prompt": "Home to the ones you love. Throw down, your, blade, blade.",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

@@ -26,7 +26,7 @@ CLI:
     python3 tools/cfai.py catalog [--refresh] [--task=Text-to-Video] [--q=seedance]
     python3 tools/cfai.py cost [--since=2026-10-01]   # spend so far from media/genlog.jsonl
 """
-import base64, hashlib, json, mimetypes, os, pathlib, re, secrets, subprocess, sys, time
+import base64, hashlib, json, mimetypes, os, pathlib, re, secrets, subprocess, sys, threading, time
 import urllib.error, urllib.parse, urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -40,7 +40,9 @@ API = f"https://api.cloudflare.com/client/v4/accounts/{ACC}"
 RUN = API + "/ai/run"
 KV = f"{API}/storage/kv/namespaces/{RELAY['kv_namespace']}/values/"
 SYNC_CUTOFF = 28            # seconds; the sandbox cuts synchronous requests at ~30 s
-DIRECT_HOSTS = ("storage.googleapis.com",)   # output hosts the sandbox can download from directly
+DIRECT_HOSTS = ("storage.googleapis.com", ".r2.cloudflarestorage.com")   # output hosts downloadable from here
+# (AI Gateway hands Google/ElevenLabs outputs out as R2 presigned URLs: direct; Seedance (volces.com) and
+#  x.ai URLs are blocked: those come from the relay's KV mirror)
 
 
 def log(msg):
@@ -359,22 +361,40 @@ def _errmsg(d):
     return json.dumps((d or {}).get("errors") or d)[:800]
 
 
-def run_sync(model, inp, timeout=SYNC_CUTOFF, retries=2):
+RETRYABLE = (429, 500, 502, 503, 504)
+
+
+def _parse(b):
+    try:
+        return json.loads(b.decode() or "null")
+    except Exception:
+        return None
+
+
+def run_sync(model, inp, timeout=SYNC_CUTOFF + 7, retries=2):
     """Synchronous run. Partner models go through the /ai/run envelope; Workers AI (@cf/...) models use the
-    model-in-path endpoint (the envelope would need a cf-aig-gateway-id header). Returns `result`."""
+    model-in-path endpoint (the envelope would need a cf-aig-gateway-id header). Returns `result`.
+    The sandbox cuts requests at ~30 s and answers with an EMPTY 200 body: that is never retried, because
+    the run itself may still complete (and be billed) server-side."""
     url, body = (f"{RUN}/{model}", inp) if model.startswith("@cf/") else (RUN, {"model": model, "input": inp})
     last = None
     for attempt in range(retries + 1):
         t0 = time.time()
         try:
-            st, d = jhttp("POST", url, body, timeout=timeout)
-        except Exception as e:      # connection cut (the ~30 s sandbox limit) or network error
-            raise CFError(f"{model}: request failed after {time.time() - t0:.0f}s ({e!r}); for long jobs use mode='bg'")
-        if st == 200 and (d or {}).get("success", True) and "result" in (d or {}):
+            st, b = http("POST", url, body, timeout=timeout)
+        except Exception as e:      # our own timeout or a network error: outcome unknown, do not retry
+            raise CFError(f"{model}: no response after {time.time() - t0:.0f}s ({e!r}); for long jobs use mode='bg'")
+        dt, d = time.time() - t0, _parse(b)
+        if isinstance(d, dict) and st == 200 and d.get("success", True) and "result" in d:
             return d["result"]
-        last = f"HTTP {st} {_errmsg(d)}"
+        if d is None:
+            if dt > 25 or not b:
+                raise CFError(f"{model}: response cut after {dt:.0f}s (the sandbox's ~30 s limit); use mode='bg'")
+            last = f"HTTP {st} unparseable body {b[:200]!r}"
+        else:
+            last = f"HTTP {st} {_errmsg(d)}"
         log(f"{model} attempt {attempt + 1}: {last}")
-        if st in (400, 401, 403, 404, 413, 422) or "User Input Error" in last:
+        if st not in RETRYABLE or "User Input Error" in last:
             break
         time.sleep(4 * (attempt + 1))
     raise CFError(f"{model} failed: {last}")
@@ -394,15 +414,19 @@ def submit(model, inp, tag="", out=None, job_id=None, meta=None):
     last = None
     for attempt in range(4):
         try:
-            st, d = jhttp("POST", RUN, payload, timeout=300)
+            st, b = http("POST", RUN, payload, timeout=300)
         except Exception as e:
             # the request may or may not have been accepted: never blindly resubmit (that could pay twice)
             raise CFError(f"submit {model} {job}: no response ({e!r}); check `cfai.py collect {job}` before resubmitting")
-        if st in (200, 201, 202) and (d or {}).get("success", True):
+        d = _parse(b)
+        if d is None:
+            raise CFError(f"submit {model} {job}: HTTP {st} with unparseable body {b[:200]!r}; outcome unknown, "
+                          f"check `cfai.py collect {job}` before resubmitting")
+        if st in (200, 201, 202) and d.get("success", True):
             break
         last = f"HTTP {st} {_errmsg(d)}"
         log(f"submit {model} attempt {attempt + 1}: {last}")
-        if st in (400, 401, 403, 404, 413, 422) or "User Input Error" in last:
+        if st not in RETRYABLE or "User Input Error" in last:
             raise CFError(f"submit {model} rejected: {last}")
         time.sleep(5 * (attempt + 1))
     else:
@@ -472,6 +496,11 @@ def find_b64(o, keys=("image", "images", "audio", "video", "b64_json", "data")):
     return out
 
 
+def direct_ok(url):
+    h = urllib.parse.urlparse(url).hostname or ""
+    return any(h == d or (d.startswith(".") and h.endswith(d)) for d in DIRECT_HOSTS)
+
+
 def _download(url, timeout=600):
     st, b = http("GET", url, timeout=timeout)
     if st != 200:
@@ -514,8 +543,14 @@ def save_outputs(job, rec, out):
     blobs = [base64.b64decode(b) for b in find_b64(res)]
     if not blobs:
         urls = list(dict.fromkeys(find_urls(res)))
-        if urls and all(urllib.parse.urlparse(u).hostname in DIRECT_HOSTS for u in urls):
-            blobs = [_download(u) for u in urls]
+        if urls and all(direct_ok(u) for u in urls):
+            try:
+                blobs = [_download(u) for u in urls]
+            except Exception as e:
+                if job is None:
+                    raise
+                log(f"direct download failed ({e}); using the relay mirror")
+                blobs = _mirror_files(job, len(urls))
         elif urls:
             if job is None:
                 blobs = []
@@ -539,9 +574,12 @@ def save_outputs(job, rec, out):
     return paths
 
 
+_LOG_LOCK = threading.Lock()
+
+
 def _genlog(entry):
     LOG.parent.mkdir(parents=True, exist_ok=True)
-    with open(LOG, "a") as f:
+    with _LOG_LOCK, open(LOG, "a") as f:
         f.write(json.dumps(entry) + "\n")
 
 
@@ -596,7 +634,7 @@ def gen(model, inp, out, tag="", mode="auto", timeout=None, check=True, dry=Fals
     t0 = time.time()
     if mode == "sync":
         try:
-            res = run_sync(model, inp, timeout=timeout or SYNC_CUTOFF)
+            res = run_sync(model, inp, timeout=timeout or SYNC_CUTOFF + 7)
         except CFError as e:
             _genlog({"t": time.strftime("%Y-%m-%dT%H:%M:%S"), "tag": tag, "model": model, "input": strip_blobs(inp), "out": [],
                      "secs": round(time.time() - t0, 1), "est_cost_usd": None, "mode": "sync", "error": str(e)[:600]})

@@ -1,0 +1,56 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 8.2,
+  "duration_after_vad": 8.2
+ },
+ "text": "I love you.",
+ "word_count": 3,
+ "segments": [
+  {
+   "start": 110.3,
+   "end": 113.54,
+   "text": " I love you.",
+   "temperature": 1,
+   "avg_logprob": -1.5567626953125,
+   "compression_ratio": 0.5789473684210527,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " I",
+     "start": 110.3,
+     "end": 110.76
+    },
+    {
+     "word": " love",
+     "start": 110.76,
+     "end": 110.96
+    },
+    {
+     "word": " you.",
+     "start": 110.96,
+     "end": 113.54
+    }
+   ],
+   "word_count": 3
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:00.460\n I\n\n00:00.460 --> 00:00.660\n love\n\n00:00.660 --> 00:03.240\n you.\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 6.372799152879999
+ },
+ "_meta": {
+  "src": "media/stems/sep/kimvoc2_vocals.wav",
+  "t0": 110.3,
+  "t1": 118.5,
+  "prompt": "",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

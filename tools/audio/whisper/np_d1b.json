@@ -1,0 +1,86 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 15.2,
+  "duration_after_vad": 15.2
+ },
+ "text": "In the sky, in the sky, oh no way",
+ "word_count": 9,
+ "segments": [
+  {
+   "start": 139.8,
+   "end": 152.42,
+   "text": " In the sky, in the sky, oh no way",
+   "temperature": 0.6,
+   "avg_logprob": -0.9750803198133197,
+   "compression_ratio": 1.03125,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " In",
+     "start": 139.8,
+     "end": 141.0
+    },
+    {
+     "word": " the",
+     "start": 141.0,
+     "end": 141.56
+    },
+    {
+     "word": " sky,",
+     "start": 141.56,
+     "end": 142.42
+    },
+    {
+     "word": " in",
+     "start": 143.62,
+     "end": 144.28
+    },
+    {
+     "word": " the",
+     "start": 144.28,
+     "end": 145.04
+    },
+    {
+     "word": " sky,",
+     "start": 145.04,
+     "end": 146.54
+    },
+    {
+     "word": " oh",
+     "start": 146.56,
+     "end": 147.92
+    },
+    {
+     "word": " no",
+     "start": 147.92,
+     "end": 148.94
+    },
+    {
+     "word": " way",
+     "start": 148.94,
+     "end": 152.42
+    }
+   ],
+   "word_count": 9
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:01.200\n In\n\n00:01.200 --> 00:01.760\n the\n\n00:01.760 --> 00:02.620\n sky,\n\n00:03.820 --> 00:04.480\n in\n\n00:04.480 --> 00:05.240\n the\n\n00:05.240 --> 00:06.740\n sky,\n\n00:06.760 --> 00:08.120\n oh\n\n00:08.120 --> 00:09.140\n no\n\n00:09.140 --> 00:12.620\n way\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 11.812993551679998
+ },
+ "_meta": {
+  "src": "media/stems/sep/kimvoc2_vocals.wav",
+  "t0": 139.8,
+  "t1": 155.0,
+  "prompt": "",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

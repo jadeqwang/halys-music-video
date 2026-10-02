@@ -1,0 +1,66 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 22.5,
+  "duration_after_vad": 22.5
+ },
+ "text": "Throw down, your, blade, blade.",
+ "word_count": 5,
+ "segments": [
+  {
+   "start": 238.12,
+   "end": 258.22,
+   "text": " Throw down, your, blade, blade.",
+   "temperature": 0,
+   "avg_logprob": -0.5563150892655054,
+   "compression_ratio": 0.9393939393939394,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Throw",
+     "start": 238.12,
+     "end": 239.52
+    },
+    {
+     "word": " down,",
+     "start": 239.52,
+     "end": 240.34
+    },
+    {
+     "word": " your,",
+     "start": 240.34,
+     "end": 240.34
+    },
+    {
+     "word": " blade,",
+     "start": 240.34,
+     "end": 257.56
+    },
+    {
+     "word": " blade.",
+     "start": 258.2,
+     "end": 258.22
+    }
+   ],
+   "word_count": 5
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:02.120 --> 00:03.520\n Throw\n\n00:03.520 --> 00:04.340\n down,\n\n00:04.340 --> 00:04.340\n your,\n\n00:04.340 --> 00:21.560\n blade,\n\n00:22.200 --> 00:22.220\n blade.\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 17.486339139
+ },
+ "_meta": {
+  "src": "media/stems/sep/kimvoc2_vocals.wav",
+  "t0": 236.0,
+  "t1": 258.5,
+  "prompt": "Throw down, your, blade, blade. Throw down, your, blade, blade.",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

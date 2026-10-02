@@ -1,0 +1,61 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 10,
+  "duration_after_vad": 10
+ },
+ "text": "Halo, in the, sky.",
+ "word_count": 4,
+ "segments": [
+  {
+   "start": 109.5,
+   "end": 114.32,
+   "text": " Halo, in the, sky.",
+   "temperature": 0,
+   "avg_logprob": -0.773828136920929,
+   "compression_ratio": 0.6923076923076923,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Halo,",
+     "start": 109.5,
+     "end": 110.24
+    },
+    {
+     "word": " in",
+     "start": 110.34,
+     "end": 112.64
+    },
+    {
+     "word": " the,",
+     "start": 112.64,
+     "end": 112.66
+    },
+    {
+     "word": " sky.",
+     "start": 112.68,
+     "end": 114.32
+    }
+   ],
+   "word_count": 4
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:00.740\n Halo,\n\n00:00.840 --> 00:03.140\n in\n\n00:03.140 --> 00:03.160\n the,\n\n00:03.180 --> 00:04.820\n sky.\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 7.7717062839999995
+ },
+ "_meta": {
+  "src": "media/stems/sep/kimvoc2_vocals.wav",
+  "t0": 109.5,
+  "t1": 119.5,
+  "prompt": "Go home to the ones you love. Halo, in the, sky, sky.",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

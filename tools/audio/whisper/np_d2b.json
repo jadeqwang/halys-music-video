@@ -1,0 +1,76 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 19,
+  "duration_after_vad": 19
+ },
+ "text": "Oh, oh, oh, oh, oh, oh, oh.",
+ "word_count": 7,
+ "segments": [
+  {
+   "start": 237.5,
+   "end": 255.24,
+   "text": " Oh, oh, oh, oh, oh, oh, oh.",
+   "temperature": 0,
+   "avg_logprob": -0.6024816176470589,
+   "compression_ratio": 1.8,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Oh,",
+     "start": 237.5,
+     "end": 239.5
+    },
+    {
+     "word": " oh,",
+     "start": 240.3,
+     "end": 244.72
+    },
+    {
+     "word": " oh,",
+     "start": 244.72,
+     "end": 248.84
+    },
+    {
+     "word": " oh,",
+     "start": 248.84,
+     "end": 249.52
+    },
+    {
+     "word": " oh,",
+     "start": 249.76,
+     "end": 249.94
+    },
+    {
+     "word": " oh,",
+     "start": 249.94,
+     "end": 250.46
+    },
+    {
+     "word": " oh.",
+     "start": 252.0,
+     "end": 255.24
+    }
+   ],
+   "word_count": 7
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:02.000\n Oh,\n\n00:02.800 --> 00:07.220\n oh,\n\n00:07.220 --> 00:11.340\n oh,\n\n00:11.340 --> 00:12.020\n oh,\n\n00:12.260 --> 00:12.440\n oh,\n\n00:12.440 --> 00:12.960\n oh,\n\n00:14.500 --> 00:17.740\n oh.\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 14.766241939599999
+ },
+ "_meta": {
+  "src": "media/stems/sep/kimvoc2_vocals.wav",
+  "t0": 237.5,
+  "t1": 256.5,
+  "prompt": "",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

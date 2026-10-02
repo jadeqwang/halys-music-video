@@ -15,3 +15,10 @@ video/plates/*/frames/
 video/plates/*/masks/
 *.wav
 !media/sfx/**/*.wav
+
+# intermediate look-dev / test media (regenerable or stand-ins)
+media/lookdev/inputs/*_raw.*
+media/lookdev/analysis/
+media/tests/*.mp4
+media/plates/**/*.mp3
+media/plates/**/*.m4a
