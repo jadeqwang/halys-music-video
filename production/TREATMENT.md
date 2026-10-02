@@ -117,3 +117,36 @@ Giant chopped words carry the drops.
 The song is untouched. A light ElevenLabs layer is used only where it sharpens the story: distant bronze and horses under the cello in the cold open,
 which fall away when the light goes strange. Birdsong that stops on *"Birds went quiet."* Keyboard clicks and one sparkle on the wink.
 The final chord may be held a few seconds longer (spectral freeze) to give the wink room. Each addition must earn its place in review, or it goes.
+
+## v0.1 — adopted from the zeitgeist brief (production/ZEITGEIST.md)
+
+* **The reality layer wears her colours.** Jade's outfit is already an eclipse: white jacket = corona, orange stripes/headphones = the 360° horizon glow
+  and prominences, navy = the totality sky, black top = the Moon. CORONA/ORBIT are drawn in exactly that palette (pearl, orange, navy-black), so the ending
+  reveal clicks visually: she is dressed as the eclipse. Hα red survives only as a rare accent.
+* **Frame rate is a genre signal.** Master timeline 60 fps. Painted worlds draw at 12 fps (held 5 frames), marble at 30, CORONA/ORBIT at 60, and the room
+  animates on twos with real holds and smears. The drop literally changes how reality is sampled.
+* **Foreshadowing, rewatch bait (each ≤ 12 frames, never called out):** a convex bronze shield reflects a tiny figure in orange headphones holding a Yagi
+  antenna (Van Eyck's *Arnolfini* mirror trick) on "Sun burning on the bronze"; in the pre-chorus a vector-flat orange disc briefly slides over the
+  painted sun (the simulation leaking); on the first chopped "HALO" the O is eclipsed for 3–4 frames leaving **HAL**; near the end of Drop 1 the eye in the
+  sky is her eye for two frames.
+* **Drop 1 caption:** "we just went sci-fi." — V. Glover, Artemis II, during totality, 6 Apr 2026 (small, accurately attributed, no agency marks).
+* **The Flammarion moment** (the 1888 engraving of a man pushing his head through the firmament) for *"What was it like when reality suddenly broke"*.
+* **Thales section:** a generic forecast card ("Will the sun go dark over the Halys before sunset?" YES 3¢ → 99¢, ≤ 2 s, no real-market UI) and
+  Antikythera-style bronze gears (the saros dial) turning into lines of code.
+* **Final chorus:** the warriors roar when the light comes back (the Reykjavik crowd, Aug 2026).
+* **Drop 2:** both armies drop their blades exactly on the chopped "BLADE" — with one straggler. A thrown sword match-cuts to an unbranded
+  stainless-steel starship (the *2001* bone→satellite grammar; "swords into starships"). The resolve is **Earthset** (Artemis II's defining image) under
+  "home to the ones you love": the first blue in the film is home.
+* **Terminal reveal (all real, readable code):** `seed=-585`, `world.step()`, persistent panes named `lydians` `medes` `sun` `moon`, a ΔT band plot on
+  which she drags the totality path onto the battlefield (settling the "was it really total at the Halys?" debate), a spinner verb ("syzygizing…"),
+  the commit `fix(halys): schedule eclipse to end war (#585)`, a log line `6EQUJ5`. Then the wink.
+* **End card:** NEXT TOTALITY · 2027-08-02 · LUXOR · 6m23s.
+* **Equal dignity.** The Medes were Iranians and there is a war on in 2026. Mirror-symmetric compositions, no villains, no "exotic horde", no modern
+  military signifiers, nothing photoreal enough to clip as footage. The film is about the moment people choose to stop.
+* **Hard rules from the do-not list:** cut on the beat and hold (no floaty perpetual push-ins or morphs); no indigo-violet gradients, Inter,
+  glassmorphism, blanket bloom/chromatic aberration, Perlin swirls, Matrix rain, glowing-eyed statues, Eye-of-Providence triangles; no real brands or
+  cloned product UIs; no Musk iconography; never "AGI" on screen; text ≤ 15 characters/second and ≥ 4–5 % of frame height for subtitles.
+* **Formats:** master 16:9 1920×1080; the renderer keeps layout per aspect so a native 4:5 (1080×1350) X cut and 9:16 teasers can be re-rendered
+  (re-flowed type, per-shot crop centres) rather than cropped. Teasers: "The Eye" (0:00–0:12), "The Switch" (≈1:42–2:02), "Throw down your blade" (≈3:26–3:50).
+* **Provenance (user's call before launch):** the plates are Seedance 2.5 generations by design, so the honest credit is "drawn in JavaScript over
+  AI-generated motion reference" — never "no AI".
