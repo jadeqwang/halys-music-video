@@ -27,3 +27,4 @@ media/plates/**/*.m4a
 video/plates/*/maps/
 video/plates/*/f*.jpg
 video/plates/*/m*.png
+video/lab/node_modules/
