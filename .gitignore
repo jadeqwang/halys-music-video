@@ -22,3 +22,8 @@ media/lookdev/analysis/
 media/tests/*.mp4
 media/plates/**/*.mp3
 media/plates/**/*.m4a
+
+# per-frame plate analysis maps (regenerable with tools/pipeline)
+video/plates/*/maps/
+video/plates/*/f*.jpg
+video/plates/*/m*.png
