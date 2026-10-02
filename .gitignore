@@ -1,0 +1,17 @@
+# deps / caches
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+
+# heavy generated media (regenerable; logged in media/genlog.jsonl)
+media/stems/
+media/plates/**/*.mp4
+media/plates/**/frames/
+media/plates/**/masks/
+media/tmp/
+video/out/
+video/plates/*/frames/
+video/plates/*/masks/
+*.wav
+!media/sfx/**/*.wav
