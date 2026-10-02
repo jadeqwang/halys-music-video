@@ -1,0 +1,1116 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 273.6,
+  "duration_after_vad": 273.6
+ },
+ "text": "Thales foretold the sun. Thank you. The river hairlies on the sixth year of the war Lydians and Mates slew each other on the shore Sun burning on the bronze Exchanging turns and strikes when light went strange A halo in the sky, warriors awed by the vacant eye of a guide Till I turn to shade, eye of gods above Slow down your blade, go home to the ones you love Thank you. What was it like when reality suddenly broke The silent eye, how the gods suddenly spoke Birds from quiet air, suddenly cold What we do next is how history unfolds A shadow crossed the hills The wind picked up a chill Dailies foretold the sun would go dark Warriors behold A sudden spark A sudden spark A sudden spark A shadow turned to day Sunlight from above Throw down your plate, home to the ones you love The End Thank you.",
+ "word_count": 155,
+ "segments": [
+  {
+   "start": 0.0,
+   "end": 0.86,
+   "text": " Thales foretold the sun.",
+   "temperature": 0,
+   "avg_logprob": -0.3036221590909091,
+   "compression_ratio": 0.75,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Thales",
+     "start": 0.0,
+     "end": 0.82
+    },
+    {
+     "word": " foretold",
+     "start": 0.82,
+     "end": 0.86
+    },
+    {
+     "word": " the",
+     "start": 0.86,
+     "end": 0.86
+    },
+    {
+     "word": " sun.",
+     "start": 0.86,
+     "end": 0.86
+    }
+   ],
+   "word_count": 4
+  },
+  {
+   "start": 30.0,
+   "end": 32.72,
+   "text": " Thank you.",
+   "temperature": 0,
+   "avg_logprob": -0.3730468700329463,
+   "compression_ratio": 0.5555555555555556,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Thank",
+     "start": 30.0,
+     "end": 31.3
+    },
+    {
+     "word": " you.",
+     "start": 31.3,
+     "end": 32.72
+    }
+   ],
+   "word_count": 2
+  },
+  {
+   "start": 67.0,
+   "end": 73.2,
+   "text": " The river hairlies on the sixth year of the war",
+   "temperature": 0,
+   "avg_logprob": -0.3179209280987175,
+   "compression_ratio": 1.3951612903225807,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " The",
+     "start": 67.0,
+     "end": 68.16
+    },
+    {
+     "word": " river",
+     "start": 68.16,
+     "end": 68.66
+    },
+    {
+     "word": " hairlies",
+     "start": 68.66,
+     "end": 69.9
+    },
+    {
+     "word": " on",
+     "start": 69.9,
+     "end": 70.4
+    },
+    {
+     "word": " the",
+     "start": 70.4,
+     "end": 70.58
+    },
+    {
+     "word": " sixth",
+     "start": 70.58,
+     "end": 70.92
+    },
+    {
+     "word": " year",
+     "start": 70.92,
+     "end": 71.54
+    },
+    {
+     "word": " of",
+     "start": 71.54,
+     "end": 72.16
+    },
+    {
+     "word": " the",
+     "start": 72.16,
+     "end": 72.32
+    },
+    {
+     "word": " war",
+     "start": 72.32,
+     "end": 73.2
+    }
+   ],
+   "word_count": 10
+  },
+  {
+   "start": 73.2,
+   "end": 80.02,
+   "text": " Lydians and Mates slew each other on the shore",
+   "temperature": 0,
+   "avg_logprob": -0.3179209280987175,
+   "compression_ratio": 1.3951612903225807,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Lydians",
+     "start": 73.2,
+     "end": 75.42
+    },
+    {
+     "word": " and",
+     "start": 75.42,
+     "end": 75.84
+    },
+    {
+     "word": " Mates",
+     "start": 75.84,
+     "end": 76.46
+    },
+    {
+     "word": " slew",
+     "start": 76.46,
+     "end": 77.2
+    },
+    {
+     "word": " each",
+     "start": 77.2,
+     "end": 77.68
+    },
+    {
+     "word": " other",
+     "start": 77.68,
+     "end": 78.42
+    },
+    {
+     "word": " on",
+     "start": 78.42,
+     "end": 79.08
+    },
+    {
+     "word": " the",
+     "start": 79.08,
+     "end": 79.22
+    },
+    {
+     "word": " shore",
+     "start": 79.22,
+     "end": 80.02
+    }
+   ],
+   "word_count": 9
+  },
+  {
+   "start": 81.46,
+   "end": 84.94,
+   "text": " Sun burning on the bronze",
+   "temperature": 0,
+   "avg_logprob": -0.3179209280987175,
+   "compression_ratio": 1.3951612903225807,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Sun",
+     "start": 81.46,
+     "end": 82.62
+    },
+    {
+     "word": " burning",
+     "start": 82.62,
+     "end": 83.78
+    },
+    {
+     "word": " on",
+     "start": 83.78,
+     "end": 84.32
+    },
+    {
+     "word": " the",
+     "start": 84.32,
+     "end": 84.48
+    },
+    {
+     "word": " bronze",
+     "start": 84.48,
+     "end": 84.94
+    }
+   ],
+   "word_count": 5
+  },
+  {
+   "start": 84.94,
+   "end": 89.38,
+   "text": " Exchanging turns and strikes when light went strange",
+   "temperature": 0,
+   "avg_logprob": -0.3179209280987175,
+   "compression_ratio": 1.3951612903225807,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Exchanging",
+     "start": 84.94,
+     "end": 85.96
+    },
+    {
+     "word": " turns",
+     "start": 85.96,
+     "end": 86.72
+    },
+    {
+     "word": " and",
+     "start": 86.72,
+     "end": 87.16
+    },
+    {
+     "word": " strikes",
+     "start": 87.16,
+     "end": 87.64
+    },
+    {
+     "word": " when",
+     "start": 87.64,
+     "end": 87.96
+    },
+    {
+     "word": " light",
+     "start": 87.96,
+     "end": 88.36
+    },
+    {
+     "word": " went",
+     "start": 88.36,
+     "end": 88.68
+    },
+    {
+     "word": " strange",
+     "start": 88.68,
+     "end": 89.38
+    }
+   ],
+   "word_count": 8
+  },
+  {
+   "start": 89.38,
+   "end": 96.18,
+   "text": " A halo in the sky, warriors awed by the vacant eye of a guide",
+   "temperature": 0,
+   "avg_logprob": -0.3019097275204129,
+   "compression_ratio": 1.3217391304347825,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " A",
+     "start": 89.38,
+     "end": 89.9
+    },
+    {
+     "word": " halo",
+     "start": 89.9,
+     "end": 90.32
+    },
+    {
+     "word": " in",
+     "start": 90.32,
+     "end": 90.58
+    },
+    {
+     "word": " the",
+     "start": 90.58,
+     "end": 90.76
+    },
+    {
+     "word": " sky,",
+     "start": 90.76,
+     "end": 91.2
+    },
+    {
+     "word": " warriors",
+     "start": 91.76,
+     "end": 92.36
+    },
+    {
+     "word": " awed",
+     "start": 92.36,
+     "end": 92.9
+    },
+    {
+     "word": " by",
+     "start": 92.9,
+     "end": 93.14
+    },
+    {
+     "word": " the",
+     "start": 93.14,
+     "end": 93.34
+    },
+    {
+     "word": " vacant",
+     "start": 93.34,
+     "end": 94.0
+    },
+    {
+     "word": " eye",
+     "start": 94.0,
+     "end": 94.72
+    },
+    {
+     "word": " of",
+     "start": 94.72,
+     "end": 94.98
+    },
+    {
+     "word": " a",
+     "start": 94.98,
+     "end": 95.16
+    },
+    {
+     "word": " guide",
+     "start": 95.16,
+     "end": 96.18
+    }
+   ],
+   "word_count": 14
+  },
+  {
+   "start": 96.8,
+   "end": 102.16,
+   "text": " Till I turn to shade, eye of gods above",
+   "temperature": 0,
+   "avg_logprob": -0.3019097275204129,
+   "compression_ratio": 1.3217391304347825,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Till",
+     "start": 96.68,
+     "end": 97.18
+    },
+    {
+     "word": " I",
+     "start": 97.18,
+     "end": 97.54
+    },
+    {
+     "word": " turn",
+     "start": 97.54,
+     "end": 98.02
+    },
+    {
+     "word": " to",
+     "start": 98.02,
+     "end": 98.26
+    },
+    {
+     "word": " shade,",
+     "start": 98.26,
+     "end": 98.96
+    },
+    {
+     "word": " eye",
+     "start": 100.16,
+     "end": 100.58
+    },
+    {
+     "word": " of",
+     "start": 100.58,
+     "end": 101.04
+    },
+    {
+     "word": " gods",
+     "start": 101.04,
+     "end": 101.52
+    },
+    {
+     "word": " above",
+     "start": 101.52,
+     "end": 102.16
+    }
+   ],
+   "word_count": 9
+  },
+  {
+   "start": 103.28,
+   "end": 110.62,
+   "text": " Slow down your blade, go home to the ones you love",
+   "temperature": 0,
+   "avg_logprob": -0.3019097275204129,
+   "compression_ratio": 1.3217391304347825,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Slow",
+     "start": 103.28,
+     "end": 104.28
+    },
+    {
+     "word": " down",
+     "start": 104.28,
+     "end": 104.78
+    },
+    {
+     "word": " your",
+     "start": 104.78,
+     "end": 105.08
+    },
+    {
+     "word": " blade,",
+     "start": 105.08,
+     "end": 105.98
+    },
+    {
+     "word": " go",
+     "start": 106.76,
+     "end": 106.96
+    },
+    {
+     "word": " home",
+     "start": 106.96,
+     "end": 107.74
+    },
+    {
+     "word": " to",
+     "start": 107.74,
+     "end": 108.32
+    },
+    {
+     "word": " the",
+     "start": 108.32,
+     "end": 108.52
+    },
+    {
+     "word": " ones",
+     "start": 108.52,
+     "end": 109.52
+    },
+    {
+     "word": " you",
+     "start": 109.52,
+     "end": 110.16
+    },
+    {
+     "word": " love",
+     "start": 110.16,
+     "end": 110.62
+    }
+   ],
+   "word_count": 11
+  },
+  {
+   "start": 121.1,
+   "end": 123.9,
+   "text": " Thank you.",
+   "temperature": 0,
+   "avg_logprob": -0.3727213541666667,
+   "compression_ratio": 0.5555555555555556,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Thank",
+     "start": 121.1,
+     "end": 122.5
+    },
+    {
+     "word": " you.",
+     "start": 122.5,
+     "end": 123.9
+    }
+   ],
+   "word_count": 2
+  },
+  {
+   "start": 160.16,
+   "end": 164.16,
+   "text": " What was it like when reality suddenly broke",
+   "temperature": 0,
+   "avg_logprob": -0.17125000596046447,
+   "compression_ratio": 1.4393939393939394,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " What",
+     "start": 160.16,
+     "end": 161.0
+    },
+    {
+     "word": " was",
+     "start": 161.0,
+     "end": 161.3
+    },
+    {
+     "word": " it",
+     "start": 161.3,
+     "end": 161.46
+    },
+    {
+     "word": " like",
+     "start": 161.46,
+     "end": 161.84
+    },
+    {
+     "word": " when",
+     "start": 161.84,
+     "end": 162.1
+    },
+    {
+     "word": " reality",
+     "start": 162.1,
+     "end": 162.72
+    },
+    {
+     "word": " suddenly",
+     "start": 162.72,
+     "end": 163.6
+    },
+    {
+     "word": " broke",
+     "start": 163.6,
+     "end": 164.16
+    }
+   ],
+   "word_count": 8
+  },
+  {
+   "start": 164.16,
+   "end": 167.54,
+   "text": " The silent eye, how the gods suddenly spoke",
+   "temperature": 0,
+   "avg_logprob": -0.17125000596046447,
+   "compression_ratio": 1.4393939393939394,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " The",
+     "start": 164.16,
+     "end": 164.44
+    },
+    {
+     "word": " silent",
+     "start": 164.44,
+     "end": 164.82
+    },
+    {
+     "word": " eye,",
+     "start": 164.82,
+     "end": 165.26
+    },
+    {
+     "word": " how",
+     "start": 165.38,
+     "end": 165.54
+    },
+    {
+     "word": " the",
+     "start": 165.54,
+     "end": 165.72
+    },
+    {
+     "word": " gods",
+     "start": 165.72,
+     "end": 166.28
+    },
+    {
+     "word": " suddenly",
+     "start": 166.28,
+     "end": 167.06
+    },
+    {
+     "word": " spoke",
+     "start": 167.06,
+     "end": 167.54
+    }
+   ],
+   "word_count": 8
+  },
+  {
+   "start": 167.54,
+   "end": 170.3,
+   "text": " Birds from quiet air, suddenly cold",
+   "temperature": 0,
+   "avg_logprob": -0.17125000596046447,
+   "compression_ratio": 1.4393939393939394,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Birds",
+     "start": 167.54,
+     "end": 168.12
+    },
+    {
+     "word": " from",
+     "start": 168.12,
+     "end": 168.28
+    },
+    {
+     "word": " quiet",
+     "start": 168.28,
+     "end": 168.7
+    },
+    {
+     "word": " air,",
+     "start": 168.7,
+     "end": 169.06
+    },
+    {
+     "word": " suddenly",
+     "start": 169.26,
+     "end": 169.68
+    },
+    {
+     "word": " cold",
+     "start": 169.68,
+     "end": 170.3
+    }
+   ],
+   "word_count": 6
+  },
+  {
+   "start": 170.3,
+   "end": 175.3,
+   "text": " What we do next is how history unfolds",
+   "temperature": 0,
+   "avg_logprob": -0.17125000596046447,
+   "compression_ratio": 1.4393939393939394,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " What",
+     "start": 170.3,
+     "end": 170.94
+    },
+    {
+     "word": " we",
+     "start": 170.94,
+     "end": 171.3
+    },
+    {
+     "word": " do",
+     "start": 171.3,
+     "end": 171.52
+    },
+    {
+     "word": " next",
+     "start": 171.52,
+     "end": 171.92
+    },
+    {
+     "word": " is",
+     "start": 171.92,
+     "end": 172.2
+    },
+    {
+     "word": " how",
+     "start": 172.2,
+     "end": 172.52
+    },
+    {
+     "word": " history",
+     "start": 172.52,
+     "end": 173.4
+    },
+    {
+     "word": " unfolds",
+     "start": 173.4,
+     "end": 175.3
+    }
+   ],
+   "word_count": 8
+  },
+  {
+   "start": 175.3,
+   "end": 178.6,
+   "text": " A shadow crossed the hills",
+   "temperature": 0,
+   "avg_logprob": -0.17125000596046447,
+   "compression_ratio": 1.4393939393939394,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " A",
+     "start": 175.3,
+     "end": 175.84
+    },
+    {
+     "word": " shadow",
+     "start": 175.84,
+     "end": 176.68
+    },
+    {
+     "word": " crossed",
+     "start": 176.68,
+     "end": 177.26
+    },
+    {
+     "word": " the",
+     "start": 177.26,
+     "end": 177.64
+    },
+    {
+     "word": " hills",
+     "start": 177.64,
+     "end": 178.6
+    }
+   ],
+   "word_count": 5
+  },
+  {
+   "start": 178.6,
+   "end": 181.9,
+   "text": " The wind picked up a chill",
+   "temperature": 0,
+   "avg_logprob": -0.5109953747855293,
+   "compression_ratio": 1.4695652173913043,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " The",
+     "start": 178.6,
+     "end": 179.26
+    },
+    {
+     "word": " wind",
+     "start": 179.26,
+     "end": 179.8
+    },
+    {
+     "word": " picked",
+     "start": 179.8,
+     "end": 180.22
+    },
+    {
+     "word": " up",
+     "start": 180.22,
+     "end": 180.76
+    },
+    {
+     "word": " a",
+     "start": 180.76,
+     "end": 181.06
+    },
+    {
+     "word": " chill",
+     "start": 181.06,
+     "end": 181.9
+    }
+   ],
+   "word_count": 6
+  },
+  {
+   "start": 181.9,
+   "end": 187.6,
+   "text": " Dailies foretold the sun would go dark",
+   "temperature": 0,
+   "avg_logprob": -0.5109953747855293,
+   "compression_ratio": 1.4695652173913043,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Dailies",
+     "start": 181.9,
+     "end": 183.26
+    },
+    {
+     "word": " foretold",
+     "start": 183.26,
+     "end": 184.16
+    },
+    {
+     "word": " the",
+     "start": 184.16,
+     "end": 184.46
+    },
+    {
+     "word": " sun",
+     "start": 184.46,
+     "end": 185.02
+    },
+    {
+     "word": " would",
+     "start": 185.02,
+     "end": 185.82
+    },
+    {
+     "word": " go",
+     "start": 185.82,
+     "end": 186.16
+    },
+    {
+     "word": " dark",
+     "start": 186.16,
+     "end": 187.6
+    }
+   ],
+   "word_count": 7
+  },
+  {
+   "start": 187.6,
+   "end": 191.86,
+   "text": " Warriors behold",
+   "temperature": 0,
+   "avg_logprob": -0.5109953747855293,
+   "compression_ratio": 1.4695652173913043,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Warriors",
+     "start": 187.6,
+     "end": 189.72
+    },
+    {
+     "word": " behold",
+     "start": 189.72,
+     "end": 191.86
+    }
+   ],
+   "word_count": 2
+  },
+  {
+   "start": 191.86,
+   "end": 195.16,
+   "text": " A sudden spark",
+   "temperature": 0,
+   "avg_logprob": -0.5109953747855293,
+   "compression_ratio": 1.4695652173913043,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " A",
+     "start": 191.86,
+     "end": 193.74
+    },
+    {
+     "word": " sudden",
+     "start": 193.74,
+     "end": 194.34
+    },
+    {
+     "word": " spark",
+     "start": 194.34,
+     "end": 195.16
+    }
+   ],
+   "word_count": 3
+  },
+  {
+   "start": 195.16,
+   "end": 196.94,
+   "text": " A sudden spark",
+   "temperature": 0,
+   "avg_logprob": -0.5109953747855293,
+   "compression_ratio": 1.4695652173913043,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " A",
+     "start": 195.16,
+     "end": 195.76
+    },
+    {
+     "word": " sudden",
+     "start": 195.76,
+     "end": 196.18
+    },
+    {
+     "word": " spark",
+     "start": 196.18,
+     "end": 196.94
+    }
+   ],
+   "word_count": 3
+  },
+  {
+   "start": 197.9,
+   "end": 198.72,
+   "text": " A sudden spark",
+   "temperature": 0,
+   "avg_logprob": -0.5109953747855293,
+   "compression_ratio": 1.4695652173913043,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " A",
+     "start": 197.52,
+     "end": 198.12
+    },
+    {
+     "word": " sudden",
+     "start": 198.12,
+     "end": 198.72
+    },
+    {
+     "word": " spark",
+     "start": 198.72,
+     "end": 198.72
+    }
+   ],
+   "word_count": 3
+  },
+  {
+   "start": 198.72,
+   "end": 203.5,
+   "text": " A shadow turned to day",
+   "temperature": 0,
+   "avg_logprob": -0.5109953747855293,
+   "compression_ratio": 1.4695652173913043,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " A",
+     "start": 198.72,
+     "end": 199.16
+    },
+    {
+     "word": " shadow",
+     "start": 199.16,
+     "end": 202.28
+    },
+    {
+     "word": " turned",
+     "start": 202.28,
+     "end": 202.82
+    },
+    {
+     "word": " to",
+     "start": 202.82,
+     "end": 203.18
+    },
+    {
+     "word": " day",
+     "start": 203.18,
+     "end": 203.5
+    }
+   ],
+   "word_count": 5
+  },
+  {
+   "start": 203.5,
+   "end": 206.88,
+   "text": " Sunlight from above",
+   "temperature": 0,
+   "avg_logprob": -0.5109953747855293,
+   "compression_ratio": 1.4695652173913043,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Sunlight",
+     "start": 203.5,
+     "end": 205.76
+    },
+    {
+     "word": " from",
+     "start": 205.76,
+     "end": 206.24
+    },
+    {
+     "word": " above",
+     "start": 206.24,
+     "end": 206.88
+    }
+   ],
+   "word_count": 3
+  },
+  {
+   "start": 208.6,
+   "end": 215.64,
+   "text": " Throw down your plate, home to the ones you love",
+   "temperature": 0,
+   "avg_logprob": -0.47795757225581575,
+   "compression_ratio": 0.8888888888888888,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Throw",
+     "start": 208.6,
+     "end": 209.12
+    },
+    {
+     "word": " down",
+     "start": 209.12,
+     "end": 209.58
+    },
+    {
+     "word": " your",
+     "start": 209.58,
+     "end": 209.86
+    },
+    {
+     "word": " plate,",
+     "start": 209.86,
+     "end": 210.7
+    },
+    {
+     "word": " home",
+     "start": 210.7,
+     "end": 212.28
+    },
+    {
+     "word": " to",
+     "start": 212.28,
+     "end": 213.06
+    },
+    {
+     "word": " the",
+     "start": 213.06,
+     "end": 213.26
+    },
+    {
+     "word": " ones",
+     "start": 213.26,
+     "end": 214.32
+    },
+    {
+     "word": " you",
+     "start": 214.32,
+     "end": 215.0
+    },
+    {
+     "word": " love",
+     "start": 215.0,
+     "end": 215.64
+    }
+   ],
+   "word_count": 10
+  },
+  {
+   "start": 250.96,
+   "end": 253.76,
+   "text": " The End",
+   "temperature": 1,
+   "avg_logprob": -1.1331146240234375,
+   "compression_ratio": 0.4666666666666667,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " The",
+     "start": 250.96,
+     "end": 252.36
+    },
+    {
+     "word": " End",
+     "start": 252.36,
+     "end": 253.76
+    }
+   ],
+   "word_count": 2
+  },
+  {
+   "start": 269.72,
+   "end": 272.52,
+   "text": " Thank you.",
+   "temperature": 0,
+   "avg_logprob": -0.3994140525658925,
+   "compression_ratio": 0.5555555555555556,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Thank",
+     "start": 269.72,
+     "end": 271.12
+    },
+    {
+     "word": " you.",
+     "start": 271.12,
+     "end": 272.52
+    }
+   ],
+   "word_count": 2
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:00.820\n Thales\n\n00:00.820 --> 00:00.860\n foretold\n\n00:00.860 --> 00:00.860\n the\n\n00:00.860 --> 00:00.860\n sun.\n\n00:30.000 --> 00:31.300\n Thank\n\n00:31.300 --> 00:32.720\n you.\n\n01:07.000 --> 01:08.160\n The\n\n01:08.160 --> 01:08.660\n river\n\n01:08.660 --> 01:09.900\n hairlies\n\n01:09.900 --> 01:10.400\n on\n\n01:10.400 --> 01:10.580\n the\n\n01:10.580 --> 01:10.920\n sixth\n\n01:10.920 --> 01:11.540\n year\n\n01:11.540 --> 01:12.160\n of\n\n01:12.160 --> 01:12.320\n the\n\n01:12.320 --> 01:13.200\n war\n\n01:13.200 --> 01:15.420\n Lydians\n\n01:15.420 --> 01:15.840\n and\n\n01:15.840 --> 01:16.460\n Mates\n\n01:16.460 --> 01:17.200\n slew\n\n01:17.200 --> 01:17.680\n each\n\n01:17.680 --> 01:18.420\n other\n\n01:18.420 --> 01:19.080\n on\n\n01:19.080 --> 01:19.220\n the\n\n01:19.220 --> 01:20.020\n shore\n\n01:21.460 --> 01:22.620\n Sun\n\n01:22.620 --> 01:23.780\n burning\n\n01:23.780 --> 01:24.320\n on\n\n01:24.320 --> 01:24.480\n the\n\n01:24.480 --> 01:24.940\n bronze\n\n01:24.940 --> 01:25.960\n Exchanging\n\n01:25.960 --> 01:26.720\n turns\n\n01:26.720 --> 01:27.160\n and\n\n01:27.160 --> 01:27.640\n strikes\n\n01:27.640 --> 01:27.960\n when\n\n01:27.960 --> 01:28.360\n light\n\n01:28.360 --> 01:28.680\n went\n\n01:28.680 --> 01:29.380\n strange\n\n01:29.380 --> 01:29.900\n A\n\n01:29.900 --> 01:30.320\n halo\n\n01:30.320 --> 01:30.580\n in\n\n01:30.580 --> 01:30.760\n the\n\n01:30.760 --> 01:31.200\n sky,\n\n01:31.760 --> 01:32.360\n warriors\n\n01:32.360 --> 01:32.900\n awed\n\n01:32.900 --> 01:33.140\n by\n\n01:33.140 --> 01:33.340\n the\n\n01:33.340 --> 01:34.000\n vacant\n\n01:34.000 --> 01:34.720\n eye\n\n01:34.720 --> 01:34.980\n of\n\n01:34.980 --> 01:35.160\n a\n\n01:35.160 --> 01:36.180\n guide\n\n01:36.680 --> 01:37.180\n Till\n\n01:37.180 --> 01:37.540\n I\n\n01:37.540 --> 01:38.020\n turn\n\n01:38.020 --> 01:38.260\n to\n\n01:38.260 --> 01:38.960\n shade,\n\n01:40.160 --> 01:40.580\n eye\n\n01:40.580 --> 01:41.040\n of\n\n01:41.040 --> 01:41.520\n gods\n\n01:41.520 --> 01:42.160\n above\n\n01:43.280 --> 01:44.280\n Slow\n\n01:44.280 --> 01:44.780\n down\n\n01:44.780 --> 01:45.080\n your\n\n01:45.080 --> 01:45.980\n blade,\n\n01:46.760 --> 01:46.960\n go\n\n01:46.960 --> 01:47.740\n home\n\n01:47.740 --> 01:48.320\n to\n\n01:48.320 --> 01:48.520\n the\n\n01:48.520 --> 01:49.520\n ones\n\n01:49.520 --> 01:50.160\n you\n\n01:50.160 --> 01:50.620\n love\n\n02:01.100 --> 02:02.500\n Thank\n\n02:02.500 --> 02:03.900\n you.\n\n02:40.160 --> 02:41.000\n What\n\n02:41.000 --> 02:41.300\n was\n\n02:41.300 --> 02:41.460\n it\n\n02:41.460 --> 02:41.840\n like\n\n02:41.840 --> 02:42.100\n when\n\n02:42.100 --> 02:42.720\n reality\n\n02:42.720 --> 02:43.600\n suddenly\n\n02:43.600 --> 02:44.160\n broke\n\n02:44.160 --> 02:44.440\n The\n\n02:44.440 --> 02:44.820\n silent\n\n02:44.820 --> 02:45.260\n eye,\n\n02:45.380 --> 02:45.540\n how\n\n02:45.540 --> 02:45.720\n the\n\n02:45.720 --> 02:46.280\n gods\n\n02:46.280 --> 02:47.060\n suddenly\n\n02:47.060 --> 02:47.540\n spoke\n\n02:47.540 --> 02:48.120\n Birds\n\n02:48.120 --> 02:48.280\n from\n\n02:48.280 --> 02:48.700\n quiet\n\n02:48.700 --> 02:49.060\n air,\n\n02:49.260 --> 02:49.680\n suddenly\n\n02:49.680 --> 02:50.300\n cold\n\n02:50.300 --> 02:50.940\n What\n\n02:50.940 --> 02:51.300\n we\n\n02:51.300 --> 02:51.520\n do\n\n02:51.520 --> 02:51.920\n next\n\n02:51.920 --> 02:52.200\n is\n\n02:52.200 --> 02:52.520\n how\n\n02:52.520 --> 02:53.400\n history\n\n02:53.400 --> 02:55.300\n unfolds\n\n02:55.300 --> 02:55.840\n A\n\n02:55.840 --> 02:56.680\n shadow\n\n02:56.680 --> 02:57.260\n crossed\n\n02:57.260 --> 02:57.640\n the\n\n02:57.640 --> 02:58.600\n hills\n\n02:58.600 --> 02:59.260\n The\n\n02:59.260 --> 02:59.800\n wind\n\n02:59.800 --> 03:00.220\n picked\n\n03:00.220 --> 03:00.760\n up\n\n03:00.760 --> 03:01.060\n a\n\n03:01.060 --> 03:01.900\n chill\n\n03:01.900 --> 03:03.260\n Dailies\n\n03:03.260 --> 03:04.160\n foretold\n\n03:04.160 --> 03:04.460\n the\n\n03:04.460 --> 03:05.020\n sun\n\n03:05.020 --> 03:05.820\n would\n\n03:05.820 --> 03:06.160\n go\n\n03:06.160 --> 03:07.600\n dark\n\n03:07.600 --> 03:09.720\n Warriors\n\n03:09.720 --> 03:11.860\n behold\n\n03:11.860 --> 03:13.740\n A\n\n03:13.740 --> 03:14.340\n sudden\n\n03:14.340 --> 03:15.160\n spark\n\n03:15.160 --> 03:15.760\n A\n\n03:15.760 --> 03:16.180\n sudden\n\n03:16.180 --> 03:16.940\n spark\n\n03:17.520 --> 03:18.120\n A\n\n03:18.120 --> 03:18.720\n sudden\n\n03:18.720 --> 03:18.720\n spark\n\n03:18.720 --> 03:19.160\n A\n\n03:19.160 --> 03:22.280\n shadow\n\n03:22.280 --> 03:22.820\n turned\n\n03:22.820 --> 03:23.180\n to\n\n03:23.180 --> 03:23.500\n day\n\n03:23.500 --> 03:25.760\n Sunlight\n\n03:25.760 --> 03:26.240\n from\n\n03:26.240 --> 03:26.880\n above\n\n03:28.600 --> 03:29.120\n Throw\n\n03:29.120 --> 03:29.580\n down\n\n03:29.580 --> 03:29.860\n your\n\n03:29.860 --> 03:30.700\n plate,\n\n03:30.700 --> 03:32.280\n home\n\n03:32.280 --> 03:33.060\n to\n\n03:33.060 --> 03:33.260\n the\n\n03:33.260 --> 03:34.320\n ones\n\n03:34.320 --> 03:35.000\n you\n\n03:35.000 --> 03:35.640\n love\n\n04:10.960 --> 04:12.360\n The\n\n04:12.360 --> 04:13.760\n End\n\n04:29.720 --> 04:31.120\n Thank\n\n04:31.120 --> 04:32.520\n you.\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 212.63388393024002
+ },
+ "_meta": {
+  "src": "media/stems/sep/kimvoc2_vocals.wav",
+  "t0": null,
+  "t1": null,
+  "prompt": "The River Halys, on the sixth year of the war. Lydians and Medes slew each other on the shore. A halo in the sky, warriors awed by the vacant eye of a god. Throw down your blade. Thales foretold the sun would go dark.",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

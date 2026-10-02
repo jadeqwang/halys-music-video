@@ -1,0 +1,9 @@
+{
+  "_comment": "Relay Worker used for background /ai/run jobs (see production/TOOLING.md). No secrets here: the hook secret lives in the Worker (secret_text HOOK_SECRET) and a copy in KV under secret_kv_key, read at runtime through the Cloudflare API.",
+  "account": "78885e7db58a4c34423a7e62c8471b75",
+  "worker": "orbital-sunrise-relay",
+  "url": "https://orbital-sunrise-relay.jadewang.workers.dev",
+  "kv_namespace": "9c6c777939a7491a973772459d7ac3f1",
+  "secret_kv_key": "cfg:hook_secret",
+  "source": "tools/relay/worker.js"
+}
