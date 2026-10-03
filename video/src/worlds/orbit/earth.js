@@ -216,13 +216,21 @@ export function earthView(o) {
   const Y = [N[0] * Math.cos(r) - E[0] * Math.sin(r), N[1] * Math.cos(r) - E[1] * Math.sin(r), N[2] * Math.cos(r) - E[2] * Math.sin(r)];
   const D = o.D ?? 40, F = o.Rs * Math.sqrt(D * D - 1), sw = ll2v(...(o.sun || [-60, 21.5]));
   const sunV = [dot3(X, sw), dot3(Y, sw), dot3(Z, sw)];
-  return { X, Y, Z, D, F, Rs: o.Rs, cx: o.cx, cy: o.cy, sunV, sunW: sw, lon0: o.lon0, lat0: o.lat0 };
+  // the Moon's shadow (S77, the room's sim): a dark dot inside a soft penumbra; radii in degrees of arc (drawn large, as on her monitor)
+  const umb = o.umbra ? { v: ll2v(...o.umbra.ll), cu: Math.cos((o.umbra.r ?? 2.9) * D2R), cp: Math.cos((o.umbra.pen ?? 9.8) * D2R), k: o.umbra.k ?? 1 } : null;
+  return { X, Y, Z, D, F, Rs: o.Rs, cx: o.cx, cy: o.cy, sunV, sunW: sw, lon0: o.lon0, lat0: o.lat0, umb };
 }
 export function project(V, p) {
   const x = dot3(V.X, p), y = dot3(V.Y, p), z = dot3(V.Z, p), k = V.F / (V.D - z);
   return [V.cx + x * k, V.cy - y * k, z];
 }
 
+// 1 outside the shadow, ~.55 in the penumbra, ~.06 in the umbra (smooth)
+function shade(V, px, py, pz) {
+  const U = V.umb; if (!U) return 1;
+  const c = U.v[0] * px + U.v[1] * py + U.v[2] * pz;
+  return 1 - U.k * (.42 * sstep(U.cp, U.cp + (1 - U.cp) * .35, c) + .52 * sstep(U.cu - (1 - U.cu) * .4, U.cu + (1 - U.cu) * .2, c));
+}
 // ---------------------------------------------------------------- lines for one frame
 const BLUE = 2;
 export function earthLines(V, o = {}) {
@@ -275,7 +283,7 @@ export function earthLines(V, o = {}) {
         if (!vis(sx, sy)) { flush(L.id, ph); last = null; continue; }
         if (last && i < L.n - 1 && Math.hypot(sx - last[0], sy - last[1]) < minStep) continue;
         const day = sstep(-.07, .16, sun[0] * x + sun[1] * y + sun[2] * z), limb = sstep(zmin, zmin + .1, z), cd = L.cd[i], ld = L.ld[i];
-        const lit = limb * wgt;
+        const lit = limb * wgt * shade(V, px, py, pz);
         B0.push((.06 + 1.3 * cd * cd) * (.08 + .92 * day) * lit);
         B1.push(.3 * (1 - cd) * (1 - ld) * day * lit);
         B2.push(.1 * (1 - cd) * ld * (.3 + .7 * day) * lit);
@@ -328,6 +336,7 @@ export function earthLines(V, o = {}) {
 const FILL = `
 uniform vec2 uRes, uC; uniform float uF, uD, uRs, uAlpha, uHaze, uNight;
 uniform vec3 uX, uY, uZ, uSun; uniform vec4 uOcc; uniform sampler2D uLand, uAnat; uniform vec4 uAnatBox; uniform float uAnatOn;
+uniform vec4 uUmb; uniform vec3 uUmbR;
 const float PI = 3.14159265;
 float landAt(vec3 p) {
   float lon = atan(p.y, p.x), lat = asin(clamp(p.z, -1., 1.));
@@ -370,6 +379,7 @@ void main() {
   vec3 nightc = mix(vec3(.012, .03, .075), vec3(.01, .01, .012), L) * uNight;
   vec3 col = mix(nightc, dayc, day);
   col += vec3(.94, .54, .16) * .22 * exp(-pow(sd / .07, 2.)) * (1. - L * .5);   // the dusk band
+  if (uUmb.w > .5) { float c = dot(p, uUmb.xyz); col *= 1. - uUmbR.z * (.42 * smoothstep(uUmbR.y, uUmbR.y + (1. - uUmbR.y) * .35, c) + .55 * smoothstep(uUmbR.x - (1. - uUmbR.x) * .4, uUmbR.x + (1. - uUmbR.x) * .2, c)); }
   float edge = smoothstep(uRs + .8, uRs - .8, rpx);
   o = vec4(col * uAlpha * edge, uAlpha * edge);
 }`;
@@ -383,7 +393,33 @@ export async function earthFill(f, V, o = {}) {
     uRes: [W, H], uC: [V.cx, V.cy], uF: V.F, uD: V.D, uRs: V.Rs, uAlpha: o.alpha ?? 1, uHaze: o.haze ?? 1, uNight: o.night ?? 1,
     uX: V.X, uY: V.Y, uZ: V.Z, uSun: V.sunV, uOcc: occ ? [occ.x, occ.y, occ.r, 1] : [0, 0, 0, 0],
     uLand: G.texture(LAND.img, { wrap: 'repeat' }), uAnat: G.texture(_anatTex), uAnatBox: [19, 30.5, 50, 47.5], uAnatOn: V.Rs > 900 ? 1 : 0,
+    uUmb: V.umb ? [...V.umb.v, 1] : [0, 0, 1, 0], uUmbR: V.umb ? [V.umb.cu, V.umb.cp, V.umb.k] : [1, 1, 0],
   });
   const g = f.g;
   g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = o.op || 'screen'; g.globalAlpha = 1; g.drawImage(G.canvas, 0, 0, W, H); g.restore();
+}
+
+// ---------------------------------------------------------------- the flat map's seas (the dive, the pull-back)
+// screen px -> map km (rotated by rot, scale S px/km, the landing point at uC) -> lon/lat -> the 1:10m regional mask:
+// the Black Sea and the Mediterranean stay Earth-blue while they are in view; the land is left to the lines
+const MAPFILL = `
+uniform vec2 uRes, uC, uLL0, uK, uShift; uniform float uS, uRot, uAlpha; uniform sampler2D uAnat; uniform vec4 uBox;
+void main() {
+  vec2 px = vec2(uv.x * uRes.x, (1. - uv.y) * uRes.y);
+  vec2 q = vec2(px.x - uC.x, uC.y - px.y) / uS;
+  float c = cos(uRot), s = sin(uRot);
+  vec2 km = vec2(q.x * c + q.y * s, -q.x * s + q.y * c) + uShift;
+  vec2 ll = uLL0 + km / uK;
+  vec2 t = (ll - uBox.xy) / (uBox.zw - uBox.xy);
+  float L = (t.x > 0. && t.x < 1. && t.y > 0. && t.y < 1.) ? texture(uAnat, vec2(t.x, 1. - t.y)).r : 1.;
+  float sea = 1. - smoothstep(.35, .65, L);
+  vec3 col = vec3(.06, .29, .74) * sea;
+  o = vec4(col * uAlpha, sea * uAlpha);
+}`;
+export async function mapFill(f, m, o = {}) {
+  const W = f.W, H = f.H, G = getGL(W, H), prog = G.program(MAPFILL);
+  if (!_anatTex) _anatTex = await loadImage(ANAT_URL);
+  G.pass(prog, { uRes: [W, H], uC: [m.cx, m.cy], uS: m.S, uRot: m.rot, uLL0: m.ll0, uK: m.k, uShift: m.shift, uAlpha: o.alpha ?? 1, uAnat: G.texture(_anatTex), uBox: [19, 30.5, 50, 47.5] });
+  const g = f.g;
+  g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = 'screen'; g.drawImage(G.canvas, 0, 0, W, H); g.restore();
 }

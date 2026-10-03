@@ -405,10 +405,11 @@ function formation(F, j, sg, t, ts) {
 // agent j of side sg at time t: a hard snap (fast, overshooting) from the previous formation after each listed stab
 function agentAt(j, sg, t) {
   let k = 0; while (k + 1 < SNAPS.length && t >= SNAPS[k + 1] - 1e-6) k++;
-  const ts = SNAPS[k], D = k === 7 ? .9 : .16, st = .03 * hash3(j, sg > 0 ? 3 : 4, 9);
+  // the snap frame is the flight's first frame (every agent has moved on it: the hit lands on the stab's frame)
+  const ts = SNAPS[k], D = k === 7 ? .9 : .16, st = .012 * hash3(j, sg > 0 ? 3 : 4, 9), tf = t - ts + 1 / FPS - st;
   const B = formation(k, j, sg, t, ts);
   if (k === 0) return B;
-  const e = k === 7 ? easeInOut(clamp((t - ts - st) / D)) : easeBack((t - ts - st) / D);
+  const e = k === 7 ? easeInOut(clamp(tf / D)) : easeBack(tf / D);
   if (e >= 1 && k !== 7) return B;
   const A = formation(k - 1, j, sg, t, SNAPS[k - 1]);
   return [lerp(A[0], B[0], e), lerp(A[1], B[1], e), lerp(A[2], B[2], e), lerp(A[3], B[3], e)];
@@ -456,7 +457,7 @@ function projectLines(lines, C, f) {
 function agentLines(f, t, C) {
   const out = [], s = f.H / 1080, kick = audio.kickEnv(t, .12);
   let ki = 0; while (ki + 1 < SNAPS.length && t >= SNAPS[ki + 1] - 1e-6) ki++;
-  const ds = t - SNAPS[ki], flash = 1 + .8 * Math.exp(-ds / .08) * (ki > 0 ? 1 : 0), flying = ki > 0 && ds < (ki === 7 ? 1 : .26);
+  const ds = t - SNAPS[ki], flash = 1 + 1.2 * Math.exp(-ds / .06) * (ki > 0 ? 1 : 0), flying = ki > 0 && ds < (ki === 7 ? 1 : .26);
   const pupilPump = 1 + .1 * kick;
   const pump = p => { const dx = p[0] - 960, dy = p[1] - 540, r = Math.hypot(dx, dy); if (r < 260 && r > 1) { p[0] = 960 + dx * pupilPump; p[1] = 540 + dy * pupilPump; } return p; };
   for (const sg of [-1, 1]) for (let j = 0; j < NP; j++) {

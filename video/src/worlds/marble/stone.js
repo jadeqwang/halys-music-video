@@ -33,7 +33,7 @@ export const STONE_DEFAULTS = {
   albedo: "#ece6db", vein: "#6f7178", veins: .95, veinPeriod: 210, veinW: 1.6, veinZone: .42, cloud: .07,
   ground: { albedo: .13, tint: [1.0, .96, .92], glow: .8, glowH: .05, glowFar: .25, detail: .9, keyK: .5, contact: .65 },
   water: { k: .0, lo: .55, hi: .8, col: [1.0, .64, .34] },
-  skyCol: { zenith: '#0a0d14', mid: '#151a25', glow: 1.0, band: .03, wide: .1, bandW: .72, az: .3, streak: .035 },
+  skyCol: { zenith: '#0c0f17', mid: '#1a2130', glow: 1.0, band: .03, wide: .1, bandW: .72, az: .3, streak: .035 },
   exposure: 1.0, blankEyes: true, eyeFlat: .95,
 };
 const merge = (a, b) => { const o = { ...a }; for (const k in b) o[k] = b[k] && typeof b[k] === 'object' && !Array.isArray(b[k]) && a[k] && typeof a[k] === 'object' ? { ...a[k], ...b[k] } : b[k]; return o; };
@@ -390,4 +390,15 @@ export function stoneSource(f, src, opts = {}) {
   const wall = new Uint8Array(N); for (let i = 0; i < N; i++) wall[i] = S[i] > .5 ? 1 : 0;
   return { aw, ah, R: outR, G: outG, B: outB, depth: src.depth, matte: M, sky: S, wall, faces: src.faces || [], mat: src.mat,
     key: `${src.key}|stone|${f.t.toFixed(4)}|${opts.tag || ''}`, info: { ...(src.info || {}), stone: true }, hz: hzL, M, S, Lp, D };
+}
+
+// a designed reference (procedural, already lit, sRGB) in the stone format: compensated for the engine's warm offsets,
+// with the statue mask, the sky mask and its stroke wall, and the horizon row per column
+export function asStone(f, src, o = {}) {
+  const { aw, ah } = src, N = aw * ah, R = new Float32Array(N), G = new Float32Array(N), B = new Float32Array(N), lab = [0, 0, 0], rgb = [0, 0, 0];
+  for (let i = 0; i < N; i++) { rgb2lab(src.R[i], src.G[i], src.B[i], lab); lab2rgb(lab[0], lab[1] - .004, lab[2] - .012, rgb); R[i] = rgb[0]; G[i] = rgb[1]; B[i] = rgb[2]; }
+  const M = src.matte ? Float32Array.from(src.matte) : new Float32Array(N), S = src.sky ? Float32Array.from(src.sky) : new Float32Array(N);
+  const wall = new Uint8Array(N); for (let i = 0; i < N; i++) wall[i] = S[i] > .5 ? 1 : 0;
+  const hz = new Float32Array(aw); for (let x = 0; x < aw; x++) { let y = 0; while (y < ah && S[y * aw + x] > .5) y++; hz[x] = o.horizonY != null ? o.horizonY * ah : y; }
+  return { aw, ah, R, G, B, depth: src.depth, matte: M, sky: S, wall, faces: [], mat: src.mat, key: `${src.key}|asStone`, info: src.info, hz, M, S, Lp: null, D: src.depth };
 }

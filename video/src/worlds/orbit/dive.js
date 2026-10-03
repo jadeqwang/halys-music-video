@@ -57,12 +57,12 @@ export function river() {
   const sL = pts[iL][2];
   const out = pts.map((p, i) => {
     const a = pts[Math.max(0, i - 1)], b = pts[Math.min(pts.length - 1, i + 1)], tx = b[0] - a[0], ty = b[1] - a[1], m = Math.hypot(tx, ty) || 1, nx = -ty / m, ny = tx / m;
-    const s = p[2] - sL, w = Math.exp(-((s / 30) ** 2)), wl = Math.exp(-((s / 4) ** 2)) * (1 - Math.exp(-((s / .25) ** 2)));
+    const s = p[2] - sL, calm = 1 - Math.exp(-((s / 2.2) ** 2)), w = Math.exp(-((s / 30) ** 2)) * calm, wl = Math.exp(-((s / 5) ** 2)) * (1 - Math.exp(-((s / 1.1) ** 2)));
     const d = w * (.55 * Math.sin(s / 3.2 * 6.283) + .22 * Math.sin(s / 1.3 * 6.283 + 1.1)) + wl * .045 * Math.sin(s / .42 * 6.283);
     return [p[0] + nx * d, p[1] + ny * d, s];
   });
-  // re-centre: the landing point at the origin, its tangent
-  const L0 = out[iL], a = out[iL - 2], b = out[iL + 2];
+  // re-centre: the landing point at the origin; the reach's direction over +-3 km (a straight reach: no meanders there)
+  const L0 = out[iL], a = out.find(p => p[2] > -3) || out[0], b = out.find(p => p[2] > 3) || out[out.length - 1];
   const ang = Math.atan2(b[1] - a[1], b[0] - a[0]);
   const fin = out.map(([x, y, s]) => [x - L0[0], y - L0[1], s]);
   return (_river = { pts: fin, iL, ang, shift: [L0[0], L0[1]] });
@@ -82,18 +82,31 @@ function landH(x, y) {                         // metres; x, y km from the landi
   for (const [a, b, hm, rkm] of CONES) { const c = llKm(a, b), q = llKm(lon, lat), d = Math.hypot(q[0] - c[0], q[1] - c[1]); h += (hm - 1100) * Math.exp(-d / rkm); }
   return h;
 }
-// distance (km) to the river, by a coarse-to-fine search on the polyline
-function riverDist(x, y, R) {
-  const P = R.pts; let best = 1e9;
-  for (let i = 0; i < P.length - 1; i += 40) { const d = Math.hypot(P[i][0] - x, P[i][1] - y); if (d < best) best = d; }
-  if (best > 30) return best;
-  best = 1e9;
-  for (let i = 0; i < P.length - 1; i++) { const dx = P[i][0] - x, dy = P[i][1] - y; if (Math.abs(dx) > 25 || Math.abs(dy) > 25) continue; const d = Math.hypot(dx, dy); if (d < best) best = d; }
-  return best;
+// distance (km) to the river on a grid: seed the cells the river passes, then a two-pass chamfer transform (O(cells))
+function riverDistGrid(x0, y0, x1, y1, gw, gh, R) {
+  const D = new Float32Array(gw * gh).fill(1e9), sx = (x1 - x0) / (gw - 1), sy = (y1 - y0) / (gh - 1);
+  for (const p of R.pts) {
+    const i = Math.round((p[0] - x0) / sx), j = Math.round((y1 - p[1]) / sy);
+    for (let dj = -1; dj <= 1; dj++) for (let di = -1; di <= 1; di++) {
+      const ii = i + di, jj = j + dj; if (ii < 0 || jj < 0 || ii >= gw || jj >= gh) continue;
+      const d = Math.hypot(x0 + ii * sx - p[0], y1 - jj * sy - p[1]), k = jj * gw + ii; if (d < D[k]) D[k] = d;
+    }
+  }
+  const dd = Math.hypot(sx, sy);
+  for (let j = 0; j < gh; j++) for (let i = 0; i < gw; i++) { const k = j * gw + i; let v = D[k]; if (i) v = Math.min(v, D[k - 1] + sx); if (j) v = Math.min(v, D[k - gw] + sy); if (i && j) v = Math.min(v, D[k - gw - 1] + dd); if (j && i < gw - 1) v = Math.min(v, D[k - gw + 1] + dd); D[k] = v; }
+  for (let j = gh - 1; j >= 0; j--) for (let i = gw - 1; i >= 0; i--) { const k = j * gw + i; let v = D[k]; if (i < gw - 1) v = Math.min(v, D[k + 1] + sx); if (j < gh - 1) v = Math.min(v, D[k + gw] + sy); if (i < gw - 1 && j < gh - 1) v = Math.min(v, D[k + gw + 1] + dd); if (j < gh - 1 && i) v = Math.min(v, D[k + gw - 1] + dd); D[k] = v; }
+  return D;
 }
 const valley = (h, d, depth, wkm) => h - depth * Math.exp(-((d / wkm) ** 2));
 
+// contours of hFn(x, y, d) on a gw-wide grid over [x0, x1] x [y0, y1] (km, y up); d = distance to the river
 function contourSet(x0, y0, x1, y1, n, hFn, levels, attrs) {
+  const gw = n, gh = Math.max(3, Math.round(n * (y1 - y0) / (x1 - x0))), Hf = new Float32Array(gw * gh), R = river();
+  const D = riverDistGrid(x0, y0, x1, y1, gw, gh, R);
+  for (let j = 0; j < gh; j++) for (let i = 0; i < gw; i++) Hf[j * gw + i] = hFn(lerp(x0, x1, i / (gw - 1)), lerp(y1, y0, j / (gh - 1)), D[j * gw + i]);
+  return contours(Hf, gw, gh, levels, (i, j) => [lerp(x0, x1, i / (gw - 1)), lerp(y1, y0, j / (gh - 1))]).map(c => mkLine(c.pts, typeof attrs === 'function' ? attrs(c.lv) : attrs));
+}
+function plainContours(x0, y0, x1, y1, n, hFn, levels, attrs) {
   const gw = n, gh = Math.max(3, Math.round(n * (y1 - y0) / (x1 - x0))), Hf = new Float32Array(gw * gh);
   for (let j = 0; j < gh; j++) for (let i = 0; i < gw; i++) Hf[j * gw + i] = hFn(lerp(x0, x1, i / (gw - 1)), lerp(y1, y0, j / (gh - 1)));
   return contours(Hf, gw, gh, levels, (i, j) => [lerp(x0, x1, i / (gw - 1)), lerp(y1, y0, j / (gh - 1))]).map(c => mkLine(c.pts, typeof attrs === 'function' ? attrs(c.lv) : attrs));
@@ -107,7 +120,7 @@ export function lodA() {
   out.push(mkLine(rv.map(p => [p[0], p[1]]), { b: 1.5, w: 2.1, o: 1, flags: FL.NOFADE, spd: .8 }));
   out.push(mkLine(TUZ_LL.map(([a, b]) => K(a, b)), { b: .8, w: 1.1, o: .15, flags: FL.NOFADE }));
   const levels = [700, 950, 1200, 1450, 1700, 2000, 2350, 2700, 3100, 3500];
-  out.push(...contourSet(-560, -420, 920, 420, 420, (x, y) => valley(landH(x, y), riverDist(x, y, R), 180, 6), levels, lv => ({ b: .16 + .1 * clamp((lv - 700) / 2800), w: .8, o: .35 + .3 * clamp((lv - 1200) / 2400), spd: .3 })));
+  out.push(...contourSet(-560, -420, 920, 420, 420, (x, y, d) => valley(landH(x, y), d, 180, 6), levels, lv => ({ b: .16 + .1 * clamp((lv - 700) / 2800), w: .8, o: .35 + .3 * clamp((lv - 1200) / 2400), spd: .3 })));
   return out.filter(Boolean);
 }
 // LOD B: the bend (130 x 90 km)
@@ -116,7 +129,7 @@ export function lodB() {
   const near = R.pts.filter(p => Math.abs(p[0]) < 90 && Math.abs(p[1]) < 70);
   out.push(mkLine(near.map(p => [p[0], p[1]]), { b: 1.4, w: 1.8, o: 1, flags: FL.NOFADE, spd: .9 }));
   const levels = []; for (let h = 860; h < 1700; h += 45) levels.push(h);
-  out.push(...contourSet(-65, -45, 65, 45, 360, (x, y) => valley(landH(x, y), riverDist(x, y, R), 120, 2.2), levels, lv => ({ b: .14 + .12 * clamp((lv - 860) / 600), w: .75, o: .4, spd: .3 })));
+  out.push(...contourSet(-65, -45, 65, 45, 360, (x, y, d) => valley(landH(x, y), d, 120, 2.2), levels, lv => ({ b: .14 + .12 * clamp((lv - 860) / 600), w: .75, o: .4, spd: .3 })));
   return out.filter(Boolean);
 }
 // LOD C: the valley floor (9 x 6 km): banks at their width, sandbars, terraces, fields
@@ -132,9 +145,9 @@ export function lodC() {
     out.push(...splitLine(mkLine(fl, { b: .45, w: .8, o: .05, spd: 1.6, phase: j }), (x, y, k) => h2(k >> 5, j + 9, 3) > .25));
   }
   const levels = []; for (let h = 900; h < 1150; h += 6) levels.push(h);
-  out.push(...contourSet(-6, -4.5, 6, 4.5, 420, (x, y) => { const d = riverDist(x, y, R); return valley(landH(x, y), d, 55, .9) + 18 * sstep(.25, .32, d) + 10 * sstep(.8, .9, d); }, levels, { b: .17, w: .75, o: .4, spd: .3 }));
+  out.push(...contourSet(-6, -4.5, 6, 4.5, 420, (x, y, d) => valley(landH(x, y), d, 55, .9) + 18 * sstep(.25, .32, d) + 10 * sstep(.8, .9, d), levels, { b: .17, w: .75, o: .4, spd: .3 }));
   for (let i = 0; i < 46; i++) {                                 // field plots on the terraces: small skewed quads
-    const x = (h2(i, 1, 51) - .5) * 10, y = (h2(i, 2, 51) - .5) * 7.5; if (riverDist(x, y, R) < .25) continue;
+    const x = (h2(i, 1, 51) - .5) * 10, y = (h2(i, 2, 51) - .5) * 7.5; if (R.pts.some(p => Math.abs(p[0] - x) < .45 && Math.abs(p[1] - y) < .45)) continue;
     const a = h2(i, 3, 51) * 3.14, w = .15 + .3 * h2(i, 4, 51), hh = .1 + .2 * h2(i, 5, 51), c = Math.cos(a), sn = Math.sin(a);
     const q = [[-w, -hh], [w, -hh], [w, hh], [-w, hh], [-w, -hh]].map(([u, v]) => [x + u * c - v * sn, y + u * sn + v * c]);
     out.push(mkLine(q, { b: .2, w: .7, o: .55 }));
@@ -145,7 +158,7 @@ export function lodC() {
 // ---------------------------------------------------------------- the cloud deck (unit space, centred at 0)
 export function cloudLayer(seed, n = 170) {
   const levels = [.5, .54, .58, .62, .66, .7, .74];
-  return contourSet(-1, -1, 1, 1, n, (x, y) => { const r = Math.hypot(x, y); return fbm(x * 2.4 + seed, y * 2.4 - seed, seed + 3, 5) + .12 * Math.cos(r * 9 + seed) - .25 * sstep(.95, 1.4, r); }, levels, lv => ({ b: .5 + 1.4 * (lv - .5), w: 1.0, o: 0, spd: .5 }));
+  return plainContours(-1, -1, 1, 1, n, (x, y) => { const r = Math.hypot(x, y); return fbm(x * 2.4 + seed, y * 2.4 - seed, seed + 3, 5) + .12 * Math.cos(r * 9 + seed) - .25 * sstep(.95, 1.4, r); }, levels, lv => ({ b: .5 + 1.4 * (lv - .5), w: 1.0, o: 0, spd: .5 }));
 }
 
 // ---------------------------------------------------------------- the ground camera (perspective, heading = +y)

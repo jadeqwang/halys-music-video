@@ -134,11 +134,11 @@ export function mapSource(f, o = {}) {
     const edge = Math.min(u + .08, 1.08 - u, v + .1, 1.12 - v), onBoard = u > 0 && u < 1 && v > 0 && v < 1;
     const h = onBoard ? gs(G.H, n, m, u, v) : -.02;
     const hx = onBoard ? (gs(G.H, n, m, u + eps, v) - gs(G.H, n, m, u - eps, v)) / (2 * eps) : 0, hy = onBoard ? (gs(G.H, n, m, u, v + eps) - gs(G.H, n, m, u, v - eps)) / (2 * eps) : 0;
-    const rel = o.relief ?? .9;
+    const rel = o.relief ?? 2.2;
     let nx = -hx * rel * .06, ny = hy * rel * .06, nz = 1; const nl = Math.hypot(nx, ny, nz); nx /= nl; ny /= nl; nz /= nl;   // board space: x east, y north
     const land = onBoard ? gs(G.land, n, m, u, v) : 0, riv = onBoard ? gs(G.river, n, m, u, v) : 0, lake = onBoard ? gs(G.lake, n, m, u, v) : 0;
     // marble: land a warm white, the sea a polished darker grey-violet slab, the rim dark
-    let alb = lerp(.42, .86, land) * (1 - .25 * riv) * (1 + .05 * (vnoise(u * 160, v * 160, 3) - .5));
+    let alb = lerp(.2, .88, land) * (1 - .55 * riv) * (1 + .05 * (vnoise(u * 160, v * 160, 3) - .5));
     alb = lerp(alb, .7, lake * .6);
     const veins = Math.abs(Math.sin((u * 3.1 + v * 1.7) * 22 + 3 * fbm(u * 6, v * 6, 9, 3))); alb *= 1 - .18 * (1 - sstep(0, .045, veins)) * land;
     const kd = clamp(nx * key[0] + ny * -key[1] + nz * key[2]);

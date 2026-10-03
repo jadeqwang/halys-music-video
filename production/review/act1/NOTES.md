@@ -1,7 +1,8 @@
 # Act I review (S01–S34, 0–110.58 s) · brush engine
 
 Files: `rN_sheet_*.jpg` contact sheets (from the rendered frames), `rN_act1_*.mp4` clips with the song
-(1280×720, CRF 30). Only the latest clip of each section is kept (20 MB budget).
+(1280×720, CRF 30), `final_sheet_all_shots.jpg` (render.mjs --sheet, every Act I shot and insert). Only the latest
+clip of each section is kept (20 MB budget): r2 0–14 s, r4 25–52 s, r3 67–111 s.
 
 ## Round 1 (stand-ins mostly replaced by the first real plates)
 
@@ -28,3 +29,18 @@ Files: `rN_sheet_*.jpg` contact sheets (from the rendered frames), `rN_act1_*.mp
 - S34p: 60 fps insert, the pupil dilates smoothly to S35's full-black first frame (centre = drop1's master sun).
 - Still weak: water reads as round dabs in the shallows; the wides' troops are better but not Altdorfer-fine;
   S28's sky part is very dark; S10/S21 action plates are soft (motion blur in the plates).
+
+## Round 3 (67–111 s clip)
+
+- S25: painted sky + bitten sun at the right edge, brightness-based sky mask (no halos), water as horizontal flicks
+  (groundFlow now also takes coherent ripples; narrower strokes) instead of round dabs.
+- S28's crescent sky lifted into a halo of cloud; S30's umbra wall reads (gold land before the front, black behind);
+  S31–S34 on the totality look (band behind the ranks, corona, beads → ring → white → pupil).
+- Weak: S31 front faces stay dark; S27's duel close-ups murky; the S26 sweep is subtle at speed.
+
+## Round 4 (25–52 s clip)
+
+- S10 rebuilt as a contre-jour charge (the plate's bright sky and glitter kept, ranks in silhouette); S11/S14 legible;
+  S12 a flat golden disk (no white hole); S13 on P09 (the cavalry charge); S16 with the crowd pass; S17/S19 duel on
+  P12 with strikes landing on beats.
+- Weak: S18's silhouettes are small blobs; the wides' troops still read as a texture at full frame, not Altdorfer-fine.

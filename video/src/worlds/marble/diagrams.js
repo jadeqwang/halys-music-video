@@ -65,7 +65,7 @@ export function thalesDiagrams(g, W, H, t, o = {}) {
   const u = H / 1080, s = H, t0 = o.t0 ?? 183.45, dim = 1 - (o.dim ?? 0) * .35;
   const items = [];
   // the saros dial behind his head, turning slowly
-  const [hx, hy] = o.head || [.56, .3], Rr = .33 * s, cx = hx * W, cy = hy * H, rot = -.6 + (t - t0) * .045;
+  const [hx, hy] = o.dial || [.84, .58], Rr = (o.dialR ?? .15) * s, cx = hx * W, cy = hy * H, rot = -.6 + (t - t0) * .045;
   const kRing = sstep(t0, t0 + 1.2, t);
   items.push([poly(circlePts(cx, cy, Rr, rot, rot + TAU, 160), 1.6), kRing]);
   items.push([poly(circlePts(cx, cy, Rr * .9, rot + .3, rot + .3 + TAU, 160), 1.0), sstep(t0 + .2, t0 + 1.4, t)]);
@@ -76,8 +76,8 @@ export function thalesDiagrams(g, W, H, t, o = {}) {
     items.push([poly([[cx + Math.cos(a) * Rr * .9, cy + Math.sin(a) * Rr * .9], [cx + Math.cos(a) * Rr * (.9 + l), cy + Math.sin(a) * Rr * (.9 + l)]], j % 10 === 0 ? 1.2 : .8), kk]);
   }
   // his theorem: circle, diameter, the triangle on it, the right angle
-  const [tx, ty] = o.theorem || [.2, .36], R = .115 * s, X = tx * W, Y = ty * H, ta = (o.thalesA ?? -.12), tb = 2.05;
-  const t1 = t0 + 1.0;
+  const [tx, ty] = o.theorem || [.2, .36], R = .1 * s, X = tx * W, Y = ty * H, ta = (o.thalesA ?? -.12), tb = 2.05;
+  const t1 = t0 + 1.05;
   items.push([poly(circlePts(X, Y, R, -Math.PI / 2, 1.5 * Math.PI, 96), 1.5), sstep(t1, t1 + .7, t)]);
   const A = [X + Math.cos(Math.PI + ta) * R, Y + Math.sin(Math.PI + ta) * R], Bp = [X + Math.cos(ta) * R, Y + Math.sin(ta) * R], P = [X + Math.cos(-tb) * R, Y + Math.sin(-tb) * R];
   items.push([poly([A, Bp], 1.3), sstep(t1 + .5, t1 + .85, t)]);
@@ -86,7 +86,7 @@ export function thalesDiagrams(g, W, H, t, o = {}) {
     const p1 = [P[0] + d1[0] / l1 * q, P[1] + d1[1] / l1 * q], p2 = [P[0] + d2[0] / l2 * q, P[1] + d2[1] / l2 * q], p3 = [p1[0] + d2[0] / l2 * q, p1[1] + d2[1] / l2 * q];
     items.push([poly([p1, p3, p2], 1.1), sstep(t1 + 1.15, t1 + 1.4, t)]); }
   // the gear: teeth, rim, four spokes, hub; then its teeth peel off into lines of code
-  const [gx, gy] = o.gear || [.84, .64], Rg = .085 * s, GX = gx * W, GY = gy * H, nTeeth = 40, grot = (t - t0) * .25, t2 = t0 + 1.9;
+  const [gx, gy] = o.gear || [.12, .86], Rg = .065 * s, GX = gx * W, GY = gy * H, nTeeth = 36, grot = (t - t0) * .25, t2 = t0 + 1.9;
   const tooth = []; for (let j = 0; j < nTeeth; j++) { const a0 = grot + j / nTeeth * TAU, a1 = a0 + TAU / nTeeth * .25, a2 = a0 + TAU / nTeeth * .5, a3 = a0 + TAU / nTeeth * .75;
     for (const [a, r] of [[a0, Rg], [a1, Rg * 1.09], [a2, Rg * 1.09], [a3, Rg]]) tooth.push([GX + Math.cos(a) * r, GY + Math.sin(a) * r]); }
   const peel = sstep(t2 + 1.0, t2 + 2.2, t);
@@ -96,14 +96,14 @@ export function thalesDiagrams(g, W, H, t, o = {}) {
   items.push([poly(circlePts(GX, GY, Rg * .16, 0, TAU, 32), 1.0), sstep(t2 + .7, t2 + 1.0, t)]);
   // leader lines from the teeth to the code rows (the gear resolving into code)
   const rows = ['saros = 6585.32  # days', 'for k in range(-3, 4):', '    t = t0 + k * saros', '    if eclipse(t, halys):', '        mark(t)'];
-  const cx0 = GX - Rg * 2.9, cy0 = GY + Rg * 1.45, lh = .03 * s;
+  const right = o.codeAt === 'right', cx0 = right ? GX + Rg * 1.9 : GX - Rg * 2.9, cy0 = right ? GY - Rg * .95 : GY + Rg * 1.45, lh = .028 * s;
   rows.forEach((_, j) => {
-    const a = grot + (.6 + j * .22) * Math.PI, sx = GX + Math.cos(a) * Rg * 1.09, sy = GY + Math.sin(a) * Rg * 1.09;
+    const a = grot + (right ? (-.35 + j * .17) : (.6 + j * .22)) * Math.PI, sx = GX + Math.cos(a) * Rg * 1.09, sy = GY + Math.sin(a) * Rg * 1.09;
     items.push([poly([[sx, sy], [lerp(sx, cx0 - .01 * s, .5), cy0 + j * lh - .006 * s], [cx0 - .008 * s, cy0 + j * lh - .006 * s]], .8), sstep(t2 + 1.1 + j * .12, t2 + 1.5 + j * .12, t)]);
   });
   // draw: lines first, into a layer that his matte cuts (lines pass behind him), then the lettering
   gildLines(g, items, u, { alpha: dim * (o.alpha ?? 1) });
-  arcText(g, 'SAROS · 18 Y 11 D 8 H', cx, cy, Rr * 1.045, -Math.PI / 2 - .55 + (t - t0) * .045 * .5, 27 * u, u, dim * sstep(t0 + 1.3, t0 + 1.9, t) * (o.alpha ?? 1));
+  arcText(g, 'SAROS · 18 Y 11 D 8 H', cx, cy, Rr * 1.07, -Math.PI / 2 + (t - t0) * .02, 24 * u, u, dim * sstep(t0 + 1.3, t0 + 1.9, t) * (o.alpha ?? 1));
   // the code rows typing out (JetBrains Mono in gold)
   setFont(g, 'mono', 19 * u);
   rows.forEach((row, j) => {

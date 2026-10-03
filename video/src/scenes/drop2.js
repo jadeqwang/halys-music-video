@@ -8,7 +8,7 @@
 
 import { scene, shotOverride } from '../registry.js';
 import { drawLines, staticMesh, dynLayer, coronaRing, ringU, audio, proc, FL, resolve, sourceFields } from '../worlds/line/index.js';
-import { clamp, lerp, sstep, smooth, easeInOut, easeOut, hash3, TAU } from '../core.js';
+import { clamp, lerp, sstep, smooth, easeIn, easeInOut, easeOut, hash3, TAU } from '../core.js';
 import { FPS } from '../time.js';
 import { lockedRing, ringR, RING_CFG, RING_BARE, clipLines, splitLine, mkLine, dot, placeU, affineU, vocalBreath, breathPhase, xform } from '../worlds/orbit/index.js';
 import * as ERA from '../worlds/orbit/eras.js';
@@ -244,4 +244,193 @@ scene('S73', async f => {
   await drawLines(f, { layers, kick, kickWidth: 1.1, kickPush: 18, pushCenter: [target[0], target[1]], phase: audio.flowPhase(t), look: { glow: [.24, .1] }, disk: false, palette: BLUE });
   await E.earthFill(f, V, { occ });
   steer(f, { kick, field: { center: [target[0], target[1]], r: 0 }, sun: undefined });
+});
+
+// ================================================================ S74: the dive, lines condense into paint (GOLD)
+// 257.675 (the hit, the kick stops): down through the cloud deck (white contour layers scaled past the camera), the
+// map of Anatolia under it (1:10m coasts, the seas still Earth-blue, the Halys in orange), zooming 1100x into the bend
+// near Avanos; then the camera pitches from nadir to level as it drops into the valley, P38's front row appears in
+// lines, and the lines widen and condense into the brush engine's GOLD paint of P38's first frame (12 drawings/s, the
+// painted world's cadence). Its last frame is paint(P38 frame 1, LANDING_LOOK): S75 (259.36) continues from there.
+export const S74_T0 = 257.675, S74_T1 = 259.355;
+// the GOLD look of the landing frame (and of S77's first frame): the brush agent's S75/S76 should match it, or export
+// theirs as P38_GOLD from chorus2.js and both ends pick it up (see goldLook)
+export const LANDING_LOOK = {
+  palette: 'gold', lightDir: [-.55, -.8], pool: [{ x: .5, y: .5, rx: .95, ry: .9, feather: .6, k: 1 }], poolFromLight: { k: .7, bg: .45 }, poolMatte: .5,
+  envDim: .8, crushFloor: .05, rim: .75, glint: .9, plateKeep: .6, keepDim: .88, faceMin: .3, impasto: .5, eclipse: 0, seed: 38,
+};
+export const S74_HANDOFF = { t: S74_T1, plate: 'P38', tp: 0, frame: 1, cam: null, look: 'LANDING_LOOK (or chorus2.js P38_GOLD)' };
+async function goldLook() {
+  try { const m = await import('./chorus2.js'); if (m.P38_GOLD) return m.P38_GOLD; } catch (e) { /* no export yet */ }
+  return LANDING_LOOK;
+}
+// paint(P38 at plate time tp) at the drawing of song time t (12 fps), cached per drawing: a pure function of (tp, drawing)
+const PAINTS = new Map();
+async function paintP38(f, t, tp) {
+  const di = Math.round(t * 12), key = `${f.W}x${f.H}|${di}|${tp}`;
+  if (PAINTS.has(key)) { const c = PAINTS.get(key); PAINTS.delete(key); PAINTS.set(key, c); return c; }
+  const B = await import('../worlds/brush/index.js'), look = await goldLook();
+  const tq = di / 12, ff = { ...f, t: tq, cad: 12, k: 0, lt: 0 };
+  const src = await B.resolvePlate(ff, 'P38', { id: 'c_armies' }, null, { keys: [[0, tp], [1e4, tp]] });
+  const c = new OffscreenCanvas(f.W, f.H), g2 = c.getContext('2d');
+  await B.paint(ff, src, { ...look, target: g2, drawIdx: di });
+  PAINTS.set(key, c);
+  while (PAINTS.size > 6) PAINTS.delete(PAINTS.keys().next().value);
+  return c;
+}
+const P38_SRC = { plate: 'P38', standin: 'armies' };
+const P38_TRACE = { contourW: [1.2, 2.4], contourB: 1.8, innerB: .95, innerHi: .16, lightDir: [-.5, -.8], dsepMin: 3, dsepMax: 9, bgSepMin: 14, bgSepMax: 26, bgGain: .35,
+  sky: { horizonY: .43, below: .45, useDepth: false }, horizon: 1, horizonBand: .02, armies: 1, armyMask: [[[0, .43], [1, .43], [1, .6], [0, .6]]], tick: [4, 9],
+  river: [[0, .6], [1, .6], [1, .675], [0, .675]], riverFlow: { x: -2, y: .64, k: 3 }, riverB: 1.0, minLen: 20 };
+let LOD = null;
+async function diveLods(f) {
+  const D = await import('../worlds/orbit/dive.js');
+  if (!LOD) { const t0 = performance.now(); LOD = { A: D.lodA(), B: D.lodB(), C: D.lodC(), clouds: [D.cloudLayer(1.3), D.cloudLayer(4.1), D.cloudLayer(7.7)], R: D.river() }; console.log(`[orbit] dive lods ${Math.round(performance.now() - t0)} ms`); }
+  return { D, L: LOD };
+}
+// the map's rotation: the river horizontal at the landing point, north-ish up
+function mapRot(R) { let r = -R.ang; while (r > Math.PI / 2) r -= Math.PI; while (r < -Math.PI / 2) r += Math.PI; return r; }
+const mapU = (S, rot, cx, cy) => affineU(S * Math.cos(rot), -S * Math.sin(rot), -S * Math.sin(rot), -S * Math.cos(rot), cx, cy);
+const lodW = S => ({ A: (1 - sstep(10, 24, S)), B: sstep(4, 10, S) * (1 - sstep(150, 320, S)), C: sstep(55, 130, S) });
+const DIVE = { S0: .4, S1: 380, tp: .95, te: 1.3 };
+function diveScale(tau) { const u = clamp(tau / DIVE.tp); return Math.exp(lerp(Math.log(DIVE.S0), Math.log(DIVE.S1), u * u * (1.35 - .35 * u))); }
+scene('S74', async f => {
+  const W = f.W, H = f.H, s = H / 1080, t = f.t, tau = t - S74_T0, cx = W / 2, cy = H / 2;
+  const { D, L } = await diveLods(f), E = await import('../worlds/orbit/earth.js');
+  const rot = mapRot(L.R), Fc = 1.2 * W;
+  const S = diveScale(tau), w = lodW(S), layers = [];
+  const ground = tau > DIVE.tp, gu = clamp((tau - DIVE.tp) / (DIVE.te - DIVE.tp)), ge = easeInOut(gu);
+  const groundK = 1 - sstep(1.28, 1.4, tau);
+  if (!ground) {
+    for (const [k, key] of [['A', 'dive-A'], ['B', 'dive-B'], ['C', 'dive-C']]) if (w[k] > .01) layers.push({ mesh: staticMesh(f, key, () => L[k]), u: { ...mapU(S, rot, cx, cy), uBright: w[k], uPulse: 0 } });
+  } else {
+    const h0 = Fc / DIVE.S1, cam = { x: 0, y: lerp(0, -.06, ge), h: Math.exp(lerp(Math.log(h0), Math.log(.0018), Math.pow(gu, .7))), pitch: lerp(Math.PI / 2, .006, ge), F: Fc, cx, cy, heading: -rot };
+    if (groundK > .01) layers.push(dynLayer([...D.groundLines(L.C, cam, W, H, groundK), ...D.groundLines(L.B, cam, W, H, groundK * (1 - ge))], { uPulse: .2 }));
+  }
+  // the cloud deck: three layers scaled past the camera
+  [-.08, .07, .22].forEach((ti, i) => {
+    const d = tau - ti, env = sstep(-.22, -.04, d) * (1 - sstep(.06, .24, d)); if (env <= .01) return;
+    const sc = .85 * W * Math.exp(4.8 * d), r0 = .3 * i + .25 * tau, c = Math.cos(r0) * sc, sn = Math.sin(r0) * sc;
+    layers.push({ mesh: staticMesh(f, 'cloud-' + i, () => L.clouds[i]), u: { ...affineU(c, sn, -sn, c, cx, cy), uBright: 1.5 * env, uPulse: .3 } });
+  });
+  // the landing: P38 in lines, then paint
+  const plateK = sstep(1.25, 1.37, tau), paintK = sstep(1.37, 1.6, tau);
+  const flash = .16 * Math.exp(-Math.max(0, tau) / .035);
+  await drawLines(f, {
+    ...(plateK > .01 ? { src: P38_SRC, freeze: 0, trace: P38_TRACE, corona: false, plateU: { uBright: 1.3 * plateK } } : {}),
+    layers, kick: 0, phase: audio.flowPhase(t) * .8, flash, disk: false, palette: BLUE,
+    look: { glow: [.24 * (1 - paintK), .1 * (1 - paintK)], width: 1 + 2.2 * paintK, soft: .45 * paintK, flat: .5 * paintK },
+  });
+  const seaA = (1 - sstep(7, 22, S)) * sstep(.04, .22, tau) * (ground ? 0 : 1);
+  if (seaA > .01) await E.mapFill(f, { cx, cy, S, rot, ll0: D.BEND, k: [111.32 * Math.cos(38.72 * Math.PI / 180), 110.9], shift: L.R.shift }, { alpha: seaA });
+  if (paintK > .002) {
+    const pc = await paintP38(f, t, 0), g = f.g;
+    g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = paintK; g.drawImage(pc, 0, 0, W, H); g.restore();
+  }
+  steer(f, { kick: 0 });
+});
+
+// ================================================================ S77: the pull-back (paint -> light -> ink)
+// On the boom (262.72): S76's last painted frame (P38's last frame) evaporates into its lines as the camera booms up;
+// the valley drops away (ground camera, level -> nadir), the map of Anatolia recedes, up through the cloud deck, the
+// globe (blue again) with the Moon's shadow over Anatolia, the Moon swings past, the Earth settles at the size it has
+// on her monitor, and the image shrinks into the monitor's sim panel as the bezel enters; the last frames dissolve into
+// S78's first frame (her room), so the cut at 266.12 is invisible. The end framing is room.js's roomHandoff().
+export const S77_T0 = 262.724, S77_T1 = 266.124;
+shotOverride('S77', { cadence: 60 });
+const S77P = { globe: [1.42, 2.72], moon: [1.85, 2.72], bezel: [2.62, 3.3], room: [3.14, 3.37] };
+const UMBRA = { ll: [33.9, 38.4], r: 2.9, pen: 9.8 };       // where the room's sim draws it
+let _moonRef = null;
+scene('S77', async f => {
+  const W = f.W, H = f.H, s = H / 1080, t = f.t, tau = t - S77_T0, cx = W / 2, cy = H / 2;
+  const { D, L } = await diveLods(f), E = await import('../worlds/orbit/earth.js');
+  const rot = mapRot(L.R), Fc = 1.2 * W;
+  // ---- weights of the phases
+  const paintK = 1 - sstep(.05, .3, tau);
+  const plateK = sstep(0, .08, tau) * (1 - sstep(.4, .54, tau));
+  const gu = clamp((tau - .34) / (.8 - .34)), ge = easeInOut(gu), groundK = sstep(.3, .44, tau) * (1 - sstep(.76, .84, tau));
+  const mu = clamp((tau - .78) / (1.5 - .78)), S = Math.exp(lerp(Math.log(DIVE.S1), Math.log(DIVE.S0), Math.pow(mu, 1.3)));
+  const mapK = sstep(.74, .84, tau) * (1 - sstep(1.4, 1.52, tau));
+  const gk = clamp((tau - S77P.globe[0]) / (S77P.globe[1] - S77P.globe[0])), globeK = sstep(S77P.globe[0], S77P.globe[0] + .1, tau);
+  const bz = clamp((tau - S77P.bezel[0]) / (S77P.bezel[1] - S77P.bezel[0])), be = easeInOut(bz);
+  const roomK = sstep(S77P.room[0], S77P.room[1], tau);
+  const R = await import('./room.js'), HO = R.roomHandoff(W, H);
+  const Rf = 410 * s, Ec = [W / 2, .44 * H];
+  // ---- the world of light for this frame (into f.g, or a layer when it must shrink into the monitor)
+  const target = bz > 0 ? f.layer(2) : null, fw = target ? { ...f, g: target.g } : f;
+  const layers = [], plates = {};
+  let V = null, occ = null;
+  if (plateK > .01) Object.assign(plates, { src: P38_SRC, freeze: 5.0, trace: P38_TRACE, corona: false, plateU: { uBright: 1.3 * plateK }, cam: { pitch: -16 * easeIn(clamp(tau / .5)), zoom: 1 - .1 * clamp(tau / .5), pan: [0, 60 * s * clamp(tau / .5)] } });
+  if (groundK > .01) {
+    const h1 = Fc / DIVE.S1, cam = { x: 0, y: lerp(-.06, 0, ge), h: Math.exp(lerp(Math.log(.0018), Math.log(h1), Math.pow(gu, 1.4))), pitch: lerp(.006, Math.PI / 2, ge), F: Fc, cx, cy, heading: -rot };
+    layers.push(dynLayer([...D.groundLines(L.C, cam, W, H, groundK), ...D.groundLines(L.B, cam, W, H, groundK * ge)], { uPulse: .2 }));
+  }
+  if (mapK > .01) { const w = lodW(S); for (const [k, key] of [['A', 'dive-A'], ['B', 'dive-B'], ['C', 'dive-C']]) if (w[k] > .01) layers.push({ mesh: staticMesh(f, key, () => L[k]), u: { ...mapU(S, rot, cx, cy), uBright: w[k] * mapK, uPulse: 0 } }); }
+  // up through the cloud deck (layers shrinking past the camera)
+  [1.2, 1.32, 1.44].forEach((ti, i) => {
+    const d = tau - ti, env = sstep(-.22, -.04, d) * (1 - sstep(.06, .24, d)); if (env <= .01) return;
+    const sc = .85 * W * Math.exp(-4.8 * d + 1.0), r0 = .3 * i - .25 * tau, c = Math.cos(r0) * sc, sn = Math.sin(r0) * sc;
+    layers.push({ mesh: staticMesh(f, 'cloud-' + i, () => L.clouds[i]), u: { ...affineU(c, sn, -sn, c, cx, cy), uBright: 1.4 * env, uPulse: .3 } });
+  });
+  let moon = null;
+  if (globeK > .01) {
+    await E.earthReady(1);
+    const ge2 = easeInOut(gk), Rs = Math.exp(lerp(Math.log(DIVE.S0 * 6371), Math.log(Rf), ge2));
+    V = E.earthView({ lon0: lerp(34.85, 22, ge2), lat0: lerp(38.72, 24, ge2), roll: 0, D: 40, Rs, cx: lerp(cx, Ec[0], ge2), cy: lerp(cy, Ec[1], ge2), sun: EARTH_SUN, umbra: UMBRA });
+    // the Moon swings past (closer than the Earth: it occludes it), ending small on the Sun's side
+    const mk = clamp((tau - S77P.moon[0]) / (S77P.moon[1] - S77P.moon[0]));
+    if (mk > 0) {
+      const me = easeOut(mk);
+      moon = { x: lerp(-.2 * W, .17 * W, me), y: lerp(1.3 * H, .7 * H, me), r: Math.exp(lerp(Math.log(1.05 * H), Math.log(.24 * Rf), me)) };
+      occ = moon;
+    }
+    layers.push(dynLayer(E.earthLines(V, { W, H, minStep: 2.6, occ }), { uBright: globeK }));
+    const stars = []; for (let i = 0; i < 160; i++) { const x = hash3(i, 77, 1) * W, y = hash3(i, 77, 2) * H; if (Math.hypot(x - V.cx, y - V.cy) < V.Rs * 1.05 || (moon && Math.hypot(x - moon.x, y - moon.y) < moon.r * 1.05)) continue; stars.push(dot(x, y, (.25 + 1.0 * Math.pow(hash3(i, 77, 3), 4)) * globeK, 1.4 + hash3(i, 77, 4), 0, FL.TIP | FL.SHARP)); }
+    layers.push(dynLayer(stars));
+    if (moon) {
+      const { moonDisk } = await import('../worlds/orbit/moon.js');
+      if (!_moonRef) _moonRef = moonDisk(0, 0, 400 * s, { sun: [-.85, -.35], sunZ: .15 });
+      const k = moon.r / (400 * s);
+      layers.push({ mesh: staticMesh(f, 'moon-disk', () => _moonRef), u: { ...affineU(k, 0, 0, k, moon.x, moon.y), uBright: .95, uPulse: 0 } });
+      // the shadow cone from the Moon to the dot on the Earth (faint)
+      const u = E.project(V, E.ll2v(...UMBRA.ll));
+      if (u[2] > 1 / V.D) {
+        const dx = u[0] - moon.x, dy = u[1] - moon.y, dl = Math.hypot(dx, dy) || 1, nx = -dy / dl, ny = dx / dl;
+        const cone = [[[moon.x + nx * moon.r * .98, moon.y + ny * moon.r * .98], [u[0], u[1]]], [[moon.x - nx * moon.r * .98, moon.y - ny * moon.r * .98], [u[0], u[1]]]];
+        layers.push(dynLayer(cone.map(pts => mkLine(pts, { b: .22 * mk, w: .8, o: .3, spd: 1.2 }))));
+      }
+    }
+  }
+  await drawLines(fw, { ...plates, layers, kick: 0, phase: audio.flowPhase(t) * .8, disk: false, palette: BLUE,
+    look: { glow: [.24, .1], width: 1 + 1.6 * paintK, soft: .35 * paintK } });
+  const seaA = (1 - sstep(7, 22, S)) * mapK;
+  if (seaA > .01) await E.mapFill(fw, { cx, cy, S, rot, ll0: D.BEND, k: [111.32 * Math.cos(38.72 * Math.PI / 180), 110.9], shift: L.R.shift }, { alpha: seaA });
+  if (V) await E.earthFill(fw, V, { occ, alpha: globeK });
+  if (paintK > .002) { const pc = await paintP38(f, t, 5.0), g = fw.g; g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = paintK; g.drawImage(pc, 0, 0, W, H); g.restore(); }
+  // ---- into the monitor: the image shrinks into the sim panel, the bezel enters around it
+  if (target) {
+    const kEnd = HO.earth.r / Rf, sc = Math.exp(lerp(0, Math.log(kEnd), be));
+    const c = [lerp(Ec[0], HO.earth.x, be), lerp(Ec[1], HO.earth.y, be)];
+    const Tu = [sc, 0, 0, sc, c[0] - sc * Ec[0], c[1] - sc * Ec[1]];                  // frame -> screen now
+    const m = sc / kEnd, Mu = [m, 0, 0, m, c[0] - m * HO.earth.x, c[1] - m * HO.earth.y];   // final screen -> screen now
+    const g = f.g;
+    g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = '#06070b'; g.fillRect(0, 0, W, H);
+    // the side monitor (bezel), its screen, the sim panel clipped: everything placed by Mu
+    g.setTransform(...Mu);
+    const q = HO.bezel, poly = (pts, grow = 0) => { const mx = (pts[0][0] + pts[2][0]) / 2, my = (pts[0][1] + pts[2][1]) / 2; g.beginPath(); pts.forEach(([x, y], i) => { const X = x + Math.sign(x - mx) * grow, Y = y + Math.sign(y - my) * grow; i ? g.lineTo(X, Y) : g.moveTo(X, Y); }); g.closePath(); };
+    g.fillStyle = '#15171d'; poly(q, 9 * s); g.fill();
+    g.strokeStyle = 'rgba(243,239,230,.18)'; g.lineWidth = 1.2 * s / m; poly(q, 9 * s); g.stroke();
+    g.fillStyle = '#0b0c10'; poly(q); g.fill();
+    g.save(); poly(HO.panel); g.clip();
+    g.setTransform(...Tu); g.drawImage(target.c, 0, 0, W, H);
+    g.restore();
+    g.restore();
+    // the last frames dissolve into her room (S78's first frame, drawn by room.js): the cut is invisible
+    if (roomK > .002) {
+      const RL = f.layer(3), i78 = Math.ceil(266.12 * FPS - 1e-6);
+      await f.drawScene('S78', { t: i78 / FPS, i: i78, d: 0, lt: 0, k: 0 }, RL.g);
+      g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = roomK; g.drawImage(RL.c, 0, 0, W, H); g.restore();
+    }
+  }
+  steer(f, { kick: 0 });
 });
