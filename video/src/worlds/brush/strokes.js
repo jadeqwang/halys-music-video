@@ -208,7 +208,9 @@ function traceStroke(F, J, x0, y0, Ra, rb, gb, bb, cR, cG, cB, painted, cfg, li,
   const aw = F.aw, c = [samp(F, rb, x0, y0), samp(F, gb, x0, y0), samp(F, bb, x0, y0)];
   const pts = [[x0, y0]], v = [0, 0, 0], r0 = rid[Math.round(y0) * aw + Math.round(x0)];
   let x = x0, y = y0, ldx = 0, ldy = 0;
-  const maxL = cfg.maxLen[li], minL = cfg.minLen[li], step = Ra * cfg.step[li] * 1.6, cT = Math.cos(cfg.maxTurn), sT = Math.sin(cfg.maxTurn);
+  let maxL = cfg.maxLen[li], minL = cfg.minLen[li];
+  const step = Ra * cfg.step[li] * 1.6, cT = Math.cos(cfg.maxTurn), sT = Math.sin(cfg.maxTurn);
+  if (F.gw) { const gw = F.gw[Math.round(y0) * aw + Math.round(x0)]; if (gw > .35) { minL = Math.max(minL, 3); maxL = maxL + 3; } }   // flicks across water
   for (let k = 1; k <= maxL; k++) {
     if (k > minL) {
       const xi = Math.round(x), yi = Math.round(y), i = yi * aw + xi;

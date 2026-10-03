@@ -12,7 +12,7 @@
 // For the marble world: drawCrystallise(f, { widen }) and S45_HANDOFF (S45 section below).
 
 import { scene, shotOverride } from '../registry.js';
-import { drawLines, plateLines, coronaRing, ringU, staticMesh, dynLayer, audio, proc, FL, camUniforms, project, PALETTE, resolve } from '../worlds/line/index.js';
+import { drawLines, plateLines, sourceFields, coronaRing, ringU, staticMesh, dynLayer, audio, proc, FL, camUniforms, project, PALETTE, resolve } from '../worlds/line/index.js';
 import { clamp, lerp, sstep, smooth, easeInOut, easeOut, hash3, TAU } from '../core.js';
 import { FPS } from '../time.js';
 
@@ -20,25 +20,32 @@ const snap = audio.snap;
 const STAB36 = [112.74, 113.173, 113.607, 115.783, 116.217, 116.652, 117.086];   // SHOTLIST S36 inversions (timing.json stabs)
 const steer = (f, o) => { f.type = Object.assign(f.type || {}, o); };
 const typeSun = s => s ? { x: s[0], y: s[1], r: s[2] } : undefined;
+// where the eclipse hangs in the drop's opening (the master composition): the CHOP fill radiates from it in S35-S36
+const dropSun = f => ({ x: .5 * f.W, y: .343 * f.H, r: .028 * f.W });
 const segAt = (t, cuts) => { let i = 0; while (i < cuts.length && snap(cuts[i]) <= t + 1e-6) i++; return i; };
 
 // ---------------------------------------------------------------- looks
 // close-ups: crisp weighted contours lead, interior lines spaced wide enough that a face reads as form, not texture
 const CU_TRACE = { contourW: [1.3, 2.6], contourB: 1.5, innerB: .95, innerHi: .17, rim: 1, lightDir: [-.4, -.9],
   dsepMin: 3.4, dsepMax: 10, bgSepMin: 20, bgSepMax: 36, bgGain: .2, subjBright: [.25, .9], minLen: 26 };
+// the master composition: generic settings work on any plate (sky by depth, sun at the river's vanishing point); the
+// board-specific geometry (F2's river, army masks, light pools, horizon) is stand-in only (standinTrace)
 const MASTER_TRACE = {
-  sky: { horizonY: .335, below: .345, useDepth: false }, sun: { x: .5, y: .343, r: .024, tilt: .35 },
+  sky: { maxDepth: .03, soft: .02, horizonY: .37, below: .40 }, sun: { x: .5, y: .343, r: .028, tilt: .35 },
+  innerEverywhere: 1, innerHi: .13, innerLo: .055, contour: 0, gamma: 1.2, bgGain: .42, shadowCut: .03, tick: [6, 15], tickMin: 2,
+  armies: 1, pool: [{ x: .2, y: .62, rx: .23, ry: .3, k: 1 }, { x: .8, y: .62, rx: .23, ry: .3, k: 1 }],      // both banks (equal light)
+};
+const MASTER_STANDIN = {
+  sky: { horizonY: .335, below: .345, useDepth: false },
   river: [[.497, .352], [.49, .38], [.485, .40], [.47, .42], [.475, .45], [.455, .50], [.43, .55], [.40, .60], [.375, .65], [.35, .70], [.32, .78], [.29, .88], [.27, 1.0],
     [.70, 1.0], [.66, .90], [.63, .80], [.615, .70], [.605, .62], [.58, .56], [.55, .50], [.525, .45], [.515, .42], [.51, .40], [.505, .38], [.503, .352]],
   riverFlow: { x: .5, y: .35, k: 2.5 }, riverB: 1.1,
   armies: 1, armyMask: [[[0, .37], [.46, .37], [.44, .42], [.38, .48], [.30, .55], [.22, .62], [.12, .70], [0, .75]], [[1, .37], [.54, .37], [.56, .42], [.62, .48], [.70, .55], [.78, .62], [.88, .70], [1, .75]]],
-  innerEverywhere: 1, innerHi: .13, innerLo: .055, contour: 0, gamma: 1.2, bgGain: .42, shadowCut: .03,
   pool: [{ x: .12, y: .82, rx: .2, ry: .32, k: 1 }, { x: .88, y: .82, rx: .2, ry: .32, k: 1 }],
-  tick: [6, 15], tickMin: 2,
 };
-const MASTER = { src: { plate: 'P01', standin: 'master' }, trace: MASTER_TRACE, analysis: { gain: 1.7 }, corona: {}, skyField: { gain: .5 } };
+const MASTER = { src: { plate: 'P01', standin: 'master' }, trace: MASTER_TRACE, standinTrace: MASTER_STANDIN, corona: {}, skyField: { gain: .5 } };
 // reaction shots (P42-P45): the dusk horizon glows orange behind the figures
-const RX_TRACE = { ...CU_TRACE, sky: { horizonY: .47, below: .5, useDepth: false }, horizon: 1, horizonBand: .02, dsepMin: 3, dsepMax: 9 };
+const RX_TRACE = { ...CU_TRACE, sky: { horizonY: .47, below: .5, useDepth: false }, horizon: 1, horizonBand: .02, dsepMin: 3, dsepMax: 9, innerEverywhere: 1, innerHi: .13, innerLo: .06, innerB: 1.1 };
 
 // ---------------------------------------------------------------- S35: the break, and the whole battlefield reacts
 // 110.58 the world returns as light from the black pupil (master composition) while the armies ripple: spear ticks tilt
@@ -84,7 +91,7 @@ scene('S35', async f => {
   const S = S35_SUB[sub], ts = snap(S35_CUTS[sub - 1]), lt = f.t - ts;
   await drawLines(f, { src: S.src, tp: S.tp0 + lt, chainFrom: S.tp0, trace: RX_TRACE, corona: false, cam: { zoom: 1 + .05 * Math.exp(-lt / .06) },
     kick, kickPush: 16, phase, look: { glow: [.22, .08] } });
-  steer(f, { kick });
+  steer(f, { kick, sun: dropSun(f) });
 });
 
 // ---------------------------------------------------------------- S36: the "WTF" montage
@@ -127,7 +134,7 @@ scene('S36', async f => {
     src: R.src, freeze: R.tp, trace: { ...RX_TRACE, ...(R.trace || {}) }, corona: false,
     cam: { zoom: 1 + .06 * Math.exp(-lt / .045) }, kick, kickPush: 14, phase: audio.flowPhase(f.t), invert, look: { glow: [.2, .07] },
   });
-  steer(f, { kick, invert });
+  steer(f, { kick, invert, sun: dropSun(f) });
 });
 
 // ---------------------------------------------------------------- S37: the orbit around a frozen reaction tableau
@@ -135,7 +142,8 @@ scene('S36', async f => {
 // own parallax) plus a gentle extra yaw from depth. Until then the stand-in (both duelists looking up) orbits in 3D from
 // its depth map. Kick pulse throughout.
 const TABLEAU = { src: { plate: 'P46', standin: 'duelup' },
-  trace: { ...CU_TRACE, sky: { horizonY: .62, below: .62, useDepth: false }, sun: { x: .22, y: .1, r: .022, tilt: .7 }, lightDir: [-.6, -.8], bgGain: .3, bgCut: .12, depthBlur: 5, relief: .3 },
+  trace: { ...CU_TRACE, sky: { maxDepth: .05, soft: .03, below: .62 }, sun: { x: .22, y: .1, r: .022, tilt: .7 }, lightDir: [-.6, -.8], bgGain: .45, bgCut: .1, depthBlur: 5, relief: .3,
+    subjBright: [.38, 1.05], contourB: 1.8, innerB: 1.1 },
   corona: {}, skyField: { gain: .32, sep0: .13, rmax: 16 } };
 export function s37Cam(t, live) {
   const k = clamp((t - 117.53) / (124.47 - 117.53)), e = easeInOut(k);
@@ -152,12 +160,13 @@ const ringR = H => .105 * H;
 const RING = { corona: { gain: 1.05 }, skyField: { gain: .17, sep0: .17, sep1: 1.2, locals: 5, rmax: 3.6 }, tilt: .42 };
 const RING44 = { ...RING, skyField: { ...RING.skyField, rmax: 9, gain: .24, sep1: 1.6, bounds: [-30, -30, 30, 0] } };   // above the horizon only
 const CYCLE = {
-  S41: { src: { plate: 'P14', standin: 'bface', standinWin: { cx: .58, cy: .45, zoom: 1.12 }, win: { cx: .5, cy: .45, zoom: 1.1 } }, trace: { ...CU_TRACE } },
+  S41: { src: { plate: 'P14', standin: 'bface', standinWin: { cx: .58, cy: .45, zoom: 1.12 }, win: { cx: .4, cy: .2, zoom: 1.3 }, clamp: false }, trace: { ...CU_TRACE } },   // he looks up at the ring (window past the plate's top: black)
   S42: { src: { plate: 'P04', standin: 'duelup', standinWin: { cx: .64, cy: .3, zoom: 2.1 }, win: { cx: .6, cy: .42, zoom: 1.5 } }, trace: { ...CU_TRACE } },
   S43: { plates: [
     { src: { plate: 'P05', standin: 'kings', standinWin: { cx: .25, cy: .5, zoom: 1 }, win: { cx: .3, cy: .5, zoom: 1.05 } }, rect: [0, 0, .5, 1], trace: { ...CU_TRACE, lightDir: [.3, -1] } },
     { src: { plate: 'P06', standin: 'kings', standinWin: { cx: .75, cy: .5, zoom: 1 }, win: { cx: .56, cy: .5, zoom: 1.05 } }, rect: [.5, 0, .5, 1], trace: { ...CU_TRACE, lightDir: [-.3, -1] } }] },
-  S44: { src: { plate: 'P01', standin: 'master', standinWin: { cx: .5, cy: .343, zoom: 1.5 } }, trace: { ...MASTER_TRACE, sun: null }, analysis: { gain: 1.7 } },
+  S44: { src: { plate: 'P01', standin: 'master', standinWin: { cx: .5, cy: .343, zoom: 1.5 }, win: { cx: .5, cy: .35, zoom: 1.5 } }, speed: .18,   // the master composition, barely drifting
+    trace: { ...MASTER_TRACE, sun: null }, standinTrace: MASTER_STANDIN },
 };
 async function chopCycle(f, id) {
   const W = f.W, H = f.H, cx = W / 2, cy = H / 2, kick = audio.kickEnv(f.t, .13), s = H / 1080;
@@ -171,8 +180,8 @@ async function chopCycle(f, id) {
   const layers = [];
   if (R > .5) layers.push({ mesh: ring, u: { ...ringU(cx, cy, R * (1 + .025 * kick)), uBright: bright, uPush: [cx, cy, 22 * kick * s, 300 * s] } });
   if (point > 0) layers.push(dynLayer([proc.circle(cx, cy, 2.2 * s, { b: 3 * point, w: 2.4 }, 10), proc.line([[cx, cy], [cx + .5, cy]], { b: 6 * point, w: 3.5, flags: FL.TIP })]));
-  const tp = f.t - f.shot.t0;
-  const plates = C.plates ? C.plates.map(p => ({ ...p, tp, chainFrom: 0 })) : [{ src: C.src, tp, chainFrom: 0, trace: C.trace, analysis: C.analysis }];
+  const tp = (f.t - f.shot.t0) * (C.speed ?? 1);
+  const plates = C.plates ? C.plates.map(p => ({ ...p, tp, chainFrom: 0 })) : [{ src: C.src, tp, chainFrom: 0, trace: C.trace, standinTrace: C.standinTrace, analysis: C.analysis }];
   await drawLines(f, {
     plates, corona: false, kick, kickPush: 14, pushCenter: [cx, cy], phase: audio.flowPhase(f.t), look: { bright: bgFade, glow: [.22, .08] }, layers,
     disk: R > .5 ? { x: cx, y: cy, r: R } : false,
@@ -197,7 +206,7 @@ export async function drawCrystallise(f, { widen = widenAt(f.t), t = f.t, tp = M
   const w = clamp(widen);
   return drawLines(f, {
     src: S45_PLATE, tp, chainFrom: 0, trace: S45_TRACE, corona: false, phase: slowPhase(t), pulse: .5 * (1 - w),
-    look: { width: 1 + 4.2 * w * w, flat: .85 * w, white: .7 * w, glow: [.22 * (1 - w) + .05 * w, .08 * (1 - w)], endFade: 10 + 50 * w, exposure: 1.6 - .2 * w, soft: .1 * w * w },
+    look: { width: 1 + 4.6 * w * w, flat: .85 * w, white: .7 * w, glow: [.22 * (1 - w) + .03 * w, .08 * (1 - w)], endFade: 10 + 60 * w, exposure: 1.6 - .15 * w },
   });
 }
 // the stable hand-off: plate time and widen at the cut (the marble agent continues from here)
@@ -248,21 +257,25 @@ function machinery(cx, cy, s, t, hole) {
 scene('S38', async f => {
   const W = f.W, H = f.H, s = H / 1080, t = f.t;
   const rise = easeOut(clamp((t - S38.t0) / (S38.touch - S38.t0)));
-  const handY = lerp(.85, .34, rise) * H, contact = [W * .5, H * .06 + handY];   // the fingertips meet the sky
+  const live = resolve(HAND.src).kind === 'plate';
+  const handY = live ? 0 : lerp(.85, .34, rise) * H;
   const press = sstep(S38.touch - .08, S38.tear, t), tear = t >= S38.tear ? easeOut(clamp((t - S38.tear) / .55)) : 0, tear2 = t >= S38.tear2 ? easeOut(clamp((t - S38.tear2) / .25)) : 0;
-  const Rh = (tear * 300 + tear2 * 170) * s, hole = [contact[0], contact[1] - .1 * H];
   // the hand's silhouette (its matte, in screen px) occludes the membrane
-  const hand = await plateLines(f, HAND.src, HAND);
-  const F = hand.F, M = F.M;
+  const F = await sourceFields(HAND.src, live ? t - S38.t0 : 0, 960, W / H), M = F.M, hand = { meta: { S: W / F.aw } };
+  // the contact: the topmost point of the hand's matte (fingertips), in screen px
+  let contact = [W * .5, H * .06 + handY];
+  if (M) { let best = null; for (let y = 2; y < F.ah && !best; y++) for (let x = 2; x < F.aw - 2; x++) if (M[y * F.aw + x] > .5) { best = [x * hand.meta.S, y * hand.meta.S + handY]; break; } if (best) contact = best; }
+  // the tear opens into the open sky: above the fingertips (stand-in), beside the raised hand (P24: hand high, sky to its left)
+  const Rh = (tear * 300 + tear2 * 170) * s, hole = live ? [Math.max(.3 * W, contact[0] - .2 * W), Math.min(.55 * H, contact[1] + .25 * H)] : [contact[0], contact[1] - .1 * H];
   const inHand = (x, y) => { if (!M) return false; const ax = x / hand.meta.S, ay = (y - handY) / hand.meta.S; if (ax < 0 || ay < 0 || ax >= F.aw - 1 || ay >= F.ah - 1) return ay >= F.ah - 1 && Math.abs(ax - F.aw / 2) < F.aw * .12; return M[(ay | 0) * F.aw + (ax | 0)] > .45; };
   // membrane: dent + spreading ripples around the contact, tear around the hand
   const mem = membraneLines(W, H, s), tc = S38.touch;
   proc.displace(mem, (x, y) => {
     const dx = x - contact[0], dy = y - contact[1], r = Math.hypot(dx, dy) + 1e-3;
-    const dent = 70 * s * press * Math.exp(-r * r / (2 * Math.pow(170 * s, 2)));
+    const sg = 150 * s, dent = 60 * s * press * (r / sg) * Math.exp(-r * r / (2 * sg * sg));      // zero at the contact: lines bend around it
     const age = t - tc, rip = age > 0 ? 9 * s * Math.sin((r - 900 * s * age) / (34 * s)) * Math.exp(-r / (520 * s)) * Math.exp(-age / .9) * sstep(0, 900 * s * age, 900 * s * age - r + 60 * s) : 0;
     const recoil = Rh > 0 && r < Rh * 1.6 ? (Rh * 1.6 - r) * .35 * (1 - .4 * tear2) : 0;
-    return [dx / r * (dent + rip + recoil), dy / r * (dent + rip + recoil) - dent * .3];
+    return [dx / r * (dent + rip + recoil), dy / r * (dent + rip + recoil)];
   });
   // split the membrane where the hand covers it or the hole has opened; mark cut ends with bright tips
   const memOut = [];
@@ -278,7 +291,7 @@ scene('S38', async f => {
   }
   const layers = [dynLayer(memOut, { uT: audio.flowPhase(t) * .6 })];
   if (Rh > 2) layers.push(dynLayer(machinery(hole[0], hole[1] - 60 * s, s, t - S38.tear, (x, y) => Math.hypot(x - hole[0], (y - hole[1]) * 1.35) < Rh * .97 && !inHand(x, y)), { uBright: .95 + .5 * tear2 }));
-  await drawLines(f, { ...HAND, cam: { pan: [0, handY] }, phase: audio.flowPhase(t), layers, look: { glow: [.22, .08] }, disk: false });
+  await drawLines(f, { ...HAND, tp: live ? t - S38.t0 : 0, chainFrom: 0, cam: { pan: [0, handY] }, phase: audio.flowPhase(t), layers, look: { glow: [.22, .08] }, disk: false });
   steer(f, { kick: 0 });
 });
 
@@ -331,7 +344,7 @@ function groundLines() {                          // the river (orange banks, fl
   for (const sg of [-1, 1]) {
     const bank = []; for (let y = -40; y <= 1120; y += 6) bank.push([riverX(y) + sg * (40 + 5 * Math.sin(y / 47 + sg)), y]);
     out.push(proc.line(bank, { b: 1.15, w: 1.6, o: 1, flags: FL.NOFADE }));
-    for (let r = 1; r <= 6; r++) { const pts = []; for (let y = -40; y <= 1120; y += 10) pts.push([riverX(y) + sg * (40 + r * r * 15 + 70 * r + 14 * Math.sin(y / (90 + 13 * r) + r)), y]); out.push(proc.line(pts, { b: .12 - .014 * r, w: .7, o: .05, phase: r, spd: .4 })); }
+    for (let r = 1; r <= 3; r++) { const pts = []; for (let y = -40; y <= 1120; y += 10) pts.push([riverX(y) + sg * (40 + r * r * 22 + 90 * r + 14 * Math.sin(y / (90 + 13 * r) + r)), y]); out.push(proc.line(pts, { b: .09 - .018 * r, w: .7, o: .05, phase: r, spd: .4 })); }
   }
   for (let i = -3; i <= 3; i++) { const pts = []; for (let y = -40; y <= 1120; y += 8) pts.push([riverX(y) + i * 10 + 3 * Math.sin(y / 30 + i * 2), y]); out.push(proc.line(pts, { b: .34, w: .8, o: .03, phase: i * 1.3, spd: 1.4 })); }
   return out;
@@ -376,15 +389,16 @@ function agentLines(f, t, C) {
     let dx = pa[0] - pb[0], dy = pa[1] - pb[1], len = Math.hypot(dx, dy);
     const depth = Math.min(1.6, 1 / pa[2] * (C.top ? 1 : 1.2));
     if (len < 4 * s || len > 160 * s) { const fl = Math.hypot(a[2], a[3]) || 1; dx = a[2] / fl * 5 * s * depth; dy = a[3] / fl * 5 * s * depth; }
-    const head = [pa[0], pa[1]], tail = [pa[0] - dx * 1.4, pa[1] - dy * 1.4], o = sg < 0 ? .85 : .12, b0 = (.95 + .4 * hash3(j, sg, 1)) * flash * (1 + .5 * kick);
-    out.push(proc.line([tail, head], { b: b0, w: 1.2 * Math.min(1.5, depth), o: o * .5, flags: FL.SHARP }));
-    out.push(proc.line([head, [head[0] + .5, head[1]]], { b: b0 * 2.2, w: 2.6 * Math.min(1.5, depth), o, flags: FL.TIP | FL.SHARP }));
+    const head = [pa[0], pa[1]], tail = [pa[0] - dx * 1.5, pa[1] - dy * 1.5], o = sg < 0 ? .85 : .12, b0 = (1.25 + .5 * hash3(j, sg, 1)) * flash * (1 + .6 * kick);
+    const dk = Math.min(1.6, depth);
+    out.push(proc.line([tail, head], { b: b0 * .9, w: 1.4 * dk, o: o * .6, flags: 0 }));                         // the trail glows
+    out.push(proc.line([head, [head[0] + .5, head[1]]], { b: b0 * 2.6, w: 3.4 * dk, o, flags: FL.TIP }));          // a point of light
   }
   return out;
 }
 scene('S39', async f => {
   const t = f.t, C = mapCam(f, 0), ground = projectLines(groundLines(), C, f);
-  await drawLines(f, { layers: [dynLayer(ground, { uT: audio.flowPhase(t) }), dynLayer(agentLines(f, t, C), {})], kick: audio.kickEnv(t, .12), look: { glow: [.18, .06] }, disk: false });
+  await drawLines(f, { layers: [dynLayer(ground, { uT: audio.flowPhase(t) }), dynLayer(agentLines(f, t, C), {})], kick: audio.kickEnv(t, .12), look: { glow: [.3, .12] }, disk: false });
   steer(f, { kick: audio.kickEnv(t, .12) });
 });
 const ANIME = [snap(138.6), snap(138.6) + 1 / FPS];
@@ -402,6 +416,6 @@ scene('S40', async f => {
     if (anime) { layers.push(dynLayer(proc.animeEye(C.sun[0], C.sun[1], 4.6 * R, { b: 1.5, w: 2.4 * s }), {})); disk = { x: C.sun[0] + .02 * 4.6 * R, y: C.sun[1], r: .3 * .2 * 4.6 * R }; }
     else { layers.push({ mesh: coronaRing(f, 'ring', { refR: R, ...RING }), u: { ...ringU(C.sun[0], C.sun[1], R * (1 + .025 * kick)), uPush: [C.sun[0], C.sun[1], 22 * kick * s, 300 * s] } }); disk = { x: C.sun[0], y: C.sun[1], r: R }; }
   }
-  await drawLines(f, { layers, kick, look: { glow: [.2, .07] }, disk });
+  await drawLines(f, { layers, kick, look: { glow: [.28, .1] }, disk });
   steer(f, { kick, sun: sun ? typeSun(sun) : undefined });
 });

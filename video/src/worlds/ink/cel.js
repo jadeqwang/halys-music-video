@@ -23,13 +23,18 @@ export const CEL_DEFAULTS = {
   shadeSigma: 2.6,            // lightness smoothing inside a material before the shadow split
   matteRefine: [3, .0025],    // guided filter radius, eps
   allowBlue: null,            // {cx, cy, rx, ry} plate-normalised ellipse where the back circle may be (null = nowhere)
-  navyBelow: 1.1,             // navy (trousers) only below this plate-normalised y
-  skinAbove: 1.1,             // ignore
   orangeMinC: .085,
+  blueMinC: .05,              // the back circle (the jacket's cool shadow reaches C .05 under monitor light)
+  brightL: .45,               // bright / dark split of the coarse classes
+  skinA: -.002, skinB: -.016, // skin warmth inside a skin zone (OKLab a, b lower bounds)
+  skin: [],                   // extra skin zones (plate-normalised ellipses)
+  navy: null,                 // the trouser zone (ellipse) or null
+  faces: true,                // false: ignore landmarks (a back view: the landmarker hallucinates faces)
   lineMin: 6,                 // shortest interior chain (analysis px)
-  lineW: [.75, 1.55],         // interior line width range (output px at 1080p)
-  silW: 2.7,                  // silhouette width (output px at 1080p)
-  eyeBoost: 1.9,              // lash lines are heavier
+  lineW: [1.3, 2.8],          // interior line width range (output px at 1080p)
+  silW: 3.2,                  // silhouette width (output px at 1080p)
+  eyeBoost: 2.0,
+  sheenMax: 900,              // a bright patch up to this many px walled in by black is hair sheen              // lash lines are heavier
   shadeT: null,               // per-material shadow thresholds (calibrated per setup)
   frameEdge: 2,               // silhouette segments within this many px of the frame edge are not drawn
 };
@@ -47,12 +52,17 @@ function oklabOf(rgba, N, gain) {
   return [L, A, B];
 }
 
-function inEllipse(e, u, v) { if (!e) return false; const dx = (u - e.cx) / e.rx, dy = (v - e.cy) / e.ry; return dx * dx + dy * dy <= 1; }
+function inEllipse(e, u, v) {
+  if (!e) return false;
+  let du = u - e.cx, dv = v - e.cy;
+  if (e.rot) { const c = Math.cos(-e.rot), s = Math.sin(-e.rot), x = du * 960, y = dv * 540; du = (x * c - y * s) / 960; dv = (x * s + y * c) / 540; }
+  const dx = du / e.rx, dy = dv / e.ry; return dx * dx + dy * dy <= 1;
+}
 
 // eye regions from the face landmarks (setup-normalised): ellipse around each eye's upper/lower lid polylines
 export function eyeRegions(faces, W, H) {
   const out = [];
-  const fc = faces && faces[0]; if (!fc || !fc.lines) return out;
+  const fc = faces && faces[0]; if (!fc || !fc.lines || fc.src !== 'mp') return out;
   for (const side of ['L', 'R']) {
     const up = fc.lines[`eye${side}_up`], lo = fc.lines[`eye${side}_lo`], ir = fc.lines[`iris${side}`];
     if (!up || !lo) continue;
@@ -65,28 +75,71 @@ export function eyeRegions(faces, W, H) {
   return out;
 }
 
-function classify(L, A, B, line, alpha, W, H, cfg, eyes) {
-  const N = W * H, mat = new Uint8Array(N);
-  const UNK = 255;
+// skin zones: the face oval from the landmarks (dilated; plus the neck below the chin and the ears) and any extra
+// plate-normalised ellipses the sheet gives this exposure (hands; the face in a profile drawing the landmarker missed)
+function skinZones(faces, cfg) {
+  const z = [...(cfg.skin || [])];
+  const fc = cfg.faces === false ? null : faces && faces[0];
+  if (fc && fc.lines && fc.lines.oval && fc.src === 'mp') {
+    const o = fc.lines.oval; let x0 = 1, x1 = 0, y0 = 1, y1 = 0;
+    for (let i = 0; i + 1 < o.length; i += 2) { x0 = Math.min(x0, o[i]); x1 = Math.max(x1, o[i]); y0 = Math.min(y0, o[i + 1]); y1 = Math.max(y1, o[i + 1]); }
+    const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2, rx = (x1 - x0) / 2, ry = (y1 - y0) / 2;
+    z.push({ cx, cy: cy - ry * .12, rx: rx * 1.32, ry: ry * 1.4 });             // face + ears + forehead up to the parting
+    z.push({ cx, cy: y1 + ry * .25, rx: rx * .62, ry: ry * .45 });               // neck
+  }
+  return z;
+}
+
+// Classification. Orange and the back circle are decided per pixel (their chroma is unmistakable); skin only inside skin
+// zones and only where the pixel is warm (a lamp-lit sleeve and a hand have the same colour, so position decides);
+// eyes inside the eye zones; everything else is the white jacket (bright) or black (dark), navy only in the trouser
+// zone. Then regions: a small bright patch walled in by black is the hair's sheen, not a piece of jacket.
+function classify(L, A, B, line, alpha, W, H, cfg, eyes, faces) {
+  const N = W * H, mat = new Uint8Array(N), UNK = 255;
+  const zones = skinZones(faces, cfg);
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
     const i = y * W + x;
     if (alpha[i] < .5) { mat[i] = 0; continue; }
+    const l = L[i], a = A[i], b = B[i], C = Math.hypot(a, b), h = Math.atan2(b, a) * 57.2958, u = x / W, v = y / H;
+    const eye = eyes.length ? eyes.find(e => inEllipse(e, u, v)) : null;
+    if (h > 22 && h < 90 && l > .3 && (C >= cfg.orangeMinC || (C >= .062 && l < .72))) { mat[i] = eye ? ID.iris : ID.orange; continue; }
+    if (cfg.allowBlue && inEllipse(cfg.allowBlue, u, v) && C > cfg.blueMinC && h < -70 && h > -160 && l > .42) { mat[i] = ID.blue; continue; }
     if (line[i]) { mat[i] = UNK; continue; }
-    const l = L[i], a = A[i], b = B[i], C = Math.hypot(a, b), h = Math.atan2(b, a) * 57.2958;
-    const u = x / W, v = y / H;
-    const eye = eyes.find(e => inEllipse(e, u, v));
-    let m;
-    if (C >= cfg.orangeMinC && h > 25 && h < 88 && l > .42) m = ID.orange;
-    else if (cfg.allowBlue && inEllipse(cfg.allowBlue, u, v) && C > .028 && h < -70 && h > -160 && l > .45) m = ID.blue;
-    else if (eye && l < .66 && C > .022 && h > 15 && h < 95) m = ID.iris;
-    else if (eye && l >= .8 && C < .045) m = ID.white;
-    else if (l >= .5) m = (h > 8 && h < 100 && C > .021) ? ID.skin : ID.jacket;
-    else if (v > cfg.navyBelow && b < -.016 && C > .022 && l > .12) m = ID.navy;
-    else if (h > 15 && h < 95 && C > .035 && l > .3) m = eye ? ID.iris : ID.skin;
-    else m = ID.black;
-    mat[i] = m;
+    if (eye) {
+      if (l >= .55 && a > cfg.skinA + .004 && b > cfg.skinB + .004) mat[i] = ID.skin;     // the lids and the skin around the eye
+      else if (l >= .55 && C < .07) mat[i] = ID.white;
+      else if (C > .02 && h > 10 && h < 100 && l > .08) mat[i] = ID.iris;
+      else mat[i] = ID.black;
+      continue;
+    }
+    const inSkin = zones.length && zones.some(z => inEllipse(z, u, v));
+    if (l >= cfg.brightL) mat[i] = inSkin && a > cfg.skinA && b > cfg.skinB ? ID.skin : ID.jacket;
+    else if (cfg.navy && inEllipse(cfg.navy, u, v) && b < -.022 && C > .022) mat[i] = ID.navy;
+    else mat[i] = inSkin && l > .3 && a > cfg.skinA + .01 && b > cfg.skinB ? ID.skin : ID.black;
   }
   return mat;
+}
+
+// a bright region (jacket) that is small and almost entirely walled in by black is a sheen on the hair
+function sheenRegions(mat, W, H, maxArea) {
+  const N = W * H, seen = new Uint8Array(N), stack = new Int32Array(N);
+  for (let s0 = 0; s0 < N; s0++) {
+    if (seen[s0] || mat[s0] !== ID.jacket) continue;
+    let sp = 0; stack[sp++] = s0; seen[s0] = 1;
+    const px = []; let border = 0, blk = 0;
+    while (sp) {
+      const i = stack[--sp]; px.push(i);
+      const x = i % W, y = (i / W) | 0;
+      for (const j of [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, y > 0 ? i - W : -1, y < H - 1 ? i + W : -1]) {
+        if (j < 0) continue;
+        const m = mat[j];
+        if (m === ID.jacket) { if (!seen[j]) { seen[j] = 1; stack[sp++] = j; } }
+        else if (m !== 255) { border++; if (m === ID.black) blk++; }
+      }
+      if (px.length > maxArea) break;
+    }
+    if (px.length <= maxArea && border > 0 && blk / border > .66) for (const i of px) mat[i] = 250;   // marked: sheen
+  }
 }
 
 // line pixels take the most common material among their non-line neighbours (lines are <= 4 px wide)
@@ -128,14 +181,23 @@ export function analyzeCel(inp, cfg0 = {}) {
   for (let i = 0; i < N; i++) R[i] = L[i] < cfg.ridgeMaxL ? Math.max(0, g2[i] - g1[i]) : 0;
   const lineHi = new Uint8Array(N);
   for (let i = 0; i < N; i++) lineHi[i] = inside[i] && R[i] > cfg.ridgeHi ? 1 : 0;
-  const eyes = eyeRegions(inp.faces, W, H);
+  const eyes = cfg.faces === false ? [] : eyeRegions(inp.faces, W, H);
   // 3. materials
-  let mat = classify(L, A, B, lineHi, alpha, W, H, cfg, eyes);
+  let mat = classify(L, A, B, lineHi, alpha, W, H, cfg, eyes, inp.faces);
   mat = propagate(mat, W, H);
   // 4. region smoothing
   mat = modeFilter(mat, W, H, cfg.mode[0], NMAT, inside, cfg.mode[1]);
   mat = cleanSmall(mat, W, H, cfg.minArea, NMAT);
   for (let i = 0; i < N; i++) if (!inside[i]) mat[i] = 0; else if (!mat[i]) mat[i] = ID.black;
+  sheenRegions(mat, W, H, cfg.sheenMax);
+  // decal zones: painted flat (the lettering is drawn as type on top: decals.js)
+  for (const z of cfg.clear || []) {
+    const id = ID[z.mat] || ID.jacket;
+    const x0 = Math.max(0, Math.floor((z.cx - z.rx * 1.5) * W)), x1 = Math.min(W - 1, Math.ceil((z.cx + z.rx * 1.5) * W));
+    const y0 = Math.max(0, Math.floor((z.cy - z.ry * 1.5) * H)), y1 = Math.min(H - 1, Math.ceil((z.cy + z.ry * 1.5) * H));
+    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) { const i = y * W + x; if (inside[i] && inEllipse(z, x / W, y / H)) mat[i] = id; }
+  }
+  const sheen = new Uint8Array(N); for (let i = 0; i < N; i++) if (mat[i] === 250) { mat[i] = ID.black; sheen[i] = 1; }
   // 5. one shadow tone per material
   const Ls = new Float32Array(N);
   const thr = cfg.shadeT || {};
@@ -149,7 +211,23 @@ export function analyzeCel(inp, cfg0 = {}) {
   const lab = new Uint8Array(N);
   for (let i = 0; i < N; i++) {
     const m = mat[i]; if (!m) continue;
-    const t = thr[m]; lab[i] = label(m, t != null && Ls[i] < t);
+    const t = thr[m];
+    lab[i] = m === ID.black ? label(m, sheen[i] || (t != null && Ls[i] > t)) : label(m, t != null && Ls[i] < t);
+  }
+  for (const z of cfg.clear || []) {
+    const id = ID[z.mat] || ID.jacket;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const i = y * W + x; if (mat[i] === id && inEllipse(z, x / W, y / H)) lab[i] = label(id, false); }
+  }
+  // the small face (face.js draws its features): flat skin inside the face oval, the eye zones cleared to skin
+  if (cfg.flatFace && eyes.length && cfg.faces !== false) {
+    const fz = skinZones(inp.faces, { faces: true });
+    const face = fz.length ? fz[fz.length - 2] : null;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const i = y * W + x, u = x / W, v = y / H;
+      if (!inside[i]) continue;
+      if (eyes.some(e => inEllipse({ ...e, rx: e.rx * 1.25, ry: e.ry * 1.3 }, u, v))) { mat[i] = ID.skin; lab[i] = label(ID.skin, false); }
+      else if (face && mat[i] === ID.skin && inEllipse({ ...face, rx: face.rx * .8, ry: face.ry * .78 }, u, v)) lab[i] = label(ID.skin, false);
+    }
   }
   let labS = modeFilter(lab, W, H, 2, NLAB, inside, 1);
   labS = cleanSmall(labS, W, H, cfg.minArea * 2, NLAB);
@@ -157,20 +235,26 @@ export function analyzeCel(inp, cfg0 = {}) {
   const t1 = performance.now();
   // 6. line art
   const chains = lineArt(inp, cfg, { L, R, alpha, inside, mat, labS, eyes, W, H });
-  return { W, H, lab: labS, mat, alpha, chains, eyes, Ls, stats: { ms: Math.round(performance.now() - t0), msFill: Math.round(t1 - t0), chains: chains.length } };
+  return { W, H, lab: labS, mat, alpha, chains, eyes, Ls, R, stats: { ms: Math.round(performance.now() - t0), msFill: Math.round(t1 - t0), chains: chains.length } };
 }
 
 // per-setup calibration: shadow thresholds per material from the reference drawing (Otsu inside each material, used
 // only when the two tones really separate; otherwise the material stays flat)
 export function calibrate(res, opts = {}) {
-  const t = {}, N = res.W * res.H;
+  const t = {}, N = res.W * res.H, flat = opts.flat || ['blue', 'white'];
   for (const m of MATS) {
     const msk = new Uint8Array(N); let n = 0;
     for (let i = 0; i < N; i++) if (res.mat[i] === m.id) { msk[i] = 1; n++; }
-    if (n < 400) continue;
+    if (n < 400 || flat.includes(m.name)) continue;
+    if (m.sheen) {                     // black: the brightest ~10 % of the hair is its sheen (when there is any spread)
+      const v = []; for (let i = 0; i < N; i += 3) if (msk[i]) v.push(res.Ls[i]);
+      v.sort((a, b) => a - b);
+      const p50 = v[v.length >> 1], p90 = v[Math.floor(v.length * (opts.sheenP ?? .9))];
+      if (p90 - p50 > .035) t[m.id] = p90;
+      continue;
+    }
     const o = otsu(res.Ls, msk);
-    const want = (opts.flat || []).includes(m.name) ? null : o.sep > (opts.minSep ?? .55) ? o.t + (opts.bias?.[m.name] || 0) : null;
-    if (want != null) t[m.id] = want;
+    if (o.sep > (opts.minSep ?? .55)) t[m.id] = o.t + (opts.bias?.[m.name] || 0);
   }
   return t;
 }
@@ -219,6 +303,8 @@ function lineArt(inp, cfg, F) {
     const mid = pts[pts.length >> 1], mi = Math.round(mid[1]) * W + Math.round(mid[0]);
     const eye = eyes.find(ey => inEllipse({ ...ey, rx: ey.rx * 1.15, ry: ey.ry * 1.25 }, mid[0] / W, mid[1] / H));
     if (len < cfg.lineMin && !eye) continue;
+    if ((cfg.clear || []).some(z => inEllipse({ ...z, rx: z.rx * 1.15, ry: z.ry * 1.25 }, mid[0] / W, mid[1] / H))) continue;
+    if (cfg.flatFace && eye) continue;
     // strength = mean ridge response
     let s = 0; for (const [x, y] of pts) s += R[Math.round(y) * W + Math.round(x)] || 0; s /= pts.length;
     pts = smoothPts(resample(pts, 1), 1.1, !!ch.closed);

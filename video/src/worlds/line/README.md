@@ -85,11 +85,27 @@ const r = await drawLines(f, { src: { plate: 'P12', standin: 'duelup' }, tp,    
 Scenes set `f.type = { sun: {x, y, r}, kick, invert, field: { center } }` (the CHOP fill circles the eclipse, pulses
 with the same kick and inverts on the same frames). Drop 1 inverts only on the S36 stabs (same list as the type track).
 
+## For the marble world (S45, the breakdown)
+
+`scenes/drop1.js` exports the hand-off: `drawCrystallise(f, { widen, t, tp })` draws S45's line world at any `widen`
+(0 = Drop 1 lines; 1 = long white strokes: width x5.6, flattened brightness, whitened, glow off, pulses stopped,
+slowed by an integrated phase so they never run backwards), `widenAt(t)` (153.83 -> 157.03), and
+`S45_HANDOFF = { t: 157.03, widen: 1, plate: { plate: 'P25', standin: 'aduel' }, tp: 3.2 }`: at the 157.03 cut the
+marble world continues from P25 at plate time 3.2 s with the lines fully widened. drop1.js registers scene `S45` (the
+first half, then the hand-off frame held); marble.js can register its own `S45` (imported later, it replaces mine) and
+call `drawCrystallise` for 153.83-157.03.
+
 ## Performance (1920x1080, headless Chromium, SwiftShader, 4 cores)
 
-See production/review/drop1/NOTES.md for the measured numbers. A still plate's analysis + trace (0.5-2 s) runs once
-per window per page and is cached; a frame then costs the GPU raster + glow + compose. Video plates cost one analysis +
-trace per reference (every 4 plate frames = 10 master frames) plus the flow transport per frame.
+* Warm frame, still plate or procedural shot: engine 0.26-0.32 s (line raster + glow + compose + readback) plus the
+  type layer 0.1-0.15 s, measured at load average 7-9; 0.9-1.6 s per frame at load 20-25 (other agents' renders).
+* First frame of a still window: analysis 0.4-0.9 s + trace 0.5-1.6 s, cached per page.
+* Video plates: one analysis + trace per reference (every 4 plate frames = 10 master frames), plus flow transport
+  (~10-20 ms); the reference chain from the shot's start costs 20-45 s per worker per shot under load, amortised over
+  the shot's frames.
+* Drop 1 review renders (108-156 s, 2880 frames, 3 workers, load 15-80): 0.34-0.78 s per frame effective.
+* GPU notes (SwiftShader): bilinear RGBA16F fetches at full resolution cost ~35 ms each at load 10, so the post pass
+  reads the line target with texelFetch and the glow is computed at quarter/eighth resolution and combined there.
 
 ## Files
 

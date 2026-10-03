@@ -32,7 +32,8 @@ export const LINE = '#17141c';            // character line art (near-black, a t
 export const LINE_SKIN = '#9a5a4c';       // colour-trace line for the nose / inner face (a darker skin, not black)
 export const MAT = {
   none:   { id: 0 },
-  black:  { id: 1, base: '#121318', shadow: '#0b0c0f' },   // hair #101114 (sheet), crop top, headphone cups, chair
+  black:  { id: 1, base: '#101114', shadow: '#2a2d35', sheen: true },   // hair #101114 (sheet), crop top, cups, chair; its second
+                                                         // tone is the hair's sheen (lighter), not a shadow
   jacket: { id: 2, base: '#f2f0ea', shadow: '#c7c6ce' },   // white bomber; the shadow is a neutral-cool grey, never blue
   orange: { id: 3, base: '#f08a2a', shadow: '#c8641d' },   // stripes, headphones, straps
   navy:   { id: 4, base: '#1e2433', shadow: '#141925' },   // cargo pants
@@ -63,8 +64,8 @@ export const ROOM = {
   pearl: '#f3efe6',        // monitor light, corona pearl
   orange: '#f08a2a',       // the lamp (her colour, the eclipse colour)
   lampHot: '#ffd9a6',      // the bulb (warm white; the only warm white)
-  fog: ['#5d6068', '#787b82', '#93959a', '#aeafb2'],     // SF fog, flat grey bands (no blue cast)
-  hill: '#3e4149',
+  fog: ['#55575e', '#6b6d73', '#808287', '#94959a'],     // SF fog at night, flat grey bands (no blue cast)
+  hill: '#383a41',
   tower: '#22242b',
   beacon: '#e3402a',
   earth: '#86b5e6',        // Earth on her monitor = the same light blue as the circle on her back
@@ -76,8 +77,11 @@ export const ROOM = {
 export function gradeRoom([L, a, b]) {
   const C = Math.hypot(a, b), h = Math.atan2(b, a) * 180 / Math.PI;
   let k = 1;
-  if (h < -60 && h > -160) k = Math.min(1, .022 / Math.max(C, 1e-6)) * .9 + .1 * Math.min(1, .022 / Math.max(C, 1e-6));   // blue: clamp chroma
-  if (h > 80 && h < 115 && L > .6) k = Math.min(k, .4);       // yellowish lights -> neutral
-  const L2 = L > .72 && h < -60 && h > -160 ? .72 + (L - .72) * .5 : L;                  // no pale-blue glare
+  if (h < -55 && h > -165) {                                   // blue family: navy is allowed when dark, never bright
+    const cmax = L < .32 ? .034 : L < .45 ? .024 : .014;
+    k = Math.min(1, cmax / Math.max(C, 1e-6));
+  }
+  if (h > 75 && h < 115 && L > .55) k = Math.min(k, .45);      // yellowish lights -> neutral (no yellow cast)
+  const L2 = L > .7 && h < -55 && h > -165 ? .7 + (L - .7) * .5 : L;
   return [L2, a * k, b * k];
 }

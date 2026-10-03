@@ -50,10 +50,10 @@ export function sheet(...parts) {
   // collapse consecutive identical drawings into one exposure (a held drawing is one drawing)
   return out.filter((e, k) => k === 0 || !same(e, out[k - 1]));
 }
-const same = (a, b) => a.src === b.src && a.pf === b.pf && a.ref === b.ref && JSON.stringify(a.region || null) === JSON.stringify(b.region || null) && a.tag === b.tag;
+const same = (a, b) => a.src === b.src && a.pf === b.pf && a.ref === b.ref && (a.dy || 0) === (b.dy || 0) && JSON.stringify(a.region || null) === JSON.stringify(b.region || null) && a.tag === b.tag;
 
 // a stable key for the drawing an exposure shows (cache key for the cel)
-export const drawingKey = e => e ? `${e.src}:${e.pf}${e.ref ? `<${e.ref}` : ''}${e.region ? JSON.stringify(e.region) : ''}` : 'none';
+export const drawingKey = e => e ? `${e.src}:${e.pf}${e.ref ? `<${e.ref}` : ''}${e.dy ? `^${e.dy}` : ''}${e.region ? JSON.stringify(e.region) : ''}` : 'none';
 
 // the unique plate frames a sheet needs (for matte prep and warm-up)
 export function framesUsed(sh) {

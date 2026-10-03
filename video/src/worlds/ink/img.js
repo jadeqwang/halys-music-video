@@ -306,3 +306,38 @@ export function otsu(v, mask, bins = 128) {
   let mu = sum / n, va = 0; for (let i = 0; i < bins; i++) va += h[i] * (i - mu) * (i - mu); va /= n;
   return { t: (bt + .5) / bins, sep: Math.sqrt(best / (n * n)) / Math.max(1e-6, Math.sqrt(va)), n };
 }
+
+// Felzenszwalb-Huttenlocher graph segmentation on a 3-channel image (4-connected grid), scale k, min component size.
+// Returns { lab (Int32 component id per pixel, compacted 0..n-1), n }.
+export function felzenszwalb(c0, c1, c2, W, H, k = .5, minSize = 40, w1 = 1, w2 = 1) {
+  const N = W * H, E = (W - 1) * H + W * (H - 1);
+  const ea = new Int32Array(E), eb = new Int32Array(E), ew = new Float32Array(E);
+  let m = 0;
+  const d = (i, j) => { const a = c0[i] - c0[j], b = (c1[i] - c1[j]) * w1, c = (c2[i] - c2[j]) * w2; return Math.sqrt(a * a + b * b + c * c); };
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const i = y * W + x;
+    if (x < W - 1) { ea[m] = i; eb[m] = i + 1; ew[m] = d(i, i + 1); m++; }
+    if (y < H - 1) { ea[m] = i; eb[m] = i + W; ew[m] = d(i, i + W); m++; }
+  }
+  const order = new Uint32Array(m); for (let i = 0; i < m; i++) order[i] = i;
+  order.sort((a, b) => ew[a] - ew[b]);
+  const parent = new Int32Array(N), size = new Int32Array(N).fill(1), th = new Float32Array(N).fill(k);
+  for (let i = 0; i < N; i++) parent[i] = i;
+  const find = x => { while (parent[x] !== x) { parent[x] = parent[parent[x]]; x = parent[x]; } return x; };
+  for (let q = 0; q < m; q++) {
+    const e = order[q]; let a = find(ea[e]), b = find(eb[e]);
+    if (a === b) continue;
+    const w = ew[e];
+    if (w <= th[a] && w <= th[b]) {
+      if (size[a] < size[b]) { const t = a; a = b; b = t; }
+      parent[b] = a; size[a] += size[b]; th[a] = w + k / size[a];
+    }
+  }
+  for (let q = 0; q < m; q++) {
+    const e = order[q], a = find(ea[e]), b = find(eb[e]);
+    if (a !== b && (size[a] < minSize || size[b] < minSize)) { if (size[a] < size[b]) { parent[a] = b; size[b] += size[a]; } else { parent[b] = a; size[a] += size[b]; } }
+  }
+  const lab = new Int32Array(N), map = new Map();
+  for (let i = 0; i < N; i++) { const r = find(i); if (!map.has(r)) map.set(r, map.size); lab[i] = map.get(r); }
+  return { lab, n: map.size };
+}

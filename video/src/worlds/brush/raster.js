@@ -85,9 +85,10 @@ void main() {
     disc = 1.0 - smoothstep(r - 0.8 + wob, r + 0.8 + wob, d);
     vec2 un = q / r;
     float marks = texture(uNoise, un * vec2(0.22, 0.07) + vec2(0.31, uBoil * 0.017)).r * 0.65 + texture(uNoise, un * 0.12 + 0.7).g * 0.35;
-    vec3 core = mix(uLead, uNaples, 0.18 * uWarm);
-    vec3 limb = mix(uNaples, uGold, 0.25 + 0.55 * uWarm);
-    sunC = mix(core, limb, smoothstep(0.5 * r, 1.02 * r, d)) * (0.975 + 0.05 * marks) * uBlaze;
+    // a flat blazing disk: one warm colour (golden-orange when low), only a thin deeper band at the very limb
+    vec3 core = mix(uLead, uNaples, 0.2 + 0.6 * uWarm);
+    vec3 limb = mix(uNaples, uGold, 0.35 + 0.55 * uWarm);
+    sunC = mix(core, limb, 0.25 + 0.75 * smoothstep(0.78 * r, 1.02 * r, d)) * (0.975 + 0.05 * marks) * uBlaze;
     float lum = dot(sunC, vec3(0.2126, 0.7152, 0.0722));
     sunC = mix(sunC, vec3(lum) * vec3(0.98, 1.0, 1.02), uMetal * 0.5);
     sunH = 1.05 + 0.15 * (marks - 0.5);

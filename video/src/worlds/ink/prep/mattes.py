@@ -1,6 +1,6 @@
 """INK subject mattes for the room plates (offline, CPU).
 
-    python3 video/src/worlds/ink/prep/mattes.py [P39 P40 P41] [--src=plates|dev] [--frames=P39:12,22,..] [--force]
+    python3 video/src/worlds/ink/prep/mattes.py [P39 P40 P41] [--frames='P39:12,22;P40:40,49'] [--force]
 
 Why: rembg's isnet-anime (the plate pipeline's default, tools/plate_masks.py) is right for close-ups (P41) but on the wide
 room plates it picks the brass saros dial or the desk lamp as the subject and drops her black hair (P39). For the wide
@@ -70,6 +70,30 @@ def combine(pid, ms):
     return np.clip(out, 0, 1)
 
 
+def post_p40(od, frames):
+    """P40 (the spin): the seated legs are the same through the turn, but the models drop them on some frames; take the
+    lower body from the union of the settled front frames. Drop the keyboard the models grab while she types (f <= 45)
+    and the lamp's bright head where her flying hair crosses it."""
+    import cv2
+    ROOTF = ROOT / 'video/plates/P40/frames'
+    front = [f for f in frames if f >= 72]
+    ms = {f: np.asarray(Image.open(od / f'm{f:04d}.png'), np.float32) / 255 for f in frames if (od / f'm{f:04d}.png').exists()}
+    if not front:
+        return
+    low = np.max([ms[f] for f in front if f in ms], axis=0)
+    yy = np.arange(540)[:, None] * np.ones((1, 960))
+    lowmask = np.clip((yy - 370) / 30, 0, 1)
+    for f, m in ms.items():
+        m = np.maximum(m, low * lowmask)
+        img = np.asarray(Image.open(ROOTF / f'f{f:04d}.jpg').convert('L'), np.float32) / 255
+        if f <= 45:
+            m[300:352, 375:470] = 0
+        box = (slice(100, 200), slice(178, 262))
+        m[box] = np.where(img[box] > .38, 0, m[box])
+        Image.fromarray((np.clip(m, 0, 1) * 255 + .5).astype(np.uint8)).save(od / f'm{f:04d}.png', optimize=True)
+    print('P40 post: legs from', front, flush=True)
+
+
 def main():
     a = sys.argv[1:]
     kw = {x[2:].split('=', 1)[0]: (x.split('=', 1)[1] if '=' in x else True) for x in a if x.startswith('--')}
@@ -81,8 +105,8 @@ def main():
     for pid in ids:
         idx = json.loads((ROOT / 'video/plates/index.json').read_text()).get(pid)
         src = 'plates'
-        if not idx or kw.get('src') == 'dev':
-            idx = json.loads((ROOT / 'video/out/ink_dev/index.json').read_text()).get(pid); src = 'out/ink_dev'
+        if not idx:
+            print(pid, 'not in video/plates/index.json (run tools/pipeline.sh first)'); continue
         take = pathlib.Path(idx['take']).stem
         od = OUT / f'{pid}_{take}'; od.mkdir(parents=True, exist_ok=True)
         for f in sorted(set(frames[pid])):
@@ -94,6 +118,14 @@ def main():
             out = combine(pid, ms)
             Image.fromarray((out * 255 + .5).astype(np.uint8)).save(dst, optimize=True)
             print(pid, take, f, 'ok', flush=True)
+        if pid == 'P40':
+            post_p40(od, sorted(set(frames[pid])))
+    write_index()
+
+
+def write_index():
+    idx = {d.name: sorted(int(p.stem[1:]) for p in d.glob('m*.png')) for d in sorted(OUT.iterdir()) if d.is_dir()}
+    (OUT / 'index.json').write_text(json.dumps(idx))
 
 
 if __name__ == '__main__':

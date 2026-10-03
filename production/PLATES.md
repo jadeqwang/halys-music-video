@@ -6,7 +6,7 @@ list's P01–P41 (with P22 split into P22a/P22b and a Mede eye variant P19b) plu
 where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` with a `retake_note`. Per-plate verdicts:
 `media/plates/<id>/review.json`. Shot purposes and times: `production/SHOTLIST.md` (as of the 02:43 commit e899de3).
 
-> Status (2026-10-03 03:08): 48 plates delivered, 82 paid takes this pass (720p, 16:9, 24 fps, 455 s of video),
+> Status (2026-10-03 04:14): 48 plates delivered, 82 paid takes this pass (720p, 16:9, 24 fps, 455 s of video),
 > **$105.20** (genlog estimate at $0.2312/s; 3 real-person-filter rejections cost nothing). Chosen takes run through the
 > analysis pipeline into `video/plates/<id>/` and `video/plates/index.json` (`take` = the chosen file).
 
@@ -39,6 +39,52 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
   invented); the renderer paints its own eclipse over it. Dusk plates are dim but analysable (exposure gain in `stats.json`).
 * **Two-shot plates with a requested hard cut work** (P11, P15, P32 cut within 0.1–0.6 s of the asked time).
 * No stirrups, flags, logos or modern objects appeared in any chosen take; the Median sword sits on the right where visible.
+
+## Shot map (which plate, which part)
+
+Plate times are seconds into the chosen take; `→` keys are song → plate (see each plate below for all keys).
+
+| Shots | Plate (take) | Use |
+|---|---|---|
+| S01–S02 | P02 (1) | 1:1 from 0; frozen armies, the renderer paints the eclipse |
+| S03 | P23 (2) | plate 0–1.75: heroes in the water, faces up |
+| S04–S06 | P01 (1) | S05 = plate 0–3.5 (static master), S06 = 3.5–7.0 (descent), 1:1 from 7.18; S04's rewind can run the master backwards |
+| S07 / S08 | P03 (1) / P04 (1) | 1:1 (helmet on; spear grip, toy horse) |
+| S09 / S22 / S43 | P05 (1) + P06 (1) | S09: hands up at 2.40 / 2.55 (→ 23.3 swell); S22: the shout section, plate 3.6–6.0; S43: any |
+| S10 | P07 (2) | plate 0–1.74, the lines must not meet before the boom |
+| S11 | P08 (1) | impact 27.24 → 1.58 |
+| S13 | P09 (3) | plate 0–3.5 (levelled lances) |
+| S14 | P10 (1) | loose 38.23 → 2.21 |
+| S15 | P11 (1) | Lydian = plate 0–2.0, Mede = 2.0–5.0 (hard cut) |
+| S16, S20, S24, S30, S44 | P01 (1) | the static master, plate 0–4.5 (slow/hold for S24's 7 s) |
+| S17, S19, S27 | P12 (1) | strikes 46.06 → 2.12, 47.56 → 3.30, 48.91 → 3.88, 49.53 → 5.20, 50.63 → 6.05, 51.48 → 6.90 |
+| S21 | P13 (2) | knock-down 59.60 → 1.00; up on one knee at 3.5 (= 62.20) |
+| S23, S41, S47 | P14 (2) | breathing 0–1.6, still ~1.6–2.0, the long upward gaze from 2.0 (→ 67.73) |
+| S25 | P15 (2) | face-off 0–3.375, cut on 77.88 to the shore melee 3.375–7.0 |
+| S26 | P16 (1) | glint 84.38 → 2.50 |
+| S27 ("light went strange") | P17 (1) | looks up 88.69 → 2.85 |
+| S28 | P18 (2) | faces up one by one 2.0–3.5; all up 91.31 → 3.50 |
+| S29 / S42 | P19 (1) / P19b (1) | eye opens 93.95 → 0.90 / the Mede's eye |
+| S31, S55 | P20 (1) | every face up 102.21 → 2.04 |
+| S32 | P21 (3) | sword into the water 104.96 → 2.46 |
+| S33 | P22a (1, flip it) + P22b (1) | hands open 1.2–2.3 / 2.0–3.0 |
+| S35 | P01 + P42 (2) + P44 (1) + P43 (2) | IN THE → P42 kneel at ~1.0; SKY → P44 rear 0.92; SKY → P43 prostration ~1.1 |
+| S36 | P42–P45, P14, P19, P19b | P42: kneel 1.0, spin 1.6, eyes 2.9, spear 4.5 · P43: prostrate 1.1, amulet 1.8, bow 3.5, arm 4.3 · P44: rear 0.9, calming 1.9–3.4 · P45: Lydian 0–1.79, Mede 1.79–3.08, Alyattes 3.08–4.38, Cyaxares 4.38–5.04 |
+| S37 | P46 (4) + depth | 1:1 from 117.53; ~25–30° arc around the frozen group |
+| S38 | P24 (1) | palm meets the "glass" ~1.6–2.3 |
+| S45, S46, S49 | P25 (2) | orbit through the frozen battle 0–5.6; crane/tilt to the sky 5.6–10 (S49) |
+| S51 | P26 (1) | 1:1 (only wind moves) |
+| S52 | P27 (3) | 1:1 (Thales walks toward the lens) |
+| S53–S54 | P28 (1) | glance into the lens 187.65 → 2.80 |
+| S57–S58 | P29 (1) | light sweep 1.7–4.0; the roar 200.315 → 5.85 |
+| S59 / S60 | P30 (1) / P31 (1) | 1:1 |
+| S61 | P32 (1) | blades fly 0–2.17; the sinking sword 2.17–5.0 under the held "blade" |
+| S62 | P33 (1) | apex 215.287 → 3.40 (match cut to P34) |
+| S63 / S67 / S68 / S70 | P34 (2) / P35 (3) / P36 (1) / P37 (1) | 1:1 (P36 faces up 237.66 → 2.10) |
+| S74–S76 | P38 (4) | raise 259.35 → 2.00, BLADE 260.62 → 2.35, straggler 261.05 → 3.60 |
+| S78 | P39 (1) | 1:1 |
+| S79 | P40 (2) | spin lands 270.04 → 2.10; deadpan hold to the end (hold the last drawing) |
+| S80–S81 | P41 (4) | blind typing 0.2–1.8, smile from 3.25, wink 276.95 → 4.45 (closed ~4.4–5.1) |
 
 ## Weak spots to know about
 
@@ -158,7 +204,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P01 · Master composition by day
 
 * **Shots:** S04-06, S16, S20, S24, S30, S35, S44. **Window:** song [7.18, 22.18], audio reference cut at t0 = 7.18 s (Halys.mp3), 15 s, 2 take(s) reviewed.
-* **Chosen:** take 1 → `media/plates/P01/take1.mp4`; analysis in `video/plates/P01/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Opens exactly on the canonical master composition (halys_wide3) and holds it for 4.5 s, then a clean descent that fits S06 1:1 while the armies surge into the ford; the river stays visible. Take 2 floods the riverbed. Take 3 (no-board retake for a high drift over a battle already raging) was still queued at the provider after 60 min.
+* **Chosen:** take 1 → `media/plates/P01/take1.mp4`; analysis in `video/plates/P01/` (frames 361, fields 361, mattes 0, depth 0, gain 1.027). Opens exactly on the canonical master composition (halys_wide3) and holds it for 4.5 s, then a clean descent that fits S06 1:1 while the armies surge into the ford; the river stays visible. Take 2 floods the riverbed. Take 3 (no-board retake for a high drift over a battle already raging) was still queued at the provider after 60 min.
 * **Delivers:** Opens exactly on the canonical master composition (halys_wide3): river straight to the sun at the vanishing point, Lydians left, Medes right, mirrored, armies in parade ranks (plate 0-4.5 s). Then the camera descends (4.5-8.5 s) as both armies surge into the river, ending in a ground-level melee in the ford (8.5-15 s).
 * **Sync keys** (song s → plate s, offset = plate − (song − t0)):
   * 10.690 → 4.50 (+0.99 s) · S06 descent begins
@@ -171,7 +217,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P02 · Master view at totality
 
 * **Shots:** S01-02. **Window:** song [0.0, 8.0], audio reference cut at t0 = 0.0 s (Halys.mp3), 8 s, 1 take(s) reviewed.
-* **Chosen:** take 1 → `media/plates/P02/take1.mp4`; analysis in `video/plates/P02/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Only take; matches the totality board, frozen armies, analysable.
+* **Chosen:** take 1 → `media/plates/P02/take1.mp4`; analysis in `video/plates/P02/` (frames 193, fields 193, mattes 97, depth 97, gain 2.2). Only take; matches the totality board, frozen armies, analysable.
 * **Delivers:** S01-02 base: the master view at totality, matched to halys_totality3 (same river, banks, armies), frozen armies, slow push-in, orange 360-degree horizon glow.
 * **Sync:** no musical hit to land; use 1:1 from t0 (plate = song − t0).
 * **Checks:** Armies are dark silhouettes (army-level only) · The black sun + corona and Jupiter are drawn (copied from the board) although the prompt asked for an empty sky; the renderer paints the eclipse over it. Land is dim: mean 0.12, p95 0.30 (analysable; pipeline gain lifts it)
@@ -225,7 +271,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P07 · Front lines surge into the river
 
 * **Shots:** S10. **Window:** song [25.5, 30.5], audio reference cut at t0 = 25.5 s (Halys.mp3), 5 s, 2 take(s) reviewed.
-* **Chosen:** take 2 → `media/plates/P07/take2.mp4`; analysis in `video/plates/P07/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Symmetric, as specified (take 1 was two-thirds Lydian).
+* **Chosen:** take 2 → `media/plates/P07/take2.mp4`; analysis in `video/plates/P07/` (frames 121, fields 121, mattes 0, depth 0, gain 1.0). Symmetric, as specified (take 1 was two-thirds Lydian).
 * **Delivers:** S10 delivered: mirror-symmetric waterline charge: two equal lines (Lydian crests and crimson left, wicker shields right) converge in a V, legs churning the water, the gap closing in the centre, no collision.
 * **Sync:** no musical hit to land; use 1:1 from t0 (plate = song − t0).
 * **Checks:** Army-level correct · Sun at the top-right corner; bright sky
@@ -247,7 +293,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P09 · Lydian cavalry charge
 
 * **Shots:** S13. **Window:** song [32.47, 37.47], audio reference cut at t0 = 32.47 s (Halys.mp3), 5 s, 3 take(s) reviewed.
-* **Chosen:** take 3 → `media/plates/P09/take3.mp4`; analysis in `video/plates/P09/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Only take with levelled lances, side light and a dark background (takes 1-2 raised the spears against a bright sky).
+* **Chosen:** take 3 → `media/plates/P09/take3.mp4`; analysis in `video/plates/P09/` (frames 121, fields 121, mattes 0, depth 0, gain 1.011). Only take with levelled lances, side light and a dark background (takes 1-2 raised the spears against a bright sky).
 * **Delivers:** S13 delivered: five Lydian riders gallop through the knee-deep shallows straight at the camera, side-lit gold from frame right against a dark far bank; lances levelled forward toward the lens; spray lit gold; the lead horse grows to a third of the frame and stays sharp.
 * **Sync:** no musical hit to land; use 1:1 from t0 (plate = song − t0).
 * **Checks:** Crested open-faced helmets, crimson, ochre cloaks, saddlecloths, no stirrups · Army-level, consistent with the cavalry sheets · None
@@ -281,7 +327,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P12 · The duel
 
 * **Shots:** S17, S19, S27 (S36/S37 moved to P42-P46 in the 02:43 shot list). **Window:** song [44.73, 52.73], audio reference cut at t0 = 44.73 s (Halys.mp3), 8 s, 2 take(s) reviewed.
-* **Chosen:** take 1 → `media/plates/P12/take1.mp4`; analysis in `video/plates/P12/` (frames 193, fields 193, mattes 84, depth 0, gain 1.0). Clean, symmetric, equal-size exchanges with sharp stops; its first exchange (S17: the thrust turned by the lion shield) is clean, whereas take 2's is a motion-blurred shield across the lens and its figures are unequal. Take 2 has nicer side light (alternate for S19/S27). (S37's orbit now uses P46.)
+* **Chosen:** take 1 → `media/plates/P12/take1.mp4`; analysis in `video/plates/P12/` (frames 193, fields 193, mattes 97, depth 97, gain 1.0). Clean, symmetric, equal-size exchanges with sharp stops; its first exchange (S17: the thrust turned by the lion shield) is clean, whereas take 2's is a motion-blurred shield across the lens and its figures are unequal. Take 2 has nicer side light (alternate for S19/S27). (S37's orbit now uses P46.)
 * **Delivers:** S17/S19 duel delivered: full figures, mirrored, six readable exchanges with sharp stops.
 * **Sync keys** (song s → plate s, offset = plate − (song − t0)):
   * 46.060 → 2.12 (+0.79 s) · beat: first thrust turned by the lion shield
@@ -298,7 +344,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P13 · Knocked into the water
 
 * **Shots:** S21. **Window:** song [58.72, 63.72], audio reference cut at t0 = 58.72 s (Halys.mp3), 5 s, 2 take(s) reviewed.
-* **Chosen:** take 2 → `media/plates/P13/take2.mp4`; analysis in `video/plates/P13/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Side light and darker background with the same action, closer to the beat than take 1.
+* **Chosen:** take 2 → `media/plates/P13/take2.mp4`; analysis in `video/plates/P13/` (frames 121, fields 121, mattes 0, depth 0, gain 1.214). Side light and darker background with the same action, closer to the beat than take 1.
 * **Delivers:** S21 delivered: side-lit, darker background; the Mede's shield bash knocks the Lydian back into the water with a big splash at ~1.0 s; the spear comes down at ~2.1 s; the Lydian rolls and rises to one knee behind his lion shield by ~3.5 s.
 * **Sync keys** (song s → plate s, offset = plate − (song − t0)):
   * 59.600 → 1.00 (+0.12 s) · timpani: knocked down
@@ -312,7 +358,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P14 · One face in the chaos
 
 * **Shots:** S23, S36, S41, S47. **Window:** song [65.67, 70.67], audio reference cut at t0 = 65.67 s (Halys.mp3), 5 s, 2 take(s) reviewed.
-* **Chosen:** take 2 → `media/plates/P14/take2.mp4`; analysis in `video/plates/P14/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Longer upward gaze in awe (from 2.0 s; S41/S47 need it) and the light grows on his face; take 1 is the alternate with a better-lit opening.
+* **Chosen:** take 2 → `media/plates/P14/take2.mp4`; analysis in `video/plates/P14/` (frames 121, fields 121, mattes 61, depth 61, gain 1.709). Longer upward gaze in awe (from 2.0 s; S41/S47 need it) and the light grows on his face; take 1 is the alternate with a better-lit opening.
 * **Delivers:** S23/S36/S41/S47: breathing in the dark melee (0-1.6 s), eyes rise from 2.0 s, a long upward gaze in awe with wet eyes from 2.8 s to the end; the light grows on his face as he looks up.
 * **Sync keys** (song s → plate s, offset = plate − (song − t0)):
   * 67.730 → 2.00 (-0.06 s) · first sung word: the frame is still
@@ -324,7 +370,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P15 · Face-off, then the shore melee
 
 * **Shots:** S25. **Window:** song [74.41, 81.41], audio reference cut at t0 = 74.41 s (Halys.mp3), 7 s, 2 take(s) reviewed.
-* **Chosen:** take 2 → `media/plates/P15/take2.mp4`; analysis in `video/plates/P15/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Side-lit symmetric face-off and a readable mirrored shore melee after a cut that lands on 77.88; take 1's melee is tiny and far.
+* **Chosen:** take 2 → `media/plates/P15/take2.mp4`; analysis in `video/plates/P15/` (frames 169, fields 169, mattes 6, depth 0, gain 1.052). Side-lit symmetric face-off and a readable mirrored shore melee after a cut that lands on 77.88; take 1's melee is tiny and far.
 * **Delivers:** S25 delivered: symmetric face-off in the shallows, Lydian left / Mede right in profile, shields up, spears lowered, circling (0-3.375 s); hard cut at 3.375 s to a mirrored side-on wide of the shore melee: a long line of Lydians and Medes clashing on the bank, dust, river in the foreground.
 * **Sync keys** (song s → plate s, offset = plate − (song − t0)):
   * 77.880 → 3.38 (-0.10 s) · cut to the shore melee
@@ -358,7 +404,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P18 · Faces turn up one after another
 
 * **Shots:** S28. **Window:** song [89.22, 93.22], audio reference cut at t0 = 89.22 s (Halys.mp3), 4 s, 2 take(s) reviewed.
-* **Chosen:** take 2 → `media/plates/P18/take2.mp4`; analysis in `video/plates/P18/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Readable wave of upturned faces (take 1's was invisible).
+* **Chosen:** take 2 → `media/plates/P18/take2.mp4`; analysis in `video/plates/P18/` (frames 97, fields 97, mattes 0, depth 0, gain 2.144). Readable wave of upturned faces (take 1's was invisible).
 * **Delivers:** S28: six warriors chest-up against a dark bank (2 Lydians, 4 Medes); faces turn up one after another left to right (first ~2.0 s, all six up by ~3.5 s) and hold.
 * **Sync keys** (song s → plate s, offset = plate − (song − t0)):
   * 89.780 → 2.00 (+1.44 s) · 'halo'
@@ -403,7 +449,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P21 · Throw down your blade
 
 * **Shots:** S32. **Window:** song [103.64, 107.64], audio reference cut at t0 = 103.64 s (Halys.mp3), 4 s, 3 take(s) reviewed.
-* **Chosen:** take 3 → `media/plates/P21/take3.mp4`; analysis in `video/plates/P21/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Only take with the sword falling into the water with a splash (takes 1-2 on dry gravel).
+* **Chosen:** take 3 → `media/plates/P21/take3.mp4`; analysis in `video/plates/P21/` (frames 97, fields 97, mattes 0, depth 0, gain 2.2). Only take with the sword falling into the water with a splash (takes 1-2 on dry gravel).
 * **Delivers:** S32 delivered: mirrored profile two-shot knee-deep in the river at dusk; frozen, then facing each other; the Lydian's sword drops into the water at ~2.46 s with a clear splash at his feet; still afterwards.
 * **Sync keys** (song s → plate s, offset = plate − (song − t0)):
   * 104.960 → 2.46 (+1.14 s) · 'blade': the sword hits the water
@@ -416,7 +462,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P22a · Hand opens: the knucklebone
 
 * **Shots:** S33 (left panel). **Window:** song [105.85, 109.85], audio reference cut at t0 = 105.85 s (Halys.mp3), 4 s, 1 take(s) reviewed.
-* **Chosen:** take 1 → `media/plates/P22a/take1.mp4`; analysis in `video/plates/P22a/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Only take (flip for the mirrored diptych).
+* **Chosen:** take 1 → `media/plates/P22a/take1.mp4`; analysis in `video/plates/P22a/` (frames 97, fields 97, mattes 0, depth 0, gain 1.596). Only take (flip for the mirrored diptych).
 * **Delivers:** S33 left panel delivered: the Lydian's loose fist (crimson sleeve, bronze scales at frame right) opens from 1.2 s to reveal an ivory, lumpy astragalus on a thin cord; open palm held from 2.3 s.
 * **Sync:** no musical hit to land; use 1:1 from t0 (plate = song − t0).
 * **Checks:** Knucklebone exactly like the sheet inset (ivory here, unlike P03) · Sheet prop · Five natural fingers, no artefacts. The hand enters from the RIGHT (same side as P22b), so the pair is not mirrored
@@ -436,7 +482,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P23 · The heroes at totality (cold open)
 
 * **Shots:** S03. **Window:** song [3.65, 7.65], audio reference cut at t0 = 3.65 s (Halys.mp3), 4 s, 2 take(s) reviewed.
-* **Chosen:** take 2 → `media/plates/P23/take2.mp4`; analysis in `video/plates/P23/` (frames ?, fields ?, mattes ?, depth ?, gain ?). In the water, as specified (take 1 stood on dry gravel).
+* **Chosen:** take 2 → `media/plates/P23/take2.mp4`; analysis in `video/plates/P23/` (frames 97, fields 97, mattes 0, depth 0, gain 2.15). In the water, as specified (take 1 stood on dry gravel).
 * **Delivers:** S03 delivered: mirrored two-shot of the heroes standing IN the red-brown water, faces turned up to the dark sky, completely still, a thin orange horizon glow.
 * **Sync:** no musical hit to land; use 1:1 from t0 (plate = song − t0).
 * **Checks:** Correct on both · Match · Spears held upright (grounded) rather than lowered into the water; the river reads as a flat, wide water body
@@ -447,7 +493,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P24 · Flammarion: palm against the sky
 
 * **Shots:** S38. **Window:** song [124.47, 128.47], audio reference cut at t0 = 124.47 s (Halys.mp3), 4 s, 1 take(s) reviewed.
-* **Chosen:** take 1 → `media/plates/P24/take1.mp4`; analysis in `video/plates/P24/` (frames 97, fields 0, mattes 0, depth 0, gain 1.0). Only take.
+* **Chosen:** take 1 → `media/plates/P24/take1.mp4`; analysis in `video/plates/P24/` (frames 97, fields 97, mattes 49, depth 49, gain 2.073). Only take.
 * **Delivers:** S38 delivered: the Lydian from behind/side on a ridge against a dark dusk sky with an orange horizon; raises his right arm and pushes his open, spread palm up against the sky (1.0-3.8 s), leaning up into it.
 * **Sync:** no musical hit to land; use 1:1 from t0 (plate = song − t0).
 * **Checks:** Helmet + crest, braids, scales, crimson, shield rim at frame bottom · Matches · The 'glass' press reads as a reach with spread fingers (no head push-through)
@@ -457,7 +503,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P25 · Frozen battle, moving camera
 
 * **Shots:** S45, S46, S49. **Window:** song [153.83, 163.83], audio reference cut at t0 = 153.83 s (Halys.mp3), 10 s, 2 take(s) reviewed.
-* **Chosen:** take 2 → `media/plates/P25/take2.mp4`; analysis in `video/plates/P25/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Central Lydian-vs-Mede duel frozen mid-strike as specified; take 1 has no central duel.
+* **Chosen:** take 2 → `media/plates/P25/take2.mp4`; analysis in `video/plates/P25/` (frames 241, fields 241, mattes 0, depth 0, gain 1.917). Central Lydian-vs-Mede duel frozen mid-strike as specified; take 1 has no central duel.
 * **Delivers:** S45/S46/S49 delivered: the Lydian frozen mid-thrust against the Mede blocking with his wicker shield at the centre; riders, archers and spearmen frozen around them; arrows hang in the air; the camera orbits left-to-right through the frozen scene (0-5.6 s), then cranes up and tilts to the dark sky (5.6-10 s).
 * **Sync:** no musical hit to land; use 1:1 from t0 (plate = song − t0).
 * **Checks:** Correct (crest, crimson, scales, lion shield; red cap, ochre, iron scales, wicker shield) · Heroes consistent with the sheets · Black sun drawn at the end (renderer paints over); readable warm dusk
@@ -468,7 +514,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P26 · Wind on frozen bodies
 
 * **Shots:** S51. **Window:** song [178.66, 182.66], audio reference cut at t0 = 178.66 s (Halys.mp3), 4 s, 1 take(s) reviewed.
-* **Chosen:** take 1 → `media/plates/P26/take1.mp4`; analysis in `video/plates/P26/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Only take.
+* **Chosen:** take 1 → `media/plates/P26/take1.mp4`; analysis in `video/plates/P26/` (frames 97, fields 97, mattes 49, depth 49, gain 1.669). Only take.
 * **Delivers:** S51 delivered: three warriors (two Lydians, a Mede) frozen mid-action on the bank at dusk; only the wind moves: crimson cloaks billow, the ribbons under the gold lion standard stream, feather grass bends.
 * **Sync:** no musical hit to land; use 1:1 from t0 (plate = song − t0).
 * **Checks:** Correct; the Lydians wear crimson cloaks (not on the sheet, plausible) · Consistent · None; orange horizon, readable dusk
@@ -478,7 +524,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P27 · Thales walks between the statues
 
 * **Shots:** S52. **Window:** song [181.23, 185.23], audio reference cut at t0 = 181.23 s (Halys.mp3), 4 s, 4 take(s) reviewed.
-* **Chosen:** take 3 → `media/plates/P27/take3.mp4`; analysis in `video/plates/P27/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Clear walk toward a static camera with full, readable frozen figures (takes 1-2 had no walk; take 4 is darker and more cluttered).
+* **Chosen:** take 3 → `media/plates/P27/take3.mp4`; analysis in `video/plates/P27/` (frames 97, fields 97, mattes 0, depth 0, gain 1.496). Clear walk toward a static camera with full, readable frozen figures (takes 1-2 had no walk; take 4 is darker and more cluttered).
 * **Delivers:** S52 delivered: static camera; Thales (staff, chiton, terracotta mantle) walks toward the lens from the middle distance to a medium shot between a Lydian frozen mid-thrust and a Mede frozen behind his wicker shield, a line of frozen soldiers far behind; looks up at the sky; dusk.
 * **Sync:** no musical hit to land; use 1:1 from t0 (plate = song − t0).
 * **Checks:** Per sheet, staff in hand · Matches thales.jpg · None; the frozen men do not move
@@ -491,7 +537,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P28 · Thales looks into the lens
 
 * **Shots:** S53, S54. **Window:** song [184.64, 189.64], audio reference cut at t0 = 184.64 s (Halys.mp3), 5 s, 2 take(s) reviewed.
-* **Chosen:** take 1 → `media/plates/P28/take1.mp4`; analysis in `video/plates/P28/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Glance into the lens near the breath, no corona behind the head; take 2 drew a huge corona behind him.
+* **Chosen:** take 1 → `media/plates/P28/take1.mp4`; analysis in `video/plates/P28/` (frames 121, fields 121, mattes 0, depth 0, gain 1.74). Glance into the lens near the breath, no corona behind the head; take 2 drew a huge corona behind him.
 * **Delivers:** S53/S54 delivered: Thales (staff, braided fillet, chiton, terracotta mantle) among silhouetted warriors under an orange dusk horizon; looks up studying the sky (0-2.2 s), lowers his gaze and meets the lens with a dry, knowing half-smile from ~2.8 s to the end.
 * **Sync keys** (song s → plate s, offset = plate − (song − t0)):
   * 187.650 → 2.80 (-0.21 s) · the breath: he glances at camera
@@ -503,7 +549,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P29 · Light returns: statues to flesh, the roar
 
 * **Shots:** S57, S58. **Window:** song [194.86, 203.86], audio reference cut at t0 = 194.86 s (Halys.mp3), 9 s, 2 take(s) reviewed.
-* **Chosen:** take 1 → `media/plates/P29/take1.mp4`; analysis in `video/plates/P29/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Clear dusk-to-gold light sweep and statues-to-flesh transition; take 2 starts already golden.
+* **Chosen:** take 1 → `media/plates/P29/take1.mp4`; analysis in `video/plates/P29/` (frames 217, fields 217, mattes 0, depth 0, gain 1.35). Clear dusk-to-gold light sweep and statues-to-flesh transition; take 2 starts already golden.
 * **Delivers:** S57/S58 delivered: a dense mixed crowd frozen in dim dusk, a wave of golden light sweeps in from the right (1.7-4.0 s) and they come alive, look up and around; both armies roar from ~5.8 s, raising spears and arms, embracing by 8.5 s.
 * **Sync keys** (song s → plate s, offset = plate − (song − t0)):
   * 200.315 → 5.85 (+0.40 s) · 'Shadow turned to day': the roar
@@ -515,7 +561,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P30 · Golden faces, laughter
 
 * **Shots:** S59. **Window:** song [203.39, 207.39], audio reference cut at t0 = 203.39 s (Halys.mp3), 4 s, 1 take(s) reviewed.
-* **Chosen:** take 1 → `media/plates/P30/take1.mp4`; analysis in `video/plates/P30/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Only take.
+* **Chosen:** take 1 → `media/plates/P30/take1.mp4`; analysis in `video/plates/P30/` (frames 97, fields 97, mattes 17, depth 0, gain 1.351). Only take.
 * **Delivers:** S59 delivered: the Lydian and the Mede side by side, faces lit gold, looking up and laughing with relief; the Mede claps the Lydian's shoulder at ~3.3 s; cheering crowd dark behind.
 * **Sync:** no musical hit to land; use 1:1 from t0 (plate = song − t0).
 * **Checks:** Correct (crest, braids, scales; red cap, beard, ochre, iron scales) · Match the sheets · None
@@ -525,7 +571,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P31 · Face to face, still
 
 * **Shots:** S60. **Window:** song [207.4, 211.4], audio reference cut at t0 = 207.4 s (Halys.mp3), 4 s, 1 take(s) reviewed.
-* **Chosen:** take 1 → `media/plates/P31/take1.mp4`; analysis in `video/plates/P31/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Only take.
+* **Chosen:** take 1 → `media/plates/P31/take1.mp4`; analysis in `video/plates/P31/` (frames 97, fields 97, mattes 0, depth 0, gain 1.0). Only take.
 * **Delivers:** S60 delivered: close mirrored profile two-shot, Lydian left facing right, Mede right facing left, a metre apart, weapons in hand, still, breathing; low sun at the right edge.
 * **Sync:** no musical hit to land; use 1:1 from t0 (plate = song − t0).
 * **Checks:** Correct · Match · The river surface behind them has an odd pink-white streaked texture
@@ -535,7 +581,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P32 · Rain of bronze, one sword sinking
 
 * **Shots:** S61. **Window:** song [208.7, 213.7], audio reference cut at t0 = 208.7 s (Halys.mp3), 5 s, 2 take(s) reviewed.
-* **Chosen:** take 1 → `media/plates/P32/take1.mp4`; analysis in `video/plates/P32/` (frames ?, fields ?, mattes ?, depth ?, gain ?). More blades readable in the air; otherwise equal to take 2.
+* **Chosen:** take 1 → `media/plates/P32/take1.mp4`; analysis in `video/plates/P32/` (frames 121, fields 121, mattes 0, depth 0, gain 1.112). More blades readable in the air; otherwise equal to take 2.
 * **Delivers:** S61 delivered: wide backlit river with both armies hurling swords and spears from both banks, a rain of blades arcing through gold air (0-2.17 s); hard cut at 2.17 s to one bronze sword entering the red water point-first and sinking, hilt last, rings spreading (2.2-5 s).
 * **Sync keys** (song s → plate s, offset = plate − (song − t0)):
   * 209.945 → 1.60 (+0.35 s) · 'blade'
@@ -548,7 +594,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P33 · A sword tossed into the sky
 
 * **Shots:** S62 (-> S63 match cut). **Window:** song [211.88, 215.88], audio reference cut at t0 = 211.88 s (Halys.mp3), 4 s, 1 take(s) reviewed.
-* **Chosen:** take 1 → `media/plates/P33/take1.mp4`; analysis in `video/plates/P33/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Only take; apex on the Drop 2 kick.
+* **Chosen:** take 1 → `media/plates/P33/take1.mp4`; analysis in `video/plates/P33/` (frames 97, fields 97, mattes 0, depth 0, gain 1.072). Only take; apex on the Drop 2 kick.
 * **Delivers:** S62 delivered: the Lydian on the bank against a golden sky tosses his sword at ~0.8 s; the camera tilts up; the sword spins end over end into the golden clouds and slows to near-still at the apex at ~3.4 s.
 * **Sync keys** (song s → plate s, offset = plate − (song − t0)):
   * 215.287 → 3.40 (-0.01 s) · DROP 2 kick: match cut at the apex
@@ -559,7 +605,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P34 · Swords into starships
 
 * **Shots:** S63. **Window:** song [215.29, 222.29], audio reference cut at t0 = 215.29 s (Halys.mp3), 7 s, 2 take(s) reviewed.
-* **Chosen:** take 2 → `media/plates/P34/take2.mp4`; analysis in `video/plates/P34/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Generic silhouette without the Starship flaps of take 1.
+* **Chosen:** take 2 → `media/plates/P34/take2.mp4`; analysis in `video/plates/P34/` (frames 169, fields 169, mattes 0, depth 0, gain 2.053). Generic silhouette without the Starship flaps of take 1.
 * **Delivers:** S63 delivered: a generic polished-steel rocket (pointed ogive nose, three small fins at the base, no flaps) lifts off at dusk on a white-gold flame, climbs centred and vertical, camera tilting up.
 * **Sync:** no musical hit to land; use 1:1 from t0 (plate = song − t0).
 * **Checks:** Unbranded: no logos, flags or lettering · Steel ring panels still hint at the real thing, but the silhouette is generic
@@ -570,7 +616,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P35 · Concorde above the clouds
 
 * **Shots:** S67. **Window:** song [232.27, 236.27], audio reference cut at t0 = 232.27 s (Halys.mp3), 4 s, 3 take(s) reviewed.
-* **Chosen:** take 3 → `media/plates/P35/take3.mp4`; analysis in `video/plates/P35/` (frames ?, fields ?, mattes ?, depth ?, gain ?). The only take that reads as a Concorde (no tailplane, needle nose).
+* **Chosen:** take 3 → `media/plates/P35/take3.mp4`; analysis in `video/plates/P35/` (frames 97, fields 97, mattes 0, depth 0, gain 1.103). The only take that reads as a Concorde (no tailplane, needle nose).
 * **Delivers:** S67 delivered: a Concorde-type SST in clean side profile above a sea of clouds at dusk (needle nose, slender fuselage with a window row, single swept fin and no tailplane, rectangular under-wing nacelle), camera tracking alongside.
 * **Sync:** no musical hit to land; use 1:1 from t0 (plate = song − t0).
 * **Checks:** Plain white, no markings · Wing planform not visible in pure profile
@@ -582,7 +628,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P36 · A modern crowd looks up
 
 * **Shots:** S68. **Window:** song [235.66, 239.66], audio reference cut at t0 = 235.66 s (Halys.mp3), 4 s, 1 take(s) reviewed.
-* **Chosen:** take 1 → `media/plates/P36/take1.mp4`; analysis in `video/plates/P36/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Only take.
+* **Chosen:** take 1 → `media/plates/P36/take1.mp4`; analysis in `video/plates/P36/` (frames 97, fields 97, mattes 0, depth 0, gain 1.413). Only take.
 * **Delivers:** S68 delivered: a mixed modern crowd in a park in paper eclipse glasses looking up; at ~2.1 s arms go up, a child on shoulders raises both arms, several point up.
 * **Sync keys** (song s → plate s, offset = plate − (song − t0)):
   * 237.660 → 2.10 (+0.10 s) · faces lift together
@@ -593,7 +639,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P37 · Karnak, darkness at noon
 
 * **Shots:** S70. **Window:** song [242.45, 246.45], audio reference cut at t0 = 242.45 s (Halys.mp3), 4 s, 1 take(s) reviewed.
-* **Chosen:** take 1 → `media/plates/P37/take1.mp4`; analysis in `video/plates/P37/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Only take.
+* **Chosen:** take 1 → `media/plates/P37/take1.mp4`; analysis in `video/plates/P37/` (frames 97, fields 97, mattes 0, depth 0, gain 1.143). Only take.
 * **Delivers:** S70 delivered: looking straight up between massive carved Karnak columns and architraves at a cross of sky, slow rotation, the sky dims from blue to violet dusk.
 * **Sync:** no musical hit to land; use 1:1 from t0 (plate = song − t0).
 * **Checks:** Blue sky (renderer recolours); carved reliefs, no text
@@ -603,7 +649,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P38 · Blades up, blades down, one straggler
 
 * **Shots:** S74, S75, S76. **Window:** song [257.68, 262.68], audio reference cut at t0 = 257.68 s (Halys.mp3), 5 s, 4 take(s) reviewed.
-* **Chosen:** take 4 → `media/plates/P38/take4.mp4`; analysis in `video/plates/P38/` (frames ?, fields ?, mattes ?, depth ?, gain ?). The only take with a clear, natural straggler and the upright-blade barcode (takes 1-2: no straggler; take 3: straggler frozen for 1.5 s).
+* **Chosen:** take 4 → `media/plates/P38/take4.mp4`; analysis in `video/plates/P38/` (frames 121, fields 121, mattes 0, depth 0, gain 1.0). The only take with a clear, natural straggler and the upright-blade barcode (takes 1-2: no straggler; take 3: straggler frozen for 1.5 s).
 * **Delivers:** S75/S76 delivered: nine-man front row (Lydians left, Medes right, a straggler Lydian in the centre) with both armies massed behind on the sand; all raise swords at ~2.0 s; the row stabs its blades point-first into the sand at ~2.35 s; the centre man keeps his raised, glances, and stabs his late at ~3.6 s, leaving a row of upright blades (the barcode).
 * **Sync keys** (song s → plate s, offset = plate − (song − t0)):
   * 259.350 → 2.00 (+0.33 s) · hit: blades raised
@@ -619,7 +665,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P39 · The room, from behind her chair
 
 * **Shots:** S78. **Window:** song [266.12, 270.12], audio reference cut at t0 = 266.12 s (Halys.mp3), 4 s, 1 take(s) reviewed.
-* **Chosen:** take 1 → `media/plates/P39/take1.mp4`; analysis in `video/plates/P39/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Only take.
+* **Chosen:** take 1 → `media/plates/P39/take1.mp4`; analysis in `video/plates/P39/` (frames 97, fields 97, mattes 49, depth 49, gain 1.45). Only take.
 * **Delivers:** S78 delivered: from behind her chair (room_a), she types at the ultrawide and side monitors; RARE EARTH and the patch on the back of the white jacket face the camera; window with fog and the red-blinking tower.
 * **Sync:** no musical hit to land; use 1:1 from t0 (plate = song − t0).
 * **Checks:** Per sheet/ROOM.md (blue circle is faint on the back) · Matches · Screen pseudo-text (renderer replaces)
@@ -629,7 +675,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P40 · She spins the chair: deadpan
 
 * **Shots:** S79. **Window:** song [268.3, 273.3], audio reference cut at t0 = 268.3 s (Halys.mp3), 5 s, 2 take(s) reviewed.
-* **Chosen:** take 2 → `media/plates/P40/take2.mp4`; analysis in `video/plates/P40/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Spin lands 1.06 s closer to the chord than take 1 and leaves a longer deadpan hold (2.9 s).
+* **Chosen:** take 2 → `media/plates/P40/take2.mp4`; analysis in `video/plates/P40/` (frames 121, fields 121, mattes 61, depth 61, gain 1.443). Spin lands 1.06 s closer to the chord than take 1 and leaves a longer deadpan hold (2.9 s).
 * **Delivers:** S79 delivered: typing from behind (0-1.1 s), one smooth half-turn spin (1.2-2.1 s), facing the camera squarely with a perfect deadpan stare from ~2.1 s to the end (2.9 s of hold).
 * **Sync keys** (song s → plate s, offset = plate − (song − t0)):
   * 270.040 → 2.10 (+0.36 s) · final stark chord: the spin ends facing camera
@@ -641,7 +687,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P41 · Blind typing and the wink
 
 * **Shots:** S80, S81. **Window:** song [273.4, 279.4], audio reference cut at t0 = 273.4 s (sound-design master), 6 s, 4 take(s) reviewed.
-* **Chosen:** take 4 → `media/plates/P41/take4.mp4`; analysis in `video/plates/P41/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Typing gesture plus a clean single-eye wink (take 3 has no typing; take 2 closes both eyes before winking; take 1 never winks with one eye).
+* **Chosen:** take 4 → `media/plates/P41/take4.mp4`; analysis in `video/plates/P41/` (frames 145, fields 145, mattes 15, depth 0, gain 1.0). Typing gesture plus a clean single-eye wink (take 3 has no typing; take 2 closes both eyes before winking; take 1 never winks with one eye).
 * **Delivers:** S80/S81 delivered: front-facing close-up, monitors and lamp behind; deadpan stare while her right shoulder and sleeve dip at frame-left as she types blind (0.2-1.8 s); sly smile from ~3.25 s; a clean single-eye wink (frame-left eye closed ~4.4-5.1 s, other eye open), then the sly smile to the end.
 * **Sync keys** (song s → plate s, offset = plate − (song − t0)):
   * 276.950 → 4.45 (+0.90 s) · the 'ting': THE WINK
@@ -655,13 +701,14 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P42 · Lydian reactions: prayer, terror, eyes covered, spear dropped
 
 * **Shots:** S35, S36. **Window:** song [110.58, 115.58], audio reference cut at t0 = 110.58 s (Halys.mp3), 5 s, 2 take(s) reviewed.
-* **Chosen:** take 2 → `media/plates/P42/take2.mp4`; analysis in `video/plates/P42/` (frames ?, fields ?, mattes ?, depth ?, gain ?). All four reactions, in order, the kneeling prayer first (take 1 bunches them into the last 2 s).
+* **Chosen:** take 2 → `media/plates/P42/take2.mp4`; analysis in `video/plates/P42/` (frames 121, fields 121, mattes 0, depth 0, gain 2.186). All four reactions, in order, the kneeling prayer first (take 1 bunches them into the last 2 s).
 * **Delivers:** S35/S36 delivered: four Lydians knee-deep at dusk, each reaction readable and separate: the second man sinks to his knees with both arms up, palms open (Greek prayer, arms up ~1.0 s, splash 1.3 s); the foreground man spins round staring in terror (~1.6 s); the third throws his forearm over his eyes (~2.9 s); the fourth's spear falls into the water (~4.5 s).
 * **Sync keys** (song s → plate s, offset = plate − (song − t0)):
   * 110.980 → 1.00 (+0.60 s) · IN THE: the kneeling man's arms go up (S35 cut)
   * 111.435 → 1.60 (+0.74 s) · kick: the spin round
   * 111.865 → 2.90 (+1.61 s) · kick: eyes covered
   * 112.305 → 4.50 (+2.77 s) · kick: the spear drops
+* **Timing notes:** Each reaction is a separate moment for the S36 montage: the keys say where each one happens in the plate (mapped to the kick it was asked for); cut each onto whichever stutter onset the edit needs.
 * **Checks:** Crested helmets, braids, scales, crimson, lion shields · Consistent with lydian.jpg · Reactions spread over the whole plate rather than on consecutive kicks
 * **Notes for the renderer:** For S35's IN THE (110.98) use the kneel at plate ~1.0.
 * **Review sheet:** `media/plates/P42/take2.review.jpg` (motion curve + frames at the hits); 8-frame contact `media/plates/P42/take2.sheet.jpg`.
@@ -670,13 +717,14 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P43 · Median reactions: proskynesis, amulet, bow dropped, arm grabbed
 
 * **Shots:** S35, S36. **Window:** song [110.58, 115.58], audio reference cut at t0 = 110.58 s (Halys.mp3), 5 s, 2 take(s) reviewed.
-* **Chosen:** take 2 → `media/plates/P43/take2.mp4`; analysis in `video/plates/P43/` (frames ?, fields ?, mattes ?, depth ?, gain ?). All four reactions in order, proskynesis first (take 1 has only a late prostration).
+* **Chosen:** take 2 → `media/plates/P43/take2.mp4`; analysis in `video/plates/P43/` (frames 121, fields 121, mattes 0, depth 0, gain 2.17). All four reactions in order, proskynesis first (take 1 has only a late prostration).
 * **Delivers:** S35/S36 delivered (mirror of P42): four Medes by a gravel bar at dusk: the far-right man drops to his knees and prostrates, forehead on the river stones (~1.1 s); the second clasps his hands at his chest over an amulet and prays (~1.8 s); the hooded archer's bow splashes into the water (~3.5 s); the third grabs his neighbour's arm (~4.3 s).
 * **Sync keys** (song s → plate s, offset = plate − (song − t0)):
   * 111.890 → 1.10 (-0.21 s) · SKY: the prostration (S35 cut)
   * 111.435 → 1.80 (+0.94 s) · kick: the amulet prayer
   * 111.865 → 3.50 (+2.21 s) · kick: the bow falls
   * 112.305 → 4.30 (+2.58 s) · kick: grabs his neighbour's arm
+* **Timing notes:** Each reaction is a separate moment for the S36 montage: the keys say where each one happens in the plate (mapped to the kick it was asked for); cut each onto whichever stutter onset the edit needs.
 * **Checks:** Red caps, black beards, ochre tunics, iron scales, wicker shields; archer hood, sheepskin, bow · Consistent with mede.jpg / median_archer.jpg · The amulet itself is small; arm grab is subtle
 * **Notes for the renderer:** For S35's last SKY (111.89) use the prostration at plate ~1.1.
 * **Review sheet:** `media/plates/P43/take2.review.jpg` (motion curve + frames at the hits); 8-frame contact `media/plates/P43/take2.sheet.jpg`.
@@ -685,7 +733,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P44 · Horses: the rear and the calming
 
 * **Shots:** S35, S36. **Window:** song [110.58, 115.58], audio reference cut at t0 = 110.58 s (Halys.mp3), 5 s, 1 take(s) reviewed.
-* **Chosen:** take 1 → `media/plates/P44/take1.mp4`; analysis in `video/plates/P44/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Only take; both horse beats read.
+* **Chosen:** take 1 → `media/plates/P44/take1.mp4`; analysis in `video/plates/P44/` (frames 121, fields 121, mattes 0, depth 0, gain 1.281). Only take; both horse beats read.
 * **Delivers:** S35/S36 delivered: at dusk on the bank the Lydian rider's chestnut rears high on its hind legs (~0.9 s, right on the S35 'SKY' 111.455) while he grips the reins; behind, the Median rider stands at his bay's head holding it against his chest to calm it.
 * **Sync keys** (song s → plate s, offset = plate − (song − t0)):
   * 111.455 → 0.92 (+0.04 s) · SKY: the horse rears (S35 cut)
@@ -696,7 +744,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P45 · Faces in shock (Lydian, Mede, Alyattes, Cyaxares)
 
 * **Shots:** S36. **Window:** song [112.31, 117.31], audio reference cut at t0 = 112.31 s (Halys.mp3), 5 s, 1 take(s) reviewed.
-* **Chosen:** take 1 → `media/plates/P45/take1.mp4`; analysis in `video/plates/P45/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Only take; four readable faces.
+* **Chosen:** take 1 → `media/plates/P45/take1.mp4`; analysis in `video/plates/P45/` (frames 121, fields 121, mattes 0, depth 0, gain 2.085). Only take; four readable faces.
 * **Delivers:** S36 delivered: four tight dusk close-ups with hard cuts at 1.79, 3.08 and 4.38 s: the Lydian looks around wildly then up (0-1.79); the Mede whips round then looks up (1.79-3.08); Alyattes in shock looking up (3.08-4.38); Cyaxares eyes wide looking up (4.38-5.04).
 * **Sync:** no musical hit to land; use 1:1 from t0 (plate = song − t0).
 * **Timing notes:** Segments: Lydian 0-1.79, Mede 1.79-3.08, Alyattes 3.08-4.38, Cyaxares 4.38-5.04 (hard cuts).
@@ -707,7 +755,7 @@ where a retake changed a prompt, the first-pass prompt is kept as `prompt_v1` wi
 ### P46 · Frozen reaction tableau, 30-degree orbit
 
 * **Shots:** S37. **Window:** song [117.53, 125.53], audio reference cut at t0 = 117.53 s (Halys.mp3), 8 s, 4 take(s) reviewed.
-* **Chosen:** take 4 → `media/plates/P46/take4.mp4`; analysis in `video/plates/P46/` (frames ?, fields ?, mattes ?, depth ?, gain ?). Balanced prayer/terror poses on both sides, a real rear, empty sky and the widest clean arc (take 3 put every kneeling pose on the Medes and the horse never reared; take 2 drew a corona; take 1's duel is unclear).
+* **Chosen:** take 4 → `media/plates/P46/take4.mp4`; analysis in `video/plates/P46/` (frames 193, fields 193, mattes 0, depth 0, gain 1.836). Balanced prayer/terror poses on both sides, a real rear, empty sky and the widest clean arc (take 3 put every kneeling pose on the Medes and the horse never reared; take 2 drew a corona; take 1's duel is unclear).
 * **Delivers:** S37 delivered: a frozen Baroque reaction group on a stony bank under an empty dark sky with an orange horizon, reflected in the water: a Lydian kneeling with arms raised (palms up), a Mede pointing up, spears crossed at the centre, a Mede kneeling with arms raised, a Lydian covering his eyes, a Lydian rider whose horse is frozen high on its hind legs, a Mede prostrate on the stones; everyone statue-still while the camera arcs ~25-30 degrees left to right.
 * **Sync:** no musical hit to land; use 1:1 from t0 (plate = song − t0).
 * **Checks:** Correct (crests/crimson/scales; red caps/ochre/iron scales) · Consistent with the sheets · The crossed spears are both held by Lydians (the central Mede kneels rather than duels); 4 Lydian : 3 Median figures

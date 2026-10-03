@@ -43,6 +43,7 @@ export function skyMask(F, o) {
     let s = D && o.useDepth !== false ? 1 - sstep(md, md + soft, D[i]) : 1;
     if (o.horizonY != null) s = Math.min(s, 1 - sstep(o.horizonY * ah - 1.5, o.horizonY * ah + 1.5, y));
     if (F.M) s *= 1 - sstep(.15, .5, F.M[i]);
+    else s *= 1 - sstep(.2, .42, F.detail[i]);          // no matte yet: detailed regions (figures) are never sky
     s *= 1 - sstep(yMax - 4, yMax + 4, y);
     m[i] = s;
   }
@@ -95,6 +96,10 @@ export function prepFields(F, cfg0) {
   const M = F.M ? blur(F.M, aw, ah, .7) : new Float32Array(N);
   let subj = new Float32Array(N);
   if (cfg.subject === 'matte' && F.M && cfg.poolMatte) for (let i = 0; i < N; i++) subj[i] = sstep(.3, .7, M[i]) * cfg.poolMatte;
+  else if (cfg.subject === 'matte' && !F.M && !cfg.pool && cfg.autoSubject !== false) {   // plate without a matte yet: detail stands in
+    const dB = blur(F.detail, aw, ah, 3);
+    for (let i = 0; i < N; i++) subj[i] = sstep(.22, .55, dB[i]) * (1 - sstep(.3, .6, sky[i]));
+  }
   if (cfg.pool) {
     let pl = new Float32Array(N);
     for (const e of cfg.pool) { const m = ellipseMask(F, e), k = e.k ?? 1; for (let i = 0; i < N; i++) pl[i] = Math.max(pl[i], m[i] * k); }

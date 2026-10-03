@@ -1,8 +1,7 @@
-// source.js: where the INK engine gets its pictures. A plate id resolves, in order, to
-//   1. the production plate video/plates/<id>/ (as soon as video/plates/index.json lists it: tools/pipeline.sh),
-//   2. a dev extraction of the same chosen take in video/out/ink_dev/<id>/ (gitignored; made by the INK owner with the
-//      exact extract_plates.py filters, so frame numbers match the production plate), or
-//   3. nothing: the scene falls back to its stand-in stills (worlds/ink/standins/).
+// source.js: where the INK engine gets its pictures. A plate id resolves to the production plate video/plates/<id>/ as
+// soon as video/plates/index.json lists it (tools/pipeline.sh), else to nothing, and the scene falls back to its stand-in
+// stills (worlds/ink/standins/<id>/: frame.jpg + matte.png + meta.json, listed in standins/index.json). The switch is
+// automatic: no code changes when a plate lands.
 // Mattes: the INK prep mattes (worlds/ink/mattes/<id>_<take>/, see prep/mattes.py: the pipeline's isnet-anime matte picks
 // the desk lamp or the saros dial on the wide room plates) when they exist for this take and frame, else the plate's own
 // masks/ (odd frames), else none.
@@ -15,9 +14,8 @@ import { PLATES } from '../../plates.js';
 import { loadJSON, loadImage, pixels, LRU } from '../../assets.js';
 
 const pad4 = n => String(n).padStart(4, '0');
-let DEV = null, MATTES = null, STANDINS = null;
+let MATTES = null, STANDINS = null;
 export async function initSources() {
-  DEV = (await loadJSON('out/ink_dev/index.json', { optional: true })) || {};
   MATTES = (await loadJSON('src/worlds/ink/mattes/index.json', { optional: true })) || {};
   STANDINS = (await loadJSON('src/worlds/ink/standins/index.json', { optional: true })) || {};
 }
@@ -26,8 +24,6 @@ export const takeStem = take => String(take || '').replace(/^.*\//, '').replace(
 export function plateRef(id) {
   const P = PLATES[id];
   if (P && P.n) return { kind: 'plate', id, base: `plates/${id}/`, take: P.take, n: P.n, fps: P.fps || 24, w: P.w || 960, h: P.h || 540, gain: P.gain || 1, masks: P.mattes > 0 };
-  const D = DEV && DEV[id];
-  if (D && D.n) return { kind: 'dev', id, base: `out/ink_dev/${id}/`, take: D.take, n: D.n, fps: D.fps || 24, w: D.w || 960, h: D.h || 540, gain: D.gain || 1, masks: D.mattes > 0 };
   return null;
 }
 export function standinRef(id) {
@@ -36,7 +32,7 @@ export function standinRef(id) {
 }
 
 // ---------------------------------------------------------------- raw loads
-const _rgba = new LRU(40), _matte = new LRU(40);
+const _rgba = new LRU(16), _matte = new LRU(16);
 async function frameRGBA(ref, pf) {
   const url = ref.kind === 'still' ? `${ref.base}frame.jpg` : `${ref.base}frames/f${pad4(Math.max(1, Math.min(ref.n, pf)))}.jpg`;
   const hit = _rgba.get(url); if (hit) return hit;
@@ -123,7 +119,7 @@ function regionWeight(r, W, H) {
 const _rw = new LRU(8);
 
 // The input of one drawing in setup space: { W, H, rgba, matte, faces, key }
-const _inputs = new LRU(12);
+const _inputs = new LRU(4);
 export async function drawingInput(setup, e) {
   const key = `${setup.id}|${e.src}:${e.pf}<${e.ref || ''}|${JSON.stringify(e.region || null)}|${e.dy || 0}`;
   const hit = _inputs.get(key); if (hit) return hit;

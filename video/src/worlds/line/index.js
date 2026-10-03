@@ -145,7 +145,9 @@ export async function drawLines(f, opts = {}) {
   // trace, corona, skyField, analysis, cam, tickFx, ... }] (diptychs, split screens); per-plate keys override opts
   const plates = opts.plates || (opts.src ? [opts] : []);
   for (const pl of plates) {
-    const po = pl === opts ? opts : { ...opts, ...pl, plates: undefined, layers: undefined };
+    let po = pl === opts ? opts : { ...opts, ...pl, plates: undefined, layers: undefined };
+    // stand-in-only geometry (river polygons, army masks, horizons drawn for a board): never applied to a real plate
+    if (po.standinTrace && resolve(po.src).kind === 'standin') po = { ...po, trace: { ...(po.trace || {}), ...po.standinTrace }, standinTrace: undefined };
     const rect = po.rect || [0, 0, 1, 1], RW = Math.round(rect[2] * W), RH = Math.round(rect[3] * H);
     const fv = { W: RW, H: RH, rect };
     const r = resolve(po.src), extra = [...(po.plateExtra || [])];

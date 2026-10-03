@@ -1,0 +1,12 @@
+audio: media/stems/halys_sd_master.wav   frames: video/out/frames_room   60 fps
+
+event                               onset (s)   onset f   visual f   late (frames)   pixel check
+final chord / spin lands               270.013     16201      16201               0   change before 0.00 / on frame 39.84
+key click 1 / key-press drawing        273.455     16408      16408               0   change before 0.00 / on frame 15.75
+key click 2 / key-press drawing        274.025     16442      16442               0   change before 0.00 / on frame 14.64
+key click 3 / key-press drawing        274.927     16496      16496               0   change before 0.00 / on frame 15.30
+ting / eyelid shut                     276.947     16617      16617               0   eye whites 1914 -> 1760 px
+
+cut to black: f16653 (277.550 s), 0.60 s after the eyelid shuts; audio ends 279.6 s, film 281 s
+
+OK: every event within one frame of its sound

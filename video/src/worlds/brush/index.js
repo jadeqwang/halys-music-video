@@ -173,6 +173,19 @@ export async function paint(f, src, opts = {}) {
     ref = { ...ref, R, G, B, L, pool, focus, sky: mask };
     skyInfo = { mask };
   }
+  // water and open ground: where the plate has no dominant direction (glitter, pebbles, grass), the brush follows a
+  // designed direction (horizontal flicks across the river) instead of dabbing in every direction (the 'filter' look)
+  if (cfg.groundFlow) {
+    const g = cfg.groundFlow, ang = g.angle ?? 0, sn = Math.sin(ang), cs = Math.cos(ang);
+    const T = { xx: new Float32Array(N).fill(sn * sn), xy: new Float32Array(N).fill(-sn * cs), yy: new Float32Array(N).fill(cs * cs) };
+    const W2 = new Float32Array(N), y0 = Math.floor((g.y0 ?? 0) * ah), M = F0.M, skyM = ref.sky, kk = g.k ?? .7;
+    for (let y = y0; y < ah; y++) for (let x = 0; x < aw; x++) {
+      const i = y * aw + x;
+      W2[i] = kk * (1 - sstep(g.cohLo ?? .2, g.cohHi ?? .65, F0.coh[i])) * (M ? 1 - sstep(.15, .5, M[i]) : 1) * (skyM ? 1 - skyM[i] : 1);
+    }
+    F = withTensor(F, T, W2, g.gain ?? 1.6);
+    F.gw = W2;
+  }
   ms.sky = Math.round(performance.now() - t0); t0 = performance.now();
   if (opts.debug) { debugBlit(f, opts.target || f.g, opts.debug, { src, F: F0, ref, mat }); return { ms }; }
   const eyes = cfg.eyeStrokes ? eyeGeometry(F0, cfg) : [];
@@ -198,7 +211,7 @@ export async function paint(f, src, opts = {}) {
     const jup = s.jupiter ? (() => { const [jx, jy] = s.jupiter.x != null ? [s.jupiter.x * W, s.jupiter.y * H] : eclipse.jupiterAt(sd, s.jupiter.ppd); return [jx, jy, Math.max(2, 2.6 * u * (s.jupiter.size ?? 1)), s.jupiter.k ?? 1]; })() : null;
     sunSpec = { cx: sd.cx, cy: sd.cy, r: sd.r, mx: sd.mx, my: sd.my, mr: sd.mr, e: sd.off >= 1 + eclipse.K ? 0 : sd.e, moonVis: s.moonVis ?? sstep(.975, .995, sd.e),
       beads: s.beads ? eclipse.beads(sd, s.beadSeed ?? 5, s.beads === true ? 1 : s.beads) : [], ring: s.ring ? eclipse.diamondRing(sd, s.ring, s.ringAng) : null,
-      jup, limb: s.limb || null, warm: sunWarmth(s.alt ?? 9), blaze: s.blaze ?? 1.45, sunVis: s.vis ?? 1, mask, aw, ah, boil: (drawIdx % 97) * cfg.boil, dark: s.dark };
+      jup, limb: s.limb || null, warm: sunWarmth(s.alt ?? 9), blaze: s.blaze ?? 1.3, sunVis: s.vis ?? 1, mask, aw, ah, boil: (drawIdx % 97) * cfg.boil, dark: s.dark };
   }
   // the lay-in under the strokes: the reference blurred at the first brush's scale
   if (cfg.underAlpha !== 0) {

@@ -1,10 +1,11 @@
-<!doctype html><html><body><script type="module">
+<!doctype html><html><head><base href="/"></head><body><script type="module">
 // Temporal coherence test for the line engine on a real video plate: renders N consecutive 60 fps frames of a plate
 // (a) through the temporal engine (references + optical-flow transport + crossfade) and (b) naively (each frame traced
 // from scratch at its own plate time), and measures frame-to-frame stability. Driven by tools/temporal_test.mjs.
-import { loadPlateIndex } from '../../../plates.js';
-import { drawLines } from '../index.js';
+import { loadPlateIndex, PLATES } from '/src/plates.js';
+import { drawLines } from '/src/worlds/line/index.js';
 await loadPlateIndex();
+if (!PLATES[new URLSearchParams(location.search).get('plate') || 'P04']) throw new Error('plate not in plates/index.json');
 const Q = new URLSearchParams(location.search), W = +(Q.get('w') || 960), H = +(Q.get('h') || 540);
 const plate = Q.get('plate') || 'P04', t0 = +(Q.get('t0') || 1), n = +(Q.get('n') || 60);
 const c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d');
