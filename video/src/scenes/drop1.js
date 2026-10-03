@@ -290,7 +290,9 @@ scene('S38', async f => {
 // two master frames. Design space: 1920 x 1080 "map px", (960, 540) = the bend.
 const NP = 1300;                                   // agents per side (Lydians sigma = -1 west, Medes sigma = +1 east)
 const riverX = y => 960 + 150 * Math.sin(Math.PI * (y - 540) / 980);
-const SNAPS = [126.206, 127.505, 128.803, 129.236, 130.967, 131.828, 132.694, 133.126].map(snap);
+// formation snaps on the listed stabs; a stab 1-10 ms after a kick lands on the kick's frame (one visual hit, not two)
+const onKick = t => { for (const k of audio.kickTimes()) if (Math.abs(k - t) < .012) return Math.min(k, snap(t)); return snap(t); };
+const SNAPS = [126.206, 127.505, 128.803, 129.236, 130.967, 131.828, 132.694, 133.126].map(onKick);
 const easeBack = k => { const c = 1.25; k = clamp(k); return 1 + (c + 1) * Math.pow(k - 1, 3) + c * Math.pow(k - 1, 2); };
 function formation(F, j, sg, t, ts) {
   const h1 = hash3(j, sg > 0 ? 17 : 23, 5), dt = t - ts;

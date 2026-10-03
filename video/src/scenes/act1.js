@@ -452,11 +452,17 @@ scene('S25', async f => {
 // ---------------------------------------------------------------- S26: bronze macro (the low sun burns across a convex shield)
 // Easter egg: at 84.38 ("bronze"), for 10 master frames (2 drawings), the shield reflects a tiny figure in orange
 // headphones holding a Yagi antenna (Van Eyck's Arnolfini mirror).
+// The egg is its own 12 fps insert (S26e) so its two drawings start exactly on 84.38; S26 / S26b are the same shot
+// around it (same camera progress, same material seeds: no pop in the brushwork).
+shotOverride('S26', { t1: 84.38 });
+shot({ id: 'S26e', t0: 84.38, t1: 84.38 + 10 / 60, world: 'bronze', cadence: 12, scene: 'S26', parent: 'S26', params: { label: 'S26 shield reflection (easter egg)', egg: 1 } });
+shot({ id: 'S26b', t0: 84.38 + 10 / 60, t1: 84.83, world: 'bronze', cadence: 12, scene: 'S26', parent: 'S26', params: { label: 'S26 (after the reflection)' } });
 scene('S26', async f => {
   const t = f.t, real = hasPlate('P16');
+  const ff = { ...f, k: seg(t, 81.36, 84.83), shot: { ...f.shot, t0: 81.36, t1: 84.83, dur: 84.83 - 81.36, id: 'S26' } };
   const cam = k => ({ cx: .465, cy: .5, zoom: 3.0 + .25 * k }), pcam = k => ({ cx: .5, cy: .5, zoom: 1.04 + .05 * k });
-  const src = await rp(f, 'P16', { id: 'a_duel', cam }, pcam);
-  const egg = t >= 84.38 - 1e-6 && t < 84.38 + 10 / 60 - 1e-6;
+  const src = await rp(ff, 'P16', { id: 'a_duel', cam }, pcam);
+  const egg = !!f.params.egg;
   const gk = seg(t, 84.2, 84.82), gx = lerp(.25, .8, smooth(gk));              // the glint sweeps across on "bronze", before the 84.83 cut
   // the reflection: P16 at 84.38 shows the shield's glossy face under its bronze rim (the figure sits in its sheen,
   // right of the flare); the stand-in's shield is a whole convex disc

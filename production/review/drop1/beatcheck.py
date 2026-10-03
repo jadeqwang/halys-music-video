@@ -53,6 +53,8 @@ def main():
     stut = [c["t"] for c in T["chops"] if c["word"] == "stutter" and t0 <= c["t"] < t1]
     idx, fr = frames_from(src, t0, t1)
     lum = fr.mean(axis=(1, 2))
+    med_lum = np.median(fr.reshape(len(fr), -1), axis=1)
+    top = fr[:, : int(fr.shape[1] * .27), :].mean(axis=(1, 2))           # the band above the CHOP words
     diff = np.r_[0, np.abs(np.diff(fr, axis=0)).mean(axis=(1, 2))]
     fi = lambda t: int(np.ceil(t * FPS - 1e-6))
     pos = {int(i): k for k, i in enumerate(idx)}
@@ -61,7 +63,7 @@ def main():
     # cuts: strong local peaks of the frame difference
     med = np.median(diff[1:]) + 1e-6
     cut_frames = [int(idx[k]) for k in range(1, len(diff) - 1) if diff[k] > max(6 * med, .018) and diff[k] >= diff[k - 1] and diff[k] >= diff[k + 1]]
-    inv_frames = [int(idx[k]) for k in range(len(lum)) if lum[k] > .45]
+    inv_frames = [int(idx[k]) for k in range(len(lum)) if lum[k] > .5 and med_lum[k] > .45 and idx[k] >= fi(110.58)]   # a pearl ground (S34's white push excluded)
 
     def match(events, frames, window=3, name=""):
         rows, offs = [], []
@@ -88,14 +90,20 @@ def main():
     print(f"{src}: frames {idx[0]}-{idx[-1]} ({len(idx)}), t {t0}-{t1}")
     print(f"kicks {len(kicks)}, stabs {len(stabs)}, stutter onsets {len(stut)}; detected cuts {len(cut_frames)}, inverted frames {len(inv_frames)}")
 
-    # stutter cuts
-    st_rows = match([t for t in stut], cut_frames, 1, "S36/S37 stutter onsets -> hard cuts")
+    # stutter cuts (director's change: every onset in bar 65, every second onset in bars 66-67)
+    bar66 = 114.045
+    s36 = [t for t in stut if t < 117.53 and t < bar66] + [t for t in stut if bar66 <= t < 117.53][::2]
+    match(s36, cut_frames, 1, f"S36 cut list ({len(s36)} onsets: bar 65 all, bars 66-67 every 2nd) -> hard cuts")
     # shotlist cuts (all Drop 1 shot boundaries)
     cuts = [110.58, 112.31, 117.53, 124.47, 126.21, 133.13, 140.04, 143.49, 146.94, 150.38, 153.83]
     match([c for c in cuts if t0 < c < t1], cut_frames, 1, "shot cuts (SHOTLIST)")
     # formation snaps (S39)
     snaps = [127.505, 128.803, 129.236, 130.967, 131.828, 132.694]
     match([s for s in snaps if t0 <= s < t1], cut_frames, 1, "S39 formation snaps -> picture jumps")
+    for sn in snaps:
+        e = fi(sn)
+        if e in pos:
+            k = pos[e]; print(f"    snap {sn:.3f}: diff {diff[k] / med:.1f}x median (prev {diff[k - 1] / med:.1f}x, next {diff[k + 1] / med:.1f}x)")
     # inversions: first inverted frame of each run vs the S36 stab list
     runs = [f for k, f in enumerate(inv_frames) if k == 0 or inv_frames[k - 1] != f - 1]
     lens = []
@@ -104,25 +112,26 @@ def main():
         while r + n in inv_frames:
             n += 1
         lens.append(n)
-    s36 = [112.74, 113.173, 113.607, 115.783, 116.217, 116.652, 117.086]
-    match([s for s in s36 if t0 <= s < t1], runs, 1, "S36 stab inversions (first inverted frame)")
+    stabs36 = [112.74, 113.173, 113.607, 115.783, 116.217, 116.652, 117.086]
+    match([s for s in stabs36 if t0 <= s < t1], runs, 1, "S36 stab inversions (first inverted frame)")
     if lens:
         print(f"  inversion run lengths (frames): {sorted(set(lens))}")
     # kick pulses: brightness peak near each kick (only frames inside the same shot: skip kicks next to cuts)
     offs = []
+    true_cuts = [fi(c) for c in cuts + [110.98, 111.455, 111.89] + s36]
     for t in kicks:
         e = fi(t)
-        if any(abs(e - c) <= 2 for c in cut_frames) or any(abs(e - r) <= 3 for r in runs):
+        if any(-1 <= c - e <= 4 or -4 <= e - c <= 1 for c in true_cuts) or any(abs(e - r) <= 3 for r in runs):
             continue
         ks = [pos[i] for i in range(e - 3, e + 6) if i in pos]
         if len(ks) < 6:
             continue
-        seg = lum[ks]
+        seg = top[ks]
         k = int(np.argmax(seg))
         offs.append(idx[ks[k]] - e)
     if offs:
         o = np.array(offs)
-        print(f"\nkick pulses -> brightness peak: {len(o)} kicks measured (away from cuts/inversions)")
+        print(f"\nkick pulses -> brightness peak of the top band (no type there): {len(o)} kicks measured (away from cuts/inversions)")
         print(f"  offset frames: mean {o.mean():+.2f}  median {np.median(o):+.0f}  on the kick frame: {(o == 0).mean() * 100:.0f} %  within 1 frame: {(np.abs(o) <= 1).mean() * 100:.0f} %")
         hist = {int(v): int((o == v).sum()) for v in sorted(set(o.tolist()))}
         print(f"  histogram {hist}")
