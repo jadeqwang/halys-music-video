@@ -179,7 +179,8 @@ export function traceLines(F, f, cfg, seeds = null, state = null) {
     }
     return false;
   };
-  const insert = (x, y, lid, idx) => { if (np >= cap) grow2(); const c = Math.floor(y / cell) * gw + Math.floor(x / cell); PX[np] = x; PY[np] = y; PL[np] = lid; PI[np] = idx; NX[np] = head[c]; head[c] = np; np++; };
+  let nanHits = 0;
+  const insert = (x, y, lid, idx) => { if (!(x >= 0 && y >= 0 && x < aw && y < ah)) { if (nanHits++ < 3) console.log('[line] bad insert', x, y, lid, idx); return; } if (np >= cap) grow2(); const c = Math.floor(y / cell) * gw + Math.floor(x / cell); PX[np] = x; PY[np] = y; PL[np] = lid; PI[np] = idx; NX[np] = head[c]; head[c] = np; np++; };
   let nextId = state ? state.nextId : 1;
   const maxLines = cfg.maxLines ?? 12000;
   const grow = (x0, y0, id) => {
