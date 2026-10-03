@@ -35,8 +35,11 @@ const KEYS = {
   S04: { P01: [[5.40, 1.78], [7.18, 0]] },              // the rewind runs the plate backwards
   S06: { P01: [[10.69, 3.51], [14.19, 7.01]] }, S16: { P01: [[41.24, 7.0], [44.73, 10.49]] }, S20: { P01: [[55.22, 10.5], [58.72, 14.0]] },
   S24: { P01: [[67.42, 3.0], [74.41, 9.99]] }, S30: { P01: [[96.89, 11.0], [100.24, 14.35]] },
-  S19: { P12: [[51.72, 4.5], [55.22, 8.0]] }, S18: { P12: [[46.49, 1.5], [51.72, 6.73]] },
-  S27: { P12: [[84.83, .9], [87.68, 3.75]] },          // S27 starts on the bar-49 downbeat (84.83)
+  // P12 (the duel, 8 s) serves four shots: its strikes (plate 2.12, 3.30, 3.88, 5.20, 6.05, 6.90) land on beats
+  S17: { P12: [[44.73, .79], [46.06, 2.12], [46.49, 2.55]] },
+  S18: { P12: [[46.49, 2.55], [47.56, 3.30], [48.91, 3.88], [49.53, 5.20], [50.63, 6.05], [51.48, 6.90], [51.72, 7.1]] },
+  S26: { P16: [[81.36, .1], [84.38, 2.5], [84.83, 2.95]] },   // the flare on the cheek guard lands on "bronze" (84.38)
+  S19: { P12: [[51.72, 2.9], [52.17, 3.30], [52.60, 3.88], [53.47, 5.20], [54.35, 6.05], [54.78, 6.90], [55.22, 7.35]] },
   S22: { P05: [[62.2, 2.5], [65.67, 5.97]], P06: [[62.2, 2.5], [65.67, 5.97]] },
   S15: { P11: [[39.48, .5], [40.357, 1.6], [40.358, 3.3], [41.24, 4.4]] },   // the plate itself cuts from the Lydian to the Mede
   S31: { P20: [[100.24, 0], [102.21, 2.0], [103.64, 3.4]] },
@@ -99,9 +102,9 @@ async function bronze(f, src, o) {
 }
 
 // a plate's own sun (meta: brightest blob) mapped through the camera into frame uv; null when the plate has none
-async function plateSunUV(f, id, cam) {
+async function plateSunUV(f, id, cam, keysIn = null) {
   if (!hasPlate(id)) return null;
-  const sid = f.shot.parent || f.shot.id, keys = KEYS[sid] && KEYS[sid][id];
+  const sid = f.shot.parent || f.shot.id, keys = keysIn || (KEYS[sid] && KEYS[sid][id]);
   const P = PLATES[id], tp = plateTimeOf(f.shot, f.t, keys ? { keys } : { at: T0[id] }), meta = await plateMetaAt(id, tp);
   if (!meta || !meta.sun || meta.sun[2] < .25) return null;
   const c = camAt(cam, f), X = camXform(c, P.w, P.h, f.W / 2, f.H / 2), p = [0, 0];
@@ -371,13 +374,27 @@ scene('S15', async f => {
 // ---------------------------------------------------------------- S17 / S19 / S21: the duel
 const DUEL_LIGHT = { lightDir: [-.7, -.7], pool: [{ x: .47, y: .5, rx: .25, ry: .46, rot: -.35, feather: .6, k: .7 }, { x: .4, y: .3, rx: .1, ry: .2, feather: .6, k: .9 }],
   poolMatte: 1, poolBound: { x: .52, y: .5, rx: .42, ry: .62, feather: .4 }, focus: [{ x: .395, y: .27, rx: .045, ry: .11, k: 1 }, { x: .615, y: .3, rx: .04, ry: .1, k: 1 }], crushFloor: .12 };
+// P12 is contre-jour: the low sun between them in the plate's sky. Our key is a warm pool on each fighter (the matte
+// carries it), the sun rims their silhouettes; the river's glitter stays as glints; the sky above the reeds is painted.
+async function duelLook(f, src, pcam, o = {}) {
+  const sun = (await plateSunUV(f, 'P12', pcam, o.keys)) || [.75, .19];
+  return {
+    lightDir: [sun[0] - .5, -.6], lightPoint: sun,
+    pool: [{ x: .3, y: .45, rx: .2, ry: .42, feather: .75, k: .8 }, { x: .72, y: .45, rx: .2, ry: .42, feather: .75, k: .8 }, ...facePools(src, { body: .4 })],
+    poolFromLight: { k: .5, bg: .2 }, liftDark: .5, poolMatte: .75, envDim: .6, crushFloor: .08, rim: 1, faceMin: .3, glint: 1,
+    sky: SKY(f.t, { maxDepth: .03, soft: .03, below: .3, horizonY: .26, drama: .4, glow: 1.0 }),
+    sun: SUN(f.t, { x: sun[0], y: sun[1], r: o.r ?? .022 }),
+  };
+}
 scene('S17', async f => {
-  const src = await rp(f, 'P12', { id: 'a_duel', cam: k => ({ cx: .5, cy: .48, zoom: 1.05 + .06 * k }) }, k => ({ cx: .5, cy: .5, zoom: 1.02 + .04 * k }));
-  await bronze(f, src, { ...DUEL_LIGHT, sky: SKY(f.t, { maxDepth: .006, soft: .01, below: .16, horizonY: .11 }), sun: SUN(f.t, { x: .12, y: .05, r: .03 }) });
+  const pcam = k => ({ cx: .5, cy: .5, zoom: 1.02 + .04 * k });
+  const src = await rp(f, 'P12', { id: 'a_duel', cam: k => ({ cx: .5, cy: .48, zoom: 1.05 + .06 * k }) }, pcam);
+  await bronze(f, src, hasPlate('P12') ? await duelLook(f, src, pcam) : { ...DUEL_LIGHT, sky: SKY(f.t, { maxDepth: .006, soft: .01, below: .16, horizonY: .11 }), sun: SUN(f.t, { x: .12, y: .05, r: .03 }) });
 });
 scene('S19', async f => {
-  const src = await rp(f, 'P12', { id: 'a_duel', cam: k => ({ cx: .47 + .02 * Math.sin(k * 3), cy: .46, zoom: 1.2 + .05 * k }) }, k => ({ cx: .5, cy: .5, zoom: 1.06 + .03 * k }));
-  await bronze(f, src, { ...DUEL_LIGHT });
+  const pcam = k => ({ cx: .5 + .015 * Math.sin(k * 3), cy: .52, zoom: 1.1 + .05 * k });
+  const src = await rp(f, 'P12', { id: 'a_duel', cam: k => ({ cx: .47 + .02 * Math.sin(k * 3), cy: .46, zoom: 1.2 + .05 * k }) }, pcam);
+  await bronze(f, src, hasPlate('P12') ? await duelLook(f, src, pcam) : { ...DUEL_LIGHT });
 });
 scene('S21', async f => {
   const src = await rp(f, 'P13', { id: 'a_duel', cam: k => ({ cx: .42, cy: .58, zoom: 1.5 + .1 * k }) }, k => ({ cx: .5, cy: .52, zoom: 1.04 + .05 * k }));
@@ -441,11 +458,13 @@ scene('S26', async f => {
   const src = await rp(f, 'P16', { id: 'a_duel', cam }, pcam);
   const egg = t >= 84.38 - 1e-6 && t < 84.38 + 10 / 60 - 1e-6;
   const gk = seg(t, 84.2, 84.82), gx = lerp(.25, .8, smooth(gk));              // the glint sweeps across on "bronze", before the 84.83 cut
-  const mirror = real ? { cx: .5, cy: .5, R: .34 } : { cx: .48, cy: .5, R: .42 };
+  // the reflection: P16 at 84.38 shows the shield's glossy face under its bronze rim (the figure sits in its sheen,
+  // right of the flare); the stand-in's shield is a whole convex disc
+  const mirror = real ? { cx: .7, cy: .62, R: .2, u: 0, v: 0, h: .5 } : { cx: .48, cy: .5, R: .42, u: .22, v: -.12, h: .3 };
   await bronze(f, src, {
     lightDir: [-.85, -.5], pool: [{ x: .45, y: .45, rx: .5, ry: .5, feather: .8, k: .95 }, { x: gx, y: .42, rx: .08, ry: .3, rot: .4, feather: .6, k: gk > 0 && gk < 1 ? 1 : 0 }],
     poolMatte: .3, crushFloor: .1, accents: 1.4, accentThick: 1.8, glint: 1, impasto: .7,
-    overStrokes: egg ? ({ pal }) => PR.mirrorFigure({ cx: f.W * mirror.cx, cy: f.H * mirror.cy, R: f.H * mirror.R, u: .22, v: -.12, h: .3, pal }) : null,
+    overStrokes: egg ? ({ pal }) => PR.mirrorFigure({ cx: f.W * mirror.cx, cy: f.H * mirror.cy, R: f.H * mirror.R, u: mirror.u, v: mirror.v, h: mirror.h, pal }) : null,
   });
 });
 
@@ -455,9 +474,10 @@ scene('S27', async f => {
   if (t < 87.68) {                                     // 84.83 "exchang-": the duel; strikes cut on "turns" 86.06 and "strikes" 87.20
     const part = t < 86.06 ? 0 : t < 87.205 ? 1 : 2;
     const cams = [{ cx: .5, cy: .46, zoom: 1.25 }, { cx: .4, cy: .38, zoom: 1.7 }, { cx: .56, cy: .48, zoom: 1.45 }];
-    const pc = [{ cx: .5, cy: .5, zoom: 1.08 }, { cx: .4, cy: .45, zoom: 1.4 }, { cx: .58, cy: .5, zoom: 1.25 }][part];
-    const src = await rp(f, 'P12', { id: 'a_duel', cam: cams[part] }, pc);
-    await bronze(f, src, { ...DUEL_LIGHT, poolBound: null });
+    const pc = [{ cx: .5, cy: .5, zoom: 1.08 }, { cx: .36, cy: .45, zoom: 1.45 }, { cx: .62, cy: .48, zoom: 1.3 }][part];
+    const keys = [[[84.83, .9], [86.06, 2.12]], [[86.06, 5.15], [87.205, 6.3]], [[87.205, 3.85], [87.68, 4.33]]][part];   // each cut lands on a strike
+    const src = await rp(f, 'P12', { id: 'a_duel', cam: cams[part] }, pc, { keys });
+    await bronze(f, src, hasPlate('P12') ? await duelLook(f, src, pc, { keys, r: .022 * pc.zoom }) : { ...DUEL_LIGHT, poolBound: null });
     return;
   }
   // a wicker shield throws a field of crescent suns across the Lydian's bronze; he looks up on "strange"

@@ -253,7 +253,7 @@
  },
  "P14": {
   "n": 121,
-  "mattes": 25,
+  "mattes": 48,
   "depth": 0,
   "fields": 121,
   "fps": 24,
@@ -269,7 +269,7 @@
   "n": 193,
   "mattes": 0,
   "depth": 0,
-  "fields": 0,
+  "fields": 193,
   "fps": 24,
   "w": 960,
   "h": 540,
@@ -277,6 +277,34 @@
   "src_w": 1280,
   "src_h": 720,
   "dur": 8.042,
+  "gain": 2.2
+ },
+ "P30": {
+  "n": 97,
+  "mattes": 0,
+  "depth": 0,
+  "fields": 97,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "src_w": 1280,
+  "src_h": 720,
+  "dur": 4.042,
+  "gain": 1.351
+ },
+ "P36": {
+  "n": 97,
+  "mattes": 0,
+  "depth": 0,
+  "fields": 0,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "src_w": 1280,
+  "src_h": 720,
+  "dur": 4.042,
   "gain": 1.0
  }
 }
