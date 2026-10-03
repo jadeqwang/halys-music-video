@@ -193,52 +193,73 @@ look, no logo.
 
 ---
 
-## 6. Per-aspect rules
+## 6. Per-aspect rules and scale
 
-* Sizes are design px at 1080 on the short side × `L.u`, then fitted to the safe area (`L.safe`: 90 % × 86 % of the frame
-  in landscape, 86 % × 90 % in portrait). Nothing leaves the safe area except the one-frame slam overshoot.
-* 16:9 anchors follow SHOTLIST/TREATMENT: verse and chorus CARVED lines sit big in the left half (≤ 47 % of the width,
-  centred on 0.6 H) with the figures composed right. Mirrored and two-shot frames centre at the bottom. Plaques are
-  museum labels lower left. INSCR sits in the lower third. The counter is top right, the HUD top left.
+* Sizes are design px at 1080 on the short side × `L.u` (`L.u` = H/1080 in landscape, W/1080 in portrait), then fitted
+  to the safe area (`L.safe`: 90 % × 86 % of the frame in landscape, 86 % × 90 % in portrait). Nothing leaves the safe
+  area except the one-frame slam overshoot.
+* Scale, as cap height (Cinzel's capitals are 0.70 em) against the short side, which is the frame height in 16:9 and
+  the frame width in 4:5 and 9:16 (the director's "keep these proportions relative to frame width"):
+
+  | text | design px | cap height |
+  |---|---|---|
+  | S01 title THE SUN WENT OUT | fitted: two lines, the visible letters ~70 % of the safe width | ≤ 13 % (16:9 ≈ 12.9 %) |
+  | S02, S03 beats | 131 | 8.5 % |
+  | Act I and final-chorus lyric lines (S25 foot, S30–S33, S58–S62, …) | 108 | 7.0 % |
+  | S27, S53 (long lines; S27 is the director's reference) | 96 | 6.2 % |
+  | era YEAR · PLACE / FACT | 84 (82 portrait) / 72 | 5.4 % / 4.7 % |
+  | plaques (S01 date 35, S04 …) | 31–35 | 2.0–2.3 % |
+
+  Exceptions: S24's lyric lives on the cartouche tablet, so it is 74 px (4.8 %): at 7 % the tablet would fill the
+  frame. S26's SUN BURNING ON THE stays small above BRONZE, as the shot list asks.
+* 16:9 anchors follow SHOTLIST/TREATMENT: verse and chorus CARVED lines sit big in the left half (≤ 50 % of the width)
+  with the figures composed right, or as a full-width bottom block. Mirrored and two-shot frames centre at the bottom.
+  Plaques are museum labels lower left. INSCR sits in the lower third. The counter is top right, the HUD top left.
 * Portrait (4:5 and 9:16 share it) keeps the anchors but moves the text above or below the subject: CARVED lines centre
   in the lower third; the cartouche hangs from the top, clear of the counter; diptychs stack with a horizontal divider;
-  S06's labels hug their own bank, staggered in depth; chops stack sooner.
-* Holds across cuts: a line keeps its layout when a sentence spans a cut. That covers S01→S02, the S33→S34 LOVE line,
-  S51 "chill" (sung 0.11 s before the cut, held to 182.30) and S62 "LOVE" (sung 0.23 s before Drop 2, held 0.9 s into
-  S63 and fading).
+  S06's labels hug their own bank, staggered in depth; chops stack sooner. In portrait the hook title is width-limited
+  (two lines at 92 % of the safe width, cap ≈ 7.4 % of the width).
+* Timing: text never appears before its sung start (see §4). Cuts now land on sung words (S52/S53 at 183.34 on
+  "foretold", S61/S62 at 211.44 on "home"), so those lines start on their cuts.
+* Holds across cuts (the linger rule: up to ~1.5 s past a cut, only when the sentence ends there): S01's title through
+  the S02 flash to 1.89; the S33→S34 LOVE line; S51 "chill" (sung 181.12, 0.11 s before the 181.23 cut, held to
+  182.30); the S52 Thales block into S53 to 184.60, fading; S62 "LOVE" (sung 215.07, 0.22 s before the 215.29 cut,
+  held over the starship to 216.20, fading).
 
 ---
 
 ## 7. What in the shot list's text does not quite work
 
-Characters per second, measured from first appearance to exit (target ≤ 15):
+Characters per second, measured from first appearance to exit (target ≤ 15; two-line captions are also counted read
+together):
 
 | event | chars | window | cps | note |
 |---|---|---|---|---|
-| S35 Glover caption | 75 | 110.58–113.50 | **25.7** | needs ≈ 5 s, or a shorter credit (`"We just went sci-fi." — V. Glover, Artemis II` = 46 chars). It also competes with the four slams |
+| S35 Glover caption | 22 + 51 | 110.58–114.20 | 6.1 + 14.1, **20.2** together | each line passes alone; read together the pair needs ≈ 4.9 s. It also competes with the four slams. A shorter credit, e.g. `VICTOR GLOVER · ARTEMIS II · 2026` (33), gives 15.2 |
 | S53 forecast question | 50 | 186.40–187.65 | **40** | inherent to a ≤ 1.3 s card: a pause-frame easter egg, unreadable in real time |
-| S64 Antikythera | 65 | 3.4 s | **19.1** | the stacked year / place / fact layout reads faster than one line, but it is long; e.g. `… · A BRONZE ECLIPSE COMPUTER` (55 chars, 16 cps), keeping FACTCHECK's date |
-| S66 1919 | 63 | 3.4 s | **18.6** | two sentences in the fact; `1919 · PRÍNCIPE & SOBRAL · EINSTEIN WAS RIGHT` (44 chars, 13 cps) |
-| S67 Concorde | 54 | 3.4 s | **15.9** | borderline |
-| S81 end-card plaque | 47 | 278.10–281.0 | **16.2** | borderline; needs the film to run to 281.0 (the padded master does) |
+| S64 Antikythera | 27 + 29 | 3.40 s | **16.5** together | e.g. `GEARS PREDICT ECLIPSES` (22) gives 14.4 |
+| S66 1919 | 24 + 32 | 3.39 s | **16.5** together | e.g. `LIGHT BENDS: EINSTEIN WAS RIGHT` does not help; `EINSTEIN WAS RIGHT` (18) gives 12.4 |
+| S67 Concorde | 19 + 32 | 3.39 s | 15.0 together | at the limit |
+| S81 end-card plaque | 47 | 277.80–281.0 | 14.7 | fixed by tightening the stagger (it needs the film to run to 281.0, as the padded master does) |
 
-Other text issues:
-* **Glover "We"**: SHOTLIST rev. e899de3 adopted FACTCHECK's capital W; the track follows it.
-* **Lines sung before their cut**: S53 `FORETOLD THE SUN` is sung 183.34–185.06, so three words appear together at the
-  184.64 cut. S62 `HOME` is sung 211.44, before the 211.88 cut. Both catch up on the cut.
-* **SHOTLIST housekeeping**: the new P42–P46 plate rows sit inside the §14 shot table (between S80 and S81), not in
-  the plate list. Both parsers ignore them, so nothing breaks, but the table reads oddly.
-* **Era captions**: the table's Text column has no role (the parser calls them CARVED); the header says PLAQUE, which
-  is what is used. The ` · ` separators become line breaks in the stacked year / place / fact layout; spelling is
-  untouched.
-* **ROOM.md vs FACTCHECK.md**: ROOM.md still has the old `--cal=julian` position, `totality over battlefield` and
-  `[sun] magnitude 1.000 · alt 8.9°`. The terminal uses FACTCHECK's corrected lines (`totality at halys bend`,
-  `[sun] obscuration 100% · alt 8.8°`).
+Every other era caption, the S27 lines (6.7 and 14.9) and BRONZE (13.3 in its 0.45 s) pass.
+
+Other text notes:
+* **Lyric-sheet artefacts**: none left on screen. The only one was `exchange- / -ing` (S26/S27); EXCHANGING is now one
+  word on the sung "exchange-". The builder fails on any hyphen split or parenthesised chop in a lyric display. Kept on
+  purpose: `…` in the Herodotus quote (an elision) and in `WARRIORS BEHOLD …` (the sung pause), and `sci-fi`.
+* **ROOM.md**: its terminal block now matches FACTCHECK.md's corrected lines (`--from=… --cal=julian` order,
+  `totality at halys bend`, `[sun] obscuration 100% · alt 8.8°`), the only lines that differed; the builder checks the
+  terminal against ROOM.md verbatim.
+* **SHOTLIST housekeeping**: resolved; the P42–P46 plate rows are out of the §14 shot table.
+* **Era captions**: the table's Text column has no role (the parser calls them CARVED); the type uses PLAQUE faces, as
+  the header says.
 * **Typography only, not spelling**: straight quotes are set as typographic quotes. The side panes word-wrap with a
   hanging indent; the main pane hard-wraps at 92 columns like a real terminal.
 * **Collisions to watch** once the real scenes land: the counter (top right) against anything tall on the right in
-  S24–S34, the S53 card against Thales's construction lines, and S35's caption under the slams. In S35/S36 the scene
-  should pass `f.type.sun` (the real drop-1 corona sits upper centre); otherwise the streamers radiate from frame centre.
+  S24–S34, the S53 card against Thales's construction lines and the lingering Thales block, and S35's caption under
+  the slams. In S35/S36 the scene should pass `f.type.sun` (the real drop-1 corona sits upper centre); otherwise the
+  streamers radiate from frame centre. S01 should pass `f.type.sun` too, so the title centres on the painted eye.
 
 ---
 
