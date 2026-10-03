@@ -34,3 +34,7 @@ media/sfx/*.flac
 
 # relay job status files (ephemeral)
 media/jobs/
+
+# iterative review/test clips (re-rendered constantly; finals are force-added at milestones)
+production/review/**/*.mp4
+production/type/*.mp4
