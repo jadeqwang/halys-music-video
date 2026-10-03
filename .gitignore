@@ -31,3 +31,6 @@ video/lab/node_modules/
 
 # sound-design intermediates (regenerable from tools/audio; cue sheet in production/SOUND_DESIGN.md)
 media/sfx/*.flac
+
+# relay job status files (ephemeral)
+media/jobs/
