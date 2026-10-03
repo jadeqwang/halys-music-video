@@ -19,8 +19,27 @@
    on the ting at 276.95: her eyelid crosses her eye like the Moon crossing the Sun. Hold, then black.
 8. End card: **HALYS** / Jade Wang / NEXT TOTALITY · 2027-08-02 · LUXOR · 6m23s.
 
-The plate supplies the chair spin and head turn. The renderer **retimes the plate** so the wink frame lands exactly on the chord, and redraws the
-closing eyelid itself (INK style), so the eclipse edge is ours and frame-exact.
+**She is anime; the room stays abstract** (REVISION_V2 decisions 6 and 8). Her two plates start from anime keyframes made from the character
+sheet (nano-banana-pro; prompts beside the files in `media/plates/P57/`, `P58/`), then Seedance animates them with the song as the audio reference:
+
+* **S78 = P57** (take 2, from keyframe K78d: P39's frame with her redrawn to the sheet's back view). Long straight black hair ending at the top of
+  the light-blue circle; RARE EARTH under it; the round **1420 MHz patch on her LEFT sleeve**; orange stripes on both upper sleeves. Only she comes
+  from P57 (registered into P39's frame); the room is P39's painted background as before. Limited animation on the ticks: the body is held, the
+  typing hand is redrawn on each tick; on the tick before `dt.shift` she leans toward the ΔT map and the lean lands on `dt.shift` (268.08), she
+  settles back before the commit, the commit is typed in a burst on twos; cut on the chord. Her hair carries light strand lines and a sheen in the
+  lean, the way the sheet draws black hair.
+* **The print and the patch are drawn by us but sit on the fabric.** Their positions are measured on every plate frame (`video/src/worlds/ink/
+  prep/decals.py`): the circle's true edge (an ellipse, ignoring where hair overlaps it), the cap line and baseline of the RARE EARTH line, the
+  patch's ring. The circle stays the plate's own blue shape; RARE EARTH is set along the measured band (mesh warp) and the patch is mapped onto the
+  measured ellipse, both between the fills and the line art, clipped to her visible jacket and toned by its fold shadows. So the print moves, tilts
+  and bends with her back (it visibly swings with the lean) and the patch rides on the sleeve, turning with the arm.
+* **S80–S81 = P58** (take 2, from keyframe K80b: P41's close-up with the director's reference expression). The smirk is there from the cut back
+  (closed lips, her left corner up, eyes narrowed and on us, head tilted). The face is one held cel; her right shoulder dips on each key click.
+  Tracing thins the expression's two carrying lines, so the renderer draws them as an animator would on the key drawing: the smirk line with the
+  curled corner and the cheek crease, and heavy-lidded eyes with catchlights. The reference photo was shown only to the image model, as an
+  expression reference; it was never sent to Seedance.
+* **The wink is ours:** her left eye (frame right, the smirk's side); the eyelid crosses the iris with the Moon's curved limb and shuts exactly
+  on the ting (276.95), the diamond-ring flare and a sparkle, the other eye narrows a touch; black at 277.55.
 
 ## Set
 

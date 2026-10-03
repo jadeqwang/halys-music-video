@@ -736,7 +736,9 @@ const hashS = j => { let n = (j * 2654435761) >>> 0; n ^= n >>> 15; n = Math.imu
 // the sun beyond the top right corner. The cut to the sky lands exactly on the boom (S28b, 91.31; v1 cut on the next
 // drawing, 91.40). The type's ring sits where S28b's sun is in both parts, so the halo of words holds still across the cut
 // and the thin crescent appears inside it.
-const S28_SUN = { x: .6, y: .52, r: .055 };
+// (higher than v1's .52: over the warriors the ring's top arc then runs above their heads, its ends in the gaps between
+// them, clear of the counter; S28b keeps the same ring, Jupiter just above its words)
+const S28_SUN = { x: .625, y: .355, r: .055 };
 shotOverride('S28', { t1: 91.31 });
 shot({ id: 'S28b', t0: 91.31, t1: 93.0, world: 'bronze', cadence: 12, scene: 'S28', parent: 'S28', params: { label: 'S28 the sky (cut on the 91.31 boom)', sky: 1 } });
 scene('S28', async f => {
@@ -745,12 +747,20 @@ scene('S28', async f => {
     const k = seg(t, 89.22, 91.31);
     (f.type || (f.type = {})).sun = ringSun();
     if (hasPlate('P50')) {
-      // (portrait keeps the sword-bearer and the lion shield)
-      const cx = f.W / f.H > 1.2 ? .5 : .5, pcam = kk => ({ cx, cy: .5, zoom: 1.03 + .04 * kk });
-      const src = await rp(f, 'P50', null, pcam);
-      await bronze(f, src, plateLook(src, { lightDir: [.55, -.83], lightPoint: [1.02, -.05], keep: .55, keepDim: .9, fromLight: .6, bg: .3, rim: .85, poolMatte: .35, body: .4,
-        extra: { lightColor: '#dcd6ca', eclipseLift: .15, eclipseCrush: .3, groundFlow: { y0: .84, k: .7 },
-          sky: SKY(t, { maxDepth: .05, soft: .03, below: .45, horizonY: .4, drama: .35, glow: .8, cover: .45 }),
+      const pcam = kk => ({ cx: .5, cy: .5, zoom: 1.03 + .04 * kk });
+      const src = await rp(f, 'P50', null, pcam, { gain: 1.45 });            // a dim plate (meta gain 1.85)
+      // MediaPipe locks onto the lion shield as a face from plate frame 45 on, so the faces are lit by design: one key on
+      // each of the five heads (plate uv, measured on the take), drifting up as they look up; the shield keeps its glint
+      const tp = plateTimeOf(f.shot, t, { keys: KEYS.S28.P50 }), up = sstep(1.8, 3.0, tp), c = camAt(pcam, f);
+      const toF = (u, v) => [(u - c.cx) * c.zoom + .5, (v - c.cy) * c.zoom + .5];
+      const heads = [[.17, .30], [.31, .26], [.56, .27], [.73, .25], [.87, .29]].map(([u, v]) => toF(u, v - .015 * up));
+      src.faces = [];
+      await bronze(f, src, plateLook(src, { lightDir: [.55, -.83], lightPoint: [1.02, -.05], keep: .6, keepDim: .95, fromLight: .55, bg: .3, rim: .9, poolMatte: .35, body: 0,
+        pool: [...heads.map(([x, y]) => ({ x, y, rx: .055, ry: .085, feather: .7, k: 1, fig: true })), { x: .5, y: .45, rx: .5, ry: .18, feather: .8, k: .55 }],
+        extra: { lightColor: '#dcd6ca', eclipseLift: .18, eclipseCrush: .22, exposure: 1.08, groundFlow: { y0: .84, k: .7 },
+          focus: heads.map(([x, y]) => ({ x, y, rx: .04, ry: .065, k: 1 })),
+          // the steel sky over them glows toward the sun beyond the top right corner (the plate's own light)
+          sky: SKY(t, { maxDepth: .05, soft: .03, below: .45, horizonY: .4, drama: .3, glow: 1.6, glowR: .45, cover: .4, zenith: .3 }),
           sun: SUN(t, { x: 1.03, y: -.05, r: .03 }) } }));
       return;
     }
@@ -767,7 +777,7 @@ scene('S28', async f => {
   await bronze(f, src, {
     lightDir: [.2, -1], pool: [{ x: .5, y: .97, rx: .5, ry: .05, feather: .8, k: .4 }], poolMatte: 0,
     sky: SKY(t, { horizonY: hz, glowR: .42, glow: 2.4, drama: .3, cover: .45, vortex: .3, zenith: .3, ring: .6 }),   // the thin crescent still lights a halo of sky
-    sun: SUN(t, { x: sun.x, y: sun.y, r: sun.r, ppd: 34 }), accents: 0,
+    sun: SUN(t, { x: sun.x, y: sun.y, r: sun.r, ppd: 31 }), accents: 0,
   });
   f.type.sun = ringSun();
 });

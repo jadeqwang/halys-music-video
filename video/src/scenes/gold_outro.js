@@ -50,11 +50,14 @@ async function battle(f) {
     const meta = await plateMetaAt('P54', plateTimeOf(f.shot, t, { keys: P54_KEYS }));
     if (meta && meta.sun && meta.sun[2] > .2) { const oo = f.W / f.H, so = 16 / 9; let hU = 1 / c.zoom, wU = oo / so / c.zoom; if (wU > 1 / c.zoom) { wU = 1 / c.zoom; hU = so / oo / c.zoom; } sun = [(meta.sun[0] - c.cx) / wU + .5, (meta.sun[1] - c.cy) / hU + .5]; }
   }
-  // (the plate's own golden sky is kept; the sun itself is out of the frame, so no disk)
-  await paintGold(f, src, { cam: c, sky: false, groundFlow: { y0: .66, k: .6 }, detail: .9, tag: 'P54' });
+  // (the plate's own golden sky is kept; the sun itself is out of the frame, so no disk. No painted catchlights: MediaPipe
+  // reads the round shields, boss for a nose, as faces, and the eye strokes would draw eyelids on them)
+  await paintGold(f, src, { cam: c, sky: false, groundFlow: { y0: .66, k: .6 }, detail: .9, tag: 'P54', paint: { eyeStrokes: 0 } });
   const T = f.type || (f.type = {}), sx = clamp(sun[0], .05, .95) * f.W, sy = clamp(sun[1], -.2, .4) * f.H;
   T.light = { dir: [.55, -.83], elev: .55, color: '#fff0c8', intensity: 1.12 };
   T.field = { center: [sx, sy], r: 0 };                    // the chop's streamers radiate from the light
+  // the chops ride high, over the far line and the river, so the sand where the blades fall stays clear
+  T.place = { ...(T.place || {}), 'S75.chop': { x: .5, y: .25 }, 'S76.chop': { x: .5, y: .25 } };
 }
 scene('S75', battle);
 scene('S76', battle);

@@ -52,7 +52,7 @@ async function initRoom() {
 }
 
 // framing: cover the 16:9 plate; portrait re-frames around her back (the circle, RARE EARTH and the patch all in frame)
-const FRAME = { wide: { zoom: 1.2, focus: [.479, .49], portrait: { zoom: 1.0, focus: [.42, .5] } },
+const FRAME = { wide: { zoom: 1.2, focus: [.479, .49], portrait: { zoom: 1.0, focus: [.4, .5] } },
   close: { zoom: 1.0, focus: [.5, .42], portrait: { zoom: 1.0, focus: [.5, .4] } } };
 const coverFor = (L, k) => { const fr = L.portrait ? FRAME[k].portrait : FRAME[k]; return L.cover(960, 540, fr.focus, fr.zoom); };
 function viewFor(f, k) {

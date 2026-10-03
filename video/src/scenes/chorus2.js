@@ -113,9 +113,11 @@ shotOverride('S61', { t1: 210.18 });
 scene('S61', async f => {
   const k = seg(f.t, 208.70, 210.18), cam = { cx: .5, cy: .5, zoom: 1.02 + .02 * k };
   const src = await plate(f, 'P51', cam, { keys: S61_KEYS, standin: 'c_armies' });
-  redRiver(src, .45);
+  redRiver(src, .45, .85, .6);
   // (the sun is just beyond the right edge, behind the far bank: its glow, not its disk, is in the frame)
-  await gold2(f, src, { cam, sky: false, groundFlow: { y0: .62, k: .8 }, detail: .8, tag: 'S61', typeDir: [.6, -.8] });
+  // (no painted catchlights: MediaPipe reads the Mede's wicker shield, boss for a nose, as a face and the eye strokes
+  // drew eyelids on it; the faces here are small)
+  await gold2(f, src, { cam, sky: false, groundFlow: { y0: .62, k: .8 }, detail: .8, tag: 'S61', typeDir: [.6, -.8], paint: { eyeStrokes: 0 } });
 });
 
 // ================================================================ S61b: one hand lets go over the held "blade" (v2)
@@ -133,15 +135,16 @@ scene('S61b', async f => {
   redRiver(src, .3);
   await gold2(f, src, { cam, sky: false, groundFlow: { y0: .35, k: .85 }, detail: .9, tag: 'S61b', typeDir: [.6, -.8] });
 });
-// the Halys runs red with clay: water (low, flat, below the far bank) is pulled from ochre-brown toward a deep red ochre
-function redRiver(src, y0) {
+// the Halys runs red with clay: water (low, flat, below the far bank) is pulled from ochre-brown toward a deep red ochre;
+// `deep` also takes the glare off sunlit water (pale, warm-white) so it still reads as the red river
+function redRiver(src, y0, amt = .55, deep = 0) {
   const { aw, ah } = src;
   for (let y = Math.floor(y0 * ah); y < ah; y++) for (let x = 0; x < aw; x++) {
     const i = y * aw + x, r = src.R[i], g = src.G[i], b = src.B[i];
     const warm = r - b, flat = src.matte ? 1 - src.matte[i] : 1;
     if (warm < .05 || flat < .3) continue;
-    const k = clamp((warm - .05) * 3) * flat * .55;
-    src.R[i] = clamp(r * (1 + .08 * k)); src.G[i] = g * (1 - .28 * k); src.B[i] = b * (1 - .22 * k);
+    const k = clamp((warm - .05) * 3) * flat * amt, d = deep * flat * clamp((r - .55) * 2.5);
+    src.R[i] = clamp(r * (1 + .08 * k) * (1 - .12 * d)); src.G[i] = g * (1 - .28 * k) * (1 - .3 * d); src.B[i] = b * (1 - .22 * k) * (1 - .38 * d);
   }
 }
 

@@ -1916,13 +1916,14 @@
     "room"
    ],
    "plates": [
+    "P57",
     "P39"
    ],
    "cues": [],
    "section": "14 · Outro, 257.68–281.0 (B150–159 + the sound-design tail: frozen chord, room tone, keys, ting; audio ends 279.60)",
-   "picture": "**The room**, from behind her chair: the blue RARE EARTH circle on her back rhymes with the planet we just left. The ticking build is the terminal scrolling, one line per tick; on the side monitor the ΔT map's totality band slides north onto the Halys.",
+   "picture": "**The room**, from behind her chair (v2: she is the anime character of the sheet; the room stays abstract). The blue RARE EARTH circle on her back rhymes with the planet we just left; the print bends and moves with the jacket, and the 1420 MHz patch rides on her LEFT sleeve, turning with the arm. She types on the ticks; on `dt.shift` she leans toward the side monitor as the ΔT map's totality band slides north onto the Halys; the terminal scrolls one line per tick. Cut on the chord to S79.",
    "text": "MONO terminal (ROOM.md)",
-   "sync": "Ticks 266.1–269.8"
+   "sync": "Ticks 266.1–269.8; the lean lands on 268.08"
   },
   {
    "id": "S79",
@@ -1950,11 +1951,11 @@
     "room"
    ],
    "plates": [
-    "P41"
+    "P58"
    ],
    "cues": [],
    "section": "14 · Outro, 257.68–281.0 (B150–159 + the sound-design tail: frozen chord, room tone, keys, ting; audio ends 279.60)",
-   "picture": "Still holding our gaze, she types blind (keys 273.45, 274.05, 274.95); behind her the terminal prints `[main 585ec1a] fix(halys): schedule eclipse to end war (#585)`.",
+   "picture": "**The cut back from the kings lands on her mischievous grin** (v2): anime close-up, the closed-lip, one-corner-up, knowing smirk of the director's reference, eyes narrowed and on us, head tilted; no deadpan. Holding our gaze, she types blind (keys 273.45, 274.05, 274.95; her shoulder dips on each); behind her the terminal prints `[main 585ec1a] fix(halys): schedule eclipse to end war (#585)`.",
    "text": "MONO",
    "sync": "Key clicks from the sound design"
   },
@@ -1967,7 +1968,7 @@
     "room"
    ],
    "plates": [
-    "P41"
+    "P58"
    ],
    "cues": [
     {
@@ -1987,7 +1988,7 @@
     }
    ],
    "section": "14 · Outro, 257.68–281.0 (B150–159 + the sound-design tail: frozen chord, room tone, keys, ting; audio ends 279.60)",
-   "picture": "**The wink**, on the ting: her eyelid crosses her iris with the Moon's curved edge. Hold 0.6 s, cut to black, end card (video runs ~1.4 s past the audio in silence).",
+   "picture": "**The wink**, on the ting: her left eyelid (the smirk's side) crosses her iris with the Moon's curved edge and shuts on 276.95. Hold 0.6 s, cut to black, end card (video runs ~1.4 s past the audio in silence).",
    "text": "CARVED `HALYS` · `JADE WANG`; PLAQUE `NEXT TOTALITY · 2027-08-02 · NEAR LUXOR · 6M23S`",
    "sync": "Ting 276.95; audio ends 279.60"
   }
