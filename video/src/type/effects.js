@@ -1,8 +1,9 @@
 // effects.js: one renderer per text-track fx. Each is (g, f, e, t) -> draws event e at song time t (f = the frame
 // context: f.L layout, f.cad draw cadence, f.seed per-drawing seed, f.world, f.type scene parameters).
 //
-// Timing rule: a word gilds in on the drawing that contains its sung onset (at 12 fps up to one drawing early, which is
-// what subtitle practice asks for: 2-4 frames ahead of the syllable); chops slam on the exact master frame.
+// Timing rule (SHOTLIST note): text never appears before its sung start. A word gilds in on the first drawing at or after
+// its onset (at 12 fps up to one drawing late); chops slam on the exact master frame; sung words may linger up to ~1.5 s
+// past a cut.
 
 import { FACE, C, LIGHT, applyFont, textWidth, glyphX, breakLines, layoutLines, byAspect, smartQuotes, ease, measure } from './style.js';
 import { gild } from './gild.js';
@@ -16,7 +17,7 @@ import { beatPos, pulse } from '../time.js';
 const WORLD_LIGHT = { bronze: 'bronze', gold: 'gold', marble: 'marble', corona: 'corona', orbit: 'orbit', room: 'end' };
 function ctxOf(f, e, t) {
   const cad = f.cad || 60, T = f.type || {};
-  return { t, tq: t + Math.min(1 / cad, .06) - 1e-4, cad, boil: cad <= 15 ? 1 : 0, seed: f.seed || 0, leaf: strSeed(e.id) % 997, L: f.L, T, world: f.world,
+  return { t, tq: t, cad, boil: cad <= 15 ? 1 : 0, seed: f.seed || 0, leaf: strSeed(e.id) % 997, L: f.L, T, world: f.world,
     light: T.light || LIGHT[e.light] || LIGHT[WORLD_LIGHT[f.world] || 'bronze'] };
 }
 const mixPal = (a, b, k) => a.map((c, i) => mixHex(c, b[i], clamp(k)));
@@ -33,18 +34,49 @@ export function anchorPos(L, anchor) {
     case 'top': return { x: L.cx, y: S.y + .012 * L.H, align: 'center', valign: 'top', maxW: S.w * .84 };
     case 'bottom': return { x: L.cx, y: S.y + S.h - .012 * L.H, align: 'center', valign: 'bottom', maxW: S.w * (P ? 1 : .86) };
     case 'left': return P ? { x: L.cx, y: S.y + S.h - .03 * L.H, align: 'center', valign: 'bottom', maxW: S.w }
-      : { x: S.x + .004 * L.W, y: .6 * L.H, align: 'left', valign: 'middle', maxW: .47 * L.W };
+      : { x: S.x + .004 * L.W, y: .6 * L.H, align: 'left', valign: 'middle', maxW: .5 * L.W };
+    case 'leftLow': return P ? { x: L.cx, y: S.y + S.h - .03 * L.H, align: 'center', valign: 'bottom', maxW: S.w }
+      : { x: S.x + .004 * L.W, y: .67 * L.H, align: 'left', valign: 'middle', maxW: .5 * L.W };
     case 'lowerLeft': return { x: S.x, y: S.y + S.h - .004 * L.H, align: 'left', valign: 'bottom', maxW: P ? S.w : .5 * L.W };
     case 'lower': return { x: L.cx, y: P ? .845 * L.H : .885 * L.H, align: 'center', valign: 'bottom', maxW: S.w * .94 };
     default: return { x: L.cx, y: L.cy, align: 'center', valign: 'middle', maxW: S.w * .8 };
   }
 }
-const SIZE = { hook: 74, lyric: 96, bottom: 84, small: 46, plaque: 31, plaqueHook: 35, inscr: 0, title: 150 };
+// design px at 1080 (x L.u). Cinzel's cap height is 0.7 em: lyric 108 = 7 % of the frame height (S27's 96 is the
+// reference block); beat 131 = 8.5 %; the title is fitted (see titleLayout)
+const SIZE = { lyric: 108, bottom: 108, reference: 96, beat: 131, small: 46, plaque: 31, plaqueHook: 35, inscr: 0 };
 
 // cached layout of a CARVED block: items stacked (an item may wrap), words positioned
 const _lay = new Map();
+function eyeOf(f) {
+  const L = f.L, T = f.type || {};
+  return T.sun ? { x: T.sun.x, y: T.sun.y, r: T.sun.r } : { x: L.cx, y: (L.portrait ? .42 : .45) * L.H, r: (L.portrait ? .3 * L.W : .3 * L.H) };
+}
+// the hook title: centred over the eye, one or two balanced lines, the longest filling ~75 % of the safe width (portrait:
+// ~92 %), never taller than a 13 % cap
+function titleLayout(e, f) {
+  const L = f.L, face = FACE.carved, it = e.items[0], words = it.text.split(' '), eye = eyeOf(f);
+  const key = `${e.id}|title|${L.W}x${L.H}|${eye.x}|${eye.y}`;
+  if (_lay.has(key)) return _lay.get(key);
+  const fill = (L.portrait ? .92 : .75) * L.safe.w, capMax = (L.portrait ? .1 * L.W : .13 * L.H) / face.cap;
+  let best = null;
+  for (const n of [1, 2]) {
+    const lines = n === 1 ? [words] : breakLines(words, face, 100, textWidth(face, 100, words.join(' ')) * .6, 2);
+    if (lines.length !== n) continue;
+    const w1 = Math.max(...lines.map(ws => textWidth(face, 1, ws.join(' '))));
+    const px = Math.min(capMax, fill / w1);
+    if (!best || px > best.px) best = { lines, px };
+  }
+  const lay = layoutLines(best.lines, face, best.px, { x: eye.x, y: eye.y, align: 'center', valign: 'middle', lead: 1.08 });
+  lay.words.forEach(w => { w.item = 0; w.itemObj = it; w.wi = 0; });
+  let k = 0; lay.words.forEach(w => { w.wi = k++; });
+  lay.lines = best.lines.map(ws => ({ ii: 0, ws }));
+  _lay.set(key, lay);
+  return lay;
+}
 function carvedLayout(e, f, { face = FACE.carved, size, anchor = e.anchor || 'left', lead = 1.18, items = e.items.filter(i => !i.ghost), maxW } = {}) {
   const L = f.L, pl = placeOf(f, e);
+  if (anchor === 'eye') return titleLayout(e, f);
   const key = `${e.id}|${L.W}x${L.H}|${anchor}|${size}|${items.map(i => i.key).join(',')}|${pl ? JSON.stringify(pl) : ''}`;
   if (_lay.has(key)) return _lay.get(key);
   const A = { ...anchorPos(L, anchor) };
@@ -56,7 +88,7 @@ function carvedLayout(e, f, { face = FACE.carved, size, anchor = e.anchor || 'le
   for (let k = 0; k < 30; k++, px *= .95) {
     if (allWords.some(ws => ws.some(w => textWidth(face, px, w) > mw))) continue;
     lines = []; allWords.forEach((ws, ii) => breakLines(ws, face, px, mw).forEach(l => lines.push({ ii, ws: l })));
-    if (lines.length <= 4 || k > 25) break;
+    if (lines.length <= (anchor === 'bottom' ? 2 * items.length : 4) || k > 25) break;
   }
   const lay = layoutLines(lines.map(l => l.ws), face, px, { x: A.x, y: A.y, align: A.align, valign: A.valign, lead });
   // map words back to items / word indices
@@ -100,7 +132,7 @@ const gildOpts = (c, e, extra = {}) => ({ light: c.light, boil: c.boil, seed: c.
 // ---------------------------------------------------------------- CARVED: generic block (lyrics, hook lines)
 function carved(g, f, e, t) {
   const c = ctxOf(f, e, t), T = c.T;
-  const lay = carvedLayout(e, f, { size: e.size ? SIZE[e.size] : undefined });
+  const lay = carvedLayout(e, f, { size: e.size ? SIZE[e.size] : undefined });   // (anchor 'eye': the hook title)
   let exposure = 1 + (T.flash || 0) * 1.4, opacity = 1, sil = T.backlit || 0;
   if (e.fadeout) opacity *= 1 - smooth(clamp((t - (e.t1 - e.fadeout)) / e.fadeout));
   if (e.backlit) sil = Math.max(sil, smooth(clamp((t - e.backlit[0]) / (e.backlit[1] - e.backlit[0]))));
@@ -180,7 +212,7 @@ function inscrLines(g, f, text, words, { x, y, valign = 'bottom', t, tq, maxW, c
   for (const w of lay.words) {
     const wt = words && words[k] && words[k].t != null ? words[k].t : t0 ?? t;
     k++;
-    const a = fadeIn(tq, wt - .03, .2) * alpha;
+    const a = fadeIn(tq, wt, .2) * alpha;
     if (a <= .01) continue;
     g.globalAlpha = a;
     g.fillText(w.text, w.x, w.y + (1 - a) * .05 * px);
@@ -341,15 +373,15 @@ function chop(g, f, e, t) {
   if (it.hal && fr >= 0 && fr < 4 && !(T.disk && T.disk.hal === false)) halDisk(g, L, res, word, fr / 3, scale);
 }
 
-// ---------------------------------------------------------------- the Glover caption (S35)
+// ---------------------------------------------------------------- the Glover caption (S35): quote over attribution
 function quote(g, f, e, t) {
-  const L = f.L, it = e.items[0], A = anchorPos(L, 'lower');
-  const [q, who] = it.text.split(' — ');
-  const px = 30 * u(L), px2 = 23 * u(L), out = 1 - smooth(clamp((t - (e.t1 - .18)) / .18));
-  const y2 = L.portrait ? .9 * L.H : .915 * L.H;
-  const lines2 = breakLines(('— ' + who).split(' '), FACE.plaque, px2, L.safe.w);
-  drawLabel(g, f, q, { x: L.cx, y: y2 - (lines2.length) * px2 * 1.6 - .2 * px, align: 'center', px, face: FACE.plaqueBold, t0: it.t, t, alpha: out, color: C.pearl, stagger: .006 });
-  lines2.forEach((ws, i) => drawLabel(g, f, ws.join(' '), { x: L.cx, y: y2 - (lines2.length - 1 - i) * px2 * 1.6, align: 'center', px: px2, t0: it.t + .1, t, alpha: out * .9, color: C.pearl, stagger: .004 }));
+  const L = f.L, q = e.items.find(i => i.key === 'q'), who = e.items.find(i => i.key === 'who');
+  const px = 40 * u(L), px2 = 27 * u(L), out = 1 - smooth(clamp((t - (e.t1 - .18)) / .18));
+  const yb = L.portrait ? .905 * L.H : .915 * L.H;
+  const lines2 = breakLines(who.text.split(' '), FACE.plaque, px2, L.safe.w);
+  const lh2 = px2 * 1.6, y1 = yb - (lines2.length - 1) * lh2 - 1.25 * px - .35 * px2;
+  drawLabel(g, f, q.text, { x: L.cx, y: y1, align: 'center', px, face: FACE.plaqueBold, t0: q.t, t, alpha: out, color: C.pearl, stagger: .008 });
+  lines2.forEach((ws, i) => drawLabel(g, f, ws.join(' '), { x: L.cx, y: yb - (lines2.length - 1 - i) * lh2, align: 'center', px: px2, t0: who.t + .12, t, alpha: out * .92, color: C.pearl, stagger: .004 }));
 }
 
 // ---------------------------------------------------------------- S06: map labels on the banks
@@ -428,10 +460,10 @@ function diptych(g, f, e, t) {
 function mirrored(g, f, e, t) {
   const L = f.L, c = ctxOf(f, e, t), S = L.safe, P = L.portrait;
   const left = e.items.find(i => i.key === 'left'), right = e.items.find(i => i.key === 'right'), foot = e.items.find(i => i.key === 'foot');
-  let px = (P ? 80 : 98) * u(L);
+  let px = (P ? 96 : 110) * u(L);
   const half = (P ? S.w / 2 - .02 * L.W : .4 * L.W);
   px = Math.min(px, half / textWidth(FACE.carved, 1, left.text), half / textWidth(FACE.carved, 1, right.text));
-  const y = P ? S.y + .16 * L.H : .34 * L.H;
+  const y = P ? S.y + .15 * L.H : .3 * L.H;
   const runs = [];
   const add = (it, x, align) => {
     const w = textWidth(FACE.carved, px, it.text), xx = align === 'left' ? x : x - w;
@@ -439,7 +471,7 @@ function mirrored(g, f, e, t) {
     if (p >= 0) runs.push({ text: it.text, x: xx, y, face: FACE.carved, px, sweep: { p, band: .85 * px } });
   };
   add(left, S.x, 'left'); add(right, S.x + S.w, 'right');
-  const lay = carvedLayout(e, f, { items: [foot], anchor: 'bottom', size: P ? 70 : 64, maxW: P ? S.w : S.w * .98 });
+  const lay = carvedLayout(e, f, { items: [foot], anchor: 'bottom', size: SIZE.bottom, maxW: P ? S.w : S.w * .9 });
   runs.push(...carvedRuns({ ...e, items: [foot] }, lay, c));
   gild(g, runs, gildOpts(c, e));
 }
@@ -449,7 +481,7 @@ function bronze(g, f, e, t) {
   const L = f.L, c = ctxOf(f, e, t), S = L.safe, P = L.portrait;
   const [ia, ib, ic] = ['above', 'big', 'below'].map(k => e.items.find(i => i.key === k));
   const bigW = P ? S.w * .96 : .52 * L.W;
-  const pxB = bigW / textWidth(FACE.carved, 1, ib.text), pxA = (P ? 46 : 50) * u(L), pxC = (P ? 58 : 66) * u(L);
+  const pxB = bigW / textWidth(FACE.carved, 1, ib.text), pxA = (P ? 54 : 58) * u(L), pxC = SIZE.lyric * u(L);
   const x = P ? L.cx - bigW / 2 : S.x, capB = FACE.carved.cap * pxB;
   const yB = P ? .72 * L.H : .6 * L.H;
   const rows = [[ia, pxA, yB - capB - .5 * pxA], [ib, pxB, yB], [ic, pxC, yB + .3 * pxB + FACE.carved.cap * pxC]];
@@ -476,7 +508,7 @@ function bronze(g, f, e, t) {
 // ---------------------------------------------------------------- S27: the letters eclipsed to crescents
 function crescents(g, f, e, t) {
   const c = ctxOf(f, e, t), L = f.L;
-  const lay = carvedLayout(e, f, {});
+  const lay = carvedLayout(e, f, { size: SIZE[e.size] || SIZE.reference });
   const ek = clamp((t - e.items[1].t) / (e.eclipse[1] - e.items[1].t));
   const pal = mixPal(C.gold, C.goldCool, .65 * smooth(ek));        // colour drains, goes metallic
   const k0 = c.T.disk && c.T.disk.k != null ? c.T.disk.k : null;
@@ -508,12 +540,12 @@ function crescents(g, f, e, t) {
 function ringGeom(f) {
   const L = f.L, T = f.type || {};
   const sun = T.sun || byAspect(L, { '16:9': { x: .63 * L.W, y: .45 * L.H, r: .1 * L.H }, portrait: { x: .5 * L.W, y: .36 * L.H, r: .11 * L.W } });
-  const R = T.ringR || sun.r * 2.75;
+  const R = T.ringR || sun.r * 3.0;
   return { cx: sun.x, cy: sun.y, R };
 }
 function ring(g, f, e, t) {
   const c = ctxOf(f, e, t), L = f.L, { cx, cy, R } = ringGeom(f);
-  const face = FACE.carved, px = clamp(R * .19, 30 * u(L), 90 * u(L)), cap = face.cap * px;
+  const face = FACE.carved, px = clamp(R * .21, 30 * u(L), 96 * u(L)), cap = face.cap * px;
   const runs = [];
   for (const it of e.items) {
     const top = it.key === 'top', gl = glyphX(face, px, it.text), tot = gl[gl.length - 1].x + gl[gl.length - 1].w;
@@ -618,17 +650,20 @@ function shadow(g, f, e, t) {
 }
 
 // ---------------------------------------------------------------- S52: THALES, the Greek echo, the plaque
+// The block is set high: it lingers ~1.3 s into S53 as the subject of "foretold the sun would go dark" below it.
 function thales(g, f, e, t) {
   const c = ctxOf(f, e, t), L = f.L, S = L.safe, P = L.portrait;
   const [nm, gk, pq] = ['name', 'greek', 'plaque'].map(k => e.items.find(i => i.key === k));
   const px = (P ? 120 : 132) * u(L), gpx = px * .5, ppx = SIZE.plaque * u(L);
-  const x = P ? L.cx - textWidth(FACE.carved, px, nm.text) / 2 : S.x, y = P ? .7 * L.H : .5 * L.H;
+  const x = P ? L.cx - textWidth(FACE.carved, px, nm.text) / 2 : S.x, y = P ? .22 * L.H : .245 * L.H;
+  const out = e.fadeout ? 1 - smooth(clamp((t - (e.t1 - e.fadeout)) / e.fadeout)) : 1;
   const runs = [];
   const p = sweepP(c.tq, nm.words[0].t, 6);
   if (p >= 0) runs.push({ text: nm.text, x, y, face: FACE.carved, px, sweep: { p, band: px } });
-  if (t >= gk.t) runs.push({ text: gk.text, x: x + .02 * px, y: y + .72 * px, face: FACE.greek, px: gpx, sweep: { p: clamp((c.tq - gk.t) / .5), band: .8 * gpx, peak: .6 } });
-  gild(g, runs, gildOpts(c, e, { light: c.T.light || LIGHT.marble }));
-  if (t >= pq.t) drawLabel(g, f, pq.text, { x: P ? L.cx : x + .02 * px, y: y + .72 * px + 1.25 * ppx + .4 * gpx, align: P ? 'center' : 'left', px: ppx, t0: pq.t, t, rule: false });
+  const gx = P ? L.cx - textWidth(FACE.greek, gpx, gk.text) / 2 : x + .02 * px;   // portrait: all three lines centred
+  if (t >= gk.t) runs.push({ text: gk.text, x: gx, y: y + .72 * px, face: FACE.greek, px: gpx, sweep: { p: clamp((c.tq - gk.t) / .5), band: .8 * gpx, peak: .6 } });
+  gild(g, runs, gildOpts(c, e, { light: c.T.light || LIGHT.marble, opacity: out }));
+  if (t >= pq.t) drawLabel(g, f, pq.text, { x: P ? L.cx : x + .02 * px, y: y + .72 * px + 1.25 * ppx + .4 * gpx, align: P ? 'center' : 'left', px: ppx, t0: pq.t, t, rule: false, alpha: out });
 }
 
 // ---------------------------------------------------------------- S53: the forecast card (generic, no market's look)
@@ -708,29 +743,41 @@ function spark(g, f, e, t) {
   }
 }
 
-// ---------------------------------------------------------------- S64-S71: era captions (PLAQUE: year · place · fact)
+// ---------------------------------------------------------------- S64-S71: era captions (PLAQUE, two lines)
+// YEAR · PLACE larger (bold; the year pearl, the place orange) over FACT (cap >= 4.5 % of the frame height; portrait by
+// width). Mobile first: the head wraps year / place when it cannot hold one line (portrait), the fact wraps by words.
+// A short trail of the three previous years sits above, dim, on a hairline.
+const ERA_HEAD = { ...FACE.plaqueBold, track: .06 }, ERA_FACT = { ...FACE.plaque, weight: 500, track: .05 };
 function era(g, f, e, t) {
-  const L = f.L, S = L.safe, P = L.portrait, it = e.items[0];
-  const [year, place, ...rest] = it.text.split(' · '), fact = rest.join(' · ');
-  const ypx = (P ? 62 : 66) * u(L), ppx = (P ? 30 : 31) * u(L), fpx = (P ? 30 : 31) * u(L);
-  const mw = P ? S.w - 16 * u(L) : .5 * L.W, x = S.x + 16 * u(L);
-  const factLines = breakLines(fact.split(' '), FACE.plaque, fpx, mw, 3);
-  const lh = fpx * 1.5, yBot = S.y + S.h - .004 * L.H;
-  const yFact0 = yBot - (factLines.length - 1) * lh, yPlace = yFact0 - lh * 1.05, yYear = yPlace - ppx * 1.55;
-  const t0 = it.t;
-  // the spine: a hairline from the first era downwards; earlier years stacked above, dim
-  const hist = e.history || [], hpx = 20 * u(L), hlh = hpx * 1.65;
-  const top = yYear - FACE.plaqueBold.cap * ypx - .5 * hpx - hist.length * hlh;
+  const L = f.L, S = L.safe, P = L.portrait;
+  const head = e.items.find(i => i.key === 'head'), fact = e.items.find(i => i.key === 'fact');
+  const hpx = (P ? 74 : 80) * u(L), fpx = (P ? 66 : 69) * u(L);
+  const x = S.x + 18 * u(L), mw = S.w - 18 * u(L);
+  const [year, ...rest] = head.text.split(' · '), place = rest.join(' · ');
+  const oneLine = textWidth(ERA_HEAD, hpx, head.text) <= mw;
+  const factLines = breakLines(fact.text.split(' '), ERA_FACT, fpx, mw, 3);
+  const flh = fpx * 1.22, hlh = hpx * 1.16, yBot = S.y + S.h - .004 * L.H;
+  const yFact0 = yBot - (factLines.length - 1) * flh, yHead1 = yFact0 - fpx * 1.42 - (oneLine ? 0 : hlh), headRows = oneLine ? 1 : 2;
+  const t0 = head.t;
+  const hist = e.history || [], tpx = 24 * u(L), tlh = tpx * 1.6;
+  const top = yHead1 - ERA_HEAD.cap * hpx - .55 * tpx - hist.length * tlh;
   g.save();
   g.fillStyle = C.pearl; g.globalAlpha = .45 * fadeIn(t, t0, .2);
   g.fillRect(S.x, top, Math.max(1, u(L)), yBot - top);
   g.globalAlpha = .9; g.fillStyle = C.orange;
-  g.fillRect(S.x - 3 * u(L), yYear - FACE.plaqueBold.cap * ypx * .62, 7 * u(L), 7 * u(L));
+  g.fillRect(S.x - 4 * u(L), yHead1 - ERA_HEAD.cap * hpx * .62, 9 * u(L), 9 * u(L));
   g.restore();
-  hist.forEach((h, i) => drawLabel(g, f, h, { x, y: top + hpx + i * hlh, px: hpx, color: C.pearl, alpha: .42, t0: t0 - 1, t, shadow: false }));
-  drawLabel(g, f, year, { x, y: yYear, px: ypx, face: FACE.plaqueBold, color: C.pearl, t0, t, stagger: .02 });
-  drawLabel(g, f, place, { x, y: yPlace, px: ppx, color: C.orange, t0: t0 + .16, t, stagger: .008 });
-  factLines.forEach((ws, i) => drawLabel(g, f, ws.join(' '), { x, y: yFact0 + i * lh, px: fpx, color: C.pearl, t0: t0 + .3 + i * .08, t, stagger: .006 }));
+  hist.forEach((h, i) => drawLabel(g, f, h, { x, y: top + tpx + i * tlh, px: tpx, color: C.pearl, alpha: .45, t0: t0 - 1, t, shadow: false }));
+  if (oneLine) {
+    const yw = textWidth(ERA_HEAD, hpx, year + ' · '), x2 = x + measure(ERA_HEAD, hpx, year + ' · ');
+    drawLabel(g, f, year, { x, y: yHead1, px: hpx, face: ERA_HEAD, color: C.pearl, t0, t, stagger: .02 });
+    drawLabel(g, f, '·', { x: x + measure(ERA_HEAD, hpx, year + ' '), y: yHead1, px: hpx, face: ERA_HEAD, color: C.pearl, alpha: .55, t0: t0 + .1, t });
+    if (place) drawLabel(g, f, place, { x: x2, y: yHead1, px: hpx, face: ERA_HEAD, color: C.orange, t0: t0 + .12, t, stagger: .01 });
+  } else {
+    drawLabel(g, f, year, { x, y: yHead1, px: hpx, face: ERA_HEAD, color: C.pearl, t0, t, stagger: .02 });
+    if (place) drawLabel(g, f, place, { x, y: yHead1 + hlh, px: hpx, face: ERA_HEAD, color: C.orange, t0: t0 + .12, t, stagger: .01 });
+  }
+  factLines.forEach((ws, i) => drawLabel(g, f, ws.join(' '), { x, y: yFact0 + i * flh, px: fpx, face: ERA_FACT, color: C.pearl, t0: t0 + .25 + i * .08, t, stagger: .006 }));
 }
 
 // ---------------------------------------------------------------- S72: HOME (small, late)

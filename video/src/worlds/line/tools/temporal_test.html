@@ -1,0 +1,41 @@
+<!doctype html><html><body><script type="module">
+// Temporal coherence test for the line engine on a real video plate: renders N consecutive 60 fps frames of a plate
+// (a) through the temporal engine (references + optical-flow transport + crossfade) and (b) naively (each frame traced
+// from scratch at its own plate time), and measures frame-to-frame stability. Driven by tools/temporal_test.mjs.
+import { loadPlateIndex } from '../../../plates.js';
+import { drawLines } from '../index.js';
+await loadPlateIndex();
+const Q = new URLSearchParams(location.search), W = +(Q.get('w') || 960), H = +(Q.get('h') || 540);
+const plate = Q.get('plate') || 'P04', t0 = +(Q.get('t0') || 1), n = +(Q.get('n') || 60);
+const c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d');
+const f = { W, H, g, t: 0 };
+const trace = { contourW: [1.3, 2.6], contourB: 1.5, innerB: .95, innerHi: .17, dsepMin: 3.4, dsepMax: 10, bgSepMin: 20, bgSepMax: 36, bgGain: .2, minLen: 26 };
+const sw = 240, sh = 135, sc = document.createElement('canvas'); sc.width = sw; sc.height = sh; const sg = sc.getContext('2d', { willReadFrequently: true });
+function grab() { sg.drawImage(c, 0, 0, sw, sh); const d = sg.getImageData(0, 0, sw, sh).data, out = new Float32Array(sw * sh); for (let i = 0; i < out.length; i++) out[i] = d[i * 4 + 1] / 255; return out; }
+function metrics(frames) {
+  let mad = 0, pers = 0, np = 0, worst = 1;
+  for (let k = 1; k < frames.length; k++) {
+    const a = frames[k - 1], b = frames[k]; let s = 0, hit = 0, tot = 0;
+    for (let i = 0; i < a.length; i++) s += Math.abs(a[i] - b[i]);
+    for (let y = 1; y < sh - 1; y++) for (let x = 1; x < sw - 1; x++) { const i = y * sw + x; if (a[i] < .25) continue; tot++; let m = 0; for (let j = -1; j <= 1; j++) for (let q = -1; q <= 1; q++) m = Math.max(m, b[i + j * sw + q]); if (m >= .25 * .6 + a[i] * .4) hit++; }
+    mad += s / a.length * 255; const p = tot ? hit / tot : 1; pers += p; worst = Math.min(worst, p); np++;
+  }
+  return { mad: +(mad / np).toFixed(2), persistence: +(pers / np).toFixed(4), worst: +worst.toFixed(4) };
+}
+const out = {}, keep = {};
+for (const mode of ['temporal', 'naive']) {
+  const frames = [], ms = [];
+  keep[mode] = [];
+  for (let k = 0; k < n; k++) {
+    const t = t0 + k / 60, tq = performance.now();
+    await drawLines({ ...f, t }, mode === 'temporal' ? { src: { plate }, tp: t, chainFrom: t0, trace, corona: false, look: { glow: [.2, .07] } }
+      : { src: { plate }, freeze: t, trace, corona: false, look: { glow: [.2, .07] } });
+    ms.push(performance.now() - tq);
+    frames.push(grab());
+    keep[mode].push(c.toDataURL('image/jpeg', .85));
+  }
+  out[mode] = { ...metrics(frames), msPerFrame: Math.round(ms.slice(1).reduce((a, b) => a + b, 0) / (ms.length - 1)) };
+}
+window.RESULT = { plate, t0, n, ...out };
+window.FRAMES = keep;
+</script></body></html>

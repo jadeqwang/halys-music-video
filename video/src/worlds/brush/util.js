@@ -102,7 +102,7 @@ export const oklab2srgb = (L, a, b) => lab2rgb(L, a, b, [0, 0, 0]);
 const _tmp = { a: null, n: 0 };
 function scratch(n) { if (_tmp.n < n) { _tmp.a = new Float32Array(n); _tmp.n = n; } return _tmp.a; }
 function gaussKernel(sigma) {
-  const r = Math.max(1, Math.ceil(sigma * 2.6)), k = new Float32Array(2 * r + 1);
+  const r = Math.max(1, Math.ceil(sigma * 2.2)), k = new Float32Array(2 * r + 1);
   let s = 0; for (let i = -r; i <= r; i++) { k[i + r] = Math.exp(-i * i / (2 * sigma * sigma)); s += k[i + r]; }
   for (let i = 0; i < k.length; i++) k[i] /= s;
   return { r, k };
@@ -160,7 +160,7 @@ export function up(src, dw, dh, w, h, f, out = null) {
 }
 // Gaussian blur that drops to half / quarter resolution for large sigma (the result is smooth anyway)
 export function blurFast(src, w, h, sigma, out = null) {
-  const f = sigma >= 7 ? 4 : sigma >= 3 ? 2 : 1;
+  const f = sigma >= 6 ? 4 : sigma >= 2.4 ? 2 : 1;
   if (f === 1) return blur(src, w, h, sigma, out);
   const dw = Math.ceil(w / f), dh = Math.ceil(h / f), d = down(src, w, h, f), b = blur(d, dw, dh, sigma / f);
   return up(b, dw, dh, w, h, f, out);

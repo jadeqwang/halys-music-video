@@ -380,5 +380,21 @@
   "from": "media/plates/P45/take1.mp4 @ 2.84 s",
   "plate": "P45",
   "note": "the Mede looks up"
+ },
+ "r45aly": {
+  "w": 1280,
+  "h": 720,
+  "faces": [],
+  "from": "media/plates/P45/take1.mp4 @ 3.47 s",
+  "plate": "P45",
+  "note": "Alyattes in shock"
+ },
+ "r45cya": {
+  "w": 1280,
+  "h": 720,
+  "faces": [],
+  "from": "media/plates/P45/take1.mp4 @ 4.73 s",
+  "plate": "P45",
+  "note": "Cyaxares in shock"
  }
 }

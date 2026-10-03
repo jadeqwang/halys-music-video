@@ -127,12 +127,13 @@ void main() {
   oHgt = vec4(hgt * alpha, 0.0, 0.0, alpha);
 }`;
 
-// the canvas itself (weave, cracks, varnish mottling, grain): baked once per output size
+// the canvas itself (weave, cracks, varnish mottling, grain) and the weave's gradient: baked once per output size
 const CANVAS_FS = `#version 300 es
 precision highp float;
 in vec2 vUv;
 uniform vec2 uRes;
-out vec4 o;
+layout(location = 0) out vec4 o;
+layout(location = 1) out vec4 o2;
 ${GLSL_COMMON}
 float weave(vec2 p) {
   vec2 q = p / 3.4;
@@ -146,37 +147,39 @@ void main() {
   vec2 wq = p + 14.0 * vec2(fbm(p * 0.006), fbm(p * 0.006 + 9.2));
   float d1 = voronoiEdge(wq / 38.0), d2 = voronoiEdge(wq / 12.0 + 3.1);
   float crack = (1.0 - smoothstep(0.0, 0.022, d1)) * 0.8 + (1.0 - smoothstep(0.0, 0.035, d2)) * 0.35 * smoothstep(0.5, 0.7, fbm(p * 0.004));
-  o = vec4(clamp(weave(p), 0.0, 1.0), clamp(crack, 0.0, 1.0), fbm(p * 0.0025), hash12(p));
+  float w0 = weave(p);
+  o = vec4(clamp(w0, 0.0, 1.0), clamp(crack, 0.0, 1.0), fbm(p * 0.0025), hash12(p));
+  o2 = vec4(clamp(0.5 + 0.5 * (weave(p + vec2(1.0, 0.0)) - w0), 0.0, 1.0), clamp(0.5 + 0.5 * (weave(p + vec2(0.0, 1.0)) - w0), 0.0, 1.0), 0.0, 1.0);
 }`;
 
 const POST_FS = `#version 300 es
 precision highp float;
 in vec2 vUv;
-uniform sampler2D uCol, uHgt, uCanvas;
+uniform sampler2D uCol, uHgt, uCanvas, uCanvas2;
 uniform vec2 uRes; uniform vec3 uGround, uVarnishCol;
 uniform float uImpasto, uSpec, uWeave, uCrack, uVarnish, uVignette, uFlip, uMetal, uWhite, uWarmFlash, uExposure, uBlack;
 out vec4 o;
-${GLSL_COMMON}
-float height(vec2 uv) {
-  float hp = texture(uHgt, uv).r;
-  return hp * 2.0 + uWeave * 0.07 * texture(uCanvas, uv).r * (1.0 - smoothstep(0.0, 0.3, hp));
-}
+float luma(vec3 c) { return dot(c, vec3(.2126, .7152, .0722)); }
 void main() {
   vec2 uv = vUv; if (uFlip > 0.5) uv.y = 1.0 - uv.y;
   vec2 px = 1.0 / uRes;
   vec4 c = texture(uCol, uv);
   vec4 cv = texture(uCanvas, uv);
+  vec2 wg = texture(uCanvas2, uv).rg * 2.0 - 1.0;          // the weave's gradient (baked)
   vec3 base = c.rgb + uGround * (1.0 - min(c.a, 1.0));
-  float h0 = texture(uHgt, uv).r;
-  float hL = height(uv - vec2(px.x, 0)), hR = height(uv + vec2(px.x, 0)), hU = height(uv - vec2(0, px.y)), hD = height(uv + vec2(0, px.y));
-  vec3 N = normalize(vec3(-(hR - hL) * 1.6, -(hD - hU) * 1.6, 1.0));
+  float h0 = texture(uHgt, uv).r, hR = texture(uHgt, uv + vec2(px.x, 0)).r, hD = texture(uHgt, uv + vec2(0, px.y)).r;
+  float thin = 1.0 - smoothstep(0.0, 0.3, h0);
+  // relief normal from forward differences of paint height, plus the canvas weave where the paint is thin
+  vec3 N = normalize(vec3(-((hR - h0) * 2.0 + uWeave * 0.07 * thin * wg.x) * 3.2, -((hD - h0) * 2.0 + uWeave * 0.07 * thin * wg.y) * 3.2, 1.0));
   vec3 Ld = normalize(vec3(-0.6, -0.7, 0.75));
-  vec3 lin = s2l(min(base, vec3(4.0)));
+  vec3 bc = min(base, vec3(4.0));
+  vec3 lin = bc * bc;                                       // cheap gamma (2.0): the finish is a look, not a measurement
   float lum = luma(lin);
   float relief = (dot(N, Ld) - Ld.z) / Ld.z;
   lin *= clamp(1.0 + uImpasto * relief * (0.35 + 0.65 * smoothstep(0.05, 0.45, h0)), 0.72, 1.4);
   vec3 Hv = normalize(Ld + vec3(0, 0, 1));
-  float sp = pow(max(dot(N, Hv), 0.0), 40.0) * uSpec * smoothstep(0.2, 0.6, h0) * (0.2 + smoothstep(0.03, 0.4, lum));
+  float nh = max(dot(N, Hv), 0.0), nh2 = nh * nh, nh4 = nh2 * nh2, nh8 = nh4 * nh4, nh16 = nh8 * nh8;
+  float sp = nh16 * nh16 * nh8 * uSpec * smoothstep(0.2, 0.6, h0) * (0.2 + smoothstep(0.03, 0.4, lum));
   lin += sp * vec3(1.0, 0.93, 0.8);
   lin *= 1.0 - uWeave * 0.1 * (cv.r - 0.55) * (1.0 - smoothstep(0.02, 0.22, h0));
   float cm = uCrack * (0.1 + 0.9 * (1.0 - smoothstep(0.01, 0.12, lum)));
@@ -184,14 +187,15 @@ void main() {
   lin *= mix(vec3(1.0), uVarnishCol, uVarnish * 0.75);
   lin *= 1.0 + uVarnish * 0.07 * (cv.b - 0.5);
   vec2 vq = (uv - 0.5) * vec2(1.0, 0.85);
-  lin *= 1.0 - uVignette * pow(clamp(length(vq) * 1.35, 0.0, 1.0), 2.4);
+  float vl = clamp(length(vq) * 1.35, 0.0, 1.0);
+  lin *= 1.0 - uVignette * vl * vl * sqrt(vl);
   float m = luma(lin);
   lin = mix(lin, vec3(m) * vec3(0.97, 1.0, 1.03), uMetal * 0.75);
   lin = lin * uExposure;
   lin += vec3(1.0, 0.62, 0.3) * uWarmFlash * (0.35 + lum);
   lin = mix(lin, vec3(1.0, 0.985, 0.95), uWhite);
   lin = mix(lin, vec3(0.0), uBlack);
-  vec3 outc = l2s(lin);
+  vec3 outc = sqrt(max(lin, 0.0));
   outc += (cv.a - 0.5) / 255.0;
   o = vec4(outc, 1.0);
 }`;
@@ -270,7 +274,7 @@ export function getPainter(W, H) {
   if (PAINTERS.has(k)) return PAINTERS.get(k);
   const glw = new GL(W, H);
   const P = { glw, W, H, noise: noiseTexture(glw, 256, 11), tgt: glw.target(W, H, ['rgba16f', 'r16f']), canvasTex: null, skyTex: null };
-  P.canvasTex = glw.target(W, H, ['rgba8']);
+  P.canvasTex = glw.target(W, H, ['rgba8', 'rgba8']);
   glw.pass(CANVAS_FS, {}, P.canvasTex, null);
   PAINTERS.set(k, P);
   return P;
@@ -320,7 +324,7 @@ export function rasterize(Pn, list, cfg, sun = null, over = null) {
   }
   if (cfg.timing) { glw.finish(); tm.sun = Math.round(performance.now() - t0); t0 = performance.now(); }
   glw.pass(POST_FS, {
-    uCol: tgt.tex[0], uHgt: tgt.tex[1], uCanvas: Pn.canvasTex.tex[0], uGround: cfg.ground, uImpasto: cfg.impasto, uSpec: cfg.spec, uWeave: cfg.weave,
+    uCol: tgt.tex[0], uHgt: tgt.tex[1], uCanvas: Pn.canvasTex.tex[0], uCanvas2: Pn.canvasTex.tex[1], uGround: cfg.ground, uImpasto: cfg.impasto, uSpec: cfg.spec, uWeave: cfg.weave,
     uCrack: cfg.crack, uVarnish: cfg.varnish, uVarnishCol: cfg.varnishCol || [1, .93, .76], uVignette: cfg.vignette, uFlip: 1, uMetal: cfg.metal ?? 0,
     uWhite: cfg.white ?? 0, uWarmFlash: cfg.warmFlash ?? 0, uExposure: cfg.exposure ?? 1, uBlack: cfg.black ?? 0,
   }, null, null);

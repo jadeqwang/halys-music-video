@@ -83,8 +83,9 @@ export async function draw(f) {
   // scene elements the type is composed against
   if (id === 'S01' || (id === 'S02' && t < 1.6)) {
     g.fillStyle = 'rgba(0,0,0,.72)'; g.fillRect(0, 0, L.W, L.H);
-    const r = byAspect(L, { '16:9': .3 * L.H, portrait: .3 * L.W });
-    eclipse(g, L.cx, .45 * L.H, r, { corona: 1, seed: 3 });
+    const r = byAspect(L, { '16:9': .3 * L.H, portrait: .3 * L.W }), ey = (L.portrait ? .42 : .45) * L.H;
+    eclipse(g, L.cx, ey, r, { corona: 1, seed: 3 });
+    if (id === 'S01') T.sun = { x: L.cx, y: ey, r };
     if (id === 'S02') { const k = 1 - clamp((t - 1.45) / .15); g.fillStyle = `rgba(255,248,230,${.9 * k})`; g.fillRect(0, 0, L.W, L.H); T.flash = k; }
   }
   if (id === 'S28') {

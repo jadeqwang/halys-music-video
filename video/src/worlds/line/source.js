@@ -76,7 +76,14 @@ export async function sourceFields(spec, tp = 0, aw = 960, aspect = 16 / 9, opt 
     const fx = rect[2] / r.w, fy = rect[3] / r.h;
     const fc = faces.map(f => ({ ...f, box: [(f.box[0] * r.w - rect[0]) / rect[2], (f.box[1] * r.h - rect[1]) / rect[3], (f.box[2] * r.w - rect[0]) / rect[2], (f.box[3] * r.h - rect[1]) / rect[3]] }));
     const ta = performance.now();
-    const F = analyze(id, { depth: D, matte: M, faces: fc }, { gain: opt.gain ?? (r.kind === 'plate' ? (r.P.gain || 1) : 1), ...opt });
+    // exposure: plates carry the pipeline's gain; stand-ins are normalised here (window p95 luminance -> .82)
+    let gain = opt.gain ?? (r.kind === 'plate' ? (r.P.gain || 1) : null);
+    if (gain == null) {
+      const hist = new Uint32Array(256), d = id.data; for (let i = 0; i < d.length; i += 16) hist[(d[i] * 54 + d[i + 1] * 183 + d[i + 2] * 19) >> 8]++;
+      let tot = 0; for (const v of hist) tot += v; let acc = 0, p95 = 255; for (let v = 0; v < 256; v++) { acc += hist[v]; if (acc >= tot * .95) { p95 = v; break; } }
+      gain = Math.min(2.4, Math.max(1, .82 * 255 / Math.max(p95, 1)));
+    }
+    const F = analyze(id, { depth: D, matte: M, faces: fc }, { ...opt, gain });
     F.ms = Math.round(performance.now() - ta);
     Object.assign(F, { id: r.id, kind: r.kind, frame, fps: r.fps, n: r.n, win: rect, srcW: r.w, srcH: r.h, mirror, zoom: 1 / Math.max(fx, fy), key });
     return F;

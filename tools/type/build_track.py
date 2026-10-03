@@ -82,13 +82,14 @@ def ev(id, fx, shot, items=(), **kw):
     D.append({"id": id, "fx": fx, "shot": shot, "items": list(items), **kw})
 
 
-# 1 · cold open: one sentence over three shots, bracketed by the date; it rewinds out with the picture
-ev("S01.date", "plaque", "S01", [("28 MAY 585 BC", {"key": "date", "reveal": "line"})], t1=3.65, anchor="top", size="hook")
-ev("S01.hook", "carved", "S01", [("THE SUN WENT OUT", {"key": "l1", "reveal": "line"}),
-                                 ("IN THE MIDDLE OF A BATTLE.", {"key": "l2", "shot": "S02", "reveal": "line"})],
-   t1=3.65, anchor="bottom", size="hook")
+# 1 · cold open. The hook is a title (cap ~12-13 % of the frame height) set over the eye with the date as a small plaque
+# above; it holds through the flash and the cut and clears as the next beat lands. S02 and S03 are their own large beats
+# (cap ~8.5 %); S03 rewinds out with the picture.
+ev("S01.date", "plaque", "S01", [("28 MAY 585 BC", {"key": "date", "reveal": "line"})], t1=1.89, anchor="top", size="hook")
+ev("S01.title", "carved", "S01", [("THE SUN WENT OUT", {"key": "l1", "reveal": "line"})], t1=1.89, anchor="eye", size="title")
+ev("S02.battle", "carved", "S02", [("IN THE MIDDLE OF A BATTLE.", {"key": "l1", "reveal": "line"})], t1=3.65, anchor="bottom", size="beat")
 ev("S03.home", "carved", "S03", [("AND BOTH ARMIES WENT HOME.", {"key": "l1", "reveal": "line"})],
-   t1=5.85, anchor="bottom", size="hook", rewind=[5.40, 5.85])
+   t1=5.85, anchor="bottom", size="beat", rewind=[5.40, 5.85])
 ev("S04.earlier", "plaque", "S04", [("ONE HOUR EARLIER", {"key": "p", "reveal": "line"})], anchor="bottom", size="hook")
 
 # 2 · intro A
@@ -132,7 +133,7 @@ ev("S26.bronze", "bronze", "S26", [("SUN BURNING ON THE", {"key": "above", "reve
                                    ("EXCHANGE-", {"key": "below", "reveal": "words"})], glint=84.38)
 ev("S27.strange", "crescents", "S27", [("-ING TURNS AND STRIKES", {"key": "l1", "reveal": "words"}),
                                        ("WHEN LIGHT WENT STRANGE", {"key": "l2", "reveal": "words"})],
-   eclipse=[88.69, 89.17], coverage=0.8)
+   eclipse=[88.69, 89.17], coverage=0.8, size="reference")
 
 # 5 · pre-chorus
 ev("S28.halo", "ring", "S28", [("A HALO IN THE SKY", {"key": "top", "reveal": "words"}),
@@ -152,8 +153,9 @@ ev("S33.love", "carved", "S33", [("GO HOME TO THE ONES YOU LOVE", {"key": "l", "
 # 7 · drop 1
 ev("S35.chops", "chop", "S35", [("HALO", {"key": "c1", "hal": True}), ("IN THE", {"key": "c2"}), ("SKY", {"key": "c3"}), ("SKY", {"key": "c4"})],
    t1=112.31)
-ev("S35.glover", "quote", "S35", [('"We just went sci-fi." — V. Glover, Artemis II, during totality, 6 Apr 2026', {"key": "q", "reveal": "line"})],
-   anchor="lower")
+ev("S35.glover", "quote", "S35", [('"We just went sci-fi."', {"key": "q", "reveal": "line"}),
+                                  ("VICTOR GLOVER · ARTEMIS II · DURING TOTALITY · 2026", {"key": "who", "reveal": "line", "t": 110.58})],
+   anchor="lower", t1=114.2)
 ev("S36.stutter", "chop", "S36", [("SKY", {"key": "sky"})], stutter=True,
    invert=[112.74, 113.173, 113.607, 115.783, 116.217, 116.652, 117.086])
 ev("S37.hud", "hud", "S37", [("C2 · TOTALITY · 00:00:07", {"key": "hud", "reveal": "line"})], c2=110.58, anchor="corner")
@@ -172,10 +174,14 @@ ev("S50.v", "inscr", "S50", [("a shadow crossed the hills", {"key": "l", "reveal
 ev("S51.v", "inscr", "S51", [("the wind picked up a chill", {"key": "l", "reveal": "words"})], anchor="lower", t1=182.30)
 
 # 11 · Thales
+# S52 is now 181.23-183.34 (the cut is on "foretold"): THALES on 182.49, the Greek echo and the plaque right after it;
+# the block lingers 1.26 s into S53 (the linger rule: up to ~1.5 s) as the subject of S53's line, set high so the
+# line has the lower half
 ev("S52.thales", "thales", "S52", [("THALES", {"key": "name", "reveal": "words"}),
-                                   ("ΘΑΛΗΣ", {"key": "greek", "reveal": "line", "t": beat_after(182.49, 2)}),
-                                   ("THALES OF MILETUS", {"key": "plaque", "reveal": "line", "t": beat_after(182.49, 3)})])
-ev("S53.foretold", "carved", "S53", [("FORETOLD THE SUN WOULD GO DARK", {"key": "l", "reveal": "words"})], anchor="left", light="marble")
+                                   ("ΘΑΛΗΣ", {"key": "greek", "reveal": "line", "t": 182.70}),
+                                   ("THALES OF MILETUS", {"key": "plaque", "reveal": "line", "t": 182.86})],
+   t1=184.60, fadeout=.35)
+ev("S53.foretold", "carved", "S53", [("FORETOLD THE SUN WOULD GO DARK", {"key": "l", "reveal": "words"})], anchor="leftLow", light="marble", size="reference")
 ev("S53.card", "forecast", "S53", [], t0=186.40, t1=187.65,
    question="Will the sun go dark over the Halys before sunset?", yes=[3, 99], jump=186.55)
 ev("S55.behold", "carved", "S55", [("WARRIORS BEHOLD …", {"key": "l", "reveal": "words"})], anchor="left", light="marble", ellipsis=[190.55, 192.45])
@@ -190,16 +196,17 @@ ev("S61.blade", "carved", "S61", [("THROW DOWN YOUR BLADE", {"key": "l", "reveal
 ev("S62.home", "carved", "S62", [("HOME TO THE ONES YOU LOVE", {"key": "l", "reveal": "words"})], anchor="left", light="gold", t1=216.20, fadeout=0.45)
 
 # 13 · drop 2: the era captions (the table's Text column is PLAQUE: year · place · fact)
-ERAS = [("S64", "2ND–1ST C. BC · ANTIKYTHERA · A BRONZE COMPUTER PREDICTS ECLIPSES"),
-        ("S65", "1715 · LONDON · HALLEY MAPS THE MOON'S SHADOW"),
-        ("S66", "1919 · PRÍNCIPE & SOBRAL · STARLIGHT BENDS. EINSTEIN WAS RIGHT."),
-        ("S67", "1973 · CONCORDE 001 · 74 MINUTES OF TOTALITY AT MACH 2"),
-        ("S68", "2024 · USA · 31.6 MILLION LIVE IN THE PATH"),
-        ("S69", "2026 · ARTEMIS II · TOTALITY FROM DEEP SPACE"),
-        ("S70", "2027 · NEAR LUXOR · NEXT: 6 MIN 23 S"),
-        ("S71", "MARS · PHOBOS · ECLIPSES ON OTHER WORLDS")]
-for k, (sid, txt) in enumerate(ERAS):
-    ev(f"{sid}.era", "era", sid, [(txt, {"key": "e", "role": "plaque", "reveal": "line"})], index=k, history=[e[1].split(" · ")[0] for e in ERAS[:k]])
+ERAS = [("S64", "2ND–1ST C. BC · ANTIKYTHERA", "BRONZE GEARS PREDICT ECLIPSES"),
+        ("S65", "1715 · LONDON", "HALLEY MAPS THE MOON'S SHADOW"),
+        ("S66", "1919 · PRÍNCIPE & SOBRAL", "LIGHT BENDS. EINSTEIN WAS RIGHT."),
+        ("S67", "1973 · CONCORDE 001", "74 MINUTES OF TOTALITY AT MACH 2"),
+        ("S68", "2024 · USA", "31.6 MILLION LIVE IN THE PATH"),
+        ("S69", "2026 · ARTEMIS II", "TOTALITY FROM DEEP SPACE"),
+        ("S70", "2027 · NEAR LUXOR", "NEXT: 6 MIN 23 S"),
+        ("S71", "MARS · PHOBOS", "ECLIPSES ON OTHER WORLDS")]
+for k, (sid, head, fact) in enumerate(ERAS):
+    ev(f"{sid}.era", "era", sid, [(head, {"key": "head", "role": "plaque", "reveal": "line"}), (fact, {"key": "fact", "role": "plaque", "reveal": "line"})],
+       index=k, history=[e[1].split(" · ")[0] for e in ERAS[:k]][-3:])
 ev("S72.home", "home", "S72", [("HOME", {"key": "l", "reveal": "line", "t": DOWNBEATS[[round(x, 3) for x in DOWNBEATS].index(252.595)]})])
 ev("S73.chops", "chop", "S73", [("THROW DOWN", {"key": "c1"}), ("THROW DOWN", {"key": "c2"})])
 ev("S75.chop", "chop", "S75", [("THROW DOWN", {"key": "c1"})])
@@ -327,6 +334,9 @@ def reading_report(events):
             n = len(it["text"])
             dt = e["t1"] - t_in
             rows.append((e["id"], it["key"], n, round(t_in, 2), round(e["t1"], 2), round(dt, 2), round(n / dt, 1) if dt > 0 else 99, it["text"]))
+        if e["fx"] in ("quote", "era"):
+            n = sum(len(i["text"]) for i in e["items"]); t_in = min(i["t"] for i in e["items"]); dt = e["t1"] - t_in
+            rows.append((e["id"], "together", n, round(t_in, 2), round(e["t1"], 2), round(dt, 2), round(n / dt, 1), " / ".join(i["text"] for i in e["items"])))
         if e["fx"] == "forecast":
             n = len(e["question"]); dt = e["t1"] - e["t0"]
             rows.append((e["id"], "question", n, e["t0"], e["t1"], round(dt, 2), round(n / dt, 1), e["question"]))

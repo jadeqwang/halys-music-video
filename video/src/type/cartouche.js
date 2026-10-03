@@ -151,13 +151,13 @@ export function drawCartouche(g, f, e, t, c) {
   const L = f.L, u = L.u, P = L.portrait, title = e.items[0].key === 'title';
   const items = e.items.filter(i => !i.ghost);
   // the lettering decides the tablet's size
-  const tw = Math.round((title ? byAspect(L, { '16:9': .34, portrait: .8 }) : byAspect(L, { '16:9': .5, portrait: .9 })) * L.W);
+  const tw = Math.round((title ? byAspect(L, { '16:9': .34, portrait: .8 }) : byAspect(L, { '16:9': .56, portrait: .9 })) * L.W);
   let lines, lay, px, face = FACE.carvedBold;
   const inner = tw * .8;
   if (title) {
     px = inner * .86 / textWidth(face, 1, items[0].text);
   } else {
-    px = (P ? 58 : 64) * u;
+    px = (P ? 62 : 74) * u;
     for (let k = 0; k < 20; k++, px *= .95) { const ok = items.every(it => it.text.split(' ').every(w => textWidth(face, px, w) <= inner)); if (ok) break; }
   }
   if (title) lines = [{ it: items[0], ws: [items[0].text], px }, { it: items[1], ws: [items[1].text], px: px * .3 }];

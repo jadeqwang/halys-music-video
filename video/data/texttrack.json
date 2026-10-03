@@ -7,7 +7,7 @@
    "id": "S01.date",
    "fx": "plaque",
    "shot": "S01",
-   "t1": 3.65,
+   "t1": 1.89,
    "anchor": "top",
    "size": "hook",
    "t0": 0.0,
@@ -26,12 +26,12 @@
    ]
   },
   {
-   "id": "S01.hook",
+   "id": "S01.title",
    "fx": "carved",
    "shot": "S01",
-   "t1": 3.65,
-   "anchor": "bottom",
-   "size": "hook",
+   "t1": 1.89,
+   "anchor": "eye",
+   "size": "title",
    "t0": 0.0,
    "world": "bronze",
    "worlds": [
@@ -44,9 +44,24 @@
      "text": "THE SUN WENT OUT",
      "reveal": "line",
      "t": 0.57
-    },
+    }
+   ]
+  },
+  {
+   "id": "S02.battle",
+   "fx": "carved",
+   "shot": "S02",
+   "t1": 3.65,
+   "anchor": "bottom",
+   "size": "beat",
+   "t0": 1.45,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "items": [
     {
-     "key": "l2",
+     "key": "l1",
      "role": "carved",
      "text": "IN THE MIDDLE OF A BATTLE.",
      "reveal": "line",
@@ -60,7 +75,7 @@
    "shot": "S03",
    "t1": 5.85,
    "anchor": "bottom",
-   "size": "hook",
+   "size": "beat",
    "rewind": [
     5.4,
     5.85
@@ -613,6 +628,7 @@
     89.17
    ],
    "coverage": 0.8,
+   "size": "reference",
    "t0": 85.91,
    "t1": 89.22,
    "world": "bronze",
@@ -1059,8 +1075,8 @@
    "fx": "quote",
    "shot": "S35",
    "anchor": "lower",
+   "t1": 114.2,
    "t0": 110.58,
-   "t1": 113.5,
    "world": "corona",
    "worlds": [
     "corona"
@@ -1069,10 +1085,17 @@
     {
      "key": "q",
      "role": "plaque",
-     "text": "\"We just went sci-fi.\" — V. Glover, Artemis II, during totality, 6 Apr 2026",
+     "text": "\"We just went sci-fi.\"",
      "reveal": "line",
      "t": 110.58,
-     "t_end": 113.5
+     "t_end": 114.2
+    },
+    {
+     "key": "who",
+     "role": "plaque",
+     "text": "VICTOR GLOVER · ARTEMIS II · DURING TOTALITY · 2026",
+     "reveal": "line",
+     "t": 110.58
     }
    ]
   },
@@ -1676,8 +1699,9 @@
    "id": "S52.thales",
    "fx": "thales",
    "shot": "S52",
+   "t1": 184.6,
+   "fadeout": 0.35,
    "t0": 181.23,
-   "t1": 184.64,
    "world": "marble",
    "worlds": [
     "marble",
@@ -1703,14 +1727,14 @@
      "role": "carved",
      "text": "ΘΑΛΗΣ",
      "reveal": "line",
-     "t": 182.927
+     "t": 182.7
     },
     {
      "key": "plaque",
      "role": "plaque",
      "text": "THALES OF MILETUS",
      "reveal": "line",
-     "t": 183.347
+     "t": 182.86
     }
    ]
   },
@@ -1718,9 +1742,10 @@
    "id": "S53.foretold",
    "fx": "carved",
    "shot": "S53",
-   "anchor": "left",
+   "anchor": "leftLow",
    "light": "marble",
-   "t0": 184.64,
+   "size": "reference",
+   "t0": 183.34,
    "t1": 187.65,
    "world": "marble",
    "worlds": [
@@ -1984,7 +2009,7 @@
     211.42
    ],
    "t0": 208.7,
-   "t1": 211.88,
+   "t1": 211.44,
    "world": "gold",
    "worlds": [
     "gold"
@@ -2029,7 +2054,7 @@
    "light": "gold",
    "t1": 216.2,
    "fadeout": 0.45,
-   "t0": 211.88,
+   "t0": 211.44,
    "world": "gold",
    "worlds": [
     "gold"
@@ -2090,9 +2115,16 @@
    ],
    "items": [
     {
-     "key": "e",
+     "key": "head",
      "role": "plaque",
-     "text": "2ND–1ST C. BC · ANTIKYTHERA · A BRONZE COMPUTER PREDICTS ECLIPSES",
+     "text": "2ND–1ST C. BC · ANTIKYTHERA",
+     "reveal": "line",
+     "t": 222.08
+    },
+    {
+     "key": "fact",
+     "role": "plaque",
+     "text": "BRONZE GEARS PREDICT ECLIPSES",
      "reveal": "line",
      "t": 222.08
     }
@@ -2114,9 +2146,16 @@
    ],
    "items": [
     {
-     "key": "e",
+     "key": "head",
      "role": "plaque",
-     "text": "1715 · LONDON · HALLEY MAPS THE MOON'S SHADOW",
+     "text": "1715 · LONDON",
+     "reveal": "line",
+     "t": 225.48
+    },
+    {
+     "key": "fact",
+     "role": "plaque",
+     "text": "HALLEY MAPS THE MOON'S SHADOW",
      "reveal": "line",
      "t": 225.48
     }
@@ -2139,9 +2178,16 @@
    ],
    "items": [
     {
-     "key": "e",
+     "key": "head",
      "role": "plaque",
-     "text": "1919 · PRÍNCIPE & SOBRAL · STARLIGHT BENDS. EINSTEIN WAS RIGHT.",
+     "text": "1919 · PRÍNCIPE & SOBRAL",
+     "reveal": "line",
+     "t": 228.88
+    },
+    {
+     "key": "fact",
+     "role": "plaque",
+     "text": "LIGHT BENDS. EINSTEIN WAS RIGHT.",
      "reveal": "line",
      "t": 228.88
     }
@@ -2165,9 +2211,16 @@
    ],
    "items": [
     {
-     "key": "e",
+     "key": "head",
      "role": "plaque",
-     "text": "1973 · CONCORDE 001 · 74 MINUTES OF TOTALITY AT MACH 2",
+     "text": "1973 · CONCORDE 001",
+     "reveal": "line",
+     "t": 232.27
+    },
+    {
+     "key": "fact",
+     "role": "plaque",
+     "text": "74 MINUTES OF TOTALITY AT MACH 2",
      "reveal": "line",
      "t": 232.27
     }
@@ -2179,7 +2232,6 @@
    "shot": "S68",
    "index": 4,
    "history": [
-    "2ND–1ST C. BC",
     "1715",
     "1919",
     "1973"
@@ -2192,9 +2244,16 @@
    ],
    "items": [
     {
-     "key": "e",
+     "key": "head",
      "role": "plaque",
-     "text": "2024 · USA · 31.6 MILLION LIVE IN THE PATH",
+     "text": "2024 · USA",
+     "reveal": "line",
+     "t": 235.66
+    },
+    {
+     "key": "fact",
+     "role": "plaque",
+     "text": "31.6 MILLION LIVE IN THE PATH",
      "reveal": "line",
      "t": 235.66
     }
@@ -2206,8 +2265,6 @@
    "shot": "S69",
    "index": 5,
    "history": [
-    "2ND–1ST C. BC",
-    "1715",
     "1919",
     "1973",
     "2024"
@@ -2220,9 +2277,16 @@
    ],
    "items": [
     {
-     "key": "e",
+     "key": "head",
      "role": "plaque",
-     "text": "2026 · ARTEMIS II · TOTALITY FROM DEEP SPACE",
+     "text": "2026 · ARTEMIS II",
+     "reveal": "line",
+     "t": 239.05
+    },
+    {
+     "key": "fact",
+     "role": "plaque",
+     "text": "TOTALITY FROM DEEP SPACE",
      "reveal": "line",
      "t": 239.05
     }
@@ -2234,9 +2298,6 @@
    "shot": "S70",
    "index": 6,
    "history": [
-    "2ND–1ST C. BC",
-    "1715",
-    "1919",
     "1973",
     "2024",
     "2026"
@@ -2249,9 +2310,16 @@
    ],
    "items": [
     {
-     "key": "e",
+     "key": "head",
      "role": "plaque",
-     "text": "2027 · NEAR LUXOR · NEXT: 6 MIN 23 S",
+     "text": "2027 · NEAR LUXOR",
+     "reveal": "line",
+     "t": 242.45
+    },
+    {
+     "key": "fact",
+     "role": "plaque",
+     "text": "NEXT: 6 MIN 23 S",
      "reveal": "line",
      "t": 242.45
     }
@@ -2263,10 +2331,6 @@
    "shot": "S71",
    "index": 7,
    "history": [
-    "2ND–1ST C. BC",
-    "1715",
-    "1919",
-    "1973",
     "2024",
     "2026",
     "2027"
@@ -2279,9 +2343,16 @@
    ],
    "items": [
     {
-     "key": "e",
+     "key": "head",
      "role": "plaque",
-     "text": "MARS · PHOBOS · ECLIPSES ON OTHER WORLDS",
+     "text": "MARS · PHOBOS",
+     "reveal": "line",
+     "t": 245.83
+    },
+    {
+     "key": "fact",
+     "role": "plaque",
+     "text": "ECLIPSES ON OTHER WORLDS",
      "reveal": "line",
      "t": 245.83
     }

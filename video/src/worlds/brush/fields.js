@@ -6,7 +6,7 @@
 // brushes), coherence, thinned edges, local detail, depth D (1 = near), matte M (1 = subject).
 // The source pixels themselves are never shown: only marks derived from these fields.
 
-import { blur, down, up, sampleField, clamp } from './util.js';
+import { blur, blurFast, down, up, sampleField, clamp } from './util.js';
 
 export function analyze(src, opt = {}) {
   const aw = src.aw, ah = src.ah, N = aw * ah;
@@ -52,7 +52,7 @@ export function analyze(src, opt = {}) {
     if (m >= m1 && m >= m2) edge[i] = m * inv;
   }
   const dm = new Float32Array(N); for (let i = 0; i < N; i++) dm[i] = mag[i] * inv;
-  const detail = blur(dm, aw, ah, opt.sDetail ?? 4);
+  const detail = blurFast(dm, aw, ah, opt.sDetail ?? 4);
   let dmax = 1e-6; for (let i = 0; i < N; i++) if (detail[i] > dmax) dmax = detail[i];
   const dk = 1 / (dmax * .55); for (let i = 0; i < N; i++) detail[i] = Math.min(1, detail[i] * dk);
   return { aw, ah, N, R, G, B, L, gx, gy, mag, mmax, J, Jc, coh, edge, detail,

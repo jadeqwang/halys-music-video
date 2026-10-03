@@ -569,7 +569,7 @@
   {
    "id": "S26",
    "t0": 81.36,
-   "t1": 85.91,
+   "t1": 84.83,
    "world": "bronze",
    "worlds": [
     "bronze"
@@ -587,21 +587,16 @@
      "role": "carved",
      "t": null,
      "text": "SUN BURNING ON THE"
-    },
-    {
-     "role": "carved",
-     "t": null,
-     "text": "EXCHANGE-"
     }
    ],
    "section": "4 · Verse 1, 67.42–90.03 (B39–51). Big lyrics.",
    "picture": "**Bronze macro**: the low Sun burns across a convex shield and a helmet rim. **Easter egg**: at 84.38 (\"bronze\"), for 10 frames, the shield reflects a tiny figure in orange headphones holding a Yagi antenna.",
-   "text": "CARVED, `BRONZE` huge in gold leaf with a moving glint; `SUN BURNING ON THE` small above; `EXCHANGE-`",
-   "sync": "Glint sweeps on \"bronze\" 84.38"
+   "text": "CARVED, `BRONZE` huge in gold leaf with a moving glint; `SUN BURNING ON THE` small above",
+   "sync": "Glint sweeps on \"bronze\" 84.38; cut on the B49 downbeat 84.83"
   },
   {
    "id": "S27",
-   "t0": 85.91,
+   "t0": 84.83,
    "t1": 89.22,
    "world": "bronze",
    "worlds": [
@@ -615,17 +610,17 @@
     {
      "role": "carved",
      "t": null,
-     "text": "-ING TURNS AND STRIKES"
+     "text": "EXCHANGING TURNS AND STRIKES"
     },
     {
      "role": "carved",
-     "t": null,
+     "t": 85.06,
      "text": "WHEN LIGHT WENT STRANGE"
     }
    ],
    "section": "4 · Verse 1, 67.42–90.03 (B39–51). Big lyrics.",
    "picture": "Strikes cut on \"turns\" 86.06 and \"strikes\" 87.20. On \"when light went strange\" (87.68) a wicker shield throws a field of stretched crescent suns across the Lydian's bronze. Colour drains and goes metallic. He looks up on \"strange\" (88.69).",
-   "text": "CARVED `-ING TURNS AND STRIKES` / `WHEN LIGHT WENT STRANGE`: a dark disk passes over the letters and leaves them as crescents",
+   "text": "CARVED `EXCHANGING TURNS AND STRIKES` / `WHEN LIGHT WENT STRANGE` (EXCHANGING appears whole on the sung \"exchange-\" at 85.06; the lyric sheet's \"exchange- / -ing\" split is only a singing instruction and never appears on screen): a dark disk passes over the letters and leaves them as crescents",
    "sync": "Eclipse ≈0.8"
   },
   {

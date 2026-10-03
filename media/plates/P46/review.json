@@ -68,6 +68,40 @@
    "est_cost_usd": 1.8496,
    "job": null,
    "reviewed": "2026-10-03T02:55:34"
+  },
+  "3": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "Clean frozen sculpture group under an empty dark sky with an orange horizon (no sun): two Medes kneeling with arms raised, a Lydian with raised spear and shouting face-up and a Lydian pointing up (spears crossed above), a Mede covering his eyes, a Mede prostrate, a Lydian rider behind; orbit ~10 degrees.",
+   "costume": "Correct.",
+   "identity": "Consistent.",
+   "artefacts": "Every kneeling/prostrate/eyes-covered pose is Median (Lydians stand): unequal; the horse stands instead of rearing; small orbit.",
+   "notes": "Candidate if take 4 fails (best composition and empty sky).",
+   "sync": [
+    {
+     "song_t": 117.53,
+     "event": "orbit starts",
+     "expected_plate_t": 0.0,
+     "measured_plate_t": 0.083,
+     "offset_s": 0.083,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 124.475,
+     "event": "kick out (one-bar break)",
+     "expected_plate_t": 6.945,
+     "measured_plate_t": 7.083,
+     "offset_s": 0.138,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P46/take3.review.jpg",
+   "contact": "media/plates/P46/take3.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.8496,
+   "job": null,
+   "reviewed": "2026-10-03T03:02:21"
   }
  },
  "shots": "S37",

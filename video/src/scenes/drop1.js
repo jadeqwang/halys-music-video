@@ -149,8 +149,8 @@ scene('S37', async f => {
 
 // ---------------------------------------------------------------- S41-S44: the four chop cycles, the ring locked centre
 const ringR = H => .105 * H;
-const RING = { corona: { gain: 1.05 }, skyField: { gain: .2, sep0: .16, sep1: 1.6, locals: 5, rmax: 6.5 }, tilt: .42 };
-const RING44 = { ...RING, skyField: { ...RING.skyField, rmax: 9, gain: .26, bounds: [-30, -30, 30, 0] } };   // above the horizon only
+const RING = { corona: { gain: 1.05 }, skyField: { gain: .17, sep0: .17, sep1: 1.2, locals: 5, rmax: 3.6 }, tilt: .42 };
+const RING44 = { ...RING, skyField: { ...RING.skyField, rmax: 9, gain: .24, sep1: 1.6, bounds: [-30, -30, 30, 0] } };   // above the horizon only
 const CYCLE = {
   S41: { src: { plate: 'P14', standin: 'bface', standinWin: { cx: .58, cy: .45, zoom: 1.12 }, win: { cx: .5, cy: .45, zoom: 1.1 } }, trace: { ...CU_TRACE } },
   S42: { src: { plate: 'P04', standin: 'duelup', standinWin: { cx: .64, cy: .3, zoom: 2.1 }, win: { cx: .6, cy: .42, zoom: 1.5 } }, trace: { ...CU_TRACE } },
@@ -212,13 +212,17 @@ scene('S45', async f => {
 // tears open on the stab (125.11) with recoiling line ends, and widens on the second stab (125.99): beyond it, the
 // machinery of the heavens (orbits, gear trains, dials, rows of engraved glyphs), all in lines.
 const S38 = { t0: 124.475, touch: 124.92, tear: 125.109, tear2: 125.991, t1: 126.206 };
-const HAND = { src: { plate: 'P24', standin: 'hand' }, trace: { ...CU_TRACE, lightDir: [-.3, -1], contourW: [1.6, 2.8], contourB: 1.6, bgGain: 0, dsepMin: 2.6, dsepMax: 8 }, corona: false };
+const HAND = { src: { plate: 'P24', standin: 'hand' }, trace: { ...CU_TRACE, lightDir: [-.3, -1], contourW: [1.8, 3.0], contourB: 1.9, bgGain: 0, dsepMin: 5.5, dsepMax: 14, subjBright: [.15, .55], innerHi: .3 }, corona: false };
 function membraneLines(W, H, s) {
-  const out = [], n = 46;
-  for (let i = 0; i < n; i++) {
-    const v = i / (n - 1), y0 = lerp(-.08, 1.05, Math.pow(v, 1.12)) * H, bow = lerp(.16, .05, v) * H, pts = [];
-    for (let k = 0; k <= 96; k++) { const u = k / 96, x = lerp(-.05, 1.05, u) * W; pts.push([x, y0 - bow * Math.sin(Math.PI * u) + .006 * H * Math.sin(u * 9 + i * 1.7)]); }
-    out.push(proc.line(pts, { b: .32 + .2 * hash3(i, 3, 1), w: .8, o: .04, phase: hash3(i, 3, 2) * TAU, spd: .6, id: i + 1 }));
+  const out = [], n = 64;
+  for (let i = 0; i < n; i++) {                         // the firmament: a dome of latitude lines seen from below
+    const v = i / (n - 1), y0 = lerp(-.12, .92, Math.pow(v, 1.25)) * H, bow = lerp(.2, .06, v) * H, pts = [];
+    for (let k = 0; k <= 120; k++) { const u = k / 120, x = lerp(-.05, 1.05, u) * W; pts.push([x, y0 - bow * Math.sin(Math.PI * u) + .005 * H * Math.sin(u * 9 + i * 1.7)]); }
+    out.push(proc.line(pts, { b: (.55 + .3 * hash3(i, 3, 1)) * lerp(1.1, .55, v), w: .95, o: .04, phase: hash3(i, 3, 2) * TAU, spd: .6, id: i + 1 }));
+  }
+  for (let i = 0; i < 22; i++) {                        // meridians converging at the zenith (off the top of frame)
+    const a = lerp(-1.25, 1.25, i / 21), pts = []; for (let k = 0; k <= 60; k++) { const r = lerp(.15, 1.25, k / 60) * H; pts.push([W / 2 + Math.sin(a) * r * 1.4, -.35 * H + Math.cos(a) * r]); }
+    out.push(proc.line(pts, { b: .32, w: .8, o: .04, phase: i, spd: .5 }));
   }
   for (let k = 0; k < 260; k++) { const x = hash3(k, 7, 1) * W, y = hash3(k, 7, 2) * H; out.push(proc.line([[x, y], [x + .5, y]], { b: .35 + .9 * Math.pow(hash3(k, 7, 3), 3), w: 1.3 + 1.2 * hash3(k, 7, 4), flags: FL.TIP | FL.SHARP })); }
   return out;
@@ -244,9 +248,9 @@ function machinery(cx, cy, s, t, hole) {
 scene('S38', async f => {
   const W = f.W, H = f.H, s = H / 1080, t = f.t;
   const rise = easeOut(clamp((t - S38.t0) / (S38.touch - S38.t0)));
-  const handY = lerp(.62, 0, rise) * H, contact = [W * .5, H * .43 + handY * .4];
+  const handY = lerp(.85, .34, rise) * H, contact = [W * .5, H * .06 + handY];   // the fingertips meet the sky
   const press = sstep(S38.touch - .08, S38.tear, t), tear = t >= S38.tear ? easeOut(clamp((t - S38.tear) / .55)) : 0, tear2 = t >= S38.tear2 ? easeOut(clamp((t - S38.tear2) / .25)) : 0;
-  const Rh = (tear * 250 + tear2 * 140) * s;
+  const Rh = (tear * 300 + tear2 * 170) * s, hole = [contact[0], contact[1] - .1 * H];
   // the hand's silhouette (its matte, in screen px) occludes the membrane
   const hand = await plateLines(f, HAND.src, HAND);
   const F = hand.F, M = F.M;
@@ -267,13 +271,13 @@ scene('S38', async f => {
     let cur = [];
     const flush = (cut) => { if (cur.length > 1) { const l = proc.line(cur, { b: L.b[0] * (1 + .6 * press), w: L.w[0], o: L.o[0], phase: L.phase, spd: L.spd, taper: .02 }); memOut.push(l); if (cut && tear > 0) { const e = cur[cur.length - 1]; memOut.push(proc.line([e, [e[0] + .5, e[1]]], { b: 2.2, w: 2.2, o: .6, flags: FL.TIP | FL.SHARP })); } } cur = []; };
     for (let k = 0; k < L.n; k++) {
-      const x = L.xy[k * 2], y = L.xy[k * 2 + 1], inHole = Rh > 0 && Math.hypot(x - contact[0], (y - contact[1]) * 1.15) < Rh;
+      const x = L.xy[k * 2], y = L.xy[k * 2 + 1], inHole = Rh > 0 && Math.hypot(x - hole[0], (y - hole[1]) * 1.35) < Rh;
       if (inHole || inHand(x, y)) flush(inHole); else { if (!cur.length && k > 0 && Rh > 0 && tear > 0) { const pts = [x, y]; memOut.push(proc.line([pts, [x + .5, y]], { b: 2.2, w: 2.2, o: .6, flags: FL.TIP | FL.SHARP })); } cur.push([x, y]); }
     }
     flush(false);
   }
   const layers = [dynLayer(memOut, { uT: audio.flowPhase(t) * .6 })];
-  if (Rh > 2) layers.push(dynLayer(machinery(contact[0], contact[1], s, t - S38.tear, (x, y) => Math.hypot(x - contact[0], (y - contact[1]) * 1.15) < Rh * .97 && !inHand(x, y)), { uBright: .7 + .5 * tear2 }));
+  if (Rh > 2) layers.push(dynLayer(machinery(hole[0], hole[1] - 60 * s, s, t - S38.tear, (x, y) => Math.hypot(x - hole[0], (y - hole[1]) * 1.35) < Rh * .97 && !inHand(x, y)), { uBright: .95 + .5 * tear2 }));
   await drawLines(f, { ...HAND, cam: { pan: [0, handY] }, phase: audio.flowPhase(t), layers, look: { glow: [.22, .08] }, disk: false });
   steer(f, { kick: 0 });
 });
@@ -325,7 +329,7 @@ function groundLines() {                          // the river (orange banks, fl
   for (const sg of [-1, 1]) {
     const bank = []; for (let y = -40; y <= 1120; y += 6) bank.push([riverX(y) + sg * (40 + 5 * Math.sin(y / 47 + sg)), y]);
     out.push(proc.line(bank, { b: 1.15, w: 1.6, o: 1, flags: FL.NOFADE }));
-    for (let r = 1; r <= 7; r++) { const pts = []; for (let y = -40; y <= 1120; y += 10) pts.push([riverX(y) + sg * (40 + r * r * 13 + 60 * r + 14 * Math.sin(y / (90 + 13 * r) + r)), y]); out.push(proc.line(pts, { b: .2 - .018 * r, w: .75, o: .05, phase: r, spd: .4 })); }
+    for (let r = 1; r <= 6; r++) { const pts = []; for (let y = -40; y <= 1120; y += 10) pts.push([riverX(y) + sg * (40 + r * r * 15 + 70 * r + 14 * Math.sin(y / (90 + 13 * r) + r)), y]); out.push(proc.line(pts, { b: .12 - .014 * r, w: .7, o: .05, phase: r, spd: .4 })); }
   }
   for (let i = -3; i <= 3; i++) { const pts = []; for (let y = -40; y <= 1120; y += 8) pts.push([riverX(y) + i * 10 + 3 * Math.sin(y / 30 + i * 2), y]); out.push(proc.line(pts, { b: .34, w: .8, o: .03, phase: i * 1.3, spd: 1.4 })); }
   return out;
@@ -370,9 +374,9 @@ function agentLines(f, t, C) {
     let dx = pa[0] - pb[0], dy = pa[1] - pb[1], len = Math.hypot(dx, dy);
     const depth = Math.min(1.6, 1 / pa[2] * (C.top ? 1 : 1.2));
     if (len < 4 * s || len > 160 * s) { const fl = Math.hypot(a[2], a[3]) || 1; dx = a[2] / fl * 5 * s * depth; dy = a[3] / fl * 5 * s * depth; }
-    const head = [pa[0], pa[1]], tail = [pa[0] - dx, pa[1] - dy], o = sg < 0 ? .85 : .12, b0 = (.55 + .3 * hash3(j, sg, 1)) * flash * (1 + .4 * kick);
-    out.push(proc.line([tail, head], { b: b0, w: .9 * Math.min(1.4, depth), o: o * .5, flags: FL.SHARP }));
-    out.push(proc.line([head, [head[0] + .5, head[1]]], { b: b0 * 1.9, w: 1.7 * Math.min(1.4, depth), o, flags: FL.TIP | FL.SHARP }));
+    const head = [pa[0], pa[1]], tail = [pa[0] - dx * 1.4, pa[1] - dy * 1.4], o = sg < 0 ? .85 : .12, b0 = (.95 + .4 * hash3(j, sg, 1)) * flash * (1 + .5 * kick);
+    out.push(proc.line([tail, head], { b: b0, w: 1.2 * Math.min(1.5, depth), o: o * .5, flags: FL.SHARP }));
+    out.push(proc.line([head, [head[0] + .5, head[1]]], { b: b0 * 2.2, w: 2.6 * Math.min(1.5, depth), o, flags: FL.TIP | FL.SHARP }));
   }
   return out;
 }

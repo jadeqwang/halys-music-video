@@ -43,7 +43,7 @@ function regionBlur(chs, regs, aw, ah, sig) {
   if (sig < 1.2) return chs.map(ch => boxBlur(ch, aw, ah, 1));   // the finest brushes: a touch of blur on the smoothed reference
   const outs = chs.map(() => new Float32Array(N));
   if ((regs.length === 1 && regs[0].full) || sig < 2.5) { chs.forEach((ch, c) => blurFast(ch, aw, ah, sig, outs[c])); return outs; }
-  const f = sig >= 7 ? 4 : sig >= 3 ? 2 : 1, dw = Math.ceil(aw / f), dh = Math.ceil(ah / f), sg = sig / f, DN = dw * dh;
+  const f = sig >= 6 ? 4 : sig >= 2.4 ? 2 : 1, dw = Math.ceil(aw / f), dh = Math.ceil(ah / f), sg = sig / f, DN = dw * dh;
   const t = new Float32Array(N), ratio = new Float32Array(DN);
   for (const w of regs) {
     const wd = f > 1 ? down(w, aw, ah, f) : w, den = blur(wd, dw, dh, sg);
@@ -340,7 +340,10 @@ export function eyeMaskOf(F, eyes) {
   return m;
 }
 export function eyeStrokes(F, cfg, eyes, drawIdx, P, W) {
-  const S = W / F.aw, out = [], bs = drawIdx * 7919, Lp = blur(F.L, F.aw, F.ah, 1.5);
+  const S = W / F.aw, out = [], bs = drawIdx * 7919;
+  // a local 5x5 box mean of the luminance (only near the eyes): the catchlight is a peak above it
+  const LpAt = (x, y) => { let s2 = 0, n = 0; for (let j = -2; j <= 2; j++) for (let q = -2; q <= 2; q++) { const yy = Math.min(F.ah - 1, Math.max(0, y + j)), xx = Math.min(F.aw - 1, Math.max(0, x + q)); s2 += F.L[yy * F.aw + xx]; n++; } return s2 / n; };
+  const Lp = { get: LpAt };
   const lead = P.tube('leadWhite'), umber = P.tube('rawUmber'), burnt = P.tube('burntUmber'), black = P.tube('boneBlack');
   if (!lead || !umber || !black) return out;
   const mix = (a, b, t) => [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
@@ -350,7 +353,7 @@ export function eyeStrokes(F, cfg, eyes, drawIdx, P, W) {
     const w = e.w, dir = e.dir, up0 = [dir[1], -dir[0]], up = up0[1] < 0 ? up0 : [-up0[0], -up0[1]];
     let cx = -1, cy = -1, best = .04;
     for (let y = Math.max(2, Math.round(e.y - w * .75)); y <= Math.min(F.ah - 3, e.y + w * .45); y++) for (let x = Math.max(2, Math.round(e.x - w * .6)); x <= Math.min(F.aw - 3, e.x + w * .6); x++) {
-      const i = y * F.aw + x, pk = F.L[i] - Lp[i];
+      const i = y * F.aw + x, pk = F.L[i] - Lp.get(x, y);
       if (F.L[i] > .42 && pk > best) { best = pk; cx = x; cy = y; }
     }
     if (cx < 0) return;

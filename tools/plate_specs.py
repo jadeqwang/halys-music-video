@@ -940,19 +940,22 @@ for _k, _v in RETAKES.items():
 
 RETAKES2 = {
     "P46": dict(
-        retake_note="takes 1-2: the reactions were unbalanced (take 1 mostly Lydian, take 2 mostly Median kneelers) and take 2 "
-                    "drew a large bright corona; v2 spells out a 4+4 left-to-right layout and an empty sky",
+        retake_note="takes 1-2: reactions unbalanced (take 1 mostly Lydian, take 2 mostly Median kneelers), take 2 drew a bright "
+                    "corona; take 3 (4+4 by nationality) still put every kneeling/prostrate pose on a red cap, the horse did not rear "
+                    "and the orbit was ~10 degrees; v3 assigns each pose by COSTUME and asks for a wider arc",
         prompt=("Frozen time during a total solar eclipse: a Baroque sculpture group of eight warriors on a stony riverbank, every "
-                "figure completely motionless like a statue, arranged from left to right: (1) a Lydian kneeling with both arms "
-                "raised to the sky, palms up; (2) a Mede kneeling with both arms raised to the sky, palms up; (3) at the centre "
-                f"{LYD_S.format(n=1)} and (4) {MED_S.format(n=2)}, stopped mid-strike with their spears crossed, both faces turned "
-                "up to the sky; (5) a Mede prostrate with his forehead on the river stones; (6) a Lydian pointing up at the sky, "
-                "mouth open in a shout; (7) a Mede covering his eyes with his forearm; (8) behind them, a Lydian rider like reference "
-                "image 3 holding his horse frozen in a rear. Four Lydians (crested bronze helmets, crimson tunics) and four Medes "
-                "(red felt caps, ochre tunics), equal in size and dignity. Nothing moves at all: no breathing, no cloth, no hair, no "
-                "water. The sky is empty and dark: no sun, no moon. Only the camera moves: one slow, smooth orbit of about 30 degrees "
-                f"around the group from left to right over the 8 seconds, at chest height, every figure staying in frame. {DUSK} "
-                f"Photoreal live-action bullet-time, crisp, no motion blur. {SHEET_ONLY} {PERIOD} {NOTXT}")),
+                "figure completely motionless like a statue, arranged from left to right: (1) a man in a crested bronze helmet and a "
+                "crimson tunic kneels with both arms raised to the sky, palms up; (2) a man in a red felt cap and an ochre tunic stands "
+                "pointing up at the sky, mouth open in a shout; (3) at the centre the man in the crested bronze helmet from reference "
+                "image 1 and (4) the man in the red felt cap from reference image 2, stopped mid-strike with their spears crossed, both "
+                "faces turned up to the sky; (5) a man in a red felt cap and an ochre tunic kneels with both arms raised, palms up; "
+                "(6) a man in a crested bronze helmet and a crimson tunic covers his eyes with his forearm; (7) a man in a red felt cap "
+                "lies prostrate with his forehead on the river stones; (8) behind them a rider in a crested bronze helmet like reference "
+                "image 3, his chestnut horse frozen high on its hind legs, front hooves in the air. Nothing moves at all: no breathing, "
+                "no cloth, no hair, no water. The sky is empty and dark: no sun, no moon. Only the camera moves: a slow, smooth arc of "
+                "about 30 degrees around the group from left to right over the 8 seconds, at chest height, clearly showing the group "
+                f"from a new side by the end, every figure staying in frame. {DUSK} Photoreal live-action bullet-time, crisp, no "
+                f"motion blur. {SHEET_ONLY} {PERIOD} {NOTXT}")),
 }
 for _k, _v in RETAKES2.items():
     PLATES[_k]["prompt_v1"] = PLATES[_k]["prompt"]

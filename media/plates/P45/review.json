@@ -27,7 +27,9 @@
    "virtual_avatar": true,
    "est_cost_usd": 1.156,
    "job": null,
-   "reviewed": "2026-10-03T02:55:34"
+   "reviewed": "2026-10-03T02:55:34",
+   "short": "Cuts at 1.79/3.08/4.38 s (asked 1.25/2.5/3.75); Cyaxares' shot is 0.66 s.",
+   "timing": "Segments: Lydian 0-1.79, Mede 1.79-3.08, Alyattes 3.08-4.38, Cyaxares 4.38-5.04 (hard cuts)."
   }
  },
  "shots": "S36",

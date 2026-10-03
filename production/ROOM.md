@@ -39,7 +39,7 @@ The spinner is our own: moon phases `◐ ◓ ◑ ◒` cycling. No product logos,
 Main pane (`~/sims/earth`):
 
 ```
-jade@rare-earth:~/sims/earth (main)$ ./halys run --seed=-585 --region=anatolia --cal=julian --from=-0584-05-28T15:00
+jade@rare-earth:~/sims/earth (main)$ ./halys run --seed=-585 --region=anatolia --from=-0584-05-28T15:00 --cal=julian
 loaded world: 8,412,066 agents · terrain: halys basin · weather: clear
 t=-0584-05-28T15:02 LAT  lydia ⟷ media  war.year=6
 warn: casualties rising at halys.ford (0.8/min)
@@ -53,7 +53,7 @@ warn: casualties rising at halys.ford (0.8/min)
   dt.shift(+300)   # nudge the path north so it's total at the river
   thales.notify("the sun goes dark this year")              ok   # he will take credit
 
-  totality over battlefield: 1m19s · sun 8.9° WNW · jupiter visible
+  totality at halys bend: 1m19s · sun 8.9° WNW · jupiter visible
 
 war.status = RESOLVED   treaty: border=halys · aryenis ⚭ astyages
 
@@ -67,7 +67,7 @@ Side panes (vertical monitor, tmux-style, each one line updating):
 ```
 [lydians] 18:21  laying down arms · walking home
 [medes]   18:21  laying down arms · walking home
-[sun]     magnitude 1.000 · alt 8.9° · corona visible · birds: silent
+[sun]     obscuration 100% · alt 8.8° · corona visible · birds: silent
 [moon]    on schedule ✓
 [1420 MHz]  6EQUJ5
 ```

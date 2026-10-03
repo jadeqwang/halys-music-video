@@ -24,7 +24,12 @@ const r = await drawLines(f, { src: { plate: 'P12', standin: 'duelup' }, tp,    
   the art-department boards with `video/lab/analysis/prep.py`). `win` frames the plate (uv centre, zoom 1 = the largest
   rect of the output aspect), so 4:5 and 9:16 re-frame instead of crop. Ids: `master` (F2, the master composition),
   `duelup` (F3, both heroes looking up), `bface` (the Lydian looking up), `aduel` (the duel), `armies` (aerial river),
-  `kings` (Alyattes | Cyaxares diptych), `hand` (an open palm, for P24).
+  `kings` (Alyattes | Cyaxares diptych), `hand` (an open palm, for P24), and `r42*` `r43*` `r44*` `r45*` (key frames of
+  the P42-P45 reaction takes, made with production/review/drop1/make_standins.py; `standins/index.json` records each
+  one's source). Stand-ins are exposure-normalised (window p95 -> .82); plates use the pipeline's `gain`.
+* **Geometry in source uv**: every geometric trace option (`sky.horizonY/below`, `sun`, `river`, `riverFlow`, `armyMask`,
+  `pool`, `calm`, `flowBias`) is given in the plate's own uv and mapped through the window, so it stays on the plate
+  when a shot re-frames it.
 * **Fields** (`analysis.js`): one analysis per source window at 960 px wide: colour, tone, structure tensor at three
   scales (flow = its minor eigenvector), coherence, thinned edges, detail, depth, matte. Cached per window.
 * **Lines** (`trace.js`): `{ xy, n, d, b, w, o, s, len, phase, spd, flags }` in analysis px; `d` = lift depth (1 near,
@@ -68,6 +73,8 @@ const r = await drawLines(f, { src: { plate: 'P12', standin: 'duelup' }, tp,    
 | `look` | `{ exposure, glow: [half, quarter], vignette, fade, bright, flat, white, width, endFade, soft, minW }`; `width`/`flat`/`white`/`soft` are the "widen into strokes" controls (S45) |
 | `reveal` | `{ x, y, r, ramp, boost }`: lines inside r are hidden and ignite just outside it (the pupil opening, S35) |
 | `disk`, `ring` | the crisp black disk `{x, y, r}` (default: the plate's sun) and a ring of light `{r, w, i}` around it |
+| `plates` | several plate layers instead of `src`: `[{ src, rect: [x, y, w, h] (frame fractions), tp, trace, ... }]` (diptychs, split screens); each entry overrides the shared opts |
+| `tickFx` | animate the spear ticks per frame: `(tick, i) => ({ dx, dy, lean, lenK, bK, tipK }) | null | false` (S35's reaction wave) |
 | `layers` | extra layers after the plate: `{ mesh | meshes | lines, u, cam, meta }`; `dynLayer(lines)` for lines built this frame, `coronaRing(f, key, {refR, corona, skyField, tilt})` + `ringU(cx, cy, R)` for a placeable corona, `staticMesh(f, key, build)` for cached procedural sets |
 
 `proc.js` (procedural line art in any 2D space): `line`, `circle`, `ellipse`, `gear`, `dial`, `glyphRow`, `orbits`,

@@ -59,7 +59,7 @@ export function reference(F, cfg, P) {
   }
   const focus = regionField(F, cfg.focus, 3);
   const reach = blurFast(pool, aw, ah, cfg.glintReach);
-  const Lb = blur(F.L, aw, ah, 2.5);
+  const Lb = blurFast(F.L, aw, ah, 2.5);
   const dvar = cfg.darkVar ? noiseField(aw, ah, 7 / aw, seed + 5, 3, 8) : null;
   const brkF = cfg.rim ? noiseField(aw, ah, .07, seed + 77, 3, 3) : null;
   // depth for aerial perspective (landscapes): far -> lifted toward the haze colour, desaturated
