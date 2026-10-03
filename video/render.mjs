@@ -273,8 +273,12 @@ try {
     const start = Date.now(), failed = [];
     const work = async w => {
       if (next >= tasks.length) return;
-      let page = w === 0 ? page0 : await openPage('#' + w);
+      let page = w === 0 ? page0 : await openPage('#' + w), used = 0;
+      // --recycle=N: reopen this worker's page every N drawings. Long renders grow the page heap (plate decodes,
+      // engine caches) until GC thrashes and four 3 GB pages stall the machine; a fresh page caps that.
+      const RECYCLE = +(args.recycle || 0);
       while (next < tasks.length) {
+        if (RECYCLE && used >= RECYCLE) { await closePage(page); page = await openPage('#' + w); used = 0; }
         const task = tasks[next++], lead = task.idx[0];
         let r;
         for (let attempt = 0; attempt < 2 && !r; attempt++) {
@@ -288,7 +292,7 @@ try {
         writeAtomic(fpath(lead), b64(r.url));
         for (const i of task.idx.slice(1)) linkAtomic(fpath(lead), fpath(i));
         for (const i of task.idx) ledger[i] = `${keyOf(i)}|${SRC}`;
-        done++; framesOut += task.idx.length; drawMs += r.drawMs; encMs += r.encMs;
+        done++; used++; framesOut += task.idx.length; drawMs += r.drawMs; encMs += r.encMs;
         if (Date.now() - lastLog > 5000 || done === tasks.length) {
           lastLog = Date.now(); flushLedger();
           const el = (Date.now() - start) / 1000;
@@ -296,7 +300,7 @@ try {
             `wall ${(el * 1000 / done).toFixed(0)} ms/drawing, ${(el * 1000 / framesOut).toFixed(0)} ms/frame  eta ${((tasks.length - done) * el / done / 60).toFixed(1)} min`);
         }
       }
-      if (w !== 0) await closePage(page);
+      if (w !== 0 || page !== page0) await closePage(page);
     };
     await Promise.all(Array.from({ length: Math.max(1, Math.min(workers, tasks.length)) }, (_, w) => work(w)));
     flushLedger();
