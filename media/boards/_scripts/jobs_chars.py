@@ -467,3 +467,35 @@ job("med_archer3", NBP, "chars", sheet(
     "bronze arrowheads.",
     ARCHER_BODY3 + " The bow is in his LEFT hand (on the right side of the image in the front view). " + AKI_FRESH,
     ARCHER_REFS), refs=["board:med_arch"])
+
+# ------------------------------------------------------------------ akinakes, round 3: purely local per-view edits
+AKI_LOCAL_MEDE = (
+    "Make two small local corrections and nothing else. (a) In the first figure (the front view, far left): there is a "
+    "sword scabbard whose tip shows below the wicker shield on the right side of the figure: remove it completely, so "
+    "only the shield and his trousers are there. Then add a short sword in a brown leather scabbard with a bronze chape, "
+    "exactly like the one worn by the second figure, hanging vertically along the outside of his right thigh, directly "
+    "below the hand that holds the spear, on the LEFT side of the figure. (b) In the fourth figure (the back view): "
+    "remove the scabbard hanging below the shield on the left side of the figure, and add the same sword hanging along "
+    "the outside of his thigh on the RIGHT side of the figure, directly below the hand that holds the spear. Leave the "
+    "second and third figures and both inset panels untouched.")
+edit("mede_e3", "chars/mede_e2_t1.jpg", AKI_LOCAL_MEDE)
+job("mede_g1", "openai/gpt-image-2", "chars",
+    "Edit this photographic character turnaround sheet. " + AKI_LOCAL_MEDE + KEEP, refs=["chars/mede_e2_t1.jpg"])
+
+AKI_LOCAL_KING = (
+    "Make one local correction and nothing else: the short sword (akinakes) must hang on his RIGHT thigh, on the "
+    "opposite side from the hand holding the bow. (a) In the first figure (front view, far left): remove the sword and "
+    "scabbard next to the bow on the right side of the figure, and add the same sword in its scabbard hanging vertically "
+    "along the outside of the thigh on the LEFT side of the figure, below his empty hand, tied to the thigh with a thong. "
+    "(b) In the second figure (three-quarter view): likewise move it from beside the bow to below his empty hand. (c) In "
+    "the fourth figure (back view): it hangs on the RIGHT side of the figure. Leave the third figure and the inset panels "
+    "untouched.")
+edit("cyaxares2_e1", "chars/cyaxares2_t1.jpg", AKI_LOCAL_KING)
+edit("astyages2_e1", "chars/astyages2_t1.jpg", AKI_LOCAL_KING + " Also make his close trousers dark red-brown wool "
+     "instead of black.")
+edit("med_archer3_e1", "chars/med_archer3_t1.jpg",
+     "Swap the sides of two items in all four figures and nothing else: the tooled-leather gorytos (bow-case and quiver "
+     "with arrows) must hang at his LEFT hip, on the same side as the hand holding the bow (in the front view: the right "
+     "side of the figure, next to the bow); the short sword in its scabbard must hang along his RIGHT thigh, on the "
+     "opposite side (in the front view: the left side of the figure, below his empty hand). In the back view the gorytos "
+     "is on the left side of the figure and the sword on the right side.")

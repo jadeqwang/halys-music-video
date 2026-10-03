@@ -107,6 +107,9 @@ def est_cost(model, inp, rec):
     usage = (rec or {}).get("usage") or ((rec or {}).get("result") or {}).get("usage") or {}
     if model == "openai/gpt-image-2":
         if usage:
+            if "output_image_tokens" in usage:      # Cloudflare's flattened usage
+                return round(usage.get("input_tokens", 0) * 5e-6 + usage.get("input_image_tokens", 0) * 8e-6 +
+                             usage.get("output_image_tokens", 0) * 30e-6 + usage.get("output_tokens", 0) * 10e-6, 4)
             det = usage.get("input_tokens_details") or {}
             img_in = det.get("image_tokens", 0)
             txt_in = det.get("text_tokens", max(0, usage.get("input_tokens", 0) - img_in))
@@ -143,7 +146,7 @@ def build_input(job):
         if uris:
             inp["image_input"] = uris[:3]
     elif model == "openai/gpt-image-2":
-        inp = {"prompt": prompt, "size": p.get("size", "1536x1024"), "quality": p.get("quality", "high"),
+        inp = {"prompt": prompt, "size": p.get("size", "2048x1152"), "quality": p.get("quality", "high"),
                "output_format": "jpeg", "background": "opaque"}
         if uris:
             inp["images"] = uris[:16]
@@ -187,7 +190,8 @@ def gen(jid, dry=False):
         print(json.dumps({"id": name, "model": model, "out": str(out.relative_to(ROOT)), "refs": [str(r) for r in refs],
                           "input": cfai.strip_blobs(inp)}, indent=1)[:3000])
         return None
-    cfai.validate(model, inp)
+    if not (model == "openai/gpt-image-2" and inp.get("size") not in ("1024x1024", "1024x1536", "1536x1024", "auto")):
+        cfai.validate(model, inp)       # (gpt-image-2 accepts custom sizes such as 2048x1152 beyond the schema enum)
     RAW.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
     tag = f"boards:{folder}:{name}"

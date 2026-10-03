@@ -127,3 +127,67 @@ job("room_c", NBP, "sets", " ".join([
     "rim of warm orange light from the desk lamp on her hair and the edge of her cheek, the orange headphones around her "
     "neck, the collar of the white bomber jacket; dark navy room behind, softly out of focus.",
     JADE, ROOM_STYLE, ROOM_REF]), refs=["Pasted image.png"])
+
+
+# ---------------------------------------------------------------- take-2 fixes
+job("halys_wide2", NBP, "sets", " ".join([
+    "HALYS_WIDE, the master composition: a vast, symmetrical wide establishing shot, 28 May 585 BC, late afternoon about "
+    "18:00. The camera hovers about 20 m above the MIDDLE of the river and looks straight DOWNSTREAM to the "
+    "west-north-west. The red-brown river enters at the bottom edge of the frame, centred and wide, and runs away from "
+    "the camera almost straight, narrowing to a vanishing point on the horizon at the exact horizontal centre of the "
+    "frame. Directly above that vanishing point, 8 to 10 degrees above the horizon, hangs the low sun, a bright "
+    "white-gold disc softened by haze. The river divides the frame into two mirrored halves: the LEFT bank fills the left "
+    "third of the frame, the RIGHT bank the right third.",
+    LAND,
+    "Two armies stand in disciplined ranks on OPPOSITE banks, facing each other across the water, mirror images of "
+    "equal size and equal dignity, each a long, deep formation of hundreds of men running from the foreground into the "
+    "distance along its bank. On the LEFT bank, the LYDIANS, dressed exactly like the soldier in the first reference "
+    "sheet: crested bronze helmets, crimson tunics, bronze-scale corselets, round shields painted dark crimson with "
+    "archaic lions, upright spears; long-spear cavalry behind them; a gold lion on a pole as their standard. On the "
+    "RIGHT bank, the MEDES, dressed exactly like the soldier in the second reference sheet: soft rounded madder-red felt "
+    "caps, saffron tunics, iron-scale corselets, round wicker shields, upright spears, with a separate rank of archers "
+    "with bows; cavalry behind them; a bronze horse figure on a pole as their standard. No soldiers stand in the river "
+    "or on the same bank as the other army. No flags or banners, no modern objects.",
+    "Light: raking golden-hour sunlight from straight ahead, low and almost horizontal; every figure and spear throws a "
+    "long shadow six to seven times its height, pointing back toward the camera; rim light on bronze helmets and spear "
+    "points; dust raised by the armies glows gold in the backlight. Sky: broken cumulus lit gold and copper from below, "
+    "a warm hazy gold and pale ochre sky with no blue at all. Only broad-crowned trees, absolutely no pencil-thin "
+    "columnar poplars or cypresses. Palette: umber, ochre, vermilion, bronze, lead white. 24 mm lens, deep focus.",
+    "The first two attached images are the costume sheets for the two armies (left bank = first sheet, right bank = "
+    "second sheet). The third is a satellite view of this stretch of the Kizilirmak in late May, for the true colours of "
+    "the red-brown river, the thin green riparian strip and the ochre steppe only.",
+    PHOTO]), refs=["chars/lydian_e1_t1.jpg", "chars/mede_e1_t1.jpg", "board:halys_land"])
+
+job("halys_shallows2", NBP, "sets", " ".join([
+    "HALYS_SHALLOWS, the duel ground, an empty set with no people: a wide, knee-deep shallow stretch of the red-brown "
+    "Kizilirmak over a gravel bar, seen from a low camera standing in the water at knee height, looking across the "
+    "river. Rounded river stones break the surface in the foreground, wet and glossy; the opaque red-brown water "
+    "riffles over them; a reed bed and a pink tamarisk on the left edge, a red-clay bank two to three metres high with "
+    "exposed roots on the far side, a broad-crowned black poplar beyond it. Light: one raking beam of low golden "
+    "sunlight from the left, nearly horizontal, catching the riffles and the wet stones and leaving the rest in deep "
+    "warm shadow, like a Caravaggio painting made photographic; long shadows across the water; fine dust and midges "
+    "glowing in the beam. The sky, where visible, is a warm hazy gold-grey with no blue at all. 35 mm lens, f/4.",
+    LAND, PHOTO]))
+
+ROOM_FIX = (" Keep everything else exactly the same: her face, hair, outfit, pose, the room, the light, the camera "
+            "angle and the clean anime cel style.")
+
+
+def room_edit(jid, src, change):
+    job(jid, NBP, "sets", "Edit this anime frame. " + change + ROOM_FIX, refs=[src, "Pasted image.png"])
+
+
+room_edit("room_a_e1", "sets/room_a_t1.jpg",
+          "Move the orange over-ear headphones from her head down to around her neck, resting on her collar, as on her "
+          "character sheet (second image), and remove any lettering from the headphones. Replace the red-and-cyan 3D "
+          "glasses on the desk with paper solar-eclipse glasses: a white cardboard frame with two opaque black "
+          "solar-filter lenses. Remove the operating-system taskbar at the bottom of the vertical monitor. Let her hair "
+          "fall to both sides of her back so the light-blue circle on the back of her jacket is fully visible above the "
+          "words 'RARE EARTH'.")
+room_edit("room_b_e1", "sets/room_b_t1.jpg",
+          "Replace the red-and-cyan 3D glasses on the desk with paper solar-eclipse glasses: a white cardboard frame with "
+          "two opaque black solar-filter lenses.")
+room_edit("room_c_e1", "sets/room_c_t1.jpg",
+          "Make her eyes warm dark brown exactly like on her character sheet (second image), and remove the pale "
+          "triangular patch on her cheek below her eye. Make her jacket the white cropped bomber of the sheet with one "
+          "orange stripe across the chest, not a striped sweater.")
