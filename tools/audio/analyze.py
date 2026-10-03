@@ -1,17 +1,20 @@
-"""Beat grid, downbeats, 24 fps feature curves and event lists for Halys.
+"""Beat grid, downbeats/bars, 24 fps feature curves and event lists for Halys.
 
-usage:  python tools/audio/analyze.py          (needs media/stems/*.wav from separate.sh)
+usage:  python tools/audio/madmom_beats.py     (once; neural beat/downbeat activations, see its docstring)
+        python tools/audio/analyze.py          (needs media/stems/*.wav from separate.sh)
 writes: media/stems/analysis/analysis.json     (consumed by build_outputs.py)
 
-Method (see production/AUDIO_MAP.md for the findings):
-* onset envelopes with a short (23 ms) window, shifted by the measured 9.1 ms window bias so
-  that envelope peaks sit on attacks (onsets.calibrate); three of them are combined, each
-  locally normalised: percussive (HPSS) flux, full instrumental flux, harmonic flux.
-* the tempo is NOT constant (~136.5 -> ~142 BPM accelerando, with a push to ~141 in chorus 1):
-  windowed tempo search -> smooth tempo curve -> DP beat tracker -> least-squares spline ->
-  three passes of local phase alignment against the envelope. Drops: +-3 ms; elsewhere +-15 ms.
-* bar phase from chord-change / bass-change / low-band evidence folded mod 4; it is constant
-  from 27.2 s to the end, and the intro has one 2-beat bar (bar 16) before the 27.23 s boom.
+Method (findings in production/AUDIO_MAP.md):
+* onset envelopes with a short (23 ms) window, shifted by the measured window bias so that envelope peaks sit
+  on attacks (onsets.calibrate); percussive (HPSS) flux + instrumental flux + harmonic flux, locally normalised.
+* beats: madmom RNN+DBN beat track as the backbone (the earlier librosa DP tracker squeezed one extra beat
+  into chorus 1, the final chorus and the intro swell), then three passes of local phase alignment against the
+  calibrated envelope (drops: the grid sits on the kick click within ~2 ms). The intro swell (bar 15, ~23.3 to
+  27.2 s) has no pulse at all (rubato swell into the boom), so its beats are a steady interpolation between the
+  last ostinato beat and the boom.
+* tempo is NOT constant: ~136.4 BPM in the intro, drifting up to ~142 BPM in Drop 2 (Suno does not lock to a grid).
+* downbeats: Viterbi over bar position with 4-beat bars and penalised 2/3/5/6-beat bars; evidence = madmom
+  downbeat activation (mix + instrumental) + chord/bass change + low-band hit at each beat.
 """
 import json
 import pathlib
@@ -20,7 +23,7 @@ import sys
 import librosa
 import numpy as np
 import soundfile as sf
-from scipy.interpolate import LSQUnivariateSpline, UnivariateSpline
+from scipy.interpolate import UnivariateSpline
 from scipy.ndimage import gaussian_filter1d, median_filter, percentile_filter
 from scipy.signal import butter, find_peaks, sosfiltfilt
 
@@ -34,11 +37,10 @@ SR = 22050
 NFFT, HOP = 512, 32           # 23 ms frames on a 1.45 ms hop
 FPS = 24
 
-# irregular bar: the intro's 2-beat bar sits right before the big low "boom" (first downbeat of
-# the k = 2 (mod 4) phase that then holds to the end). Chord/bass evidence alone cannot place it
-# inside 15-27 s (sustained F# pedal, then a bass line moving every beat); the swell into the
-# boom at 27.23 s is the musical cue used.
-PHASE_SWITCH_NEAR = 27.23
+# the intro swell: no pulse between the last string-ostinato beat (bar 13 + 5 beats) and the low boom; the beats
+# there are a steady interpolation (14 beats from bar 13's downbeat to the boom -> bar 15 has 6 beats)
+SWELL = (21.0, 27.4)
+IRREGULAR_PENALTY = {4: 0.0, 3: -6.0, 5: -6.0, 2: -7.0, 6: -7.0}
 
 
 def load(name, sr=SR):
@@ -71,24 +73,7 @@ def locnorm(e, dt, win=4.0):
     return e / (q + 1e-6)
 
 
-# ----------------------------------------------------------------------------- beat grid
-def best_grid(env, tt, periods, step=0.002):
-    best, allsc = (-1, 0, 0), []
-    for T in periods:
-        phs = np.arange(0, T, step)
-        n = np.arange(int(tt[0] / T) - 1, int(tt[-1] / T) + 2)
-        B = phs[:, None] + n[None, :] * T
-        ok = (B >= tt[0]) & (B <= tt[-1])
-        v = np.interp(B, tt, env)
-        v[~ok] = 0
-        sc = v.sum(1) / ok.sum(1)
-        i = int(np.argmax(sc))
-        allsc.append(sc[i])
-        if sc[i] > best[0]:
-            best = (sc[i], T, phs[i])
-    return best, np.array(allsc)
-
-
+# ----------------------------------------------------------------------------- beat alignment
 def local_align(g, t, env_s, half, smooth, span=0.045):
     deltas = np.arange(-span, span + 1e-9, 0.001)
     V = np.stack([np.interp(g + d, t, env_s) for d in deltas])
@@ -107,41 +92,6 @@ def local_align(g, t, env_s, half, smooth, span=0.045):
     w = np.clip(conf, 0.01, None)
     sp = UnivariateSpline(np.arange(n), dk, w=w / w.mean(), s=n * smooth ** 2, k=3)
     return g + sp(np.arange(n)), conf
-
-
-def beat_grid(t, env):
-    dt = t[1] - t[0]
-    bpms = np.arange(132, 146, 0.05)
-    cs, tempos, peaky = [], [], []
-    for c in np.arange(6, t[-1] - 4, 2.0):
-        k = (t >= c - 6) & (t < c + 6)
-        (s, T, _), allsc = best_grid(env[k], t[k], 60 / bpms)
-        cs.append(c)
-        tempos.append(60 / T)
-        peaky.append(s / np.median(allsc))
-    cs, tempos, peaky = map(np.array, (cs, tempos, peaky))
-    w = (peaky - 1).clip(0.05) ** 2
-    sp = UnivariateSpline(cs, tempos, w=w / w.mean(), s=len(cs) * 0.1, k=3)
-    tc = np.clip(sp(np.clip(t, cs[0], cs[-1])), 130, 146)
-    _, beats = librosa.beat.beat_track(onset_envelope=env, sr=1 / dt, hop_length=1, bpm=tc, tightness=800, trim=False)
-    bt = t[beats]
-    # snap to envelope peaks, then a smooth least-squares spline (knots every 16 beats)
-    pk, _ = find_peaks(env, distance=int(0.05 / dt))
-    pt, pv = t[pk], env[pk]
-    snapped, strength = bt.copy(), np.zeros(len(bt))
-    for i, b in enumerate(bt):
-        k = np.where(np.abs(pt - b) <= 0.045)[0]
-        if len(k):
-            j = k[np.argmax(pv[k])]
-            snapped[i], strength[i] = pt[j], pv[j]
-    idx = np.arange(len(bt), dtype=float)
-    knots = np.arange(16, len(idx) - 16, 16).astype(float)
-    g = LSQUnivariateSpline(idx, snapped, knots, w=np.clip(strength, 0.2, None) ** 2, k=3)(idx)
-    env_s = gaussian_filter1d(env, sigma=0.008 / dt)
-    conf = None
-    for half, sm in ((8, 0.004), (6, 0.003), (4, 0.003)):
-        g, conf = local_align(g, t, env_s, half, sm)
-    return g, conf, dict(win_centres=cs.tolist(), win_bpm=tempos.tolist(), win_peakiness=peaky.tolist())
 
 
 # ----------------------------------------------------------------------------- bar phase
@@ -181,23 +131,71 @@ def bar_evidence(g, yh, yp):
     return nc / (nc.std() + 1e-9) + nb / (nb.std() + 1e-9) + 0.5 * np.log1p(lb)
 
 
-def downbeats_from_phase(g, ev):
-    n = len(g)
-    ks = int(np.argmin(np.abs(g - PHASE_SWITCH_NEAR)))
-    p_after = max(range(4), key=lambda p: ev[[k for k in range(ks, n) if k % 4 == p]].sum())
-    p_before = max(range(4), key=lambda p: ev[[k for k in range(0, ks) if k % 4 == p]].sum())
-    ks = ks - ((ks - p_after) % 4)  # first downbeat of the late phase at/just before the cue
-    if ks < 0:
-        ks += 4
-    downs = [k for k in range(0, ks) if k % 4 == p_before and k + 4 <= ks] + list(range(ks, n, 4))
-    if downs and downs[0] > 3:
-        downs = list(range(downs[0] % 4, downs[0], 4)) + downs
-    # report the folding evidence by region (for the record)
-    report = []
-    for a, b in ((0, 7), (7, 27), (27, 67), (67, 110.5), (110.5, 154), (154, 215.2), (215.2, 256), (256, 273.6)):
-        kk = [k for k in range(n) if a <= g[k] < b]
-        report.append({"from": a, "to": b, "phase_score": [round(float(ev[[k for k in kk if k % 4 == p]].mean()), 3) if kk else 0 for p in range(4)]})
-    return sorted(set(downs)), p_before, p_after, report
+# ----------------------------------------------------------------------------- madmom backbone grid
+def madmom_grid(t, env, mm):
+    """madmom DBN beats -> steady interpolation through the intro swell -> local phase alignment."""
+    b = np.asarray(mm["beats"], dtype=float)
+    a_i = int(np.argmin(np.abs(b - SWELL[0])))
+    e_i = int(np.argmin(np.abs(b - 27.24)))
+    # anchor 1: the ostinato downbeat before the swell (last madmom beat <= SWELL[0] + 0.2 on a 4-beat boundary
+    # from the song start); anchor 2: the boom. Count beats at the pre-swell period.
+    a_t, e_t = b[a_i], b[e_i]
+    per = np.median(np.diff(b[max(0, a_i - 8):a_i + 1]))
+    n = int(round((e_t - a_t) / per))
+    g0 = np.concatenate([b[:a_i], np.linspace(a_t, e_t, n + 1), b[e_i + 1:]])
+    dt = t[1] - t[0]
+    env_s = gaussian_filter1d(env, sigma=0.008 / dt)
+    g = g0.copy()
+    conf = None
+    for half, sm in ((8, 0.004), (6, 0.003), (4, 0.003)):
+        g, conf = local_align(g, t, env_s, half, sm, span=0.03)
+    sw = (g0 >= a_t - 1e-3) & (g0 <= e_t + 1e-3)
+    g[sw] = g0[sw]
+    return g, conf, dict(swell_beats=n, swell=[round(float(a_t), 3), round(float(e_t), 3)], swell_period=round(float(per), 4))
+
+
+def downbeat_hmm(g, ev):
+    """Viterbi over (bar length, position); returns downbeat beat indices."""
+    L = IRREGULAR_PENALTY
+    states = [(l, q) for l in L for q in range(l)]
+    idx = {s_: i for i, s_ in enumerate(states)}
+    n, NEG = len(g), -1e18
+    V = np.full((n, len(states)), NEG)
+    B = np.zeros((n, len(states)), dtype=int)
+    for s_ in states:
+        V[0, idx[s_]] = L[s_[0]] + (ev[0] if s_[1] == 0 else 0.0)
+    ends = [idx[(l2, l2 - 1)] for l2 in L]
+    for k in range(1, n):
+        j = max(ends, key=lambda q: V[k - 1, q])
+        for s_ in states:
+            l, q = s_
+            i = idx[s_]
+            if q > 0:
+                V[k, i], B[k, i] = V[k - 1, idx[(l, q - 1)]], idx[(l, q - 1)]
+            else:
+                V[k, i], B[k, i] = V[k - 1, j] + L[l] + ev[k], j
+    s_ = int(np.argmax(V[-1]))
+    path = [s_]
+    for k in range(n - 1, 0, -1):
+        s_ = B[k, s_]
+        path.append(s_)
+    path = path[::-1]
+    return [k for k in range(n) if states[path[k]][1] == 0]
+
+
+def downbeat_evidence(g, yh, yp, mm):
+    """madmom P(downbeat | beat) log-odds + chord/bass change + low-band hit, per beat."""
+    act = (mm["down_act_mix"] + mm["down_act_instrumental"]) / 2
+    ta = np.arange(len(act)) / 100.0
+
+    def at(x, a, b):
+        return np.array([x[(ta >= gg + a) & (ta < gg + b)].max() for gg in g])
+    md, mb = at(act[:, 1], -0.04, 0.05), at(act[:, 0], -0.04, 0.05)
+    p = np.clip(md / (md + mb + 1e-6), 1e-3, 1 - 1e-3)
+    ev_m = np.log(p / (1 - p))
+    ev_h = bar_evidence(g, yh, yp)
+    ev_h = (ev_h - median_filter(ev_h, 49, mode="nearest")) / (np.std(ev_h) + 1e-9)
+    return ev_m + 0.6 * ev_h, ev_m, ev_h
 
 
 # ----------------------------------------------------------------------------- curves
@@ -300,13 +298,18 @@ def main():
     envP, envI, envH = comb(fP), comb(fI), comb(fH)
     env = locnorm(envP, dt) + locnorm(envI, dt) + locnorm(envH, dt)
 
-    print("[analyze] beat grid ...", flush=True)
-    g, conf, tempo_dbg = beat_grid(t, env)
+    print("[analyze] beat grid (madmom backbone) ...", flush=True)
+    mm = np.load(OUT / "madmom.npz")
+    g, conf, grid_dbg = madmom_grid(t, env, mm)
     g = g[(g >= 0) & (g < dur)]
     conf = conf[:len(g)]
-    ev = bar_evidence(g, yh, yp)
-    downs, p_before, p_after, phase_report = downbeats_from_phase(g, ev)
-    print(f"[analyze] {len(g)} beats, {len(downs)} downbeats, phase {p_before}->{p_after}", flush=True)
+    ev, ev_m, ev_h = downbeat_evidence(g, yh, yp, mm)
+    downs = downbeat_hmm(g, ev)
+    lens = np.diff(downs + [len(g)])
+    irregular = [dict(bar=i + 1, beat=int(k), t=round(float(g[k]), 3), beats=int(l)) for i, (k, l) in enumerate(zip(downs, lens)) if l != 4]
+    print(f"[analyze] {len(g)} beats, {len(downs)} bars, irregular bars: {irregular}", flush=True)
+    tempo_dbg = dict(grid=grid_dbg, irregular=irregular)
+    phase_report = []
 
     # ---------------- kicks: drop beats + any strong low hit
     lp = sosfiltfilt(butter(4, 150, "low", fs=sr48, output="sos"), inst48.astype(np.float64))

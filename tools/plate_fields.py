@@ -102,6 +102,9 @@ def run(pid, w=480, h=270, force=False, flow=True):
             "encoding": {"g": "R=ink (relative DoG line art, 255=line), G=tone (bilateral luminance x gain), B=edge strength",
                          "o": "R,G=128+127*(cos2t, sin2t) edge-tangent direction t, B=coherence",
                          "v": "R,G=128+4*(dx,dy) map px/frame (f->f+1), B=min(255, 8*|flow|)"}}
+    prev = json.loads((d / "fields.json").read_text()) if (d / "fields.json").exists() else {}
+    if "depth" in prev and (maps / "d0001.png").exists():
+        info["depth"] = prev["depth"]          # written by plate_depth.py; keep it across --force re-runs
     (d / "fields.json").write_text(json.dumps(info, indent=1))
     print(f"{pid}: fields for {len(frames)} frames at {w}x{h}; palette {[p['hex'] for p in info['palette']]}")
 

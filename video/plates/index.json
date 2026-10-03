@@ -12,5 +12,19 @@
   "src_h": 480,
   "dur": 4.042,
   "gain": 1.723
+ },
+ "example_singer_cu": {
+  "n": 97,
+  "mattes": 49,
+  "depth": 49,
+  "fields": 97,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "src_w": 854,
+  "src_h": 480,
+  "dur": 4.042,
+  "gain": 1.723
  }
 }

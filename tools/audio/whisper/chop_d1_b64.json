@@ -1,0 +1,623 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 3.6,
+  "duration_after_vad": 3.6
+ },
+ "text": "the sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, Thank you.",
+ "word_count": 114,
+ "segments": [
+  {
+   "start": 111.48,
+   "end": 113.98,
+   "text": " the sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky, sky,",
+   "temperature": 1,
+   "avg_logprob": -0.07550950898064507,
+   "compression_ratio": 26.571428571428573,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " the",
+     "start": 111.48,
+     "end": 111.64
+    },
+    {
+     "word": " sky,",
+     "start": 111.64,
+     "end": 111.66
+    },
+    {
+     "word": " sky,",
+     "start": 111.68,
+     "end": 111.7
+    },
+    {
+     "word": " sky,",
+     "start": 111.74,
+     "end": 112.76
+    },
+    {
+     "word": " sky,",
+     "start": 112.76,
+     "end": 113.06
+    },
+    {
+     "word": " sky,",
+     "start": 113.16,
+     "end": 113.22
+    },
+    {
+     "word": " sky,",
+     "start": 113.22,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.72
+    },
+    {
+     "word": " sky,",
+     "start": 113.72,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.96
+    },
+    {
+     "word": " sky,",
+     "start": 113.96,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    },
+    {
+     "word": " sky,",
+     "start": 113.98,
+     "end": 113.98
+    }
+   ],
+   "word_count": 112
+  },
+  {
+   "start": 113.98,
+   "end": 114.08,
+   "text": " Thank you.",
+   "temperature": 0,
+   "avg_logprob": -0.540039042631785,
+   "compression_ratio": 0.5555555555555556,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Thank",
+     "start": 113.98,
+     "end": 114.04
+    },
+    {
+     "word": " you.",
+     "start": 114.04,
+     "end": 114.08
+    }
+   ],
+   "word_count": 2
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.980 --> 00:01.140\n the\n\n00:01.140 --> 00:01.160\n sky,\n\n00:01.180 --> 00:01.200\n sky,\n\n00:01.240 --> 00:02.260\n sky,\n\n00:02.260 --> 00:02.560\n sky,\n\n00:02.660 --> 00:02.720\n sky,\n\n00:02.720 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.220\n sky,\n\n00:03.220 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.460\n sky,\n\n00:03.460 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.480\n sky,\n\n00:03.480 --> 00:03.540\n Thank\n\n00:03.540 --> 00:03.580\n you.\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 2.7978142622399997
+ },
+ "_meta": {
+  "src": "media/stems/vocals.wav",
+  "t0": 110.5,
+  "t1": 114.1,
+  "prompt": "halo, in the sky, sky",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

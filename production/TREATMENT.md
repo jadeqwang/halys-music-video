@@ -69,7 +69,7 @@ cartouche, a direct homage to the tablet in *The Battle of Alexander at Issus*. 
 A single shaft of light picks out one duel in the shallows. *"Sun burning on the bronze"*: macro glints on helmets and blades, strikes landing on the beat.
 *"when light went strange"*: crescent suns dapple a shield under a poplar. A warrior sees them and looks up.
 
-**Pre-chorus.** Faces turn upward one by one. The sky drains to violet-black and Venus appears. *"A halo in the sky"* is set on a circle around the Sun.
+**Pre-chorus.** Faces turn upward one by one. The sky drains toward night and Jupiter appears, a hard white point beside the dying sun. *"A halo in the sky"* is set on a circle around the Sun.
 *"the vacant eye of a god"*: extreme close-up of a warrior's eye reflecting the eclipse, two eyes rhyming.
 
 **Chorus 1.** Darkness races in. A Lydian and a Mede, mid-duel, stop and look at each other. A sword drops into the water.
@@ -150,3 +150,23 @@ The final chord may be held a few seconds longer (spectral freeze) to give the w
   (re-flowed type, per-shot crop centres) rather than cropped. Teasers: "The Eye" (0:00–0:12), "The Switch" (≈1:42–2:02), "Throw down your blade" (≈3:26–3:50).
 * **Provenance (user's call before launch):** the plates are Seedance 2.5 generations by design, so the honest credit is "drawn in JavaScript over
   AI-generated motion reference" — never "no AI".
+
+## v0.2 — facts from production/RESEARCH.md that change the pictures
+
+* **It happened at sunset, not noon.** Totality began ≈18:21 local solar time with the Sun only **8.6° above the WNW horizon**, under an hour before sunset;
+  shadows ran 6–7× the height of whatever cast them. So Act I is raking golden-hour light (ideal tenebrism: horizontal light, long shadows, rim-lit bronze),
+  the eclipse hangs **low over the horizon**, and the light that returns after third contact is real golden hour.
+* **The master composition.** Between Avanos and Hirfanlı the Kızılırmak flows toward the eclipsed Sun. Looking downstream, the river is a perspective line
+  running straight to the black sun on the horizon, with **Lydians on the left bank (west) and Medes on the right (east), mirrored.** This is the hook frame,
+  the drop frames and the K-pop centre lock, and it gives both armies equal weight by construction.
+* **The darkness comes out of the sunset** at ≈18,000 km/h: in "a shadow crossed the hills" the umbra rushes toward camera from the Sun's direction.
+* **Jupiter** (mag −1.8) is the bright point 11° above and 5.5° left of the black Sun; Saturn and Mars fainter. Not Venus.
+* **Pinhole crescents stretch 4–6×** at that sun height, and the Medes' wicker shields act as pinhole arrays: "when light went strange" is a field of
+  elongated crescent suns thrown through a wicker shield onto bronze and grass.
+* **Thales was about 40** (not an old sage): shadow-stick (gnomon), tally tablets, a bowl of water. No armillary spheres.
+* **Costume tells sides apart, never faces.** Medes: felt caps, sleeved tunics, trousers, sword on the right thigh, bows, wicker shields (no fluted Persian
+  crowns). Lydians: crested bronze helmets, lion blazons, long-spear cavalry.
+* **The palette has precedent.** Greek painters' four-colour palette (white, yellow, red, black) had no blue, and the prized red ochre was mined in Cappadocia.
+  "No blue until Earth" is historically literate, not just a rule.
+* **Totality probably missed the Halys** by a hair under standard ΔT (96–99 %). Herodotus never names the river as the battlefield. The film follows the
+  legend, and the ending's `dt.shift(+300)` is the in-joke that admits it.

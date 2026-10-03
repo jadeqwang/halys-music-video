@@ -203,3 +203,14 @@ export function noiseTexture(glw, n = 256, seed = 1) {
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
   return { tex: t, w: n, h: n };
 }
+
+// Debug: show up to three analysis-resolution Float32 fields (as R, G, B; one field = grey) on the visible canvas.
+const BLIT_FS = `#version 300 es
+precision highp float;
+in vec2 vUv; uniform sampler2D uTex; uniform float uGrey; out vec4 o;
+void main() { vec2 uv = vec2(vUv.x, 1.0 - vUv.y); vec4 c = texture(uTex, uv); o = vec4(uGrey > 0.5 ? c.rrr : c.rgb, 1.0); }`;
+export function blitFields(glw, aw, ah, fields) {
+  const t = glw.fieldTexture(aw, ah, [fields[0], fields[1] || fields[0], fields[2] || fields[0], null]);
+  glw.pass(BLIT_FS, { uTex: t, uGrey: fields.length === 1 ? 1 : 0 }, null, null);
+  glw.finish(); glw.deleteTexture(t);
+}

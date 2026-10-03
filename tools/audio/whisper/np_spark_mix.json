@@ -1,0 +1,88 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 11.5,
+  "duration_after_vad": 11.5
+ },
+ "text": "A sudden splash Shadow turn to day",
+ "word_count": 7,
+ "segments": [
+  {
+   "start": 192.5,
+   "end": 195.32,
+   "text": " A sudden splash",
+   "temperature": 0,
+   "avg_logprob": -0.8111979216337204,
+   "compression_ratio": 0.8095238095238095,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " A",
+     "start": 192.5,
+     "end": 193.78
+    },
+    {
+     "word": " sudden",
+     "start": 193.78,
+     "end": 194.54
+    },
+    {
+     "word": " splash",
+     "start": 194.54,
+     "end": 195.32
+    }
+   ],
+   "word_count": 3
+  },
+  {
+   "start": 200.26,
+   "end": 203.42,
+   "text": " Shadow turn to day",
+   "temperature": 0,
+   "avg_logprob": -0.8111979216337204,
+   "compression_ratio": 0.8095238095238095,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Shadow",
+     "start": 200.26,
+     "end": 201.66
+    },
+    {
+     "word": " turn",
+     "start": 201.66,
+     "end": 202.8
+    },
+    {
+     "word": " to",
+     "start": 202.8,
+     "end": 203.18
+    },
+    {
+     "word": " day",
+     "start": 203.18,
+     "end": 203.42
+    }
+   ],
+   "word_count": 4
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:01.280\n A\n\n00:01.280 --> 00:02.040\n sudden\n\n00:02.040 --> 00:02.820\n splash\n\n00:07.760 --> 00:09.160\n Shadow\n\n00:09.160 --> 00:10.300\n turn\n\n00:10.300 --> 00:10.680\n to\n\n00:10.680 --> 00:10.920\n day\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 8.9374622266
+ },
+ "_meta": {
+  "src": "media/stems/mix.wav",
+  "t0": 192.5,
+  "t1": 204.0,
+  "prompt": null,
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

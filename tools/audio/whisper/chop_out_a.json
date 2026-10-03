@@ -1,0 +1,56 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 4.5,
+  "duration_after_vad": 4.5
+ },
+ "text": "you go, blade",
+ "word_count": 3,
+ "segments": [
+  {
+   "start": 258.5,
+   "end": 260.86,
+   "text": " you go, blade",
+   "temperature": 1,
+   "avg_logprob": -1.5116315909794398,
+   "compression_ratio": 0.6190476190476191,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " you",
+     "start": 258.5,
+     "end": 259.74
+    },
+    {
+     "word": " go,",
+     "start": 259.74,
+     "end": 260.24
+    },
+    {
+     "word": " blade",
+     "start": 260.6,
+     "end": 260.86
+    }
+   ],
+   "word_count": 3
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:01.240\n you\n\n00:01.240 --> 00:01.740\n go,\n\n00:02.100 --> 00:02.360\n blade\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 3.4972678278
+ },
+ "_meta": {
+  "src": "media/stems/vocals.wav",
+  "t0": 258.5,
+  "t1": 263.0,
+  "prompt": "throw down, your blade, blade",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

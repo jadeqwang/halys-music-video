@@ -1,0 +1,83 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 3.5,
+  "duration_after_vad": 3.5
+ },
+ "text": "nada, your blade, Hoo, Da,NaoNayUng",
+ "word_count": 5,
+ "segments": [
+  {
+   "start": 244.1,
+   "end": 246.44,
+   "text": " nada, your blade, Hoo,",
+   "temperature": 1,
+   "avg_logprob": -3.9938629627227784,
+   "compression_ratio": 0.813953488372093,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " nada,",
+     "start": 244.1,
+     "end": 244.6
+    },
+    {
+     "word": " your",
+     "start": 245.84,
+     "end": 246.04
+    },
+    {
+     "word": " blade,",
+     "start": 246.04,
+     "end": 246.44
+    },
+    {
+     "word": " Hoo,",
+     "start": 246.44,
+     "end": 246.44
+    }
+   ],
+   "word_count": 4
+  },
+  {
+   "start": 246.44,
+   "end": 246.58,
+   "text": " Da,NaoNayUng",
+   "temperature": 1,
+   "avg_logprob": -3.9938629627227784,
+   "compression_ratio": 0.813953488372093,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Da",
+     "start": 246.44,
+     "end": 246.52
+    },
+    {
+     "word": ",NaoNayUng",
+     "start": 246.52,
+     "end": 246.58
+    }
+   ],
+   "word_count": 1
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:00.500\n nada,\n\n00:01.740 --> 00:01.940\n your\n\n00:01.940 --> 00:02.340\n blade,\n\n00:02.340 --> 00:02.340\n Hoo,\n\n00:02.340 --> 00:02.420\n Da\n\n00:02.420 --> 00:02.480\n,NaoNayUng\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 2.7200971993999996
+ },
+ "_meta": {
+  "src": "media/stems/vocals.wav",
+  "t0": 244.1,
+  "t1": 247.6,
+  "prompt": "throw down, your blade, blade",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

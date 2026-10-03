@@ -1,0 +1,56 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 3.5,
+  "duration_after_vad": 3.5
+ },
+ "text": "in the sky",
+ "word_count": 3,
+ "segments": [
+  {
+   "start": 140.0,
+   "end": 142.18,
+   "text": " in the sky",
+   "temperature": 0,
+   "avg_logprob": -0.8912760019302368,
+   "compression_ratio": 0.5555555555555556,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " in",
+     "start": 140.0,
+     "end": 141.06
+    },
+    {
+     "word": " the",
+     "start": 141.06,
+     "end": 141.54
+    },
+    {
+     "word": " sky",
+     "start": 141.54,
+     "end": 142.18
+    }
+   ],
+   "word_count": 3
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:01.060\n in\n\n00:01.060 --> 00:01.540\n the\n\n00:01.540 --> 00:02.180\n sky\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 2.7200971993999996
+ },
+ "_meta": {
+  "src": "media/stems/vocals.wav",
+  "t0": 140.0,
+  "t1": 143.5,
+  "prompt": "halo, in the sky, sky",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

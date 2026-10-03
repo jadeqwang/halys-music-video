@@ -1,0 +1,114 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 18.6,
+  "duration_after_vad": 18.6
+ },
+ "text": "Blade. Blade. Blade. Blade. Blade.",
+ "word_count": 5,
+ "segments": [
+  {
+   "start": 255.0,
+   "end": 257.48,
+   "text": " Blade.",
+   "temperature": 0.2,
+   "avg_logprob": -0.6415633964538574,
+   "compression_ratio": 2.2777777777777777,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Blade.",
+     "start": 255.0,
+     "end": 257.48
+    }
+   ],
+   "word_count": 1
+  },
+  {
+   "start": 259.1,
+   "end": 260.5,
+   "text": " Blade.",
+   "temperature": 0.2,
+   "avg_logprob": -0.6415633964538574,
+   "compression_ratio": 2.2777777777777777,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Blade.",
+     "start": 259.1,
+     "end": 260.5
+    }
+   ],
+   "word_count": 1
+  },
+  {
+   "start": 262.46,
+   "end": 263.56,
+   "text": " Blade.",
+   "temperature": 0.2,
+   "avg_logprob": -0.6415633964538574,
+   "compression_ratio": 2.2777777777777777,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Blade.",
+     "start": 262.46,
+     "end": 263.56
+    }
+   ],
+   "word_count": 1
+  },
+  {
+   "start": 263.56,
+   "end": 263.88,
+   "text": " Blade.",
+   "temperature": 0.2,
+   "avg_logprob": -0.6415633964538574,
+   "compression_ratio": 2.2777777777777777,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Blade.",
+     "start": 263.56,
+     "end": 263.88
+    }
+   ],
+   "word_count": 1
+  },
+  {
+   "start": 264.42,
+   "end": 265.24,
+   "text": " Blade.",
+   "temperature": 0.2,
+   "avg_logprob": -0.6415633964538574,
+   "compression_ratio": 2.2777777777777777,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Blade.",
+     "start": 264.42,
+     "end": 265.24
+    }
+   ],
+   "word_count": 1
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:02.480\n Blade.\n\n00:04.100 --> 00:05.500\n Blade.\n\n00:07.460 --> 00:08.560\n Blade.\n\n00:08.560 --> 00:08.880\n Blade.\n\n00:09.420 --> 00:10.240\n Blade.\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 14.45537368824
+ },
+ "_meta": {
+  "src": "media/stems/vocals_lead.wav",
+  "t0": 255.0,
+  "t1": 273.6,
+  "prompt": "Throw down your blade. Blade.",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

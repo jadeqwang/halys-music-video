@@ -1,0 +1,46 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 9,
+  "duration_after_vad": 9
+ },
+ "text": "Behold",
+ "word_count": 1,
+ "segments": [
+  {
+   "start": 190.5,
+   "end": 192.38,
+   "text": " Behold",
+   "temperature": 0,
+   "avg_logprob": -0.638671875,
+   "compression_ratio": 0.42857142857142855,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Behold",
+     "start": 190.5,
+     "end": 192.38
+    }
+   ],
+   "word_count": 1
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:01.880\n Behold\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 6.9945356556
+ },
+ "_meta": {
+  "src": "media/stems/vocals_lead.wav",
+  "t0": 190.5,
+  "t1": 199.5,
+  "prompt": null,
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

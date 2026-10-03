@@ -1,0 +1,443 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 45.2,
+  "duration_after_vad": 45.2
+ },
+ "text": "The River Halys, on the sixth year of the war. Lydians and Medes, slew each other on the shore. Sun burning on the bronze exchanging turns and strikes when light went strange. A halo in the sky Worry is awed by the vacant eye of a guide Tealight turned to shade Eye of gods above Slow down your blade Go home to the ones you love",
+ "word_count": 66,
+ "segments": [
+  {
+   "start": 67.14,
+   "end": 89.24,
+   "text": " The River Halys, on the sixth year of the war. Lydians and Medes, slew each other on the shore. Sun burning on the bronze exchanging turns and strikes when light went strange.",
+   "temperature": 0,
+   "avg_logprob": -0.08020278938273166,
+   "compression_ratio": 1.3565891472868217,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " The",
+     "start": 67.14,
+     "end": 68.14
+    },
+    {
+     "word": " River",
+     "start": 68.14,
+     "end": 68.64
+    },
+    {
+     "word": " Halys,",
+     "start": 68.64,
+     "end": 69.86
+    },
+    {
+     "word": " on",
+     "start": 70.02,
+     "end": 70.38
+    },
+    {
+     "word": " the",
+     "start": 70.38,
+     "end": 70.58
+    },
+    {
+     "word": " sixth",
+     "start": 70.58,
+     "end": 70.94
+    },
+    {
+     "word": " year",
+     "start": 70.94,
+     "end": 71.52
+    },
+    {
+     "word": " of",
+     "start": 71.52,
+     "end": 72.16
+    },
+    {
+     "word": " the",
+     "start": 72.16,
+     "end": 72.32
+    },
+    {
+     "word": " war.",
+     "start": 72.32,
+     "end": 73.16
+    },
+    {
+     "word": " Lydians",
+     "start": 74.42,
+     "end": 75.42
+    },
+    {
+     "word": " and",
+     "start": 75.42,
+     "end": 75.78
+    },
+    {
+     "word": " Medes,",
+     "start": 75.78,
+     "end": 76.78
+    },
+    {
+     "word": " slew",
+     "start": 76.78,
+     "end": 77.22
+    },
+    {
+     "word": " each",
+     "start": 77.22,
+     "end": 77.72
+    },
+    {
+     "word": " other",
+     "start": 77.72,
+     "end": 78.42
+    },
+    {
+     "word": " on",
+     "start": 78.42,
+     "end": 79.1
+    },
+    {
+     "word": " the",
+     "start": 79.1,
+     "end": 79.24
+    },
+    {
+     "word": " shore.",
+     "start": 79.24,
+     "end": 79.76
+    },
+    {
+     "word": " Sun",
+     "start": 81.8,
+     "end": 82.8
+    },
+    {
+     "word": " burning",
+     "start": 82.8,
+     "end": 83.8
+    },
+    {
+     "word": " on",
+     "start": 83.8,
+     "end": 84.28
+    },
+    {
+     "word": " the",
+     "start": 84.28,
+     "end": 84.48
+    },
+    {
+     "word": " bronze",
+     "start": 84.48,
+     "end": 84.94
+    },
+    {
+     "word": " exchanging",
+     "start": 84.94,
+     "end": 86.1
+    },
+    {
+     "word": " turns",
+     "start": 86.1,
+     "end": 86.8
+    },
+    {
+     "word": " and",
+     "start": 86.8,
+     "end": 87.16
+    },
+    {
+     "word": " strikes",
+     "start": 87.16,
+     "end": 87.6
+    },
+    {
+     "word": " when",
+     "start": 87.6,
+     "end": 87.96
+    },
+    {
+     "word": " light",
+     "start": 87.96,
+     "end": 88.36
+    },
+    {
+     "word": " went",
+     "start": 88.36,
+     "end": 88.68
+    },
+    {
+     "word": " strange.",
+     "start": 88.68,
+     "end": 89.24
+    }
+   ],
+   "word_count": 32
+  },
+  {
+   "start": 89.24,
+   "end": 91.18,
+   "text": " A halo in the sky",
+   "temperature": 0,
+   "avg_logprob": -0.30683211836160396,
+   "compression_ratio": 1.3189655172413792,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " A",
+     "start": 89.24,
+     "end": 89.9
+    },
+    {
+     "word": " halo",
+     "start": 89.9,
+     "end": 90.3
+    },
+    {
+     "word": " in",
+     "start": 90.3,
+     "end": 90.58
+    },
+    {
+     "word": " the",
+     "start": 90.58,
+     "end": 90.74
+    },
+    {
+     "word": " sky",
+     "start": 90.74,
+     "end": 91.18
+    }
+   ],
+   "word_count": 5
+  },
+  {
+   "start": 91.18,
+   "end": 96.12,
+   "text": " Worry is awed by the vacant eye of a guide",
+   "temperature": 0,
+   "avg_logprob": -0.30683211836160396,
+   "compression_ratio": 1.3189655172413792,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Worry",
+     "start": 91.18,
+     "end": 92.12
+    },
+    {
+     "word": " is",
+     "start": 92.12,
+     "end": 92.42
+    },
+    {
+     "word": " awed",
+     "start": 92.42,
+     "end": 92.9
+    },
+    {
+     "word": " by",
+     "start": 92.9,
+     "end": 93.16
+    },
+    {
+     "word": " the",
+     "start": 93.16,
+     "end": 93.34
+    },
+    {
+     "word": " vacant",
+     "start": 93.34,
+     "end": 94.0
+    },
+    {
+     "word": " eye",
+     "start": 94.0,
+     "end": 94.7
+    },
+    {
+     "word": " of",
+     "start": 94.7,
+     "end": 94.98
+    },
+    {
+     "word": " a",
+     "start": 94.98,
+     "end": 95.18
+    },
+    {
+     "word": " guide",
+     "start": 95.18,
+     "end": 96.12
+    }
+   ],
+   "word_count": 10
+  },
+  {
+   "start": 96.12,
+   "end": 98.96,
+   "text": " Tealight turned to shade",
+   "temperature": 0,
+   "avg_logprob": -0.30683211836160396,
+   "compression_ratio": 1.3189655172413792,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Tealight",
+     "start": 96.12,
+     "end": 97.58
+    },
+    {
+     "word": " turned",
+     "start": 97.58,
+     "end": 98.02
+    },
+    {
+     "word": " to",
+     "start": 98.02,
+     "end": 98.32
+    },
+    {
+     "word": " shade",
+     "start": 98.32,
+     "end": 98.96
+    }
+   ],
+   "word_count": 4
+  },
+  {
+   "start": 98.96,
+   "end": 102.14,
+   "text": " Eye of gods above",
+   "temperature": 0,
+   "avg_logprob": -0.30683211836160396,
+   "compression_ratio": 1.3189655172413792,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Eye",
+     "start": 98.96,
+     "end": 100.5
+    },
+    {
+     "word": " of",
+     "start": 100.5,
+     "end": 101.04
+    },
+    {
+     "word": " gods",
+     "start": 101.04,
+     "end": 101.52
+    },
+    {
+     "word": " above",
+     "start": 101.52,
+     "end": 102.14
+    }
+   ],
+   "word_count": 4
+  },
+  {
+   "start": 103.28,
+   "end": 105.94,
+   "text": " Slow down your blade",
+   "temperature": 0,
+   "avg_logprob": -0.30683211836160396,
+   "compression_ratio": 1.3189655172413792,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Slow",
+     "start": 103.28,
+     "end": 104.3
+    },
+    {
+     "word": " down",
+     "start": 104.3,
+     "end": 104.78
+    },
+    {
+     "word": " your",
+     "start": 104.78,
+     "end": 105.08
+    },
+    {
+     "word": " blade",
+     "start": 105.08,
+     "end": 105.94
+    }
+   ],
+   "word_count": 4
+  },
+  {
+   "start": 105.94,
+   "end": 110.66,
+   "text": " Go home to the ones you love",
+   "temperature": 0,
+   "avg_logprob": -0.30683211836160396,
+   "compression_ratio": 1.3189655172413792,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Go",
+     "start": 105.94,
+     "end": 106.92
+    },
+    {
+     "word": " home",
+     "start": 106.92,
+     "end": 107.74
+    },
+    {
+     "word": " to",
+     "start": 107.74,
+     "end": 108.32
+    },
+    {
+     "word": " the",
+     "start": 108.32,
+     "end": 108.52
+    },
+    {
+     "word": " ones",
+     "start": 108.52,
+     "end": 109.52
+    },
+    {
+     "word": " you",
+     "start": 109.52,
+     "end": 110.2
+    },
+    {
+     "word": " love",
+     "start": 110.2,
+     "end": 110.66
+    }
+   ],
+   "word_count": 7
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:01.140 --> 00:02.140\n The\n\n00:02.140 --> 00:02.640\n River\n\n00:02.640 --> 00:03.860\n Halys,\n\n00:04.020 --> 00:04.380\n on\n\n00:04.380 --> 00:04.580\n the\n\n00:04.580 --> 00:04.940\n sixth\n\n00:04.940 --> 00:05.520\n year\n\n00:05.520 --> 00:06.160\n of\n\n00:06.160 --> 00:06.320\n the\n\n00:06.320 --> 00:07.160\n war.\n\n00:08.420 --> 00:09.420\n Lydians\n\n00:09.420 --> 00:09.780\n and\n\n00:09.780 --> 00:10.780\n Medes,\n\n00:10.780 --> 00:11.220\n slew\n\n00:11.220 --> 00:11.720\n each\n\n00:11.720 --> 00:12.420\n other\n\n00:12.420 --> 00:13.100\n on\n\n00:13.100 --> 00:13.240\n the\n\n00:13.240 --> 00:13.760\n shore.\n\n00:15.800 --> 00:16.800\n Sun\n\n00:16.800 --> 00:17.800\n burning\n\n00:17.800 --> 00:18.280\n on\n\n00:18.280 --> 00:18.480\n the\n\n00:18.480 --> 00:18.940\n bronze\n\n00:18.940 --> 00:20.100\n exchanging\n\n00:20.100 --> 00:20.800\n turns\n\n00:20.800 --> 00:21.160\n and\n\n00:21.160 --> 00:21.600\n strikes\n\n00:21.600 --> 00:21.960\n when\n\n00:21.960 --> 00:22.360\n light\n\n00:22.360 --> 00:22.680\n went\n\n00:22.680 --> 00:23.240\n strange.\n\n00:23.240 --> 00:23.900\n A\n\n00:23.900 --> 00:24.300\n halo\n\n00:24.300 --> 00:24.580\n in\n\n00:24.580 --> 00:24.740\n the\n\n00:24.740 --> 00:25.180\n sky\n\n00:25.180 --> 00:26.120\n Worry\n\n00:26.120 --> 00:26.420\n is\n\n00:26.420 --> 00:26.900\n awed\n\n00:26.900 --> 00:27.160\n by\n\n00:27.160 --> 00:27.340\n the\n\n00:27.340 --> 00:28.000\n vacant\n\n00:28.000 --> 00:28.700\n eye\n\n00:28.700 --> 00:28.980\n of\n\n00:28.980 --> 00:29.180\n a\n\n00:29.180 --> 00:30.120\n guide\n\n00:30.120 --> 00:31.580\n Tealight\n\n00:31.580 --> 00:32.020\n turned\n\n00:32.020 --> 00:32.320\n to\n\n00:32.320 --> 00:32.960\n shade\n\n00:32.960 --> 00:34.500\n Eye\n\n00:34.500 --> 00:35.040\n of\n\n00:35.040 --> 00:35.520\n gods\n\n00:35.520 --> 00:36.140\n above\n\n00:37.280 --> 00:38.300\n Slow\n\n00:38.300 --> 00:38.780\n down\n\n00:38.780 --> 00:39.080\n your\n\n00:39.080 --> 00:39.940\n blade\n\n00:39.940 --> 00:40.920\n Go\n\n00:40.920 --> 00:41.740\n home\n\n00:41.740 --> 00:42.320\n to\n\n00:42.320 --> 00:42.520\n the\n\n00:42.520 --> 00:43.520\n ones\n\n00:43.520 --> 00:44.200\n you\n\n00:44.200 --> 00:44.660\n love\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 35.12811240368
+ },
+ "_meta": {
+  "src": "media/stems/vocals_lead.wav",
+  "t0": 66.0,
+  "t1": 111.2,
+  "prompt": "The River Halys, on the sixth year of the war. Lydians and Medes, slew each other on the shore. Sun burning on the bronze exchanging turns and strikes when light went strange. A halo in the sky, warriors awed by the vacant eye of a god. Daylight turned to shade, eye of gods above. Throw down your blade. Go home to the ones you love.",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

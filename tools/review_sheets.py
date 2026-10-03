@@ -7,8 +7,9 @@
                                                                #   (lip-sync / motion checks) -> FILE.strip.jpg
     python3 tools/review_sheets.py maps ID [--frame=1]     # one plate frame next to every analysis map
                                                                #   -> video/plates/<id>/maps_f<frame>.jpg
-    python3 tools/review_sheets.py frames [--every=1.0] [--from=0] [--to=273.6] [--cols=8] [--w=240] [--per=48]
-                                                               # rendered film frames (video/out/frames/f%05d.jpg)
+    python3 tools/review_sheets.py frames [--every=1.0] [--from=0] [--to=273.6] [--cols=8] [--w=240] [--per=48] [--dir=video/out/frames]
+                                                               # rendered film frames (video/out/frames/f%05d.jpg,
+                                                               #   master-frame numbered; fps/size from render.json)
                                                                #   -> video/out/review/sheet_<t>.jpg, labelled with
                                                                #   time + shot (video/out/shots.json from
                                                                #   `node render.mjs --list --out=out/shots.json`)
@@ -159,31 +160,33 @@ def maps_sheet(pid, frame=1, w=480):
     return out
 
 
-def frames_sheets(every=1.0, t0=0.0, t1=None, cols=8, w=240, per=48):
-    fr, outd = ROOT / "video" / "out" / "frames", ROOT / "video" / "out" / "review"
+def frames_sheets(every=1.0, t0=0.0, t1=None, cols=8, w=240, per=48, frames_dir=None):
+    fr, outd = pathlib.Path(frames_dir) if frames_dir else ROOT / "video" / "out" / "frames", ROOT / "video" / "out" / "review"
+    man = json.loads((fr / "render.json").read_text()) if (fr / "render.json").exists() else {}
+    fps = man.get("fps", 60 if man else FPS)          # the render harness writes render.json (60 fps master)
     shots = []
     sp = ROOT / "video" / "out" / "shots.json"
     if sp.exists():
-        shots = json.loads(sp.read_text())
+        shots = json.loads(sp.read_text())           # rows [id, t0, t1, ...] (render.mjs --list --out=...)
     def shot_at(t):
-        for name, s0, s1 in reversed(shots):
-            if s0 <= t < s1:
-                return name
+        for row in reversed(shots):
+            if row[1] <= t < row[2]:
+                return row[0]
         return ""
     if t1 is None:
-        n = len(list(fr.glob("f*.jpg")))
-        t1 = n / FPS
+        idx = [int(p.stem[1:]) for p in fr.glob("f*.jpg")]
+        t1 = (max(idx) + 1) / fps if idx else 0
     outd.mkdir(parents=True, exist_ok=True)
     times, t = [], t0 + every / 2
     while t < t1:
         times.append(round(t, 3)); t += every
-    h = round(w * 9 / 16)
+    h = round(w * man.get("h", 1080) / man.get("w", 1920))
     outs = []
     for k in range(0, len(times), per):
         chunk = times[k:k + per]
         ims = []
         for tt in chunk:
-            f = fr / f"f{int(round(tt * FPS)):05d}.jpg"
+            f = fr / f"f{int(tt * fps + 1e-6):05d}.jpg"
             ims.append(Image.open(f).convert("RGB").resize((w, h), Image.LANCZOS) if f.exists() else None)
         out = outd / f"sheet_{chunk[0]:06.1f}.jpg"
         tile(ims, [f"{tt:6.1f} {shot_at(tt)}" for tt in chunk], cols).save(out, quality=88)
@@ -209,7 +212,7 @@ def main(argv):
         print(maps_sheet(pos[1], int(kw.get("frame", 1))))
     elif cmd == "frames":
         frames_sheets(float(kw.get("every", 1.0)), float(kw.get("from", 0)), float(kw["to"]) if "to" in kw else None,
-                      int(kw.get("cols", 8)), int(kw.get("w", 240)), int(kw.get("per", 48)))
+                      int(kw.get("cols", 8)), int(kw.get("w", 240)), int(kw.get("per", 48)), kw.get("dir"))
     else:
         print(__doc__)
 

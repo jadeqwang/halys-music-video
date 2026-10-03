@@ -1,0 +1,96 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 3.5,
+  "duration_after_vad": 3.5
+ },
+ "text": "your blade, or the blade, or the blade, or the blade.",
+ "word_count": 11,
+ "segments": [
+  {
+   "start": 250.9,
+   "end": 254.38,
+   "text": " your blade, or the blade, or the blade, or the blade.",
+   "temperature": 1,
+   "avg_logprob": -1.4634738498263888,
+   "compression_ratio": 1.8275862068965518,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " your",
+     "start": 250.9,
+     "end": 252.26
+    },
+    {
+     "word": " blade,",
+     "start": 252.26,
+     "end": 252.38
+    },
+    {
+     "word": " or",
+     "start": 252.38,
+     "end": 252.38
+    },
+    {
+     "word": " the",
+     "start": 252.38,
+     "end": 253.62
+    },
+    {
+     "word": " blade,",
+     "start": 253.62,
+     "end": 253.62
+    },
+    {
+     "word": " or",
+     "start": 253.62,
+     "end": 253.62
+    },
+    {
+     "word": " the",
+     "start": 253.62,
+     "end": 253.62
+    },
+    {
+     "word": " blade,",
+     "start": 253.62,
+     "end": 253.62
+    },
+    {
+     "word": " or",
+     "start": 253.62,
+     "end": 253.62
+    },
+    {
+     "word": " the",
+     "start": 253.62,
+     "end": 254.38
+    },
+    {
+     "word": " blade.",
+     "start": 254.38,
+     "end": 254.38
+    }
+   ],
+   "word_count": 11
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:01.360\n your\n\n00:01.360 --> 00:01.480\n blade,\n\n00:01.480 --> 00:01.480\n or\n\n00:01.480 --> 00:02.720\n the\n\n00:02.720 --> 00:02.720\n blade,\n\n00:02.720 --> 00:02.720\n or\n\n00:02.720 --> 00:02.720\n the\n\n00:02.720 --> 00:02.720\n blade,\n\n00:02.720 --> 00:02.720\n or\n\n00:02.720 --> 00:03.480\n the\n\n00:03.480 --> 00:03.480\n blade.\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 2.7200971993999996
+ },
+ "_meta": {
+  "src": "media/stems/vocals.wav",
+  "t0": 250.9,
+  "t1": 254.4,
+  "prompt": "throw down, your blade, blade",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

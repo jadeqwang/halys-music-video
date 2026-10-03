@@ -1,0 +1,73 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 45,
+  "duration_after_vad": 45
+ },
+ "text": "Thank you. Thank you.",
+ "word_count": 4,
+ "segments": [
+  {
+   "start": 23.18,
+   "end": 24.58,
+   "text": " Thank you.",
+   "temperature": 0,
+   "avg_logprob": -0.24853515128294626,
+   "compression_ratio": 0.5555555555555556,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Thank",
+     "start": 23.18,
+     "end": 24.58
+    },
+    {
+     "word": " you.",
+     "start": 24.58,
+     "end": 24.58
+    }
+   ],
+   "word_count": 2
+  },
+  {
+   "start": 45.84,
+   "end": 46.92,
+   "text": " Thank you.",
+   "temperature": 0,
+   "avg_logprob": -0.5071614682674408,
+   "compression_ratio": 0.5555555555555556,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Thank",
+     "start": 45.84,
+     "end": 46.56
+    },
+    {
+     "word": " you.",
+     "start": 46.56,
+     "end": 46.92
+    }
+   ],
+   "word_count": 2
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:08.180 --> 00:09.580\n Thank\n\n00:09.580 --> 00:09.580\n you.\n\n00:30.840 --> 00:31.560\n Thank\n\n00:31.560 --> 00:31.920\n you.\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 34.972678278
+ },
+ "_meta": {
+  "src": "media/stems/vocals_lead.wav",
+  "t0": 15.0,
+  "t1": 60.0,
+  "prompt": null,
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

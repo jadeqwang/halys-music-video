@@ -51,7 +51,11 @@ def extract(pid, take=None, w=960, h=540, fps=24, src=None):
     sw, sh, dur = probe(mp4)
     st = json.loads((out / "stats.json").read_text()) if (out / "stats.json").exists() else {}
     c = counts(out)
-    return {**c, "fps": fps, "w": w, "h": h, "take": str(mp4.relative_to(ROOT)) if src else mp4.name, "src_w": sw, "src_h": sh, "dur": round(dur, 3), "gain": st.get("gain", 1.0)}
+    try:
+        take = str(mp4.relative_to(ROOT)) if src else mp4.name
+    except ValueError:          # --src outside the repo
+        take = str(mp4)
+    return {**c, "fps": fps, "w": w, "h": h, "take": take, "src_w": sw, "src_h": sh, "dur": round(dur, 3), "gain": st.get("gain", 1.0)}
 
 
 def still(pid, path, w=960, h=540):

@@ -1,0 +1,86 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 7.87,
+  "duration_after_vad": 7.87
+ },
+ "text": "No. No. No. No. Blade. Blade. Blade. Blade. Blade.",
+ "word_count": 9,
+ "segments": [
+  {
+   "start": 0.0,
+   "end": 7.72,
+   "text": " No. No. No. No. Blade. Blade. Blade. Blade. Blade.",
+   "temperature": 0.8,
+   "avg_logprob": -0.667895930153983,
+   "compression_ratio": 2.380952380952381,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " No.",
+     "start": 0.0,
+     "end": 1.1
+    },
+    {
+     "word": " No.",
+     "start": 1.5,
+     "end": 2.32
+    },
+    {
+     "word": " No.",
+     "start": 2.94,
+     "end": 3.68
+    },
+    {
+     "word": " No.",
+     "start": 4.76,
+     "end": 5.26
+    },
+    {
+     "word": " Blade.",
+     "start": 5.42,
+     "end": 5.42
+    },
+    {
+     "word": " Blade.",
+     "start": 6.22,
+     "end": 6.64
+    },
+    {
+     "word": " Blade.",
+     "start": 7.04,
+     "end": 7.04
+    },
+    {
+     "word": " Blade.",
+     "start": 7.68,
+     "end": 7.68
+    },
+    {
+     "word": " Blade.",
+     "start": 7.72,
+     "end": 7.72
+    }
+   ],
+   "word_count": 9
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:01.100\n No.\n\n00:01.500 --> 00:02.320\n No.\n\n00:02.940 --> 00:03.680\n No.\n\n00:04.760 --> 00:05.260\n No.\n\n00:05.420 --> 00:05.420\n Blade.\n\n00:06.220 --> 00:06.640\n Blade.\n\n00:07.040 --> 00:07.040\n Blade.\n\n00:07.680 --> 00:07.680\n Blade.\n\n00:07.720 --> 00:07.720\n Blade.\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 6.1163328455079995
+ },
+ "_meta": {
+  "src": "../../../tmp/claude-0/-home-user-halys-music-video/b8664d69-2871-5fba-a7df-659b9d78ccf5/scratchpad/bursts.wav",
+  "t0": null,
+  "t1": null,
+  "prompt": "Throw down. Your. Blade. Blade.",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

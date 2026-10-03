@@ -1,0 +1,15 @@
+{
+  "name": "halys-video",
+  "private": true,
+  "type": "module",
+  "description": "HALYS music video: every frame drawn by JavaScript (canvas 2D + WebGL2) in headless Chromium; Seedance plates are read, never shown.",
+  "scripts": {
+    "list": "node render.mjs --list",
+    "probe": "node render.mjs --probe",
+    "serve": "node render.mjs --serve",
+    "test5": "node render.mjs --frames=0:5 --workers=4 && node render.mjs --encode --range=0:5 --out=out/test_5s.mp4"
+  },
+  "dependencies": {
+    "playwright-core": "1.56.1"
+  }
+}

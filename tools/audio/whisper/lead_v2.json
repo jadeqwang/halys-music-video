@@ -1,0 +1,536 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 57,
+  "duration_after_vad": 57
+ },
+ "text": "What was it like when reality suddenly broke, the silent eye, how the gods suddenly spoke. Birds went quiet, air suddenly cold. What we do next is how history unfolds. A shadow crossed the hills The wind picked up a chill Dailies foretold the sun would go dark Warriors behold A sudden spark A sudden spark A shadow turned to day Set life from above Throw down your blade Home to the ones you love",
+ "word_count": 75,
+ "segments": [
+  {
+   "start": 160.32,
+   "end": 175.3,
+   "text": " What was it like when reality suddenly broke, the silent eye, how the gods suddenly spoke. Birds went quiet, air suddenly cold. What we do next is how history unfolds.",
+   "temperature": 0,
+   "avg_logprob": -0.11537728513159402,
+   "compression_ratio": 1.3916666666666666,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " What",
+     "start": 160.32,
+     "end": 161.0
+    },
+    {
+     "word": " was",
+     "start": 161.0,
+     "end": 161.3
+    },
+    {
+     "word": " it",
+     "start": 161.3,
+     "end": 161.46
+    },
+    {
+     "word": " like",
+     "start": 161.46,
+     "end": 161.84
+    },
+    {
+     "word": " when",
+     "start": 161.84,
+     "end": 162.1
+    },
+    {
+     "word": " reality",
+     "start": 162.1,
+     "end": 162.8
+    },
+    {
+     "word": " suddenly",
+     "start": 162.8,
+     "end": 163.6
+    },
+    {
+     "word": " broke,",
+     "start": 163.6,
+     "end": 164.16
+    },
+    {
+     "word": " the",
+     "start": 164.34,
+     "end": 164.44
+    },
+    {
+     "word": " silent",
+     "start": 164.44,
+     "end": 164.82
+    },
+    {
+     "word": " eye,",
+     "start": 164.82,
+     "end": 165.26
+    },
+    {
+     "word": " how",
+     "start": 165.4,
+     "end": 165.54
+    },
+    {
+     "word": " the",
+     "start": 165.54,
+     "end": 165.72
+    },
+    {
+     "word": " gods",
+     "start": 165.72,
+     "end": 166.28
+    },
+    {
+     "word": " suddenly",
+     "start": 166.28,
+     "end": 167.06
+    },
+    {
+     "word": " spoke.",
+     "start": 167.06,
+     "end": 167.58
+    },
+    {
+     "word": " Birds",
+     "start": 167.78,
+     "end": 168.14
+    },
+    {
+     "word": " went",
+     "start": 168.14,
+     "end": 168.26
+    },
+    {
+     "word": " quiet,",
+     "start": 168.26,
+     "end": 168.7
+    },
+    {
+     "word": " air",
+     "start": 168.98,
+     "end": 169.06
+    },
+    {
+     "word": " suddenly",
+     "start": 169.06,
+     "end": 169.68
+    },
+    {
+     "word": " cold.",
+     "start": 169.68,
+     "end": 170.28
+    },
+    {
+     "word": " What",
+     "start": 170.6,
+     "end": 171.0
+    },
+    {
+     "word": " we",
+     "start": 171.0,
+     "end": 171.3
+    },
+    {
+     "word": " do",
+     "start": 171.3,
+     "end": 171.52
+    },
+    {
+     "word": " next",
+     "start": 171.52,
+     "end": 171.92
+    },
+    {
+     "word": " is",
+     "start": 171.92,
+     "end": 172.2
+    },
+    {
+     "word": " how",
+     "start": 172.2,
+     "end": 172.5
+    },
+    {
+     "word": " history",
+     "start": 172.5,
+     "end": 173.4
+    },
+    {
+     "word": " unfolds.",
+     "start": 173.4,
+     "end": 175.3
+    }
+   ],
+   "word_count": 30
+  },
+  {
+   "start": 175.3,
+   "end": 178.6,
+   "text": " A shadow crossed the hills",
+   "temperature": 0,
+   "avg_logprob": -0.3759191316716811,
+   "compression_ratio": 1.424778761061947,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " A",
+     "start": 175.3,
+     "end": 175.84
+    },
+    {
+     "word": " shadow",
+     "start": 175.84,
+     "end": 176.62
+    },
+    {
+     "word": " crossed",
+     "start": 176.62,
+     "end": 177.26
+    },
+    {
+     "word": " the",
+     "start": 177.26,
+     "end": 177.68
+    },
+    {
+     "word": " hills",
+     "start": 177.68,
+     "end": 178.6
+    }
+   ],
+   "word_count": 5
+  },
+  {
+   "start": 178.6,
+   "end": 181.9,
+   "text": " The wind picked up a chill",
+   "temperature": 0,
+   "avg_logprob": -0.3759191316716811,
+   "compression_ratio": 1.424778761061947,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " The",
+     "start": 178.6,
+     "end": 179.26
+    },
+    {
+     "word": " wind",
+     "start": 179.26,
+     "end": 179.8
+    },
+    {
+     "word": " picked",
+     "start": 179.8,
+     "end": 180.22
+    },
+    {
+     "word": " up",
+     "start": 180.22,
+     "end": 180.76
+    },
+    {
+     "word": " a",
+     "start": 180.76,
+     "end": 181.06
+    },
+    {
+     "word": " chill",
+     "start": 181.06,
+     "end": 181.9
+    }
+   ],
+   "word_count": 6
+  },
+  {
+   "start": 181.9,
+   "end": 187.6,
+   "text": " Dailies foretold the sun would go dark",
+   "temperature": 0,
+   "avg_logprob": -0.3759191316716811,
+   "compression_ratio": 1.424778761061947,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Dailies",
+     "start": 181.9,
+     "end": 183.24
+    },
+    {
+     "word": " foretold",
+     "start": 183.24,
+     "end": 184.14
+    },
+    {
+     "word": " the",
+     "start": 184.14,
+     "end": 184.46
+    },
+    {
+     "word": " sun",
+     "start": 184.46,
+     "end": 185.08
+    },
+    {
+     "word": " would",
+     "start": 185.08,
+     "end": 185.82
+    },
+    {
+     "word": " go",
+     "start": 185.82,
+     "end": 186.16
+    },
+    {
+     "word": " dark",
+     "start": 186.16,
+     "end": 187.6
+    }
+   ],
+   "word_count": 7
+  },
+  {
+   "start": 187.6,
+   "end": 191.86,
+   "text": " Warriors behold",
+   "temperature": 0,
+   "avg_logprob": -0.3759191316716811,
+   "compression_ratio": 1.424778761061947,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Warriors",
+     "start": 187.6,
+     "end": 189.74
+    },
+    {
+     "word": " behold",
+     "start": 189.74,
+     "end": 191.86
+    }
+   ],
+   "word_count": 2
+  },
+  {
+   "start": 191.86,
+   "end": 195.16,
+   "text": " A sudden spark",
+   "temperature": 0,
+   "avg_logprob": -0.3759191316716811,
+   "compression_ratio": 1.424778761061947,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " A",
+     "start": 191.86,
+     "end": 193.74
+    },
+    {
+     "word": " sudden",
+     "start": 193.74,
+     "end": 194.34
+    },
+    {
+     "word": " spark",
+     "start": 194.34,
+     "end": 195.16
+    }
+   ],
+   "word_count": 3
+  },
+  {
+   "start": 195.16,
+   "end": 197.4,
+   "text": " A sudden spark",
+   "temperature": 0,
+   "avg_logprob": -0.3759191316716811,
+   "compression_ratio": 1.424778761061947,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " A",
+     "start": 195.16,
+     "end": 195.72
+    },
+    {
+     "word": " sudden",
+     "start": 195.72,
+     "end": 196.2
+    },
+    {
+     "word": " spark",
+     "start": 196.2,
+     "end": 197.4
+    }
+   ],
+   "word_count": 3
+  },
+  {
+   "start": 197.4,
+   "end": 203.46,
+   "text": " A shadow turned to day",
+   "temperature": 0,
+   "avg_logprob": -0.3759191316716811,
+   "compression_ratio": 1.424778761061947,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " A",
+     "start": 197.4,
+     "end": 198.08
+    },
+    {
+     "word": " shadow",
+     "start": 198.08,
+     "end": 202.22
+    },
+    {
+     "word": " turned",
+     "start": 202.22,
+     "end": 202.82
+    },
+    {
+     "word": " to",
+     "start": 202.82,
+     "end": 203.18
+    },
+    {
+     "word": " day",
+     "start": 203.18,
+     "end": 203.46
+    }
+   ],
+   "word_count": 5
+  },
+  {
+   "start": 203.46,
+   "end": 206.98,
+   "text": " Set life from above",
+   "temperature": 0,
+   "avg_logprob": -0.4356398752757481,
+   "compression_ratio": 1,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Set",
+     "start": 203.46,
+     "end": 205.16
+    },
+    {
+     "word": " life",
+     "start": 205.16,
+     "end": 205.76
+    },
+    {
+     "word": " from",
+     "start": 205.76,
+     "end": 206.32
+    },
+    {
+     "word": " above",
+     "start": 206.32,
+     "end": 206.98
+    }
+   ],
+   "word_count": 4
+  },
+  {
+   "start": 206.98,
+   "end": 210.72,
+   "text": " Throw down your blade",
+   "temperature": 0,
+   "avg_logprob": -0.4356398752757481,
+   "compression_ratio": 1,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Throw",
+     "start": 206.98,
+     "end": 209.1
+    },
+    {
+     "word": " down",
+     "start": 209.1,
+     "end": 209.56
+    },
+    {
+     "word": " your",
+     "start": 209.56,
+     "end": 209.86
+    },
+    {
+     "word": " blade",
+     "start": 209.86,
+     "end": 210.72
+    }
+   ],
+   "word_count": 4
+  },
+  {
+   "start": 211.4,
+   "end": 215.5,
+   "text": " Home to the ones you love",
+   "temperature": 0,
+   "avg_logprob": -0.4356398752757481,
+   "compression_ratio": 1,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Home",
+     "start": 211.4,
+     "end": 212.26
+    },
+    {
+     "word": " to",
+     "start": 212.26,
+     "end": 213.06
+    },
+    {
+     "word": " the",
+     "start": 213.06,
+     "end": 213.26
+    },
+    {
+     "word": " ones",
+     "start": 213.26,
+     "end": 214.3
+    },
+    {
+     "word": " you",
+     "start": 214.3,
+     "end": 215.0
+    },
+    {
+     "word": " love",
+     "start": 215.0,
+     "end": 215.5
+    }
+   ],
+   "word_count": 6
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:01.320 --> 00:02.000\n What\n\n00:02.000 --> 00:02.300\n was\n\n00:02.300 --> 00:02.460\n it\n\n00:02.460 --> 00:02.840\n like\n\n00:02.840 --> 00:03.100\n when\n\n00:03.100 --> 00:03.800\n reality\n\n00:03.800 --> 00:04.600\n suddenly\n\n00:04.600 --> 00:05.160\n broke,\n\n00:05.340 --> 00:05.440\n the\n\n00:05.440 --> 00:05.820\n silent\n\n00:05.820 --> 00:06.260\n eye,\n\n00:06.400 --> 00:06.540\n how\n\n00:06.540 --> 00:06.720\n the\n\n00:06.720 --> 00:07.280\n gods\n\n00:07.280 --> 00:08.060\n suddenly\n\n00:08.060 --> 00:08.580\n spoke.\n\n00:08.780 --> 00:09.140\n Birds\n\n00:09.140 --> 00:09.260\n went\n\n00:09.260 --> 00:09.700\n quiet,\n\n00:09.980 --> 00:10.060\n air\n\n00:10.060 --> 00:10.680\n suddenly\n\n00:10.680 --> 00:11.280\n cold.\n\n00:11.600 --> 00:12.000\n What\n\n00:12.000 --> 00:12.300\n we\n\n00:12.300 --> 00:12.520\n do\n\n00:12.520 --> 00:12.920\n next\n\n00:12.920 --> 00:13.200\n is\n\n00:13.200 --> 00:13.500\n how\n\n00:13.500 --> 00:14.400\n history\n\n00:14.400 --> 00:16.300\n unfolds.\n\n00:16.300 --> 00:16.840\n A\n\n00:16.840 --> 00:17.620\n shadow\n\n00:17.620 --> 00:18.260\n crossed\n\n00:18.260 --> 00:18.680\n the\n\n00:18.680 --> 00:19.600\n hills\n\n00:19.600 --> 00:20.260\n The\n\n00:20.260 --> 00:20.800\n wind\n\n00:20.800 --> 00:21.220\n picked\n\n00:21.220 --> 00:21.760\n up\n\n00:21.760 --> 00:22.060\n a\n\n00:22.060 --> 00:22.900\n chill\n\n00:22.900 --> 00:24.240\n Dailies\n\n00:24.240 --> 00:25.140\n foretold\n\n00:25.140 --> 00:25.460\n the\n\n00:25.460 --> 00:26.080\n sun\n\n00:26.080 --> 00:26.820\n would\n\n00:26.820 --> 00:27.160\n go\n\n00:27.160 --> 00:28.600\n dark\n\n00:28.600 --> 00:30.740\n Warriors\n\n00:30.740 --> 00:32.860\n behold\n\n00:32.860 --> 00:34.740\n A\n\n00:34.740 --> 00:35.340\n sudden\n\n00:35.340 --> 00:36.160\n spark\n\n00:36.160 --> 00:36.720\n A\n\n00:36.720 --> 00:37.200\n sudden\n\n00:37.200 --> 00:38.400\n spark\n\n00:38.400 --> 00:39.080\n A\n\n00:39.080 --> 00:43.220\n shadow\n\n00:43.220 --> 00:43.820\n turned\n\n00:43.820 --> 00:44.180\n to\n\n00:44.180 --> 00:44.460\n day\n\n00:44.460 --> 00:46.160\n Set\n\n00:46.160 --> 00:46.760\n life\n\n00:46.760 --> 00:47.320\n from\n\n00:47.320 --> 00:47.980\n above\n\n00:47.980 --> 00:50.100\n Throw\n\n00:50.100 --> 00:50.560\n down\n\n00:50.560 --> 00:50.860\n your\n\n00:50.860 --> 00:51.720\n blade\n\n00:52.400 --> 00:53.260\n Home\n\n00:53.260 --> 00:54.060\n to\n\n00:54.060 --> 00:54.260\n the\n\n00:54.260 --> 00:55.300\n ones\n\n00:55.300 --> 00:56.000\n you\n\n00:56.000 --> 00:56.500\n love\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 44.298725818799994
+ },
+ "_meta": {
+  "src": "media/stems/vocals_lead.wav",
+  "t0": 159.0,
+  "t1": 216.0,
+  "prompt": "What was it like when reality suddenly broke, the silent eye, how the gods suddenly spoke. Birds went quiet, air suddenly cold. What we do next is how history unfolds. A shadow crossed the hills, the wind picked up a chill. Thales foretold the sun would go dark. Warriors behold... a sudden spark. Shadow turned to day, sunlight from above. Throw down your blade. Home to the ones you love.",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

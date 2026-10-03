@@ -1,0 +1,76 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 3.5,
+  "duration_after_vad": 3.5
+ },
+ "text": "the blade, the blade, and the blade.",
+ "word_count": 7,
+ "segments": [
+  {
+   "start": 237.3,
+   "end": 240.78,
+   "text": " the blade, the blade, and the blade.",
+   "temperature": 1,
+   "avg_logprob": -1.2512112764211802,
+   "compression_ratio": 1.3333333333333333,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " the",
+     "start": 237.3,
+     "end": 239.32
+    },
+    {
+     "word": " blade,",
+     "start": 239.32,
+     "end": 240.12
+    },
+    {
+     "word": " the",
+     "start": 240.14,
+     "end": 240.16
+    },
+    {
+     "word": " blade,",
+     "start": 240.16,
+     "end": 240.16
+    },
+    {
+     "word": " and",
+     "start": 240.16,
+     "end": 240.16
+    },
+    {
+     "word": " the",
+     "start": 240.16,
+     "end": 240.78
+    },
+    {
+     "word": " blade.",
+     "start": 240.78,
+     "end": 240.78
+    }
+   ],
+   "word_count": 7
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:02.020\n the\n\n00:02.020 --> 00:02.820\n blade,\n\n00:02.840 --> 00:02.860\n the\n\n00:02.860 --> 00:02.860\n blade,\n\n00:02.860 --> 00:02.860\n and\n\n00:02.860 --> 00:03.480\n the\n\n00:03.480 --> 00:03.480\n blade.\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 2.7200971993999996
+ },
+ "_meta": {
+  "src": "media/stems/vocals.wav",
+  "t0": 237.3,
+  "t1": 240.8,
+  "prompt": "throw down, your blade, blade",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

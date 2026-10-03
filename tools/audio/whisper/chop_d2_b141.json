@@ -1,0 +1,66 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 3.5,
+  "duration_after_vad": 3.5
+ },
+ "text": "inspire, inspire, inspire, inspire, inspire!",
+ "word_count": 5,
+ "segments": [
+  {
+   "start": 240.7,
+   "end": 244.12,
+   "text": " inspire, inspire, inspire, inspire, inspire!",
+   "temperature": 1,
+   "avg_logprob": -2.0071504299457255,
+   "compression_ratio": 2.0952380952380953,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " inspire,",
+     "start": 240.7,
+     "end": 241.16
+    },
+    {
+     "word": " inspire,",
+     "start": 242.18,
+     "end": 242.2
+    },
+    {
+     "word": " inspire,",
+     "start": 242.22,
+     "end": 243.16
+    },
+    {
+     "word": " inspire,",
+     "start": 243.16,
+     "end": 244.08
+    },
+    {
+     "word": " inspire!",
+     "start": 244.12,
+     "end": 244.12
+    }
+   ],
+   "word_count": 5
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:00.460\n inspire,\n\n00:01.480 --> 00:01.500\n inspire,\n\n00:01.520 --> 00:02.460\n inspire,\n\n00:02.460 --> 00:03.380\n inspire,\n\n00:03.420 --> 00:03.420\n inspire!\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 2.7200971993999996
+ },
+ "_meta": {
+  "src": "media/stems/vocals.wav",
+  "t0": 240.7,
+  "t1": 244.2,
+  "prompt": "throw down, your blade, blade",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

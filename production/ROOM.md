@@ -30,7 +30,8 @@ straps; white chunky sneakers.
 
 ## Terminal (every line must be valid, readable on pause)
 
-> TODO verify against RESEARCH.md before rendering: the saros number, the local time of totality and the totality duration below are placeholders.
+> Facts checked against RESEARCH.md §1.4–1.6: Saros 57; C2 at 18:21 local solar time; 2 m 16 s at a representative site; Sun 8.6° up at az 289° (WNW);
+> Jupiter visible; under standard ΔT the Halys itself only reached 96–99 %, total if ΔT is ~300 s larger. Hence `dt.shift(+300)`.
 
 The spinner is our own: moon phases `◐ ◓ ◑ ◒` cycling. No product logos, names or cloned UIs.
 
@@ -46,11 +47,12 @@ warn: casualties rising at halys.ford (0.8/min)
 
 ◑ syzygizing… 14s
 
-  moon.set_node("descending", saros=58)              ok
-  eclipse.schedule("-585-05-28T18:14", path=halys)   ok
-  thales.notify("the sun goes dark this year")       ok   # he will take credit
+  moon.align(saros=57)                                      ok
+  eclipse.schedule("-585-05-28T18:21 LMT", over="halys")    ok
+  dt.shift(+300)   # nudge the path north so it's total at the river
+  thales.notify("the sun goes dark this year")              ok   # he will take credit
 
-  totality over battlefield: 3m12s   ΔT band: ±0.9 h
+  totality over battlefield: 2m16s · sun 8.6° WNW · jupiter visible
 
 war.status = RESOLVED   treaty: border=halys · aryenis ⚭ astyages
 
@@ -64,7 +66,7 @@ Side panes (vertical monitor, tmux-style, each one line updating):
 ```
 [lydians] 18:16  laying down arms · walking home
 [medes]   18:16  laying down arms · walking home
-[sun]     magnitude 1.000 · corona visible · birds: silent
+[sun]     magnitude 1.000 · alt 8.6° · corona visible · birds: silent
 [moon]    on schedule ✓
 [1420.405 MHz]  6EQUJ5
 ```

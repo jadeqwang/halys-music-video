@@ -1,0 +1,184 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 3.5,
+  "duration_after_vad": 3.5
+ },
+ "text": "blade. Cloud, Snap, serious. Cloud, Marsh, Dirt, Starvation. Cloud\u043d\u0443 have power and power. Water through all the cubes in,",
+ "word_count": 19,
+ "segments": [
+  {
+   "start": 218.6,
+   "end": 218.98,
+   "text": " blade.",
+   "temperature": 1,
+   "avg_logprob": -4.347013430161909,
+   "compression_ratio": 1.1376146788990826,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " blade.",
+     "start": 218.6,
+     "end": 218.98
+    }
+   ],
+   "word_count": 1
+  },
+  {
+   "start": 218.98,
+   "end": 219.52,
+   "text": " Cloud, Snap, serious.",
+   "temperature": 1,
+   "avg_logprob": -4.347013430161909,
+   "compression_ratio": 1.1376146788990826,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Cloud,",
+     "start": 218.98,
+     "end": 218.98
+    },
+    {
+     "word": " Snap,",
+     "start": 219.02,
+     "end": 219.22
+    },
+    {
+     "word": " serious.",
+     "start": 219.28,
+     "end": 219.52
+    }
+   ],
+   "word_count": 3
+  },
+  {
+   "start": 219.52,
+   "end": 221.22,
+   "text": " Cloud, Marsh, Dirt, Starvation.",
+   "temperature": 1,
+   "avg_logprob": -4.347013430161909,
+   "compression_ratio": 1.1376146788990826,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Cloud,",
+     "start": 219.52,
+     "end": 219.66
+    },
+    {
+     "word": " Marsh,",
+     "start": 219.7,
+     "end": 219.72
+    },
+    {
+     "word": " Dirt,",
+     "start": 220.96,
+     "end": 221.2
+    },
+    {
+     "word": " Starvation.",
+     "start": 221.22,
+     "end": 221.22
+    }
+   ],
+   "word_count": 4
+  },
+  {
+   "start": 221.34,
+   "end": 222.06,
+   "text": " Cloud\u043d\u0443 have power and power.",
+   "temperature": 1,
+   "avg_logprob": -4.347013430161909,
+   "compression_ratio": 1.1376146788990826,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Cloud\u043d\u0443",
+     "start": 221.34,
+     "end": 221.38
+    },
+    {
+     "word": " have",
+     "start": 221.38,
+     "end": 221.4
+    },
+    {
+     "word": " power",
+     "start": 221.4,
+     "end": 221.68
+    },
+    {
+     "word": " and",
+     "start": 221.68,
+     "end": 221.68
+    },
+    {
+     "word": " power.",
+     "start": 221.68,
+     "end": 222.06
+    }
+   ],
+   "word_count": 5
+  },
+  {
+   "start": 222.06,
+   "end": 222.08,
+   "text": " Water through all the cubes in,",
+   "temperature": 1,
+   "avg_logprob": -4.347013430161909,
+   "compression_ratio": 1.1376146788990826,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Water",
+     "start": 222.06,
+     "end": 222.08
+    },
+    {
+     "word": " through",
+     "start": 222.08,
+     "end": 222.08
+    },
+    {
+     "word": " all",
+     "start": 222.08,
+     "end": 222.08
+    },
+    {
+     "word": " the",
+     "start": 222.08,
+     "end": 222.08
+    },
+    {
+     "word": " cubes",
+     "start": 222.08,
+     "end": 222.08
+    },
+    {
+     "word": " in,",
+     "start": 222.08,
+     "end": 222.08
+    }
+   ],
+   "word_count": 6
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:00.380\n blade.\n\n00:00.380 --> 00:00.380\n Cloud,\n\n00:00.420 --> 00:00.620\n Snap,\n\n00:00.680 --> 00:00.920\n serious.\n\n00:00.920 --> 00:01.060\n Cloud,\n\n00:01.100 --> 00:01.120\n Marsh,\n\n00:02.360 --> 00:02.600\n Dirt,\n\n00:02.620 --> 00:02.620\n Starvation.\n\n00:02.740 --> 00:02.780\n Cloud\u043d\u0443\n\n00:02.780 --> 00:02.800\n have\n\n00:02.800 --> 00:03.080\n power\n\n00:03.080 --> 00:03.080\n and\n\n00:03.080 --> 00:03.460\n power.\n\n00:03.460 --> 00:03.480\n Water\n\n00:03.480 --> 00:03.480\n through\n\n00:03.480 --> 00:03.480\n all\n\n00:03.480 --> 00:03.480\n the\n\n00:03.480 --> 00:03.480\n cubes\n\n00:03.480 --> 00:03.480\n in,\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 2.7200971993999996
+ },
+ "_meta": {
+  "src": "media/stems/vocals.wav",
+  "t0": 218.6,
+  "t1": 222.1,
+  "prompt": "throw down, your blade, blade",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

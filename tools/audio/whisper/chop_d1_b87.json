@@ -1,0 +1,46 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 4,
+  "duration_after_vad": 4
+ },
+ "text": "...",
+ "word_count": 1,
+ "segments": [
+  {
+   "start": 150.3,
+   "end": 151.16,
+   "text": " ...",
+   "temperature": 1,
+   "avg_logprob": -2.0591735243797302,
+   "compression_ratio": 0.2727272727272727,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " ...",
+     "start": 150.3,
+     "end": 151.16
+    }
+   ],
+   "word_count": 1
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:00.860\n ...\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 3.1086825136
+ },
+ "_meta": {
+  "src": "media/stems/vocals.wav",
+  "t0": 150.3,
+  "t1": 154.3,
+  "prompt": "halo, in the sky, sky",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

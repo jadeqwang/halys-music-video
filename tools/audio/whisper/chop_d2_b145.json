@@ -1,0 +1,66 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 3.5,
+  "duration_after_vad": 3.5
+ },
+ "text": "oh, oh, oh, oh, oh!",
+ "word_count": 5,
+ "segments": [
+  {
+   "start": 247.5,
+   "end": 249.5,
+   "text": " oh, oh, oh, oh, oh!",
+   "temperature": 1,
+   "avg_logprob": -1.3421678176293006,
+   "compression_ratio": 1.2666666666666666,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " oh,",
+     "start": 247.5,
+     "end": 247.82
+    },
+    {
+     "word": " oh,",
+     "start": 247.82,
+     "end": 248.02
+    },
+    {
+     "word": " oh,",
+     "start": 248.02,
+     "end": 248.6
+    },
+    {
+     "word": " oh,",
+     "start": 248.8,
+     "end": 249.08
+    },
+    {
+     "word": " oh!",
+     "start": 249.22,
+     "end": 249.5
+    }
+   ],
+   "word_count": 5
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:00.320\n oh,\n\n00:00.320 --> 00:00.520\n oh,\n\n00:00.520 --> 00:01.100\n oh,\n\n00:01.300 --> 00:01.580\n oh,\n\n00:01.720 --> 00:02.000\n oh!\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 2.7200971993999996
+ },
+ "_meta": {
+  "src": "media/stems/vocals.wav",
+  "t0": 247.5,
+  "t1": 251.0,
+  "prompt": "throw down, your blade, blade",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

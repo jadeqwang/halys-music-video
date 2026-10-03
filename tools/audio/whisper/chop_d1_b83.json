@@ -1,0 +1,61 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 3.6,
+  "duration_after_vad": 3.6
+ },
+ "text": "Stay in the sky",
+ "word_count": 4,
+ "segments": [
+  {
+   "start": 143.4,
+   "end": 145.68,
+   "text": " Stay in the sky",
+   "temperature": 1,
+   "avg_logprob": -1.1870804173605782,
+   "compression_ratio": 0.6521739130434783,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Stay",
+     "start": 143.4,
+     "end": 144.3
+    },
+    {
+     "word": " in",
+     "start": 144.3,
+     "end": 144.7
+    },
+    {
+     "word": " the",
+     "start": 144.7,
+     "end": 145.04
+    },
+    {
+     "word": " sky",
+     "start": 145.04,
+     "end": 145.68
+    }
+   ],
+   "word_count": 4
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:00.900\n Stay\n\n00:00.900 --> 00:01.300\n in\n\n00:01.300 --> 00:01.640\n the\n\n00:01.640 --> 00:02.280\n sky\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 2.7978142622399997
+ },
+ "_meta": {
+  "src": "media/stems/vocals.wav",
+  "t0": 143.4,
+  "t1": 147.0,
+  "prompt": "halo, in the sky, sky",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

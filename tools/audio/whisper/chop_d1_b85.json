@@ -1,0 +1,51 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 3.5,
+  "duration_after_vad": 3.5
+ },
+ "text": "Oh no",
+ "word_count": 2,
+ "segments": [
+  {
+   "start": 146.9,
+   "end": 148.92,
+   "text": " Oh no",
+   "temperature": 1,
+   "avg_logprob": -1.82569580078125,
+   "compression_ratio": 0.38461538461538464,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " Oh",
+     "start": 146.9,
+     "end": 147.88
+    },
+    {
+     "word": " no",
+     "start": 147.88,
+     "end": 148.92
+    }
+   ],
+   "word_count": 2
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:00.980\n Oh\n\n00:00.980 --> 00:02.020\n no\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 2.7200971993999996
+ },
+ "_meta": {
+  "src": "media/stems/vocals.wav",
+  "t0": 146.9,
+  "t1": 150.4,
+  "prompt": "halo, in the sky, sky",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

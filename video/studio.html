@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Halys studio</title>
+<link rel="icon" href="data:,">
+<style>
+  :root { --bg: #111113; --panel: #1b1b1e; --fg: #e6e2da; --dim: #8d8a84; --hot: #ff7a1a; }
+  html, body { margin: 0; background: var(--bg); color: var(--fg); font: 13px/1.4 ui-monospace, "JetBrains Mono", monospace; }
+  main { display: grid; gap: 8px; padding: 10px; max-width: 1400px; margin: 0 auto; }
+  #stage { display: flex; justify-content: center; background: #000; }
+  #out { display: block; max-width: 100%; max-height: 72vh; height: auto; width: auto; background: #000; }
+  .bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  #scrub { flex: 1 1 320px; accent-color: var(--hot); }
+  button, select { background: var(--panel); color: var(--fg); border: 1px solid #333; border-radius: 4px; padding: 4px 9px; font: inherit; cursor: pointer; }
+  button:hover { border-color: var(--hot); }
+  #tc { font-variant-numeric: tabular-nums; min-width: 9ch; }
+  #stat { color: var(--dim); font-variant-numeric: tabular-nums; }
+  #shots { display: flex; flex-wrap: wrap; gap: 4px; }
+  #shots button { padding: 2px 7px; font-size: 12px; }
+  #shots button.on { border-color: var(--hot); color: var(--hot); }
+  .keys { color: var(--dim); font-size: 12px; }
+  body.render main > :not(#stage) { display: none; }
+</style>
+</head>
+<body>
+<main>
+  <div id="stage"><canvas id="out"></canvas></div>
+  <div class="bar">
+    <button id="play" title="space">▶</button>
+    <span id="tc">00:00.00</span>
+    <input id="scrub" type="range" min="0" max="273.6" step="0.0166667" value="0">
+    <select id="size" title="output size (reloads)">
+      <option value="1920x1080">16:9 1920×1080</option>
+      <option value="960x540">16:9 960×540 (fast)</option>
+      <option value="1080x1350">4:5 1080×1350</option>
+      <option value="540x675">4:5 540×675 (fast)</option>
+      <option value="1080x1920">9:16 1080×1920</option>
+    </select>
+    <label><input id="mute" type="checkbox"> mute</label>
+  </div>
+  <div id="stat">loading…</div>
+  <div id="shots"></div>
+  <div class="keys">space play/pause · ←/→ one master frame · shift+←/→ one second · [ ] previous/next shot · ?t=SECONDS&amp;w=&amp;h=&amp;fps= in the URL</div>
+  <audio id="song" preload="auto"></audio>
+</main>
+<script type="module">
+  if (new URLSearchParams(location.search).has('render')) document.body.classList.add('render');
+</script>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

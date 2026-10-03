@@ -1,0 +1,46 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 4.2,
+  "duration_after_vad": 4.2
+ },
+ "text": "yeah",
+ "word_count": 1,
+ "segments": [
+  {
+   "start": 114.0,
+   "end": 114.88,
+   "text": " yeah",
+   "temperature": 1,
+   "avg_logprob": -3.021224856376648,
+   "compression_ratio": 0.3333333333333333,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " yeah",
+     "start": 114.0,
+     "end": 114.88
+    }
+   ],
+   "word_count": 1
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:00.880\n yeah\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 3.26411663928
+ },
+ "_meta": {
+  "src": "media/stems/vocals.wav",
+  "t0": 114.0,
+  "t1": 118.2,
+  "prompt": "halo, in the sky, sky",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

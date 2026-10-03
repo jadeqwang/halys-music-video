@@ -1,0 +1,76 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 4.3,
+  "duration_after_vad": 4.3
+ },
+ "text": "rub, rub, rub, rub, rub, rub, rub.",
+ "word_count": 7,
+ "segments": [
+  {
+   "start": 254.3,
+   "end": 258.22,
+   "text": " rub, rub, rub, rub, rub, rub, rub.",
+   "temperature": 1,
+   "avg_logprob": -1.460549747242647,
+   "compression_ratio": 2,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " rub,",
+     "start": 254.3,
+     "end": 254.46
+    },
+    {
+     "word": " rub,",
+     "start": 256.12,
+     "end": 257.38
+    },
+    {
+     "word": " rub,",
+     "start": 257.48,
+     "end": 257.48
+    },
+    {
+     "word": " rub,",
+     "start": 257.56,
+     "end": 257.56
+    },
+    {
+     "word": " rub,",
+     "start": 257.56,
+     "end": 257.62
+    },
+    {
+     "word": " rub,",
+     "start": 257.62,
+     "end": 257.8
+    },
+    {
+     "word": " rub.",
+     "start": 257.8,
+     "end": 258.22
+    }
+   ],
+   "word_count": 7
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:00.160\n rub,\n\n00:01.820 --> 00:03.080\n rub,\n\n00:03.180 --> 00:03.180\n rub,\n\n00:03.260 --> 00:03.260\n rub,\n\n00:03.260 --> 00:03.320\n rub,\n\n00:03.320 --> 00:03.500\n rub,\n\n00:03.500 --> 00:03.920\n rub.\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 3.3418337021199997
+ },
+ "_meta": {
+  "src": "media/stems/vocals.wav",
+  "t0": 254.3,
+  "t1": 258.6,
+  "prompt": "throw down, your blade, blade",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

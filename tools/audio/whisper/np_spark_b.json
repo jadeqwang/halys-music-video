@@ -1,0 +1,111 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 9.9,
+  "duration_after_vad": 9.9
+ },
+ "text": "It's bad, it's bad, it's bad, it's bad, it's bad I'll turn to day.",
+ "word_count": 14,
+ "segments": [
+  {
+   "start": 194.3,
+   "end": 203.46,
+   "text": " It's bad, it's bad, it's bad, it's bad, it's bad I'll turn to day.",
+   "temperature": 0.4,
+   "avg_logprob": -0.8147136313574654,
+   "compression_ratio": 1.6923076923076923,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " It's",
+     "start": 194.3,
+     "end": 194.9
+    },
+    {
+     "word": " bad,",
+     "start": 194.9,
+     "end": 195.34
+    },
+    {
+     "word": " it's",
+     "start": 195.4,
+     "end": 196.5
+    },
+    {
+     "word": " bad,",
+     "start": 196.5,
+     "end": 197.92
+    },
+    {
+     "word": " it's",
+     "start": 197.92,
+     "end": 199.88
+    },
+    {
+     "word": " bad,",
+     "start": 199.88,
+     "end": 200.42
+    },
+    {
+     "word": " it's",
+     "start": 200.42,
+     "end": 201.52
+    },
+    {
+     "word": " bad,",
+     "start": 201.52,
+     "end": 201.52
+    },
+    {
+     "word": " it's",
+     "start": 201.52,
+     "end": 201.74
+    },
+    {
+     "word": " bad",
+     "start": 201.74,
+     "end": 202.12
+    },
+    {
+     "word": " I'll",
+     "start": 202.12,
+     "end": 202.38
+    },
+    {
+     "word": " turn",
+     "start": 202.38,
+     "end": 202.74
+    },
+    {
+     "word": " to",
+     "start": 202.74,
+     "end": 203.12
+    },
+    {
+     "word": " day.",
+     "start": 203.12,
+     "end": 203.46
+    }
+   ],
+   "word_count": 14
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:00.000 --> 00:00.600\n It's\n\n00:00.600 --> 00:01.040\n bad,\n\n00:01.100 --> 00:02.200\n it's\n\n00:02.200 --> 00:03.620\n bad,\n\n00:03.620 --> 00:05.580\n it's\n\n00:05.580 --> 00:06.120\n bad,\n\n00:06.120 --> 00:07.220\n it's\n\n00:07.220 --> 00:07.220\n bad,\n\n00:07.220 --> 00:07.440\n it's\n\n00:07.440 --> 00:07.820\n bad\n\n00:07.820 --> 00:08.080\n I'll\n\n00:08.080 --> 00:08.440\n turn\n\n00:08.440 --> 00:08.820\n to\n\n00:08.820 --> 00:09.160\n day.\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 7.69398922116
+ },
+ "_meta": {
+  "src": "media/stems/vocals_lead.wav",
+  "t0": 194.3,
+  "t1": 204.2,
+  "prompt": null,
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}

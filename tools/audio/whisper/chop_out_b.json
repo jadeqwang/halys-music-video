@@ -1,0 +1,71 @@
+{
+ "transcription_info": {
+  "language": "en",
+  "language_probability": 1,
+  "duration": 6,
+  "duration_after_vad": 6
+ },
+ "text": "It's hard, it's hard, it's hard",
+ "word_count": 6,
+ "segments": [
+  {
+   "start": 264.46,
+   "end": 267.88,
+   "text": " It's hard, it's hard, it's hard",
+   "temperature": 1,
+   "avg_logprob": -1.4826115454946245,
+   "compression_ratio": 1.4090909090909092,
+   "no_speech_prob": 0,
+   "words": [
+    {
+     "word": " It's",
+     "start": 264.46,
+     "end": 264.8
+    },
+    {
+     "word": " hard,",
+     "start": 264.8,
+     "end": 264.86
+    },
+    {
+     "word": " it's",
+     "start": 264.88,
+     "end": 265.84
+    },
+    {
+     "word": " hard,",
+     "start": 265.84,
+     "end": 266.02
+    },
+    {
+     "word": " it's",
+     "start": 266.08,
+     "end": 267.72
+    },
+    {
+     "word": " hard",
+     "start": 267.72,
+     "end": 267.88
+    }
+   ],
+   "word_count": 6
+  }
+ ],
+ "vtt": "WEBVTT\n\n00:01.960 --> 00:02.300\n It's\n\n00:02.300 --> 00:02.360\n hard,\n\n00:02.380 --> 00:03.340\n it's\n\n00:03.340 --> 00:03.520\n hard,\n\n00:03.580 --> 00:05.220\n it's\n\n00:05.220 --> 00:05.380\n hard\n\n",
+ "usage": {
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "total_tokens": 0,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  },
+  "neurons": 4.6630237704
+ },
+ "_meta": {
+  "src": "media/stems/vocals.wav",
+  "t0": 262.5,
+  "t1": 268.5,
+  "prompt": "throw down, your blade, blade",
+  "model": "@cf/openai/whisper-large-v3-turbo"
+ }
+}
