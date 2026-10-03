@@ -751,7 +751,8 @@ scene('S33', async f => {
 });
 
 // ---------------------------------------------------------------- S34: last light (beads, the diamond ring, white, the black pupil at 110.58)
-scene('S34', async f => {
+scene('S34', f => SCENE_S34(f));
+async function SCENE_S34(f) {
   const t = f.t, W = f.W, H = f.H;
   // scripted second contact: the sliver breaks into beads, the last bead swells into the diamond ring, we push into it
   const off = kf(t, [[108.84, .12], [109.55, .085], [110.05, .068], [110.58, .062]]);
@@ -778,6 +779,19 @@ scene('S34', async f => {
   if (pk > 0) f.type.pupil = { x: hx, y: hy, r: H * .03 + Rfull * Math.pow(pk, 1.8) };
   f.type.sun = { x: P0.x, y: P0.y, r: P0.r };
   f.type.flash = white;
+}
+
+// the pupil opening is a fast move (8 master frames): a 60 fps insert so it dilates smoothly into S35's first frame.
+// Under it the painting is already the white flash (S34 drawn once at 110.43); only the pupil moves.
+shotOverride('S34', { t1: 110.44 });
+shot({ id: 'S34p', t0: 110.44, t1: 110.58, world: 'bronze', cadence: 60, scene: 'S34p', parent: 'S34', params: { label: 'S34 black pupil opens (hand-off to S35)' } });
+scene('S34p', async f => {
+  const ff = { ...f, t: 110.43, k: seg(110.43, 108.84, 110.58), shot: { ...f.shot, t0: 108.84, t1: 110.58, dur: 1.74, id: 'S34' } };
+  await SCENE_S34(ff);
+  f.type = ff.type || f.type || {};
+  const t = f.t, W = f.W, H = f.H, hx = W * .5, hy = H * .343, Rfull = .5 * Math.hypot(W, H) * 1.02, pk = sstep(110.44, 110.57, t);
+  const r = H * .03 * sstep(110.44, 110.47, t) + Rfull * Math.pow(pk, 1.8);
+  if (r > 0) { blackPupil(f.g, hx, hy, r); f.type.pupil = { x: hx, y: hy, r }; }
 });
 
 // which plate each shot reads (for the report); hasPlate() decides at render time

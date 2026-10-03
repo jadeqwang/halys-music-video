@@ -4,11 +4,11 @@
   "1": {
    "verdict": "pass",
    "score": 4,
-   "purpose": "Opens exactly on the canonical master composition (halys_wide3): river straight to the sun at the vanishing point, Lydians left, Medes right, mirrored, armies in parade ranks (plate 0-4.5 s). Then the camera descends (4.5-8.5 s) as both armies surge into the river, ending in a ground-level melee in the ford (8.5-15 s).",
+   "purpose": "Opens exactly on the canonical master composition (halys_wide3): river straight to the sun at the vanishing point, Lydians left, Medes right, mirrored, armies in parade ranks; this static master holds for plate 0-4.5 s. Then the camera descends (4.5-8.5 s) as both armies surge into the river, ending in a ground-level melee in the ford (8.5-15 s).",
    "costume": "Lydians crested helmets, crimson tunics, crimson lion shields; Medes red caps, ochre tunics, wicker shields; standards on poles (lion, horse), no flags.",
    "identity": "Army-level; the close melee figures at 12-15 s read as the two sides.",
    "artefacts": "None seen at sheet scale; dense melee in the last 3 s should not be used for figure work.",
-   "notes": "1:1 from t0 fits S05 (title, plate 0-3.5) and S06 (descent, plate 3.5-7.0) exactly. For later wides (S16, S20, S24, S30, S35, S44) use plate 0-4.5 (static master). No battle at the ford in the high part (armies in ranks).",
+   "notes": "No battle at the ford in the high part (armies stand in ranks); the fighting only appears as the camera comes down. Do not use the dense melee of the last 3 s for figure work.",
    "sync": [
     {
      "song_t": 7.18,
@@ -43,7 +43,7 @@
    "job": null,
    "reviewed": "2026-10-03T01:53:33",
    "short": "Parade ranks (no battle) in the high part (plate 0-4.5 s); the camera then descends into the melee.",
-   "timing": "S05 = plate 0-3.5 and S06 (descent) = plate 3.5-7.0 at 1:1 from t0; for the later wides (S16, S20, S24, S30, S35, S44) use the static master at plate 0-4.5 (slow or hold it); the armies charge into the ford 6.5-9 s."
+   "timing": "S05 (7.18-10.69) = plate 0-3.5 at 1:1. The descent starts at plate ~4.5: key 10.69 -> 4.5 to open S06 on the move (at plain 1:1, S06 = plate 3.5-7.0 and opens with ~1 s of the static master). Later wides (S16, S20, S24, S30, S35, S44): the static master, plate 0-4.5 (slow or hold it for S24's 7 s). The armies charge into the ford at 6.5-9 s."
   },
   "2": {
    "verdict": "pass",
