@@ -376,32 +376,56 @@ const invertNow = (T, e, t, fps) => !!(T.invert ?? (e.invert && e.invert.some(s 
 
 // S36, the stutter. The montage exists to show the faces, so SKY shows on alternate picture cuts only (the shot's first
 // cut is clean), hollow (orange outline, faint pearl lines), half size, in the upper or lower third away from the
-// subject. Where: f.type.place[id] = {x, y[, size]} (fractions of the frame; size = scale of the full chop, default
-// 0.5), else whichever third is clear of f.type.avoid = [{x, y, w, h}, ...] (fractions: the faces), else alternating
-// bottom / top. Each appearance re-slams with a short orange echo.
-const STUTTER_SIZE = .5;
-function stutterSpot(f, e, L, fit, vis, t) {
+// subject. The Glover caption (to 114.2) is a hard obstacle: SKY is never drawn over it. The scene's face boxes
+// (f.type.avoid = [{x, y, w, h}, ...], fractions) are soft: SKY takes the third that is clear of them (alternating
+// bottom / top when both are), and when the caption blocks the bottom and a face fills the top, it goes in the top
+// third anyway, smaller (down to 0.3 of the full chop) and/or to one side, to clear the face as best it can; if even
+// that would cover the face (over 25 % of the word on it), the cut is skipped. f.type.place[id] = {x, y[, size]}
+// places it outright (size = scale of the full chop, default 0.5), unless that would cover the caption.
+const STUTTER_SIZE = .5, STUTTER_MIN = .3;
+function stutterSpot(f, e, L, fit, vis, t, jit) {
   const T = f.type || {}, pl = T.place && T.place[e.id], S = L.safe, face = FACE.chop;
-  const avoid = [...(T.avoid || [])];
-  for (const q of TRACK.events) {                  // the Glover caption (to 114.2) is a box to keep clear too
+  const hard = [], soft = T.avoid || [];
+  for (const q of TRACK.events) {
     if (q.fx !== 'quote' || t < q.t0 - 1e-6 || t >= q.t1 - 1e-6 || (T.hide || []).includes(q.id)) continue;
     const G = quoteGeom(L, q.items.find(i => i.key === 'who')), y0 = G.y1 - FACE.plaqueBold.cap * G.px - .015 * L.H;
-    avoid.push({ x: S.x / L.W, y: y0 / L.H, w: S.w / L.W, h: (G.yb + .015 * L.H - y0) / L.H });
+    hard.push({ x: S.x / L.W, y: y0 / L.H, w: S.w / L.W, h: (G.yb + .015 * L.H - y0) / L.H });
   }
-  const size = pl && pl.size != null ? pl.size : STUTTER_SIZE;
-  const px = fit.px * size, n = fit.lines.length, hB = face.cap * px + (n - 1) * px * fit.lead;
-  const wB = Math.max(...fit.lines.map(ws => textWidth(face, px, ws.join(' '))));
-  if (pl && pl.x != null && pl.y != null) return { cx: pl.x * L.W, cy: pl.y * L.H, size };
-  const top = Math.max(S.y + .55 * hB, L.H / 6), bottom = Math.min(S.y + S.h - .55 * hB, 5 * L.H / 6);
-  const cx = pl && pl.x != null ? pl.x * L.W : L.cx;
-  const overlap = cy => avoid.reduce((a, b) => {
-    const ix = Math.min(cx + wB / 2, (b.x + b.w) * L.W) - Math.max(cx - wB / 2, b.x * L.W);
-    const iy = Math.min(cy + hB / 2, (b.y + b.h) * L.H) - Math.max(cy - hB / 2, b.y * L.H);
+  const dims = size => {
+    const px = fit.px * size, n = fit.lines.length;
+    return { hB: face.cap * px + (n - 1) * px * fit.lead, wB: Math.max(...fit.lines.map(ws => textWidth(face, px, ws.join(' ')))) };
+  };
+  const cover = (cx, cy, d, boxes) => boxes.reduce((a, b) => {
+    const ix = Math.min(cx + d.wB / 2, (b.x + b.w) * L.W) - Math.max(cx - d.wB / 2, b.x * L.W);
+    const iy = Math.min(cy + d.hB / 2, (b.y + b.h) * L.H) - Math.max(cy - d.hB / 2, b.y * L.H);
     return a + Math.max(0, ix) * Math.max(0, iy);
   }, 0);
-  const ot = overlap(top), ob = overlap(bottom);
-  const cy = ot < ob ? top : ob < ot ? bottom : vis % 2 ? top : bottom;
-  return { cx, cy, size };
+  const size0 = pl && pl.size != null ? pl.size : STUTTER_SIZE;
+  if (pl && pl.x != null && pl.y != null && !cover(pl.x * L.W, pl.y * L.H, dims(size0), hard)) return { cx: pl.x * L.W, cy: pl.y * L.H, size: size0 };
+  const cx0 = (pl && pl.x != null ? pl.x * L.W : L.cx) + jit * size0;
+  const at = (size, where, side) => {
+    const d = dims(size);
+    const cy = where === 'top' ? Math.max(S.y + .55 * d.hB, L.H / 6) : Math.min(S.y + S.h - .55 * d.hB, 5 * L.H / 6);
+    const cx = side === 'l' ? S.x + d.wB / 2 + .01 * L.W : side === 'r' ? S.x + S.w - d.wB / 2 - .01 * L.W : cx0;
+    return { cx, cy, size, hard: cover(cx, cy, d, hard), on: cover(cx, cy, d, soft) / (d.wB * d.hB) };
+  };
+  // the full-size candidates, centred: the clear third (alternating when both are clear)
+  const pref = vis % 2 ? ['top', 'bottom'] : ['bottom', 'top'];
+  const full = pref.map(w => at(size0, w, 'c')).filter(c => !c.hard);
+  const clear = full.filter(c => c.on <= .02);
+  if (clear.length) return clear[0];
+  if (full.length === 2) return full[0].on <= full[1].on ? full[0] : full[1];   // no caption: the third less on a face
+  // blocked (the caption below, a face above): the top third anyway, smaller and/or to one side, as clear as it gets
+  let best = null;
+  for (let size = size0; size >= STUTTER_MIN - 1e-6; size -= .05) {
+    for (const side of ['c', 'l', 'r']) for (const w of ['top', 'bottom']) {
+      const c = at(size, w, side);
+      if (c.hard) continue;
+      if (c.on <= .02) return c;
+      if (!best || c.on < best.on) best = c;
+    }
+  }
+  return best && best.on <= .25 ? best : null;                                   // else skip this cut
 }
 function stutter(g, f, e, t) {
   const L = f.L, T = f.type || {}, fps = 60;
@@ -411,10 +435,10 @@ function stutter(g, f, e, t) {
   if (ci < 1 || ci % 2 === 0) return;
   const vis = (ci - 1) / 2, fr = Math.round((t - cuts[ci]) * fps);
   const it = e.items[0], word = it.text, full = fitFor(L, word);
-  const spot = stutterSpot(f, e, L, full, vis, t);
-  const fit = { ...full, px: full.px * spot.size };
   const pat = [0, 1, -1, .5, -.5, 1.5, -1.5, 0];
-  const cx = spot.cx + pat[vis % pat.length] * .02 * L.W * spot.size, cy = spot.cy;
+  const spot = stutterSpot(f, e, L, full, vis, t, pat[vis % pat.length] * .02 * L.W);
+  if (!spot) return;
+  const fit = { ...full, px: full.px * spot.size }, cx = spot.cx, cy = spot.cy;
   const scale = fr <= 0 ? 1.075 : fr === 1 ? 1.025 : 1;
   const invert = invertNow(T, e, t, fps), kick = clamp(T.kick ?? pulse(t, 10));
   const { center, disk } = chopField(T, e, L);

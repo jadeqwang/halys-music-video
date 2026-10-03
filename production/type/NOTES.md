@@ -156,9 +156,12 @@ when one line would be smaller than 20 % of the frame height.
 * Stutter (S36, 112.31–117.53): the montage exists to show the faces, so SKY shows only on alternate picture cuts
   (the cuts are the shot start plus the 18 onsets; the first cut is clean, so 9 appearances, 2.7 s of 5.2 s). It is
   hollow: the orange outline with faint pearl lines (36 % opacity, no navy, no dark halo). It is half the S35 size,
-  in the upper or lower third: at `f.type.place['S36.stutter']` if given, else the third clear of `f.type.avoid`
-  boxes and of the Glover caption (so it sits top until 114.2), else alternating bottom and top. Each appearance
-  re-slams (1.075) with a short orange echo and a small sideways jump. Bar 64's HALO / IN THE / SKY / SKY (S35) and
+  in the upper or lower third. The Glover caption (to 114.2) is a hard obstacle: SKY is never drawn over it. The
+  scene's `f.type.avoid` face boxes are soft: SKY takes the third clear of them (alternating bottom and top when both
+  are). When the caption blocks the bottom and a face fills the top, it goes in the top third anyway, smaller (down
+  to 0.3 of the full chop) and/or to one side, to clear the face; if over 25 % of the word would still sit on the
+  face, that cut is skipped. `f.type.place['S36.stutter'] = {x, y, size}` places it outright unless that covers the
+  caption. Each appearance re-slams (1.075) with a short orange echo and a small sideways jump. Bar 64's HALO / IN THE / SKY / SKY (S35) and
   the cycles S41–S44 stay full size.
 * Inversion: on the seven stabs, two frames of the negative, opaque navy lines on pearl.
 * HAL: on frames 0–3 of the first HALO, a true-black disk the width of the O, with a thin pearl limb.
