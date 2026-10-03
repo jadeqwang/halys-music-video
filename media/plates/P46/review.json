@@ -102,6 +102,41 @@
    "est_cost_usd": 1.8496,
    "job": null,
    "reviewed": "2026-10-03T03:02:21"
+  },
+  "4": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S37 delivered: a frozen Baroque reaction group on a stony bank under an empty dark sky with an orange horizon, reflected in the water: a Lydian kneeling with arms raised (palms up), a Mede pointing up, spears crossed at the centre, a Mede kneeling with arms raised, a Lydian covering his eyes, a Lydian rider whose horse is frozen high on its hind legs, a Mede prostrate on the stones; everyone statue-still while the camera arcs ~25-30 degrees left to right.",
+   "costume": "Correct (crests/crimson/scales; red caps/ochre/iron scales).",
+   "identity": "Consistent with the sheets.",
+   "artefacts": "The crossed spears are both held by Lydians (the central Mede kneels rather than duels); 4 Lydian : 3 Median figures.",
+   "notes": "1:1 from t0; clean depth layers (water, group, rider) for the S37 orbit.",
+   "sync": [
+    {
+     "song_t": 117.53,
+     "event": "orbit starts",
+     "expected_plate_t": 0.0,
+     "measured_plate_t": 0.042,
+     "offset_s": 0.042,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 124.475,
+     "event": "kick out (one-bar break)",
+     "expected_plate_t": 6.945,
+     "measured_plate_t": 7.083,
+     "offset_s": 0.138,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P46/take4.review.jpg",
+   "contact": "media/plates/P46/take4.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.8496,
+   "job": null,
+   "reviewed": "2026-10-03T03:07:53",
+   "short": "Both crossed spears held by Lydians (the central Mede kneels); 4:3 figures."
   }
  },
  "shots": "S37",
@@ -109,5 +144,8 @@
   117.53,
   125.53
  ],
- "audio_t0": 117.53
+ "audio_t0": 117.53,
+ "chosen": 4,
+ "chosen_why": "Balanced prayer/terror poses on both sides, a real rear, empty sky and the widest clean arc (take 3 put every kneeling pose on the Medes and the horse never reared; take 2 drew a corona; take 1's duel is unclear).",
+ "t_chosen": "2026-10-03T03:07:53"
 }

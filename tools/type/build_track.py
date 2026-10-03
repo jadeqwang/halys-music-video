@@ -212,7 +212,7 @@ ev("S73.chops", "chop", "S73", [("THROW DOWN", {"key": "c1"}), ("THROW DOWN", {"
 ev("S75.chop", "chop", "S75", [("THROW DOWN", {"key": "c1"})])
 ev("S76.chop", "chop", "S76", [("BLADE", {"key": "c1"})])
 
-# 14 · outro: the terminal (built below from ROOM.md + FACTCHECK.md) and the end card
+# 14 · outro: the terminal (built below from ROOM.md, whose block carries FACTCHECK.md's corrections) and the end card
 ev("S81.end", "endcard", "S81", [("HALYS", {"key": "title", "reveal": "line", "t": 277.60}),
                                  ("JADE WANG", {"key": "byline", "reveal": "line", "t": 277.85}),
                                  ("NEXT TOTALITY · 2027-08-02 · NEAR LUXOR · 6M23S", {"key": "next", "reveal": "line", "t": 278.10})],
@@ -221,7 +221,7 @@ ev("S81.end", "endcard", "S81", [("HALYS", {"key": "title", "reveal": "line", "t
 # ---------------------------------------------------------------- the terminal (S78–S80)
 TICKS = [round(x, 3) for x in TIMING["events"]["snares"] if 266.1 <= x < 269.8]
 PROMPT = "jade@rare-earth:~/sims/earth (main)$ "
-# ROOM.md main pane with FACTCHECK.md's corrected lines (run flags order, "totality at halys bend") applied
+# ROOM.md main pane, verbatim (its terminal block now carries FACTCHECK.md's corrected lines; build() checks every line)
 MAIN = [
     (None, PROMPT + "./halys run --seed=-585 --region=anatolia --from=-0584-05-28T15:00 --cal=julian"),
     (0, "loaded world: 8,412,066 agents · terrain: halys basin · weather: clear"),
@@ -313,6 +313,12 @@ def build():
             later = [c for c in st if c["bar"] >= 66]
             e["onsets"] = sorted([round(c["t"], 3) for c in st if c["bar"] < 66] + [round(c["t"], 3) for c in later[::2]])
         events.append(e)
+
+    room = (ROOT / "production" / "ROOM.md").read_text(encoding="utf-8")
+    term = [s for _, s in MAIN if s.strip() and s != PROMPT] + SIDE + [PROMPT + COMMIT] + [o["text"] for o in TERMINAL["output"] if o["text"] != PROMPT]
+    for line in term:
+        if line not in room:
+            errors.append(f"terminal line not found verbatim in production/ROOM.md: {line!r}")
 
     unused = [(s, tx) for (s, tx, k) in cues if (s, tx, k) not in used]
     for s, tx in unused:
