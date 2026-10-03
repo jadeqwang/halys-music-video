@@ -203,7 +203,7 @@ mediapipe, jsonschema, Pillow are installed). Audited 2026-10-02: every CLI belo
 | `pipeline.sh` | runs the above in dependency order: extract → meta (writes the gain) → fields → mattes → depth | `tools/pipeline.sh [--mattes\|--depth\|--all] [ids]` |
 | `review_sheets.py` | contact sheets: any video, all takes of a plate, frame strips, one frame next to all its maps, rendered film frames | `video FILE` · `plates [ids]` · `strip FILE --from= --to=` · `maps ID --frame=N` · `frames [--from= --to= --every=]` |
 | `models.py` | downloads the local analysis models (face landmarker, anime cascade, Depth Anything ONNX) to `~/.cache/halys/models` | `python3 tools/models.py [face\|animeface\|depth]` |
-| `shotlist.py` | parses `production/SHOTLIST.md` (79 shots S01–S79: times, worlds, plate ids, text cues with times and roles) into `video/data/shotlist.json`, which `video/src/edit.js` turns into shots; validates gaps/overlaps | `python3 tools/shotlist.py [--check] [--table]` (re-run after every SHOTLIST.md edit) |
+| `shotlist.py` | parses `production/SHOTLIST.md` (S01–S81 as of the outro retime: times, worlds, plate ids, text cues with times and roles) into `video/data/shotlist.json`, which `video/src/edit.js` turns into shots; validates gaps/overlaps | `python3 tools/shotlist.py [--check] [--table]` (re-run after every SHOTLIST.md edit) |
 | `encode_release.sh` | release encodes from the rendered frames (section 4) | `tools/encode_release.sh [--hevc\|--h264] [--test=a:b]` |
 
 Fixes made in the audit: `pipeline.sh` no longer hides a `plate_meta.py` crash behind `| grep ... || true` (stderr is
@@ -263,8 +263,11 @@ video/
 
 ### 3.1 Time model: 60 fps master, per-shot draw cadence
 
-* Master frame `i` shows song time `i / FPS` (FPS = 60; `--fps` / `?fps=` overrides). The film is 273.624 s →
-  **16 418 master frames**.
+* Master frame `i` shows song time `i / FPS` (FPS = 60; `--fps` / `?fps=` overrides). The film is as long as the final
+  mix: **279.600 s → 16 776 master frames** with the sound-design master (`media/stems/halys_sd_master.wav`; the original
+  `Halys.mp3` is 273.624 s → 16 418 frames). **Audio selection** (render.mjs and encode_release.sh alike): `--song=` /
+  `AUDIO=`, else `media/stems/halys_sd_master.wav` (48 kHz/24-bit, gitignored, from `tools/audio/sound_design.py`), else
+  `release/Halys_sound_design.mp3`, else `Halys.mp3`; all share t = 0. The studio streams the MP3.
 * Every shot declares a **draw cadence** (drawings per second). Defaults by world (TREATMENT.md, "frame rate is a
   genre signal"): BRONZE 12, GOLD 12, MARBLE 30, CORONA 60, ORBIT 60, ROOM 12 (anime on twos). Override per shot with
   `cadence:`. Between drawings the image is **held**: at cadence 12 each drawing stays for 5 master frames, at 30 for 2.
@@ -284,8 +287,8 @@ video/
   the next drawing (≤ 83 ms late): shots that need sample-exact hits should run at 60.
 * **Hold de-duplication.** All frames of one drawing share a key `"<shot>#<d>"`. `render.mjs --frames` renders one frame
   per key and hard-links the held frames (`f06628.jpg … f06632.jpg` → one inode). The locked edit (SHOTLIST v1,
-  79 shots) needs **8 529 drawings for 16 418 frames** (12 fps for 140 s, 30 fps for 39 s, 60 fps for 94 s; `--list`
-  prints this), so 12 fps sections cost ~3 ms per frame effective. Encoders see identical frames, which compress to
+  81 shots after the outro retime) needs **8 601 drawings for 16 776 frames** (12 fps for 147.5 s, 30 fps for 39.3 s,
+  60 fps for 94.2 s; `--list` prints this), so 12 fps sections cost ~3 ms per frame effective. Encoders see identical frames, which compress to
   almost nothing.
 
 ### 3.2 Scenes, shots and the frame context
@@ -346,7 +349,7 @@ node render.mjs --stills=drop1,200.5 [--png]              # full-size stills -> 
 node render.mjs --clip=110:116                            # quick MP4 with the song, no frames on disk
 node render.mjs --frames=0:273.7 --workers=4              # all frames -> out/frames/f%05d.jpg (resumable, hold-linked)
 node render.mjs --frames=110:154 --stale                  # after changing a scene: redraw frames drawn from older sources
-node render.mjs --encode [--range=108:113]                # frames + Halys.mp3 -> out/halys_1920x1080_60[_range].mp4 (x264 CRF 16)
+node render.mjs --encode [--range=108:113]                # frames + final mix -> out/halys_1920x1080_60[_range].mp4 (x264 CRF 16)
 node render.mjs --frames=0:273.7 --size=1080x1350 && node render.mjs --encode --size=1080x1350   # the 4:5 cut
 node render.mjs --serve [--port=8000]                     # studio: http://127.0.0.1:8000/studio.html?t=110&w=960&h=540
 ```
@@ -384,7 +387,7 @@ shift+←/→ one second, `[` `]` previous/next shot, size presets (16:9, 4:5, 9
   6 workers 75 (SwiftShader is already multi-threaded: 4 CPUs saturate at ~2 workers). 12 fps sections: ~3 ms/frame
   effective thanks to hold links. Full placeholder film: see 3.6.
 * Disk: JPEG frames of the placeholder are 50–130 KB; painted frames will be 300–600 KB. Held frames are hard links,
-  so the full 16 418-frame master needs roughly (unique drawings × frame size) ≈ 2–5 GB.
+  so the full 16 776-frame master needs roughly (unique drawings × frame size) ≈ 2–5 GB.
 
 ### 3.6 Proven so far
 
@@ -413,7 +416,8 @@ H264_SIZE=1920x1080 H264_MB=240 tools/encode_release.sh --h264                  
 ```
 
 * Input: the master frames (`video/out/frames`, fps and size from `render.json`) and the final mix (`AUDIO=`, default
-  `Halys.mp3`). It refuses to run if any frame of the range is missing and prints the `render.mjs` command to fill it.
+  the sound-design WAV master, see 3.1). It refuses to run if any frame of the range is missing and prints the
+  `render.mjs` command to fill it.
 * **Colour:** Chromium's JPEG frames are JFIF (BT.601 matrix, full range) but players decode HD video as BT.709
   limited range. ffmpeg's automatic conversion fixes the range and not the matrix, which shifts the palette on
   playback (measured: green 0,200,80 → 0,172,77; vermilion 194,64,31 → 205,73,28). swscale's direct YUV→YUV matrix
@@ -423,17 +427,19 @@ H264_SIZE=1920x1080 H264_MB=240 tools/encode_release.sh --h264                  
   and tags `-colorspace bt709 -color_primaries bt709 -color_trc bt709 -color_range tv`: the round trip is within
   ±1 level. Keep this in any new ffmpeg command that reads the frames.
 * Two-pass VBR sized for GitHub's 100 MB cap: video kbps = (target MB × 8 × 0.994 / duration) − audio kbps. For
-  273.6 s: **HEVC ≈ 2 550 kbps** video + AAC 192k (x265 `slow`, aq-mode 3, keyframe ≥ every 4 s, `hvc1` tag for Apple
-  players); **H.264 720p60 ≈ 2 470 kbps** + AAC 160k (x264 `slow`, High). If a full-length file still lands above
+  279.6 s: **HEVC ≈ 2 480 kbps** video + AAC 192k (x265 `slow`, aq-mode 3, keyframe ≥ every 4 s, `hvc1` tag for Apple
+  players); **H.264 720p60 ≈ 2 400 kbps** + AAC 160k (x264 `slow`, High). If a full-length file still lands above
   99 MB, pass 2 is re-run once at a proportionally lower bitrate; the final size is checked against the cap.
-* The song (273.624 s) ends 9 ms before the last 60 fps frame does, so audio is padded (`-af apad -shortest`): every
+* The audio can end a few ms before the last 60 fps frame does (273.624 s song vs 273.633 s of frames), so audio is
+  padded (`-af apad -shortest`): every
   frame is kept and x264's two passes see the same frame count. The script body runs inside `main`, so editing the
   file while an encode runs is safe (bash otherwise keeps reading a running script by byte offset).
 * Why two-pass and not CRF: 12 fps painted sections (each drawing held 5 frames) are nearly free, the 60 fps light
   sections are expensive; a size target moves the bits to the drops. Expect the drops (≈ 82 s of 60 fps drawing) to be
   the quality bottleneck at ~2.5 Mbit/s; if they break up, raise `HEVC_MB` only for an off-repo file, or simplify the
   60 fps material (flat blacks and clean field lines compress well, film grain does not).
-* **Verified on the full 4:34 film** (the placeholder render, all 16 418 frames; `OUT=video/out/release_test`):
+* **Verified on the full 4:34 film** (the placeholder render against the original 273.6 s song, all 16 418 frames;
+  `OUT=video/out/release_test`):
   **`Halys_1080p60_hevc.mp4` 92.2 MB** (HEVC Main, `hvc1`, 1920×1080 60/1, 2.49 Mbit/s video, AAC-LC 48 kHz 192k,
   BT.709/tv, 273.63 s) and **`Halys_720p60_h264.mp4` 87.7 MB** (H.264 High 1280×720 60/1, AAC 160k); no refit was
   needed; audio offset 0.0 ms at 30 s, 150 s and 260 s. Wall time **43 min** for both (x265 two-pass ≈ 30 min, x264

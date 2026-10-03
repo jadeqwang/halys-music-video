@@ -31,16 +31,17 @@ straps; white chunky sneakers.
 ## Terminal (every line must be valid, readable on pause)
 
 > Facts checked against RESEARCH.md §1.4–1.6: Saros 57; C2 at 18:21 local solar time; 2 m 16 s at a representative site; Sun 8.6° up at az 289° (WNW);
-> Jupiter visible; under standard ΔT the Halys itself only reached 96–99 %, total if ΔT is ~300 s larger. Hence `dt.shift(+300)`.
+> Jupiter visible; under standard ΔT the Halys itself only reached 96–99 %, total if ΔT is ~300 s larger. Hence `dt.shift(+300)`, after which the river
+> gets 1 m 19 s of totality with the Sun at 8.9° (FACTCHECK.md). Dates use astronomical year numbering (585 BC = −0584), Julian calendar; times are LAT.
 
 The spinner is our own: moon phases `◐ ◓ ◑ ◒` cycling. No product logos, names or cloned UIs.
 
 Main pane (`~/sims/earth`):
 
 ```
-jade@rare-earth:~/sims/earth (main)$ ./halys run --seed=-585 --region=anatolia --from=-585-05-28T15:00
+jade@rare-earth:~/sims/earth (main)$ ./halys run --seed=-585 --region=anatolia --cal=julian --from=-0584-05-28T15:00
 loaded world: 8,412,066 agents · terrain: halys basin · weather: clear
-t=-585-05-28T15:02 LMT  lydia ⟷ media  war.year=6
+t=-0584-05-28T15:02 LAT  lydia ⟷ media  war.year=6
 warn: casualties rising at halys.ford (0.8/min)
 
 › make them stop. nobody else gets hurt.
@@ -48,11 +49,11 @@ warn: casualties rising at halys.ford (0.8/min)
 ◑ syzygizing… 14s
 
   moon.align(saros=57)                                      ok
-  eclipse.schedule("-585-05-28T18:21 LMT", over="halys")    ok
+  eclipse.schedule("-0584-05-28T18:21 LAT", over="halys")    ok
   dt.shift(+300)   # nudge the path north so it's total at the river
   thales.notify("the sun goes dark this year")              ok   # he will take credit
 
-  totality over battlefield: 2m16s · sun 8.6° WNW · jupiter visible
+  totality over battlefield: 1m19s · sun 8.9° WNW · jupiter visible
 
 war.status = RESOLVED   treaty: border=halys · aryenis ⚭ astyages
 
@@ -64,11 +65,11 @@ jade@rare-earth:~/sims/earth (main)$ git commit -am "fix(halys): schedule eclips
 Side panes (vertical monitor, tmux-style, each one line updating):
 
 ```
-[lydians] 18:16  laying down arms · walking home
-[medes]   18:16  laying down arms · walking home
-[sun]     magnitude 1.000 · alt 8.6° · corona visible · birds: silent
+[lydians] 18:21  laying down arms · walking home
+[medes]   18:21  laying down arms · walking home
+[sun]     magnitude 1.000 · alt 8.9° · corona visible · birds: silent
 [moon]    on schedule ✓
-[1420.405 MHz]  6EQUJ5
+[1420 MHz]  6EQUJ5
 ```
 
 ## Sound

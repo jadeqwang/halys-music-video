@@ -38,13 +38,13 @@ with field lines · **INSCR** = Cormorant Garamond italic, small · **MONO** = J
 | Shot | Time | World | Plate | Picture | Text | Sync / FX |
 |---|---|---|---|---|---|---|
 | S11 | 27.24–28.98 | BRONZE | P08 | **The clash** on the boom: shields slam; a crown of red spray explodes up into the light pool. | — | 2-frame warm flash on 27.24 |
-| S12 | 28.98–32.47 | BRONZE | proc. | Lull: in slow motion one arrow arcs across the low golden disk. | INSCR `"…suddenly the day became night."` PLAQUE `HERODOTUS 1.74` | Sub drops out (B17–18) |
+| S12 | 28.98–32.47 | BRONZE | proc. | Lull: in slow motion one arrow arcs across the low golden disk. | INSCR `"…suddenly the day became night."` PLAQUE `HERODOTUS 1.74 · TR. MACAULAY` | Sub drops out (B17–18) |
 | S13 | 32.47–35.98 | BRONZE | P09 | Lydian cavalry, long spears lowered, charging through the shallows. | — | |
 | S14 | 35.98–39.48 | BRONZE | P10 | Median archers loose a volley; arrows cross the sky. Disciplined, dignified, never a horde. | — | |
 | S15 | 39.48–41.24 | BRONZE | P11 | Across the melee the Lydian and the Mede see each other (mirrored singles, cut on beat 3). | — | |
-| S16 | 41.24–44.73 | BRONZE | P01 | Altdorfer wide: massed armies along the river, the huge low Sun. | PLAQUE `THE EARLIEST EVENT IN HISTORY WE CAN DATE TO THE DAY` | Choir swell 41.5–42.9 |
+| S16 | 41.24–44.73 | BRONZE | P01 | Altdorfer wide: massed armies along the river, the huge low Sun. | PLAQUE `THE SKY DATES THIS BATTLE TO THE DAY` | Choir swell 41.5–42.9 |
 | S17 | 44.73–46.49 | BRONZE | P12 | First exchange: the Mede's spear thrust is turned by the Lydian's lion shield. | — | Strike on a beat |
-| S18 | 46.49–51.72 | BRONZE | proc.+P01 | **First contact.** Tight on the low Sun: a black bite appears on its leading limb. Below, silhouettes keep fighting; nobody notices. | PLAQUE `17:25 · FIRST CONTACT`; small engraved counter starts `TOTALITY IN 56:00` and runs (compressed) to `00:00` at 110.58 | Bass out B27–29: the bite is the only event |
+| S18 | 46.49–51.72 | BRONZE | proc.+P01 | **First contact.** Tight on the low Sun: a black bite appears on its leading limb. Below, silhouettes keep fighting; nobody notices. | PLAQUE `17:25 · FIRST CONTACT`; small engraved counter starts `TOTALITY IN 55:28` and runs (compressed) to `00:00` at 110.58 | Bass out B27–29: the bite is the only event |
 | S19 | 51.72–55.22 | BRONZE | P12 | Full orchestra: the duel, strikes landing on beats. | counter | |
 | S20 | 55.22–58.72 | BRONZE | P01 | Wide; the Sun now visibly bitten; light still golden. | counter | |
 | S21 | 58.72–62.20 | BRONZE | P13 | The Lydian is knocked into the water; the Mede's spear comes down; he rolls clear. | counter | |
@@ -140,13 +140,13 @@ with field lines · **INSCR** = Cormorant Garamond italic, small · **MONO** = J
 | Shot | Time | World | Plate | Picture | Text (PLAQUE, year · place · fact; verify all) | Sync / FX |
 |---|---|---|---|---|---|---|
 | S63 | 215.29–222.08 | ORBIT | P34 | **Swords into starships**: the spinning sword match-cuts to an unbranded stainless starship rising on a column of light. | — | Kick 215.287 |
-| S64 | 222.08–225.48 | ORBIT | proc. | Bronze gear train; the saros dial is the ring. | `C. 100 BC · ANTIKYTHERA · A BRONZE COMPUTER PREDICTS ECLIPSES` | |
+| S64 | 222.08–225.48 | ORBIT | proc. | Bronze gear train; the saros dial is the ring. | `2ND–1ST C. BC · ANTIKYTHERA · A BRONZE COMPUTER PREDICTS ECLIPSES` | |
 | S65 | 225.48–228.88 | ORBIT | proc. | Halley's eclipse map; the shadow oval crossing England is the ring. | `1715 · LONDON · HALLEY MAPS THE MOON'S SHADOW` | |
-| S66 | 228.88–232.27 | ORBIT | proc. | A glass plate: displaced stars around the black Sun. | `1919 · PRÍNCIPE · STARLIGHT BENDS. EINSTEIN WAS RIGHT.` | |
+| S66 | 228.88–232.27 | ORBIT | proc. | A glass plate: displaced stars around the black Sun. | `1919 · PRÍNCIPE & SOBRAL · STARLIGHT BENDS. EINSTEIN WAS RIGHT.` | |
 | S67 | 232.27–235.66 | ORBIT | P35 | Concorde above the clouds, the eclipse through a round porthole. | `1973 · CONCORDE 001 · 74 MINUTES OF TOTALITY AT MACH 2` | |
-| S68 | 235.66–239.05 | ORBIT | P36 | A crowd in eclipse glasses looking up, rhyming with the warriors at 102.21. | `2024 · NORTH AMERICA · 31 MILLION IN THE PATH` | |
+| S68 | 235.66–239.05 | ORBIT | P36 | A crowd in eclipse glasses looking up, rhyming with the warriors at 102.21. | `2024 · USA · 31.6 MILLION LIVE IN THE PATH` | |
 | S69 | 239.05–242.45 | ORBIT | proc. | The corona around the Moon, seen from Orion. | `2026 · ARTEMIS II · TOTALITY FROM DEEP SPACE` | |
-| S70 | 242.45–245.83 | ORBIT | P37 | The black Sun over Karnak's columns. | `2027 · LUXOR · NEXT: 6 MIN 23 S` | |
+| S70 | 242.45–245.83 | ORBIT | P37 | Looking straight up between Karnak's columns at a black Sun almost overhead (82° up at midday): darkness at noon, the opposite of 585 BC's sunset. | `2027 · NEAR LUXOR · NEXT: 6 MIN 23 S` | |
 | S71 | 245.83–249.22 | ORBIT | proc. | Phobos, a lumpy dark potato, crossing the Sun over a Martian horizon. | `MARS · PHOBOS · ECLIPSES ON OTHER WORLDS` | |
 | S72 | 249.22–255.99 | ORBIT | proc. | **Earthset**: the blue Earth over the grey lunar limb. **The first blue in the film.** | CARVED `HOME` (small, late) | Topline soars |
 | S73 | 255.99–257.68 | ORBIT | proc. | Earth rushes at camera; the dive begins. | CHOP `THROW DOWN` 256.40 · `THROW DOWN` 257.25 | |
@@ -162,7 +162,7 @@ with field lines · **INSCR** = Cormorant Garamond italic, small · **MONO** = J
 | S78 | 266.12–270.04 | INK | P39 | **The room**, from behind her chair: the blue RARE EARTH circle on her back rhymes with the planet we just left. The ticking build is the terminal scrolling, one line per tick; on the side monitor the ΔT map's totality band slides north onto the Halys. | MONO terminal (ROOM.md) | Ticks 266.1–269.8 |
 | S79 | 270.04–273.40 | INK | P40 | **On the final stark chord she spins the chair to camera**: her face is the stinger. Deadpan eye contact while the frozen chord rings. | — | Chord 270.04, freeze from 271.6 |
 | S80 | 273.40–276.95 | INK | P41 | Still holding our gaze, she types blind (keys 273.45, 274.05, 274.95); behind her the terminal prints `[main 585ec1a] fix(halys): schedule eclipse to end war (#585)`. | MONO | Key clicks from the sound design |
-| S81 | 276.95–281.0 | INK | P41 | **The wink**, on the ting: her eyelid crosses her iris with the Moon's curved edge. Hold 0.6 s, cut to black, end card (video runs ~1.4 s past the audio in silence). | CARVED `HALYS` · `JADE WANG`; PLAQUE `NEXT TOTALITY · …` (per FACTCHECK.md) | Ting 276.95; audio ends 279.60 |
+| S81 | 276.95–281.0 | INK | P41 | **The wink**, on the ting: her eyelid crosses her iris with the Moon's curved edge. Hold 0.6 s, cut to black, end card (video runs ~1.4 s past the audio in silence). | CARVED `HALYS` · `JADE WANG`; PLAQUE `NEXT TOTALITY · 2027-08-02 · NEAR LUXOR · 6M23S` | Ting 276.95; audio ends 279.60 |
 
 ---
 
@@ -209,7 +209,7 @@ Generate 2 takes of hero plates; keep the best.
 | P34 | S63 | An unbranded stainless-steel rocket lifting off, then ascending | — | 215.29–222.1 | 7 |
 | P35 | S67 | Concorde in flight above clouds at dusk | — | 232.27–236.3 | 4 |
 | P36 | S68 | A modern crowd in eclipse glasses looking up together | — | 235.66–239.7 | 4 |
-| P37 | S70 | Karnak temple columns at dusk under a darkening sky | — | 242.45–246.5 | 4 |
+| P37 | S70 | Karnak temple columns, camera looking up between them at a high midday sky that darkens | — | 242.45–246.5 | 4 |
 | P38 | S74–76 | Both armies raise blades high together, then drop them at once; one soldier drops his late and shrugs | armies | 257.68–262.7 | 5 |
 | P39 | S78 | Anime: from behind her chair at the monitors, typing; RARE EARTH circle on her back | Jade, ROOM | 266.12–270.1 | 4 |
 | P40 | S79 | Anime: she spins the chair to face camera, then holds a deadpan stare | Jade, ROOM | 268.3–273.4 | 5 |
@@ -218,7 +218,7 @@ Generate 2 takes of hero plates; keep the best.
 Procedural (no plate): the sun and every eclipse state, Altdorfer sky, crescents, umbra, corona, particles and formations, eyes, relief map, birds,
 history-cascade graphics (Antikythera, Halley, Eddington, Artemis, Phobos), Earth, Moon, the pull-back, the terminal, all type and HUD.
 
-## On-screen facts to verify before render
+## On-screen facts: verified in production/FACTCHECK.md (texts above updated to its final wording)
 
 Glover quote wording and date · "earliest event … dated to the day" phrasing (RESEARCH §7) · Herodotus 1.74 translation · 17:25 first contact (RESEARCH §1.4)
 · Antikythera date · Halley 1715 map · Eddington 1919 · Concorde 001, 74 min · 2024 "31 million in the path" · Artemis II wording · Luxor 6 m 23 s · Phobos transit.

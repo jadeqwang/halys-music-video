@@ -21,7 +21,8 @@
 //   node render.mjs --serve [--port=8000]                        static server for studio.html (+ the song)
 // Common: --size=1920x1080 (or 1080x1350, 1080x1920) · --fps=60 (master rate) · --q=0.93 (JPEG)
 //         --dir=out/frames (frames dir; default out/frames for 1920x1080@60, else out/frames_<W>x<H>[_<fps>])
-//         --song=../Halys.mp3 · --chrome=PATH (or $CHROME) · --shared (one browser, N pages) · --timeout=180
+//         --song=FILE (default: media/stems/halys_sd_master.wav, else release/Halys_sound_design.mp3, else Halys.mp3)
+//         --chrome=PATH (or $CHROME) · --shared (one browser, N pages) · --timeout=180
 //         --verbose (page console) · --debug (frame-number overlay; disables hold de-duplication)
 import { chromium } from 'playwright-core';
 import { spawn, execFileSync } from 'node:child_process';
@@ -37,7 +38,13 @@ const args = Object.fromEntries(process.argv.slice(2).map(a => { const s = a.rep
 // chromium-headless-shell 1194 (= Chromium 141, the build playwright-core 1.56.1 expects). The full
 // chrome-linux/chrome binary works too (--chrome=...) but contacts Google services the sandbox blocks.
 const CHROME = args.chrome || process.env.CHROME || '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell';
-const SONG = resolve(args.song || '../Halys.mp3');
+// Audio = the final mix. Order: --song, the sound-design mux master (48 kHz/24-bit WAV, gitignored, written by
+// tools/audio/sound_design.py), its release MP3, the original song. The film's length is this file's length (the
+// sound-design mix runs 279.6 s: the original 273.6 s plus a held-chord tail for the wink). The studio streams the
+// MP3 when the WAV is selected (same timeline, a fraction of the size).
+const AUDIO_CANDIDATES = ['../media/stems/halys_sd_master.wav', '../release/Halys_sound_design.mp3', '../Halys.mp3'];
+const SONG = resolve(args.song || AUDIO_CANDIDATES.find(f => existsSync(resolve(f))) || '../Halys.mp3');
+const STUDIO_SONG = SONG.endsWith('.wav') && existsSync(resolve('../release/Halys_sound_design.mp3')) ? resolve('../release/Halys_sound_design.mp3') : SONG;
 const probeDur = f => { try { return +execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', f]).toString().trim(); } catch (e) { return 273.6; } };
 const DUR = probeDur(SONG);
 const FPS = +(args.fps || 60);
@@ -93,8 +100,8 @@ const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.
 const MISSING = new Set();   // 404s (optional files such as data/timing.json); reported once at the end
 const server = createServer((req, res) => {
   const url = decodeURIComponent(req.url.split('?')[0]);
-  const p = url === '/audio/song.mp3' ? SONG : join(HERE, url);
-  if ((!p.startsWith(HERE + '/') && p !== SONG) || !existsSync(p) || statSync(p).isDirectory()) {
+  const p = url === '/audio/song.mp3' ? STUDIO_SONG : join(HERE, url);
+  if ((!p.startsWith(HERE + '/') && p !== STUDIO_SONG) || !existsSync(p) || statSync(p).isDirectory()) {
     if (args.verbose) console.log('404 ' + req.url);
     MISSING.add(url);
     res.writeHead(404); res.end(); return;
@@ -114,7 +121,7 @@ const server = createServer((req, res) => {
 await new Promise(r => server.listen(args.serve ? +(args.port || 8000) : 0, '127.0.0.1', r));
 const PORT = server.address().port;
 if (args.serve) {
-  console.log(`studio: http://127.0.0.1:${PORT}/studio.html   (song: ${relative(HERE, SONG)}; ctrl-c to stop)`);
+  console.log(`studio: http://127.0.0.1:${PORT}/studio.html   (audio: ${relative(HERE, STUDIO_SONG)}, ${DUR.toFixed(2)} s; ctrl-c to stop)`);
   console.log(`        add ?w=1080&h=1350 for 4:5, &t=110 to start at a time, &fps=30 for another master rate`);
   await new Promise(() => { });
 }
@@ -187,7 +194,7 @@ try {
       const byCad = {}; for (const s of shots) byCad[s.cadence] = (byCad[s.cadence] || 0) + (s.F1 - s.F0) / info.FPS;
       console.log(`${shots.length} shots, ${info.frames} master frames at ${info.FPS} fps (${info.dur.toFixed(3)} s), ${info.W}x${info.H}; ${nd} unique drawings ` +
         `(${(100 * nd / info.frames).toFixed(0)} %; the rest are held); seconds per cadence: ${Object.entries(byCad).map(([c, t]) => `${c} fps ${t.toFixed(1)} s`).join(', ')}`);
-      console.log(`timing.json ${info.timing ? 'loaded' : 'MISSING (constant 140 BPM grid)'}; plates: ${info.plates.join(', ') || 'none'}`);
+      console.log(`audio ${relative(HERE, SONG)} (${DUR.toFixed(3)} s); timing.json ${info.timing ? 'loaded' : 'MISSING (constant 140 BPM grid)'}; plates: ${info.plates.join(', ') || 'none'}`);
       if (info.gaps.length) console.log(`gaps (black): ${info.gaps.map(([a, b]) => `${a.toFixed(2)}-${b.toFixed(2)}`).join(', ')}`);
       for (const w of info.warnings || []) console.log('warning: ' + w);
       if (args.out) { mkdirSync(dirname(args.out), { recursive: true }); writeFileSync(args.out, JSON.stringify(shots.map(s => [s.id, s.t0, s.t1, s.cadence, s.world]))); console.log('wrote ' + args.out); }

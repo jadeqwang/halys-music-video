@@ -27,7 +27,7 @@ export const DEFAULTS = {
   lambda: 70, speed: .5, pulse: .5, kick: 0, kickWidth: 1.2, kickPush: 26, invert: 0,
   pearl: '#f3efe6', orange: '#f08a2a', red: '#d6452c', bg: '#05070c',
   rim: 1, lightDir: [-.75, -.66], horizon: 1, horizonBand: .035, glow: [.26, .1], exposure: 1.6, vignette: .35,
-  yaw: 0, pitch: 0, zNear: 1, zFar: 2.6, skyZ: 1.25, focal: 1.2, overscan: 1, pivot: null, edgeFade: 40, depthBlur: 2.5, depthSmooth: 6,
+  yaw: 0, pitch: 0, zNear: 1, zFar: 2.6, skyZ: 1.25, focal: 1.2, overscan: 1, pivot: null, edgeFade: 40, depthBlur: 6, depthSmooth: 8, relief: .25,
   sky: null, sun: null, corona: 1, armies: 0, tick: [5, 13], seed: 3,
   temporal: 0, tAlpha: .45,
 };
@@ -234,7 +234,10 @@ function contourLines(F, f, cfg) {
       s[k] = (x * .7 + y * .7) * S;                                     // spatial phase: travelling bands across the subject
       // depth: a contour sits on the depth discontinuity, so sample a few px inside the subject (not across the edge)
       let sx = x, sy = y;
-      if (kind === 0 && f.M) { const gx = samp(F, f.M, x + 1, y) - samp(F, f.M, x - 1, y), gy = samp(F, f.M, x, y + 1) - samp(F, f.M, x, y - 1), gm = Math.hypot(gx, gy) || 1; sx = x + gx / gm * 4; sy = y + gy / gm * 4; }
+      if (kind === 0 && f.M) {
+        const gx = samp(F, f.M, x + 1, y) - samp(F, f.M, x - 1, y), gy = samp(F, f.M, x, y + 1) - samp(F, f.M, x, y - 1), gm = Math.hypot(gx, gy) || 1;
+        for (const o of [4, 3, 2, 1]) { const qx = x + gx / gm * o, qy = y + gy / gm * o; if (samp(F, f.M, qx, qy) > .6) { sx = qx; sy = qy; break; } }   // thin objects: stay inside
+      }
       d[k] = f.Db ? samp(F, f.Db, sx, sy) : .5;
     }
     if (n > 2) { const r = 6, tmp = d.slice(); for (let k = 0; k < n; k++) { let a = 0, ws = 0; for (let j = Math.max(0, k - r); j <= Math.min(n - 1, k + r); j++) { const q = 1 - Math.abs(j - k) / (r + 1); a += tmp[j] * q; ws += q; } d[k] = a / ws; } }
@@ -358,7 +361,7 @@ function armyTicks(F, f, cfg) {
   for (const [c, x, y] of cand) {
     const i = y * aw + x; if (taken[i]) continue;
     for (let j = -2; j <= 2; j++) for (let k = -2; k <= 2; k++) { const q = (y + j) * aw + x + k; if (q >= 0 && q < taken.length) taken[q] = 1; }
-    const dep = F.D ? F.D[i] : .5, len = lerp(cfg.tick[0], cfg.tick[1], sstep(.05, .3, dep)) / S, lean = (hash3(x, y, cfg.seed) - .5) * .12;
+    const dep = f.Db ? f.Db[i] : .5, len = lerp(cfg.tick[0], cfg.tick[1], sstep(.05, .3, F.D ? F.D[i] : .5)) / S, lean = (hash3(x, y, cfg.seed) - .5) * .12;
     const ex = Math.sin(lean) * len, ey = -Math.cos(lean) * len;
     const tone = clamp(F.T[i] * 1.3), red = F.R[i] - Math.max(F.G[i], F.B[i]) > .16 ? .9 : 0, b = .65 + .45 * tone, bd = (dep - .2);
     const mkL = (pts, bb, ww, sharpTip) => {
@@ -474,10 +477,30 @@ function targets(glw) {
 
 // ---------------------------------------------------------------- lines for a frame (cached for stills, stateful for video)
 const cache = new Map(), temporalState = new Map();
+// depth for the 3D lift: smoothed separately inside and outside the subject (the silhouette's depth step survives, the
+// depth map's texture does not), and the subject's internal relief compressed around its median: the orbit should turn
+// the figures as low reliefs, not crumple them with depth-map noise
+function liftDepth(F, cfg) {
+  if (!F.D) return null;
+  const { aw, ah, N } = F, m = new Float32Array(N), out = new Float32Array(N);
+  for (let i = 0; i < N; i++) m[i] = F.M ? sstep(.3, .7, F.M[i]) : 0;
+  for (const inside of [true, false]) {
+    const w = new Float32Array(N), t = new Float32Array(N);
+    for (let i = 0; i < N; i++) { w[i] = inside ? m[i] : 1 - m[i]; t[i] = F.D[i] * w[i]; }
+    const num = blur(t, aw, ah, cfg.depthBlur), den = blur(w, aw, ah, cfg.depthBlur);
+    for (let i = 0; i < N; i++) out[i] += w[i] * (den[i] > 1e-4 ? num[i] / den[i] : F.D[i]);
+  }
+  if (F.M) {
+    const vals = []; for (let i = 0; i < N; i += 5) if (m[i] > .5) vals.push(out[i]);
+    if (vals.length) { vals.sort((a, b) => a - b); const med = vals[vals.length >> 1]; for (let i = 0; i < N; i++) out[i] = lerp(out[i], med + (out[i] - med) * cfg.relief, m[i]); }
+  }
+  return out;
+}
+
 function buildLines(F, cfg, seeds, state) {
   const f = prepFields(F, cfg);
   if (state && cfg.temporal) smoothFields(f, state.prev, cfg.tAlpha);
-  f.Db = F.D ? blur(F.D, F.aw, F.ah, cfg.depthBlur) : null;
+  f.Db = liftDepth(F, cfg);
   const stream = decorate(F, f, traceLines(F, f, cfg, seeds, state), cfg);
   const lines = [...stream, ...contourLines(F, f, cfg), ...coronaLines(F, f, cfg), ...armyTicks(F, f, cfg)];
   return { f, stream, lines };

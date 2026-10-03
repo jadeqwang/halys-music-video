@@ -1,5 +1,5 @@
 // edit.js: the shot list. Source, in order of preference:
-//   1. video/data/shotlist.json, parsed from production/SHOTLIST.md by `python3 tools/shotlist.py` (S01..S79: times,
+//   1. video/data/shotlist.json, parsed from production/SHOTLIST.md by `python3 tools/shotlist.py` (S01..S81: times,
 //      worlds, plate ids, text cues with their times). Re-run the parser after every SHOTLIST.md change.
 //   2. video/data/timing.json sections (one shot per section, cut on the measured bar lines).
 //   3. a built-in fallback table.

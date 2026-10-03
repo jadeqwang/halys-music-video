@@ -10,7 +10,9 @@
 #   tools/encode_release.sh --test=108:128      encode only that excerpt (seconds) at the bitrate the full film gets,
 #                                               into video/out/release_test/, and print the projected full-length size
 # Environment overrides:
-#   FRAMES=video/out/frames   AUDIO=Halys.mp3 (the final mix)   PRESET=slow (x265/x264 preset)
+#   FRAMES=video/out/frames   PRESET=slow (x265/x264 preset)
+#   AUDIO= the final mix; default media/stems/halys_sd_master.wav (48 kHz/24-bit sound-design master, so AAC is encoded
+#   from lossless), else release/Halys_sound_design.mp3, else Halys.mp3 (render.mjs picks audio in the same order)
 #   HEVC_MB=94  H264_MB=90 (targets, MB = 10^6 bytes; a full-length file that still lands above 99 MB gets pass 2
 #   re-run once at a proportionally lower bitrate)   H264_SIZE=1280x720 (e.g. 1920x1080 with H264_MB=240 for an
 #   upload master that does not need to fit the cap)   OUT=release   NAME=Halys
@@ -55,14 +57,18 @@ PY
 main() {   # (everything runs inside main, so bash has parsed the whole script before it starts: safe to edit while running)
   ROOT="$(cd "$(dirname "$0")/.." && pwd)"
   FRAMES="${FRAMES:-$ROOT/video/out/frames}"; FRAMES="$(cd "$FRAMES" && pwd)"
-  AUDIO="${AUDIO:-$ROOT/Halys.mp3}"
+  if [ -z "${AUDIO:-}" ]; then
+    for c in "$ROOT/media/stems/halys_sd_master.wav" "$ROOT/release/Halys_sound_design.mp3" "$ROOT/Halys.mp3"; do
+      [ -f "$c" ] && { AUDIO="$c"; break; }
+    done
+  fi
   NAME="${NAME:-Halys}"; PRESET="${PRESET:-slow}"
   HEVC_MB="${HEVC_MB:-94}"; H264_MB="${H264_MB:-90}"; H264_SIZE="${H264_SIZE:-1280x720}"
   DO_HEVC=1; DO_H264=1; TEST=""
   for a in "$@"; do
     case "$a" in
       --hevc) DO_H264=0 ;; --h264) DO_HEVC=0 ;; --test=*) TEST="${a#--test=}" ;;
-      -h|--help) sed -n '2,21p' "$0"; return 0 ;;
+      -h|--help) sed -n '2,/^set -euo/p' "$0" | sed '$d'; return 0 ;;
       *) echo "unknown option $a" >&2; return 2 ;;
     esac
   done

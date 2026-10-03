@@ -152,14 +152,27 @@ def validate(shots, dur=None):
             if q["t"] is not None and not (s["t0"] - 0.5 <= q["t"] <= (s["t1"] or 1e9) + 0.5):
                 warns.append(f"{s['id']}: cue {q['text']!r} at {q['t']} is outside the shot {s['t0']}–{s['t1']}")
     if dur and shots and shots[-1]["t1"] is not None and abs(shots[-1]["t1"] - dur) > 0.05:
-        warns.append(f"last shot ends at {shots[-1]['t1']}, song is {dur}")
+        warns.append(f"last shot ends at {shots[-1]['t1']} s but the final mix is {dur} s long")
     return errs, warns
+
+
+def audio_dur():
+    """Length of the final mix, picked like video/render.mjs does (sound-design master, its MP3, the song)."""
+    import subprocess
+    for c in ("media/stems/halys_sd_master.wav", "release/Halys_sound_design.mp3", "Halys.mp3"):
+        f = ROOT / c
+        if f.exists():
+            r = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(f)], capture_output=True, text=True)
+            try:
+                return round(float(r.stdout.strip()), 3)
+            except ValueError:
+                pass
+    return None
 
 
 def main(argv):
     shots = parse()
-    tj = ROOT / "video" / "data" / "timing.json"
-    dur = json.loads(tj.read_text()).get("dur") if tj.exists() else None
+    dur = audio_dur()
     errs, warns = validate(shots, dur)
     if "--table" in argv:
         for s in shots:

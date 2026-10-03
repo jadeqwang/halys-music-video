@@ -67,7 +67,7 @@
  "med_archer3_t1": {
   "subject": "MEDIAN ARCHER",
   "verdict": "alt",
-  "issues": "Fresh take: good bashlyk with long lappets, sheepskin cloak, Scythian bow in the left hand; gorytos and sword still on reversed sides (model bias)."
+  "issues": "Good bashlyk with long lappets, sheepskin cloak, Scythian bow; gorytos and sword on reversed sides (model bias, every model). Source of the canonical mirror med_archer3_m."
  },
  "med_archer3_e1_t1": {
   "subject": "MEDIAN ARCHER",
@@ -81,8 +81,8 @@
  },
  "thales_e1_t1": {
   "subject": "THALES",
-  "verdict": "canonical",
-  "issues": "Edit of thales_t1: labels removed, floor cleaned. Lean, ~45 (top of the 40-50 brief), long hair knotted at the nape with grey at the temples, pointed beard with shaved upper lip, crinkled linen chiton with pinned sleeves, terracotta himation over the left shoulder, gnomon rod, wax diptych; bronze bowl, knotted cord, pebbles in the inset. Minor: two tiny pseudo-letters remain on the first tally row."
+  "verdict": "alt",
+  "issues": "Edit of thales_t1: printed view numbers removed. A superb, specific face, but he reads late 40s with grey temples, and the brief's point is 'about 40, not the old sage' (caption #16). Superseded by thales2_e1."
  },
  "alyattes_t1": {
   "subject": "ALYATTES",
@@ -102,7 +102,7 @@
  "cyaxares2_t1": {
   "subject": "CYAXARES",
   "verdict": "alt",
-  "issues": "Fresh take: long sleeves with embroidered cuffs, kandys draped as a cape, belt of gold plaques, roll of curls at the nape, torque; akinakes still on the left (model bias)."
+  "issues": "Long sleeves with embroidered cuffs, kandys as a cape, gold-plaque belt, roll of curls at the nape, lion torque; akinakes on the left thigh in every view. Source of the canonical mirror cyaxares2_m."
  },
  "cyaxares2_e1_t1": {
   "subject": "CYAXARES",
@@ -127,7 +127,7 @@
  "astyages2_e1_t1": {
   "subject": "ASTYAGES",
   "verdict": "alt",
-  "issues": "Edit fixed the trousers (red-brown wool); akinakes still on the left."
+  "issues": "Trousers fixed to red-brown wool; akinakes still on the left in every view. Source of the canonical mirror astyages2_m."
  },
  "labynetus_t1": {
   "subject": "LABYNETUS (mediator)",
@@ -157,7 +157,7 @@
  "halys_wide2_t1": {
   "subject": "HALYS_WIDE",
   "verdict": "alt",
-  "issues": "Correct master layout (river from bottom centre to the sun, Lydians left bank, Medes right bank, standards); but flat front lighting despite the sun in frame, cloned parade ranks, Median caps read as fezzes, Lydians a little Roman with gold shields. Used as layout reference for the frames."
+  "issues": "Correct mirrored layout, but flat front light with the sun in frame, cloned parade ranks, Median caps read as fezzes. Used as the layout reference for frames F2 and F4."
  },
  "halys_shallows_t1": {
   "subject": "HALYS_SHALLOWS",
@@ -213,5 +213,255 @@
   "subject": "ROOM",
   "verdict": "canonical",
   "issues": "Angle C (face lit by the monitor): brown eyes, clean cheek, white bomber with one orange stripe; pearl monitor key + orange lamp rim; no yellow cast."
+ },
+ "med_archer3_g1_t1": {
+  "subject": "MEDIAN ARCHER",
+  "verdict": "reject",
+  "issues": "gpt-image-2 edit to swap gorytos/sword sides: front view unchanged, other views muddled."
+ },
+ "med_archer3_m_t1": {
+  "subject": "MEDIAN ARCHER",
+  "verdict": "canonical",
+  "issues": "Horizontal mirror of med_archer3_t1 (no generation): gorytos now at the LEFT hip and akinakes on the RIGHT thigh in all four views. Side effect: bow in the right hand; close-ups on the left and view order reversed. Minor: no corselet (optional in the brief); a little young-looking hood fabric."
+ },
+ "cyaxares2_g1_t1": {
+  "subject": "CYAXARES",
+  "verdict": "alt",
+  "issues": "gpt-image-2 edit: sword moved to the right thigh in front and back views but deleted from the 3/4 and profile views; slightly softer detail."
+ },
+ "cyaxares2_m_t1": {
+  "subject": "CYAXARES",
+  "verdict": "canonical",
+  "issues": "Horizontal mirror of cyaxares2_t1 (no generation): akinakes on the RIGHT thigh in every view. Side effect: the strung bow is now in his right hand, beside the sword; close-ups on the left. Long sleeves, kandys worn as a cape, roll of curls at the nape, grey curled beard, lion-head torque, winged-creature embroidery, gold-plaque belt. Minor: the madder cap is a little tall and close-fitting."
+ },
+ "astyages2_g1_t1": {
+  "subject": "ASTYAGES",
+  "verdict": "reject",
+  "issues": "gpt-image-2 edit added a second scabbard instead of moving the first (two swords in the front view)."
+ },
+ "astyages2_m_t1": {
+  "subject": "ASTYAGES",
+  "verdict": "canonical",
+  "issues": "Horizontal mirror of astyages2_e1_t1 (no generation): akinakes in its gold-mounted scabbard on the RIGHT thigh in every view. Saffron Median cap with gold fillet and cheek flaps, madder long-sleeved tunic, ochre kandys as a cape, lion torque, red-brown trousers; warm, open face with his father's nose. Side effect: bow in the right hand."
+ },
+ "thales_e2_t1": {
+  "subject": "THALES",
+  "verdict": "reject",
+  "issues": "NBP age-down edit of thales_e1: almost no change (NBP resists identity-level edits)."
+ },
+ "thales2_t1": {
+  "subject": "THALES",
+  "verdict": "alt",
+  "issues": "Fresh take at 38-40 with dark hair: right age, but loose centre-parted hair + headband + staff read as a stock Jesus image (meme risk); plain short sleeves."
+ },
+ "thales2_e1_t1": {
+  "subject": "THALES",
+  "verdict": "canonical",
+  "issues": "NBP edit of thales2_t1: hair knotted at the nape under a braided fillet, upper lip SHAVED with a short pointed chin beard (archaic Ionian fashion), bronze pins along the sleeves. About 40, lean, sun-tanned, dry knowing half-smile, natural skin. Gnomon staff, wax diptych, bronze bowl of water, knotted cord, counting pebbles. Minor: one tally row on the tablet has a couple of pseudo-glyphs; himation is a single plain terracotta (no woven border)."
+ },
+ "thales2_g1_t1": {
+  "subject": "THALES",
+  "verdict": "alt",
+  "issues": "gpt-image-2 version of the same edit: also good (knot, pins), softer photographic detail than the NBP edit."
+ },
+ "med_cav_rider_t1": {
+  "subject": "MEDIAN CAVALRYMAN",
+  "verdict": "alt",
+  "issues": "Optional extra for equal dignity (mirror of the Lydian rider): madder bashlyk wrapped at the chin, kandys tied on by its sleeves, bronze scale corselet, two javelins; akinakes on the left, a pouch instead of the gorytos, reads ~45 not 30, lace-up boots. Source of the mirror med_cav_rider_m."
+ },
+ "med_cav_rider_m_t1": {
+  "subject": "MEDIAN CAVALRYMAN",
+  "verdict": "canonical",
+  "issues": "Horizontal mirror of med_cav_rider_t1 (no generation): akinakes on the RIGHT thigh. Known gaps: no gorytos (a pouch sits at the left hip), older than the brief's 30, boots read a little modern."
+ },
+ "med_cav_horse_t1": {
+  "subject": "MEDIAN CAVALRYMAN",
+  "verdict": "alt",
+  "issues": "Nisaean-type bay with forelock topknot, cropped upright mane, knotted tail, bronze bit with horse-shaped cheekpieces, patterned saddlecloth + breast-strap, no stirrups, unshod. But the rider is barefoot."
+ },
+ "med_cav_horse_e1_t1": {
+  "subject": "MEDIAN CAVALRYMAN",
+  "verdict": "reject",
+  "issues": "NBP edit to give the rider boots also put leather boots on the horse's hooves."
+ },
+ "med_cav_horse_g1_t1": {
+  "subject": "MEDIAN CAVALRYMAN",
+  "verdict": "alt",
+  "issues": "gpt-image-2 edit: boots on the rider only, hooves bare, tack intact; akinakes on the rider's left. Source of the mirror med_cav_horse_m."
+ },
+ "med_cav_horse_m_t1": {
+  "subject": "MEDIAN CAVALRYMAN",
+  "verdict": "canonical",
+  "issues": "Horizontal mirror of med_cav_horse_g1_t1 (no generation): rider's akinakes on the right; topknot, upright mane, knotted tail, horse-cheekpiece bit, saddlecloth, no stirrups. Horse is leggier than the 'big, powerful' Nisaean of the brief."
+ },
+ "halys_wide3_nbp_t1": {
+  "subject": "HALYS_WIDE",
+  "verdict": "alt",
+  "issues": "Backlit, golden dust, long shadows toward camera, crimson lion shields and Median caps/wicker shields per the sheets, archers, both standards, sun over the vanishing point. But the river is a narrow straight canal, a little blue in the upper-right sky. Layout reference for halys_totality2."
+ },
+ "halys_wide3_sdr_t1": {
+  "subject": "HALYS_WIDE",
+  "verdict": "alt",
+  "issues": "Most naturalistic landscape (badlands, salt crust on the red-clay banks, tamarisk in bloom, feather grass, poppies), but pencil-thin columnar poplars (brief says avoid), meandering river breaks the perspective line, smaller armies."
+ },
+ "halys_wide3_gpt_t1": {
+  "subject": "HALYS_WIDE",
+  "verdict": "canonical",
+  "issues": "The master composition: camera over mid-river looking downstream; broad red-brown river with gravel bars and side channels running straight to the low sun at the vanishing point; Lydians (crested helmets, crimson shields with black lions, cavalry, gold lion standard) left, Medes (madder caps, saffron, wicker shields, archers, cavalry, bronze horse standard) right; backlit with long shadows toward camera, glowing dust, broad-crowned trees only, red badland hills, poppies, warm sky with no blue. Minor: ranks are still parade-neat; river may be narrower than the real 100 m."
+ },
+ "halys_totality2_nbp_t1": {
+  "subject": "HALYS_TOTALITY",
+  "verdict": "reject",
+  "issues": "Black sun + warm corona + eclipse reflected in the river are good, but Jupiter is level-left of the sun, the horizon glow is brightest under the sun (should be darker there), and the armies are still day-lit and not looking up."
+ },
+ "halys_totality2_gpt_t1": {
+  "subject": "HALYS_TOTALITY",
+  "verdict": "alt",
+  "issues": "Matched to halys_wide3_nbp: silhouettes with orange rims, 360-degree glow brightest at both frame edges, warm small corona with two prominences. Jupiter too far left."
+ },
+ "halys_totality2_gpt_j_t1": {
+  "subject": "HALYS_TOTALITY",
+  "verdict": "alt",
+  "issues": "Local composite of halys_totality2_gpt: Jupiter moved to 11 deg above / 5.5 deg left of the sun on the frame's own angular scale. Paired with the narrower-river wide (halys_wide3_nbp)."
+ },
+ "halys_totality3_gpt_t1": {
+  "subject": "HALYS_TOTALITY",
+  "verdict": "alt",
+  "issues": "Matched to the canonical wide (same river, gravel bars, hills): near-black umber sky, horizon glow brightest at the frame edges and darker under the black sun, silhouetted men looking up and pointing, corona-light path on the river. Jupiter in the wrong direction (mostly left)."
+ },
+ "halys_totality3_gpt_j_t1": {
+  "subject": "HALYS_TOTALITY",
+  "verdict": "canonical",
+  "issues": "Local composite of halys_totality3_gpt (no generation): reframed as a 4.8 deg tilt-up (top band = mirrored star-filtered sky, bottom 120 px cropped) because Jupiter's true position fell just above the frame at this 24 mm-equivalent scale; Jupiter then placed exactly 11 deg above and 5.5 deg left of the black sun (2.26x / 0.655x the sun's 8.4 deg altitude). Minor: corona streamers a little spiky; the armies are too dark to read costume (correct for deep twilight)."
+ },
+ "f1_eye_nbp_t1": {
+  "subject": "F1 THE EYE",
+  "verdict": "canonical",
+  "issues": "Reads instantly as an eye AND an eclipse: black pupil, iris of pearly fibres with crypts and a darker limbal ring, a broken ring of pink prominences, corona wings beyond; ~55% of frame height; dark Altdorfer-ish battlefield on a red river below. Minor: the iris is a little too literal/photographic (could tip into kitsch); greyish iris tint."
+ },
+ "f1_eye_gpt_t1": {
+  "subject": "F1 THE EYE",
+  "verdict": "alt",
+  "issues": "More painterly and subtler (corona as fur-like iris without a hard edge), better Altdorfer armies; but two small banners/flags (brief: none) and reads less instantly as an eye."
+ },
+ "f1_eye_sdr_t1": {
+  "subject": "F1 THE EYE",
+  "verdict": "reject",
+  "issues": "Iris too large, white and flat; small pupil; reads as a cartoon eyeball more than an eclipse."
+ },
+ "f2_bronze_nbp_t1": {
+  "subject": "F2 BRONZE",
+  "verdict": "alt",
+  "issues": "Good cartouche ('THE RIVER HALYS', tasselled) and vortex sky, but the eclipsed sun sits on the hills left of the river's vanishing point and the figures look like toy soldiers."
+ },
+ "f2_bronze_gpt_t1": {
+  "subject": "F2 BRONZE",
+  "verdict": "canonical",
+  "issues": "Altdorfer vortex sky in burnt gold/vermilion around a partially eclipsed sun exactly over the river's vanishing point (bright edge at the upper left, per RESEARCH 5.1), tasselled hanging tablet lettered THE RIVER HALYS cleanly, forests of glinting spears, mirrored armies with lion and horse standards, tenebrist land. Minor: Lydian shields show lion faces rather than archaic lions; curved horizon only slight."
+ },
+ "f2_bronze_sdr_t1": {
+  "subject": "F2 BRONZE",
+  "verdict": "alt",
+  "issues": "Striking tunnel-vortex sky and clean two-line cartouche; the vortex reads more sci-fi wormhole than Altdorfer, figures larger and stiffer."
+ },
+ "f3_duel_nbp_t1": {
+  "subject": "F3 BRONZE CLOSE",
+  "verdict": "alt",
+  "issues": "Dramatic beam, both looking up, knucklebone visible on the Lydian's chest; more digital-illustration than oil, the Mede is seen from behind."
+ },
+ "f3_duel_gpt_t1": {
+  "subject": "F3 BRONZE CLOSE",
+  "verdict": "reject",
+  "issues": "Muddy and near-monochrome, spears parallel, only one man looking up, faces grim: loses the story beat."
+ },
+ "f3_duel_sdr_t1": {
+  "subject": "F3 BRONZE CLOSE",
+  "verdict": "canonical",
+  "issues": "The duel in the red shallows stopped mid-strike: both men look up into one raking beam from the upper left, spears crossed overhead, water splashing; Lydian with braids, bronze helmet, scale corselet and black-lion shield, Mede with madder cap, curled beard, saffron long sleeves, iron scales and wicker shield; equal light and dignity; near-black umber surround, oil-paint handling. Minor: impasto moderate rather than thick; the beam is a visible shaft."
+ },
+ "f4_corona_nbp_t1": {
+  "subject": "F4 CORONA",
+  "verdict": "alt",
+  "issues": "Crisp, minimal and elegant (orange river edges, contour-line terrain, real Median caps), but the black sun sits half-set on the horizon (should be 8 deg up)."
+ },
+ "f4_corona_gpt_t1": {
+  "subject": "F4 CORONA",
+  "verdict": "alt",
+  "issues": "Best field-line language, sun correctly above the horizon, but BOTH banks are Lydians (Medes missing). Fixed in f4_corona_gpt_e1."
+ },
+ "f4_corona_gpt_e1_t1": {
+  "subject": "F4 CORONA",
+  "verdict": "canonical",
+  "issues": "gpt-image-2 edit: right bank redrawn as Medes (rounded caps, basket-weave wicker shields, archers with curved bows). Corona as dipole field-line loops in pearl, orange river edges and crests, navy-black ground, crisp thin lines, restrained glow, no violet, no particles. Minor: one crested rider remains near the right standard; the field-line corona is stylised far larger than the real one."
+ },
+ "f4_corona_flx_t1": {
+  "subject": "F4 CORONA",
+  "verdict": "reject",
+  "issues": "Armies are a noisy white sketch with orange fire-like edges; radial-line corona reads as a diagram."
+ },
+ "f5_marble_nbp_t1": {
+  "subject": "F5 MARBLE",
+  "verdict": "alt",
+  "issues": "All elements present (statues, Thales in colour, frozen birds/arrows/spray, black sun, glow) but a BLUE night sky and river, two light dots instead of one Jupiter, a bare-chested Lydian statue."
+ },
+ "f5_marble_nbp_e1_t1": {
+  "subject": "F5 MARBLE",
+  "verdict": "alt",
+  "issues": "Edit: umber sky with no blue, scale corselet on the Lydian statue, one Jupiter. Still the older Thales design."
+ },
+ "f5_marble_gpt_t1": {
+  "subject": "F5 MARBLE",
+  "verdict": "reject",
+  "issues": "Statues are brown sandstone, not white marble; dense, muddy."
+ },
+ "f5_marble_sdr_t1": {
+  "subject": "F5 MARBLE",
+  "verdict": "alt",
+  "issues": "White marble and photographic night, but Thales grins broadly and looks 50+; two sky dots."
+ },
+ "f6_gold_nbp_t1": {
+  "subject": "F6 GOLD",
+  "verdict": "alt",
+  "issues": "Luminous, swords arcing, embraces, crescent sun returning; storybook-illustration faces (same laughing face repeated)."
+ },
+ "f6_gold_gpt_t1": {
+  "subject": "F6 GOLD",
+  "verdict": "alt",
+  "issues": "Rich Rubens-like paint, a Lydian and a Mede embracing, blades raining into a molten river; darker and busier, swords read as falling from the sky."
+ },
+ "f6_gold_sdr_t1": {
+  "subject": "F6 GOLD",
+  "verdict": "canonical",
+  "issues": "Tiepolo sky of rose, apricot and cream; warm low sun breaking out as a crescent at the end of the river; swords and spears thrown in arcs into the red water; a Lydian and a Mede embracing at the centre-left; joy on both banks; painted glow with no flare or god rays. Minor: the returning crescent's horns point the wrong way (should open up-left); slight cool tint at the top of the sky."
+ },
+ "f7_orbit_nbp_t1": {
+  "subject": "F7 ORBIT",
+  "verdict": "alt",
+  "issues": "Earth floats above the lunar horizon with a gap instead of setting behind it."
+ },
+ "f7_orbit_gpt_t1": {
+  "subject": "F7 ORBIT",
+  "verdict": "canonical",
+  "issues": "Earthset: a blue Earth drawn in fine flowing contour lines with white cloud streamlines and cyclones, its lower part hidden behind a grey lunar limb drawn as dense topographic contour lines; one thin orange atmosphere line; black space, few stars. Blue only in the Earth. Minor: no night side/terminator; Earth is more rendered than pure line."
+ },
+ "f7_orbit_flx_t1": {
+  "subject": "F7 ORBIT",
+  "verdict": "alt",
+  "issues": "Earth correctly setting behind the limb, but the orange line traces the Moon's limb (should be Earth's atmosphere) and the Earth is half photo, half lines."
+ },
+ "f8_room_nbp_t1": {
+  "subject": "F8 ROOM",
+  "verdict": "alt",
+  "issues": "Properly mischievous smirk-wink with pearl/orange two-tone light, but heavier gradient shading and a sharper, older face than the sheet."
+ },
+ "f8_room_gpt_t1": {
+  "subject": "F8 ROOM",
+  "verdict": "alt",
+  "issues": "Closest to the sheet's face and flat cel style; but the sleeve patch is garbled glyphs, the wink is sweet rather than mischievous, no monitor light on the face."
+ },
+ "f8_room_gpt_e1_t1": {
+  "subject": "F8 ROOM",
+  "verdict": "canonical",
+  "issues": "gpt-image-2 edit: sleeve patch reads '1420 MHz', sly one-sided smile with arched brow, pearl monitor key light on the left of her face and hair; flat cel shading, crisp lines, brown eyes, light-blue chest circle and orange headphones per the sheet, no yellow cast. Minor: the orange lamp rim on the hair is weak; she winks with her right eye (renderer redraws the eyelid anyway)."
  }
 }

@@ -15,7 +15,7 @@
 //   f.drawScene(name, overrides, g) draws another scene (transitions through the disk)
 // Scenes must be pure functions of f: no state carried between frames (caches are fine).
 
-import { frameAtOrAfter, FPS } from './time.js';
+import { frameAtOrAfter, FPS, TM } from './time.js';
 
 export const WORLDS = {            // default draw cadence per world (TREATMENT.md v0.1: frame rate is a genre signal)
   bronze: 12, gold: 12, marble: 30, corona: 60, orbit: 60, room: 12,
@@ -43,6 +43,7 @@ export function finalize() {
     s.dur = s.t1 - s.t0;
     s.hold = FPS / s.cadence;        // master frames per drawing (fractional for rates that do not divide FPS)
     if (s.F1 <= s.F0) warn.push(`shot ${s.id} is shorter than one frame`);
+    if (s.t1 > TM.dur + 1 / FPS) warn.push(`shot ${s.id} runs past the end of the audio (${s.t1.toFixed(2)} > ${TM.dur.toFixed(2)} s): its tail is not rendered`);
     if (s.cadence > FPS) warn.push(`shot ${s.id}: cadence ${s.cadence} is above the ${FPS} fps master rate (every frame is a new drawing)`);
     else if (Math.abs(s.hold - Math.round(s.hold)) > 1e-9) warn.push(`shot ${s.id}: cadence ${s.cadence} does not divide ${FPS} fps (uneven holds)`);
   }
