@@ -25,7 +25,7 @@ const sstep = (a, b, x) => smooth(clamp((x - a) / (b - a)));
 const kf = (t, keys) => { if (t <= keys[0][0]) return keys[0][1]; for (let i = 1; i < keys.length; i++) if (t <= keys[i][0]) { const [a, va] = keys[i - 1], [b, vb] = keys[i]; return va + (vb - va) * smooth((t - a) / (b - a)); } return keys[keys.length - 1][1]; };
 const seg = (t, a, b) => clamp((t - a) / (b - a));
 const DBG = new URLSearchParams(location.search).get('bdebug'), LOG = new URLSearchParams(location.search).has('blog'), VAR = new URLSearchParams(location.search).get('bvar');
-const VARS = { lab: { fg: [1.45, 1.3, 1.15, 1.05, 1.0], maxLen: [6, 6, 5, 4, 3] }, nounder: { underAlpha: 0 }, nofine: { smoothRef: 0 } };
+const VARS = { canvas: { debugCanvas: 1 }, nomat: { _nomat: 1 }, lab: { fg: [1.45, 1.3, 1.15, 1.05, 1.0], maxLen: [6, 6, 5, 4, 3] }, nounder: { underAlpha: 0 }, nofine: { smoothRef: 0 } };
 
 // plate time 0 = the start of the song window each plate was generated against (tools/plate_specs.py t_song)
 const T0 = { P01: 7.18, P02: 0, P03: 14.19, P04: 17.66, P05: 21.15, P06: 21.15, P07: 25.5, P08: 26.0, P09: 32.47, P10: 35.98, P11: 39.48, P12: 44.73,

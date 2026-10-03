@@ -152,7 +152,7 @@ ev("S33.love", "carved", "S33", [("GO HOME TO THE ONES YOU LOVE", {"key": "l", "
 # 7 · drop 1
 ev("S35.chops", "chop", "S35", [("HALO", {"key": "c1", "hal": True}), ("IN THE", {"key": "c2"}), ("SKY", {"key": "c3"}), ("SKY", {"key": "c4"})],
    t1=112.31)
-ev("S35.glover", "quote", "S35", [('"we just went sci-fi." — V. Glover, Artemis II, during totality, 6 Apr 2026', {"key": "q", "reveal": "line"})],
+ev("S35.glover", "quote", "S35", [('"We just went sci-fi." — V. Glover, Artemis II, during totality, 6 Apr 2026', {"key": "q", "reveal": "line"})],
    anchor="lower")
 ev("S36.stutter", "chop", "S36", [("SKY", {"key": "sky"})], stutter=True,
    invert=[112.74, 113.173, 113.607, 115.783, 116.217, 116.652, 117.086])
@@ -300,7 +300,11 @@ def build():
         if "t1" not in d and any("t_end" in it for it in items):
             e["t1"] = max(it["t_end"] for it in items if "t_end" in it)
         if d["fx"] == "chop" and d.get("stutter"):
-            e["onsets"] = [round(c["t"], 3) for c in TIMING["chops"] if c["word"] == "stutter" and sh["t0"] <= c["t"] < sh["t1"]]
+            # SKY re-slams where the picture cuts (SHOTLIST S36): every stutter onset in bar 65 (8ths), every second one from
+            # bar 66 on (16ths)
+            st = [c for c in TIMING["chops"] if c["word"] == "stutter" and sh["t0"] <= c["t"] < sh["t1"]]
+            later = [c for c in st if c["bar"] >= 66]
+            e["onsets"] = sorted([round(c["t"], 3) for c in st if c["bar"] < 66] + [round(c["t"], 3) for c in later[::2]])
         events.append(e)
 
     unused = [(s, tx) for (s, tx, k) in cues if (s, tx, k) not in used]

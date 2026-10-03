@@ -140,7 +140,7 @@ export async function paint(f, src, opts = {}) {
     sd = eclipse.sunDisk(s.x * W, s.y * H, s.r * W, off, s.dir || eclipse.MOON_DIR);
     sd.obsc = eclipse.obscuration(off);
   }
-  let ref = reference(F0, cfg, pal), F = F0, mat = src.mat || null, skyInfo = null;
+  let ref = reference(F0, cfg, pal), F = F0, mat = cfg._nomat ? null : (src.mat || null), skyInfo = null;
   ms.reference = Math.round(performance.now() - t0); t0 = performance.now();
   if (cfg.sky) {
     const mask = src.sky ? Float32Array.from(src.sky) : skyMask(F0, cfg.sky);
@@ -178,6 +178,9 @@ export async function paint(f, src, opts = {}) {
   const eyes = cfg.eyeStrokes ? eyeGeometry(F0, cfg) : [];
   const list = placeStrokes(F, ref, cfg, drawIdx, mat, eyeMaskOf(F0, eyes), W);
   const per = list.perLayer;
+  if (opts.debugCanvas) {                              // the CPU virtual canvas after placement (what the error map saw)
+    const c = list.canvas; debugBlit(f, opts.target || f.g, 'ref', { src, F: F0, ref: { R: c.cR, G: c.cG, B: c.cB }, mat }); return { ms, perLayer: per };
+  }
   if (cfg.accents) list.push(...accents(F0, ref, cfg, drawIdx, pal, W));
   if (sd && skyInfo) list.push(...sunGlowStrokes(sd, skyInfo.mask, aw, ah, S, pal, cfg, drawIdx, sunWarmth(cfg.sun.alt ?? 9)));
   if (eyes.length) list.push(...eyeStrokes(F0, cfg, eyes, drawIdx, pal, W));

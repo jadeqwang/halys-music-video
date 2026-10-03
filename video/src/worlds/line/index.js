@@ -71,7 +71,9 @@ export function project(u, x, y, d) {
 const cfgKey = opts => stable({ t: opts.trace, c: opts.corona, s: opts.skyField, a: opts.analysis, aw: opts.aw });
 export async function plateLines(f, src, opts = {}, tp = opts.tp ?? 0) {
   const W = f.W, H = f.H, aspect = W / H, aw = opts.aw ?? 960;
+  if (LOG) console.log('[line] fields ' + (src.standin || src.plate));
   const F = await sourceFields(src, tp, aw, aspect, opts.analysis || {});
+  if (LOG) console.log('[line] fields ok ' + F.ms);
   const key = 'P|' + F.key + '|' + W + 'x' + H + '|' + cfgKey(opts);
   let L = LINES.get(key);
   if (!L) { const t0 = performance.now(); L = buildPlate(F, opts, W, H); L.ms = Math.round(performance.now() - t0); L.key = key; LINES.set(key, L); if (LOG) console.log(`[line] build ${F.id} ${L.ms} ms`, JSON.stringify(L.counts), 'analysis', F.ms); }
@@ -80,11 +82,12 @@ export async function plateLines(f, src, opts = {}, tp = opts.tp ?? 0) {
 export function buildPlate(F, opts, W, H, seeds = null, state = null) {
   const S = W / F.aw;
   const c = { ...TRACE_DEFAULTS, ...(opts.trace || {}), S };
-  const f = prepFields(F, c);
-  f.Db = liftDepth(F, c);
-  const stream = c.stream === false ? [] : decorate(F, f, traceLines(F, f, c, seeds, state), c);
-  const cont = contourLines(F, f, c);
-  const ticks = armyTicks(F, f, c);
+  const T0 = performance.now(), lg = m => LOG && console.log('[line] ' + m + ' ' + Math.round(performance.now() - T0));
+  const f = prepFields(F, c); lg('prep');
+  f.Db = liftDepth(F, c); lg('lift');
+  const stream = c.stream === false ? [] : decorate(F, f, traceLines(F, f, c, seeds, state), c); lg('stream ' + stream.length);
+  const cont = contourLines(F, f, c); lg('contours ' + cont.length);
+  const ticks = armyTicks(F, f, c); lg('ticks');
   const vis = c.sky ? (x, y) => x >= 0 && y >= 0 && x < F.aw - 1 && y < F.ah - 1 && samp(F, f.sky, x, y) > .5 : null;
   let cor = [], sky = [];
   if (f.sun && opts.corona !== false) cor = coronaLines(f.sun, { ...(opts.corona || {}), scale: S, visible: vis });
