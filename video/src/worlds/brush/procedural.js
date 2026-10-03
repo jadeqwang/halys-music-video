@@ -257,9 +257,9 @@ export function crowdStrokes(src, o) {
     const px = x * S, py = y * S, boil = .012 * (hash4(cx, cy, di, seed) - .5);
     // the spear: upright (a slight lean, never in step), its lit tip catching the low sun
     if (h2 < (o.spears ?? .85)) {
-      const lean = lean0 + .05 * (hash3(cx, cy, seed + 17) - .5) + boil, len = fh * (1.05 + .45 * hash3(cx, cy, seed + 19));
-      const bx = px + (h2 - .5) * fh * .1, by = py - fh * .25, tx = bx + Math.sin(lean) * len, ty = by - Math.cos(lean) * len;
-      const w = Math.max(.55 * u1, fh * .009), q = .84;
+      const lean = lean0 + .04 * (hash3(cx, cy, seed + 17) - .5) + boil, len = fh * (.7 + .25 * hash3(cx, cy, seed + 19));
+      const bx = px + (h2 - .5) * fh * .1, by = py - fh * .2, tx = bx + Math.sin(lean) * len, ty = by - Math.cos(lean) * len;
+      const w = Math.max(.55 * u1, fh * .009), q = .9;
       // a dark shaft with no paint body (a thin ridge would catch the varnish and read as rain), a short lit tip
       out.push({ pts: [[bx, by], [lerp(bx, tx, q), lerp(by, ty, q)]], r: w, c0: shaft, c1: shaft, a: .82, thick: 0, seed: h1, key: 3 + h1 * 1e-3, layer: 11, taper: .15 });
       out.push({ pts: [[lerp(bx, tx, q), lerp(by, ty, q)], [tx, ty]], r: w * 1.2, c0: tip, c1: tip, a: .5 + .4 * light, thick: .15, seed: h2, key: 3.5 + h2 * 1e-3, layer: 12, taper: .5 });
@@ -279,10 +279,43 @@ export function crowdStrokes(src, o) {
   for (const [k, sd] of (o.standards || []).entries()) {
     const h = sd.h * H, x0 = sd.u * W, yb = sd.v * H, yt = yb - h, a = sd.kind === 'horse' ? 1 : 0;
     out.push({ pts: [[x0, yb], [x0, yt]], r: Math.max(.8 * u1, h * .018), c0: dark, c1: dark, a: .9, thick: .35, seed: k + .1, key: 5 + k * 1e-3, layer: 11, taper: .1 });
-    const s = h * .22, bx = x0, by = yt - s * .2, col = bronze, w = Math.max(.9 * u1, s * .16);
+    const s = h * .3, bx = x0, by = yt - s * .25, col = bronze, w = Math.max(1 * u1, s * .14);
     const shape = a ? [[[-.5, 0], [.45, 0]], [[.35, 0], [.6, -.45]], [[.6, -.45], [.8, -.38]], [[-.45, 0], [-.55, .4]], [[.35, 0], [.4, .42]], [[-.5, -.05], [-.75, .15]]]   // horse
       : [[[-.5, 0], [.4, 0]], [[.4, 0], [.55, -.25]], [[.32, -.12], [.62, -.08]], [[-.45, 0], [-.5, .38]], [[.3, 0], [.35, .38]], [[-.5, -.02], [-.8, -.3]]];   // lion
     for (const [j, seg] of shape.entries()) out.push({ pts: seg.map(([sx, sy]) => [bx + sx * s, by + sy * s]), r: w * (j === 0 ? 1.6 : 1), c0: col, c1: mix3(col, dark, .3), a: .92, thick: .5, seed: k * 10 + j, key: 6 + k * .01 + j * 1e-4, layer: 12, taper: .2 });
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------- burning bronze (S26)
+// A hot specular sweep: a band of short lead-white / Naples strokes riding across the metal (along `dir`, at `pos` 0..1
+// of the frame), brightest at its core; and the sun's reflection: a hard white point with a short warm smear, where the
+// plate's metal is brightest. o: {W, H, pal, sweep: {pos, k, ang, width}, sun: {x, y, r, k}, mask(x, y) -> 0..1, seed}
+export function bronzeSpecular(o) {
+  const { W, H, pal } = o, out = [], u1 = H / 1080, seed = o.seed ?? 5;
+  const T = n => pal.tube(n) || [1, 1, 1];
+  const lead = T('leadWhite'), nap = T('naples'), och = T('yellowOchre');
+  const hot = mix3(lead, nap, .25), gold = mix3(nap, och, .45);
+  const sw = o.sweep;
+  if (sw && sw.k > 0) {
+    const ca = Math.cos(sw.ang ?? 1.1), sa = Math.sin(sw.ang ?? 1.1), cx = sw.pos * W, width = (sw.width ?? .07) * W;
+    for (let j = 0; j < 120; j++) {
+      const along = (hash3(j, 1, seed) - .5) * 1.4 * H, across = (hash3(j, 2, seed) - .5) * 2, core = Math.exp(-across * across * 3);
+      const x = cx + across * width + along * ca * .25, y = H * .5 + along * sa;
+      if (x < -20 || x > W + 20 || y < -20 || y > H + 20) continue;
+      const m = o.mask ? o.mask(x, y) : 1; if (m <= .05) continue;
+      const len = (8 + 26 * core) * u1, dx = ca * len * .5, dy = sa * len * .5;
+      out.push({ pts: [[x - dx, y - dy], [x + dx, y + dy]], r: (1.4 + 3.2 * core) * u1, c0: core > .6 ? hot : gold, c1: gold, a: clamp((.35 + .6 * core) * sw.k * m), thick: .55 + .3 * core, seed: hash3(j, 3, seed), key: 7 + j * 1e-4, layer: 12, taper: .45 });
+    }
+  }
+  const sn = o.sun;
+  if (sn && sn.k > 0) {
+    const r = sn.r * u1;
+    out.push({ pts: [[sn.x - r * .3, sn.y], [sn.x + r * .3, sn.y]], r, c0: lead, c1: hot, a: clamp(sn.k), thick: .9, seed: 1.3, key: 8, layer: 12, taper: .2 });
+    for (let j = 0; j < 5; j++) {                                    // a short warm smear in the metal's curvature, not rays
+      const a = -.5 + (j - 2) * .12, l = r * (2.2 + 1.5 * hash3(j, 9, seed));
+      out.push({ pts: [[sn.x, sn.y], [sn.x + Math.cos(a) * l, sn.y + Math.sin(a) * l * .4]], r: r * .35, c0: hot, c1: gold, a: clamp(sn.k * .55), thick: .4, seed: 2 + j, key: 8.1 + j * .01, layer: 12, taper: .8 });
+    }
   }
   return out;
 }

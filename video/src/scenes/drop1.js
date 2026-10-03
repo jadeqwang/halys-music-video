@@ -253,6 +253,9 @@ scene('S45', async f => {
 // tears open on the stab (125.11) with recoiling line ends, and widens on the second stab (125.99): beyond it, the
 // machinery of the heavens (orbits, gear trains, dials, rows of engraved glyphs), all in lines.
 const S38 = { t0: 124.475, touch: 124.92, tear: 125.109, tear2: 125.991, t1: 126.206 };
+// P24 (take 1) raises the arm 1.0-3.8 s and presses the spread palm ~1.6-2.3 s: retimed so the palm meets the membrane
+// on the touch (124.92 -> plate 1.6), then 1:1 through the bar (126.21 -> 2.9)
+const handTp = t => t < S38.touch ? lerp(.95, 1.6, clamp((t - S38.t0) / (S38.touch - S38.t0))) : 1.6 + (t - S38.touch);
 const HAND = { src: { plate: 'P24', standin: 'hand' }, trace: { ...CU_TRACE, lightDir: [-.3, -1], contourW: [1.8, 3.0], contourB: 1.9, bgGain: 0, dsepMin: 5.5, dsepMax: 14, subjBright: [.15, .55], innerHi: .3 }, corona: false };
 function membraneLines(W, H, s) {
   const out = [], n = 64;
@@ -269,13 +272,14 @@ function membraneLines(W, H, s) {
   return out;
 }
 function machinery(cx, cy, s, t, hole) {
-  const out = [], A = { w: 1.1, b: .9, o: 1 };
-  out.push(...proc.dial(cx, cy, 300 * s, 72, { ...A, o: .9, b: .7 }, t * .05));
-  out.push(...proc.gear(cx - 120 * s, cy + 40 * s, 110 * s, 24, t * .9, { ...A, b: 1.0 }));
-  out.push(...proc.gear(cx + 62 * s, cy - 58 * s, 75 * s, 16, -t * .9 * 24 / 16 + .1, { ...A, b: .95 }));
-  out.push(...proc.gear(cx + 170 * s, cy + 98 * s, 62 * s, 13, t * .9 * 24 / 13, { ...A, b: .85 }));
-  out.push(...proc.orbits(cx + 40 * s, cy + 10 * s, 260 * s, 1.15, t, { w: .9, b: .75, o: .1 }));
-  for (let r = 0; r < 4; r++) out.push(...proc.glyphRow(cx - 340 * s, cy - 210 * s + r * 140 * s, 680 * s, 15 * s, 11 + r, { w: .9, b: .55, o: .25 }, (r % 2 ? -1 : 1) * t * 60 * s));
+  // the machinery supports the hand and the tear (dimmer than the membrane's torn edges and the hand's contours)
+  const out = [], A = { w: 1, b: .62, o: 1 };
+  out.push(...proc.dial(cx, cy, 300 * s, 72, { ...A, o: .9, b: .45 }, t * .05));
+  out.push(...proc.gear(cx - 120 * s, cy + 40 * s, 110 * s, 24, t * .9, { ...A, b: .68 }));
+  out.push(...proc.gear(cx + 62 * s, cy - 58 * s, 75 * s, 16, -t * .9 * 24 / 16 + .1, { ...A, b: .62 }));
+  out.push(...proc.gear(cx + 170 * s, cy + 98 * s, 62 * s, 13, t * .9 * 24 / 13, { ...A, b: .55 }));
+  out.push(...proc.orbits(cx + 40 * s, cy + 10 * s, 260 * s, 1.15, t, { w: .85, b: .5, o: .1 }));
+  for (let r = 0; r < 4; r++) out.push(...proc.glyphRow(cx - 340 * s, cy - 210 * s + r * 140 * s, 680 * s, 15 * s, 11 + r, { w: .85, b: .36, o: .25 }, (r % 2 ? -1 : 1) * t * 60 * s));
   // keep only what lies inside the hole (clip by splitting)
   const res = [];
   for (const L of out) {
@@ -293,7 +297,7 @@ scene('S38', async f => {
   const handY = live ? 0 : lerp(.85, .34, rise) * H;
   const press = sstep(S38.touch - .08, S38.tear, t), tear = t >= S38.tear ? easeOut(clamp((t - S38.tear) / .55)) : 0, tear2 = t >= S38.tear2 ? easeOut(clamp((t - S38.tear2) / .25)) : 0;
   // the hand's silhouette (its matte, in screen px) occludes the membrane
-  const F = await sourceFields(HAND.src, live ? t - S38.t0 : 0, 960, W / H), M = F.M, hand = { meta: { S: W / F.aw } };
+  const F = await sourceFields(HAND.src, live ? handTp(t) : 0, 960, W / H), M = F.M, hand = { meta: { S: W / F.aw } };
   // the contact: the topmost point of the hand's matte (fingertips), in screen px
   let contact = [W * .5, H * .06 + handY];
   if (M) { let best = null; for (let y = 2; y < F.ah && !best; y++) for (let x = 2; x < F.aw - 2; x++) if (M[y * F.aw + x] > .5) { best = [x * hand.meta.S, y * hand.meta.S + handY]; break; } if (best) contact = best; }
@@ -323,7 +327,7 @@ scene('S38', async f => {
   }
   const layers = [dynLayer(memOut, { uT: audio.flowPhase(t) * .6 })];
   if (Rh > 2) layers.push(dynLayer(machinery(hole[0], hole[1] - 60 * s, s, t - S38.tear, (x, y) => Math.hypot(x - hole[0], (y - hole[1]) * 1.35) < Rh * .97 && !inHand(x, y)), { uBright: .95 + .5 * tear2 }));
-  await drawLines(f, { ...HAND, tp: live ? t - S38.t0 : 0, chainFrom: 0, cam: { pan: [0, handY] }, phase: audio.flowPhase(t), layers, look: { glow: [.22, .08] }, disk: false });
+  await drawLines(f, { ...HAND, tp: live ? handTp(t) : 0, chainFrom: .95, cam: { pan: [0, handY] }, phase: audio.flowPhase(t), layers, look: { glow: [.2, .07] }, disk: false });
   steer(f, { kick: 0 });
 });
 

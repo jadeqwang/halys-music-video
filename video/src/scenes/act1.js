@@ -182,7 +182,7 @@ async function wideLook(f, cam, o = {}) {
   return { sun, hz, pools, real };
 }
 // the standards of the master composition (P01, plate uv at plate 0-4.5 s): lions over the Lydians, horses over the Medes
-const STANDARDS = [{ u: .19, v: .47, kind: 'lion', h: .075 }, { u: .335, v: .385, kind: 'lion', h: .045 }, { u: .8, v: .46, kind: 'horse', h: .075 }, { u: .665, v: .38, kind: 'horse', h: .045 }];
+const STANDARDS = [{ u: .2, v: .5, kind: 'lion', h: .11 }, { u: .34, v: .415, kind: 'lion', h: .07 }, { u: .8, v: .5, kind: 'horse', h: .11 }, { u: .66, v: .415, kind: 'horse', h: .07 }];
 function crowdOver(f, src, L, cam, o = {}) {
   if (!L.real || !src.depth || !src.mat) return null;
   const c = camAt(cam, f), stds = o.standards === false ? [] : STANDARDS.map(s => ({ ...s, u: (s.u - c.cx) * c.zoom + .5, v: (s.v - c.cy) * c.zoom + .5, h: s.h * c.zoom }));
@@ -191,7 +191,7 @@ function crowdOver(f, src, L, cam, o = {}) {
   const VP = [.5, .31], inArmy = (fu, fv) => {
     const pu = (fu - .5) / c.zoom + c.cx, pv = (fv - .5) / c.zoom + c.cy, dx = Math.abs(pu - VP[0]);
     if (dx < .07 || pv < VP[1] + .02) return false;
-    const top = VP[1] + dx / .5 * .11, bot = VP[1] + dx / .5 * .5;
+    const top = VP[1] + dx / .5 * .2, bot = VP[1] + dx / .5 * .55;
     return pv > top && pv < bot;
   };
   return ({ pal, drawIdx }) => PR.crowdStrokes(src, { W: f.W, H: f.H, pal, horizonY: L.hz, vanishX: L.sun[0], drawIdx, standards: stds, light: 1 - .7 * E(f.t).eL,
@@ -584,8 +584,20 @@ scene('S26', async f => {
       lightDir: [-.85, -.5], pool: [{ x: .45, y: .45, rx: .5, ry: .5, feather: .8, k: .95 }, { x: gx, y: .42, rx: .08, ry: .3, rot: .4, feather: .6, k: gk > 0 && gk < 1 ? 1 : 0 }],
       poolMatte: .3, crushFloor: .1,
     }),
-    accents: 1.4, accentThick: 1.8, glint: 1, impasto: .7,
-    overStrokes: egg ? ({ pal }) => PR.mirrorFigure({ cx: f.W * mirror.cx, cy: f.H * mirror.cy, R: f.H * mirror.R, u: mirror.u, v: mirror.v, h: mirror.h, pal, tint: [1, .62, .45], tintK: .6, k: .88 }) : null,
+    // the bronze burns: more of the metal's highlights become glints, lead white piles up in them
+    accents: 1.6, accentThick: 1.9, glint: 1.5, glintT: .55, impasto: .85, thickHi: .8, spec: .32,
+    overStrokes: ({ pal }) => {
+      const out = [];
+      // the sun's reflection where the plate's metal is brightest (upper half), and the hot sweep on "bronze"
+      let bi = -1, bl = 0; const aw = src.aw, ah = src.ah;
+      for (let y = 2; y < ah * .6; y += 2) for (let x = 2; x < aw - 2; x += 2) { const i = y * aw + x, L = .2126 * src.R[i] + .7152 * src.G[i] + .0722 * src.B[i]; if (L > bl) { bl = L; bi = i; } }
+      const sunK = bi >= 0 ? sstep(.55, .85, bl) * (.75 + .25 * sstep(83.6, 84.4, t)) : 0;
+      const mask = (x, y) => { const ax = clamp(Math.round(x / f.W * aw), 0, aw - 1), ay = clamp(Math.round(y / f.H * ah), 0, ah - 1), i = ay * aw + ax; return sstep(.18, .45, .2126 * src.R[i] + .7152 * src.G[i] + .0722 * src.B[i]); };
+      out.push(...PR.bronzeSpecular({ W: f.W, H: f.H, pal, mask, sweep: { pos: gx, k: gk > 0 && gk < 1 ? Math.sin(Math.PI * gk) : 0, ang: 1.15, width: .06 },
+        sun: bi >= 0 ? { x: (bi % aw + .5) / aw * f.W, y: (Math.floor(bi / aw) + .5) / ah * f.H, r: 7, k: sunK } : null }));
+      if (egg) out.push(...PR.mirrorFigure({ cx: f.W * mirror.cx, cy: f.H * mirror.cy, R: f.H * mirror.R, u: mirror.u, v: mirror.v, h: mirror.h, pal, tint: [1, .62, .45], tintK: .6, k: .88 }));
+      return out;
+    },
   });
 });
 
