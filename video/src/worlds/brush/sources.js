@@ -306,20 +306,27 @@ export const hasPlate = id => !!(id && PLATES[id]);
 
 // two sources side by side (a diptych): each half rendered at (aw/2, ah); a wall at the seam stops every stroke
 // (wall: 0 left, 1 right). The halves keep their own material coordinates (the right half offset by a frame width).
-export async function diptychSource(f, makeLeft, makeRight, gap = 0) {
-  const [aw, ah] = analysisSize(f.W, f.H), hw = Math.floor(aw / 2);
-  const A = await makeLeft({ size: [hw, ah], layoutW: f.W / 2, layoutH: f.H }), B = await makeRight({ size: [aw - hw, ah], layoutW: f.W / 2, layoutH: f.H });
+// stack: one above the other instead (each at (aw, ah/2), wall 0 top, 1 bottom), for portrait frames, where halves
+// side by side would be slivers (2:5 in 4:5).
+export async function diptychSource(f, makeLeft, makeRight, gap = 0, stack = false) {
+  const [aw, ah] = analysisSize(f.W, f.H), hw = stack ? aw : Math.floor(aw / 2), hh = stack ? Math.floor(ah / 2) : ah;
+  const A = await makeLeft(stack ? { size: [aw, hh], layoutW: f.W, layoutH: f.H / 2 } : { size: [hw, ah], layoutW: f.W / 2, layoutH: f.H });
+  const B = await makeRight(stack ? { size: [aw, ah - hh], layoutW: f.W, layoutH: f.H / 2 } : { size: [aw - hw, ah], layoutW: f.W / 2, layoutH: f.H });
   const N = aw * ah, R = new Float32Array(N), G = new Float32Array(N), Bc = new Float32Array(N), wall = new Uint8Array(N);
   const hasD = A.depth || B.depth, hasM = A.matte || B.matte;
   const depth = hasD ? new Float32Array(N) : null, matte = hasM ? new Float32Array(N) : null, mx = new Float32Array(N), my = new Float32Array(N);
   for (let y = 0; y < ah; y++) for (let x = 0; x < aw; x++) {
-    const i = y * aw + x, right = x >= hw, S2 = right ? B : A, sw = right ? aw - hw : hw, j = y * sw + (right ? x - hw : x);
-    R[i] = S2.R[j]; G[i] = S2.G[j]; Bc[i] = S2.B[j]; wall[i] = right ? 1 : 0;
+    const i = y * aw + x, second = stack ? y >= hh : x >= hw, S2 = second ? B : A;
+    const j = stack ? (second ? y - hh : y) * aw + x : y * (second ? aw - hw : hw) + (second ? x - hw : x);
+    R[i] = S2.R[j]; G[i] = S2.G[j]; Bc[i] = S2.B[j]; wall[i] = second ? 1 : 0;
     if (depth) depth[i] = S2.depth ? S2.depth[j] : .5;
     if (matte) matte[i] = S2.matte ? S2.matte[j] : 0;
-    mx[i] = S2.mat ? S2.mat.mx[j] + (right ? f.W * 2 : 0) : x * 2; my[i] = S2.mat ? S2.mat.my[j] : y * 2;
+    mx[i] = S2.mat ? S2.mat.mx[j] + (second && !stack ? f.W * 2 : 0) : x * 2; my[i] = S2.mat ? S2.mat.my[j] + (second && stack ? f.H * 2 : 0) : y * 2;
   }
-  const faces = [...A.faces.map(q => ({ ...q, box: [q.box[0] / 2, q.box[1], q.box[2] / 2, q.box[3]], eyes: q.eyes.map(([u, v]) => [u / 2, v]) })),
-    ...B.faces.map(q => ({ ...q, box: [.5 + q.box[0] / 2, q.box[1], .5 + q.box[2] / 2, q.box[3]], eyes: q.eyes.map(([u, v]) => [.5 + u / 2, v]) }))];
-  return { aw, ah, R, G, B: Bc, depth, matte, faces, mat: { mx, my }, wall, key: `dip|${A.key}|${B.key}`, info: { kind: 'diptych', left: A.info, right: B.info } };
+  const place = (q, o) => stack
+    ? { ...q, box: [q.box[0], o + q.box[1] / 2, q.box[2], o + q.box[3] / 2], eyes: q.eyes.map(([u, v]) => [u, o + v / 2]) }
+    : { ...q, box: [o + q.box[0] / 2, q.box[1], o + q.box[2] / 2, q.box[3]], eyes: q.eyes.map(([u, v]) => [o + u / 2, v]) };
+  const faces = [...A.faces.map(q => place(q, 0)), ...B.faces.map(q => place(q, .5))];
+  return { aw, ah, R, G, B: Bc, depth, matte, faces, mat: { mx, my }, wall, key: `${stack ? 'dipv' : 'dip'}|${A.key}|${B.key}`,
+    info: { kind: 'diptych', stack, left: A.info, right: B.info } };
 }

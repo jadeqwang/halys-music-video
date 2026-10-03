@@ -364,10 +364,10 @@ scene('S08', async f => {
 });
 
 // ---------------------------------------------------------------- S09 / S22 / S33: diptychs (the type module draws the gold divider)
-async function diptych(f, A, B, o) {
+async function diptych(f, A, B, o, stack = false) {
   const src = await diptychSource(f,
     sz => rp(f, A.plate, A.standin, A.cam, sz),
-    sz => rp(f, B.plate, B.standin, B.cam, sz));
+    sz => rp(f, B.plate, B.standin, B.cam, sz), 0, stack);
   return bronze(f, src, typeof o === 'function' ? o(src) : o);
 }
 // Alyattes (P05, left, facing right) and Cyaxares (P06, right, facing left): each plate framed as an 8:9 panel on the king
@@ -838,8 +838,12 @@ scene('S32', async f => {
 scene('S33', async f => {
   const A = { plate: 'P22a', standin: { id: 'a_duel', cam: k => ({ cx: .3, cy: .22, zoom: 3.4 + .1 * k }) }, cam: k => ({ cx: .5, cy: .5, zoom: 1.02 + .03 * k, mirror: true }) };
   const B = { plate: 'P22b', standin: { id: 'a_duel', cam: k => ({ cx: .52, cy: .48, zoom: 3.4 + .1 * k }) }, cam: k => ({ cx: .5, cy: .5, zoom: 1.02 + .03 * k }) };
-  await diptych(f, A, B, { lightDir: [0, -1], lightColor: '#dcd6ca', pool: [{ x: .25, y: .5, rx: .2, ry: .4, feather: .7, k: .85 }, { x: .75, y: .5, rx: .2, ry: .4, feather: .7, k: .85 }], poolMatte: .5, crushFloor: .07, envDim: .55,
-    poolFromLight: { k: .7, bg: .3 }, plateKeep: hasPlate('P22a') ? .6 : 0, keepDim: .95, exposure: 1.15, ...TOTALITY });
+  // (portrait stacks the two fists one above the other: side by side, each half of a 4:5 frame is a 2:5 sliver)
+  const stack = f.W / f.H < 1.2;
+  const pool = stack ? [{ x: .5, y: .25, rx: .4, ry: .2, feather: .7, k: .85 }, { x: .5, y: .75, rx: .4, ry: .2, feather: .7, k: .85 }]
+    : [{ x: .25, y: .5, rx: .2, ry: .4, feather: .7, k: .85 }, { x: .75, y: .5, rx: .2, ry: .4, feather: .7, k: .85 }];
+  await diptych(f, A, B, { lightDir: [0, -1], lightColor: '#dcd6ca', pool, poolMatte: .5, crushFloor: .07, envDim: .55,
+    poolFromLight: { k: .7, bg: .3 }, plateKeep: hasPlate('P22a') ? .6 : 0, keepDim: .95, exposure: 1.15, ...TOTALITY }, stack);
 });
 
 // ---------------------------------------------------------------- S34: last light (beads, the diamond ring, white, the black pupil at 110.58)

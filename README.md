@@ -6,6 +6,9 @@
 * ▶ **[`release/Halys_1080p60_hevc.mp4`](release/Halys_1080p60_hevc.mp4)** — 1920×1080, 60 fps, HEVC (two-pass, sized under GitHub's 100 MB limit)
 * [`release/Halys_720p60_h264.mp4`](release/Halys_720p60_h264.mp4) — 1280×720, 60 fps, H.264, for players and sites that need H.264
 * [`release/Halys_sound_design.mp3`](release/Halys_sound_design.mp3) — the song with the film's sound-design layer (loudness-matched, 4:39.6)
+* [`release/teasers/`](release/teasers/) — three teasers for social, each cut to cut and in 16:9 and 4:5 (H.264, 60 fps):
+  **T1 the eye** 0:00–0:10.7 (cold open, title) · **T2 the switch** 1:41.6–2:04.5 (the arm-pull, the drop, 8 bars of Drop 1) ·
+  **T3 throw down your blade** 3:28.7–3:48.9 (the river of blades, 8 bars of Drop 2)
 
 > 28 May 585 BC. Two armies were killing each other by a red river in Anatolia.
 > Then the sun went out. They laid down their weapons and went home.
@@ -86,7 +89,9 @@ node render.mjs --list                                   # the shot table
 node render.mjs --sheet=S01,S35,S57,S81 --cols=4         # quick contact sheet
 node render.mjs --frames=0:281 --workers=3 --recycle=60  # all frames -> out/frames (resumable)
 cd .. && tools/encode_release.sh                         # the release files
+tools/cut_teasers.sh                                     # the teasers (--4x5 after a --size=1080x1350 render of their windows)
 ```
 
-`--size=1080x1350` re-renders natively in 4:5 (type re-flows per aspect). Plate frames and analysis maps are regenerated from the Seedance takes with
+`--size=1080x1350` re-renders natively in 4:5: type re-flows per aspect, and the shots that need it reframe (the arm-pull, the duelists,
+the hands diptych stacked). Plate frames and analysis maps are regenerated from the Seedance takes with
 `tools/pipeline.sh`; the takes themselves are not committed.
