@@ -231,7 +231,8 @@ look, no logo.
 * Timing: text never appears before its sung start (see §4). Cuts now land on sung words (S52/S53 at 183.34 on
   "foretold", S61/S62 at 211.44 on "home"), so those lines start on their cuts.
 * Holds across cuts (the linger rule: up to ~1.5 s past a cut, only when the sentence ends there): S01's title through
-  the S02 flash to 1.89; the S33→S34 LOVE line; S51 "chill" (sung 181.12, 0.11 s before the 181.23 cut, held to
+  the S02 flash to 1.89; S31 EYE OF GODS ABOVE (sung to 102.22) across the 101.61 cut through S31b, the arm-pull,
+  in the same layout and light, fading out 103.00–103.40 before THROW DOWN YOUR BLADE at 103.64; the S33→S34 LOVE line; S51 "chill" (sung 181.12, 0.11 s before the 181.23 cut, held to
   182.30); the S52 Thales block into S53 to 184.60, fading; S62 "LOVE" (sung 215.07, 0.22 s before the 215.29 cut,
   held over the starship to 216.20, fading).
 

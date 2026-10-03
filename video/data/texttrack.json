@@ -858,8 +858,9 @@
    "shot": "S31",
    "anchor": "left",
    "light": "corona",
+   "t1": 103.4,
+   "fadeout": 0.4,
    "t0": 100.24,
-   "t1": 101.61,
    "world": "bronze",
    "worlds": [
     "bronze"

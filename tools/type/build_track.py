@@ -99,8 +99,9 @@ def ev(id, fx, shot, items=(), **kw):
     D.append({"id": id, "fx": fx, "shot": shot, "items": list(items), **kw})
 
 
-# 1 · cold open. The hook is a title (cap ~12-13 % of the frame height) set over the eye with the date as a small plaque
-# above; it holds through the flash and the cut and clears as the next beat lands. S02 and S03 are their own large beats
+# 1 · cold open. The hook is a title (cap ~12-13 % of the frame height) composed under the eye (across the lower corona
+# when the eye is large) with the date as a small plaque at the top; it holds through the flash and the cut and clears
+# as the next beat lands. S02 and S03 are their own large beats
 # (cap ~8.5 %); S03 rewinds out with the picture.
 ev("S01.date", "plaque", "S01", [("28 MAY 585 BC", {"key": "date", "reveal": "line"})], t1=1.89, anchor="top", size="hook")
 ev("S01.title", "carved", "S01", [("THE SUN WENT OUT", {"key": "l1", "reveal": "line"})], t1=1.89, anchor="eye", size="title")
@@ -160,7 +161,10 @@ ev("S29.eye", "pupil", "S29", [("BY THE VACANT EYE OF A GOD", {"key": "l", "reve
 
 # 6 · chorus 1
 ev("S30.shade", "shadow", "S30", [("DAYLIGHT TURNED TO SHADE", {"key": "l", "reveal": "words"})], front=[98.62, 99.75], direction="down")
-ev("S31.gods", "carved", "S31", [("EYE OF GODS ABOVE", {"key": "l", "reveal": "words"})], anchor="left", light="corona")
+# sung 100.24-102.22; carries across the S31 -> S31b cut (101.61, the arm-pull) and holds through S31b, fading out by
+# 103.40, before THROW DOWN YOUR BLADE at 103.64. Same layout and light preset either side of the cut.
+ev("S31.gods", "carved", "S31", [("EYE OF GODS ABOVE", {"key": "l", "reveal": "words"})], anchor="left", light="corona",
+   t1=103.40, fadeout=0.40)
 ev("S32.blade", "carved", "S32", [("THROW DOWN YOUR BLADE", {"key": "l", "reveal": "words"})], anchor="bottom")
 # "GO HOME TO THE ONES YOU LOVE" is sung across the S33/S34 cut ("you" 109.45, "love" 110.24): one line over both shots;
 # from "love" the other words burn out and LOVE is held alone to 110.56 (the S34 cue), going backlit as the bead whites out
