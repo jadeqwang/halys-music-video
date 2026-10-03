@@ -524,11 +524,11 @@ async function s29Eye(f, k) {
   // the pupil on screen: P19's iris centre (about uv .405, .51) through the camera
   const pu = real ? [(.405 - pc.cx) * pc.zoom + .5, (.51 - pc.cy) * pc.zoom + .5] : [.515, .43];
   const rp2 = real ? .055 * pc.zoom : .03;
-  const rc = { x: pu[0] * W, y: pu[1] * H, r: rp2 * H * .55 };                 // the crescent reflected over the pupil
+  const rc = { x: pu[0] * W, y: pu[1] * H, r: rp2 * H * .8 };                  // the crescent reflected across the pupil
   await bronze(f, src, {
     lightDir: [-.8, -.4], pool: real ? [{ x: pu[0], y: pu[1], rx: .34, ry: .5, feather: .8, k: 1, fig: true }, { x: pu[0] - .12, y: pu[1] - .3, rx: .4, ry: .28, feather: .8, k: .7, fig: true }]
       : [{ x: .5, y: .45, rx: .35, ry: .4, feather: .7, k: .85 }],
-    poolFromLight: real ? { k: .8, bg: 1, matte: false } : null, poolMatte: 0, matteFromDepth: null, crushFloor: .085, faceMin: null, eyeStrokes: 0, envDim: .8,
+    eclipse: .55, poolFromLight: real ? { k: .85, bg: 1, matte: false } : null, poolMatte: 0, matteFromDepth: null, crushFloor: .085, faceMin: null, eyeStrokes: 0, envDim: .85, liftDark: .25,
     brushes: [22, 12, 7, 4, 2.2], focus: [{ x: pu[0], y: pu[1], rx: .09, ry: .16, k: 1 }],
     overStrokes: ({ pal }) => PR.crescentStrokes2(rc.x, rc.y, rc.r, E(f.t).m, -Math.PI * .66, { color: [.97, .94, .86], a: .95, thick: 1.1 }),
   });

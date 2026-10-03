@@ -372,5 +372,13 @@
   "from": "media/plates/P45/take1.mp4 @ 2.21 s",
   "plate": "P45",
   "note": "the Mede whips his head round"
+ },
+ "r45medeup": {
+  "w": 1280,
+  "h": 720,
+  "faces": [],
+  "from": "media/plates/P45/take1.mp4 @ 2.84 s",
+  "plate": "P45",
+  "note": "the Mede looks up"
  }
 }
