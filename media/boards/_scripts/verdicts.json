@@ -407,7 +407,7 @@
  "f5_marble_nbp_e1_t1": {
   "subject": "F5 MARBLE",
   "verdict": "alt",
-  "issues": "Edit: umber sky with no blue, scale corselet on the Lydian statue, one Jupiter. Still the older Thales design."
+  "issues": "Edit of f5_marble_nbp_t1: umber sky with no blue, scale corselet on the Lydian statue, a single Jupiter. Still the superseded older Thales design."
  },
  "f5_marble_gpt_t1": {
   "subject": "F5 MARBLE",
@@ -463,5 +463,15 @@
   "subject": "F8 ROOM",
   "verdict": "canonical",
   "issues": "gpt-image-2 edit: sleeve patch reads '1420 MHz', sly one-sided smile with arched brow, pearl monitor key light on the left of her face and hair; flat cel shading, crisp lines, brown eyes, light-blue chest circle and orange headphones per the sheet, no yellow cast. Minor: the orange lamp rim on the hair is weak; she winks with her right eye (renderer redraws the eyelid anyway)."
+ },
+ "f5_marble_nbp_e2_t1": {
+  "subject": "F5 MARBLE",
+  "verdict": "alt",
+  "issues": "Edit: Thales swapped for the canonical design (thales2_e1); side effect: the marble Mede's battle cry became a grin."
+ },
+ "f5_marble_nbp_e2p_t1": {
+  "subject": "F5 MARBLE",
+  "verdict": "canonical",
+  "issues": "Local composite: f5_marble_nbp_e2 with the marble Mede's face pasted back from e1. The battle frozen as marble on the red riverbank at night: rearing horse, crested Lydian in a carved scale corselet, Mede in a cap with a wicker shield, arrows hanging in the air, a flock stopped mid-flight, spray frozen like glass, blank stone eyes; black sun with a pearl corona, one Jupiter, orange 360-degree horizon glow, umber sky with no blue; canonical Thales (about 40, knotted hair, fillet, chin beard) in living colour looking up with a knowing half-smile. Minor: statues are lit flat rather than raking from the corona and horizon; Thales stands rather than walks; Jupiter is left more than above (style frame, not astronomy); the illustration is digital-painting rather than painterly."
  }
 }
