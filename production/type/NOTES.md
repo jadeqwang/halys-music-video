@@ -99,7 +99,8 @@ anything missing falls back to the track's defaults (which is how the sheets wer
 * applies the `DESIGN` table: which renderer, anchor, holds across cuts, beats for unsung labels, effect parameters;
 * matches every sung word to its onset in `timing.json`: the longest consecutive run of lyric words nearest the shot;
 * refines chop times to the measured onsets when SHOTLIST's two-decimal time is the same event (within 20 ms);
-* takes S36's stutter onsets from `chops[word=stutter]` inside the shot and S78's ticks from `events.snares`;
+* takes S36's stutter onsets from `chops[word=stutter]` inside the shot (all of bar 65, every second from bar 66, as
+  the picture cuts) and S78's ticks from `events.snares`;
 * builds the terminal timeline from ROOM.md, using FACTCHECK.md's corrected lines where the two differ;
 * fails if any SHOTLIST cue is unplaced or doubled; prints characters per second for every item.
 
@@ -138,8 +139,9 @@ when one line would be smaller than 20 % of the frame height.
   `#f3efe6` on navy-black, with a crisp signal-orange `#f08a2a` rim. Brightness varies with angle like real streamers,
   and a pulse runs outward on each beat.
 * Slam: 1.16 → 1.05 → 1.01 → 1.0 over the first three frames, with a fading orange outline echo.
-* Stutter (S36): on each of the 31 onsets inside the shot, a 1.075 re-slam, a small jump from a fixed pattern, and the
-  two previous positions as fading outlines.
+* Stutter (S36): SKY re-slams where the picture cuts (SHOTLIST rev. e899de3): every stutter onset in bar 65, every
+  second one from bar 66 (18 re-slams). Each is a 1.075 re-slam with a small jump from a fixed pattern, and the two
+  previous positions show as fading outlines.
 * Inversion: pearl fill and navy lines for two frames on the seven stabs.
 * HAL: on frames 0–3 of the first HALO, a true-black disk the width of the O, with a thin pearl limb.
 
@@ -209,13 +211,11 @@ Characters per second, measured from first appearance to exit (target ≤ 15):
 | S81 end-card plaque | 47 | 278.10–281.0 | **16.2** | borderline; needs the film to run to 281.0 (the padded master does) |
 
 Other text issues:
-* **Glover "we" / "We"**: SHOTLIST has lowercase `"we just went sci-fi."`. FACTCHECK says the capital W is verbatim and
-  lowercase only works as a fragment, which would need a leading ellipsis. The track renders SHOTLIST exactly (small
-  caps); change the string if the FACTCHECK form is wanted.
+* **Glover "We"**: SHOTLIST rev. e899de3 adopted FACTCHECK's capital W; the track follows it.
 * **Lines sung before their cut**: S53 `FORETOLD THE SUN` is sung 183.34–185.06, so three words appear together at the
   184.64 cut. S62 `HOME` is sung 211.44, before the 211.88 cut. Both catch up on the cut.
-* **S36 says 34 stutter onsets**: timing.json has 31 inside 112.31–117.53 (the other three fall after the cut, in S37).
-  The 31 are used.
+* **SHOTLIST housekeeping**: the new P42–P46 plate rows sit inside the §14 shot table (between S80 and S81), not in
+  the plate list. Both parsers ignore them, so nothing breaks, but the table reads oddly.
 * **Era captions**: the table's Text column has no role (the parser calls them CARVED); the header says PLAQUE, which
   is what is used. The ` · ` separators become line breaks in the stacked year / place / fact layout; spelling is
   untouched.
