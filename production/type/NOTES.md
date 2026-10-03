@@ -168,7 +168,7 @@ look, no logo.
 
 | event | what it does | scene parameters | default when the scene passes nothing |
 |---|---|---|---|
-| S01 title | THE SUN WENT OUT as a title over the eye: one or two balanced lines, cap height up to 13 % of the frame height (12.3 % as set, two lines), filling 75 % of the safe width, centred on the eclipse; `28 MAY 585 BC` a small plaque above. Holds through the S02 flash to 1.89 | `sun` (the eye) | eye at (0.5, 0.45 H), portrait (0.5, 0.42 H) |
+| S01 title | THE SUN WENT OUT as a title over the eye: one or two balanced lines, cap height up to 13 % of the frame height (≈ 12.9 % as set, two lines), the visible letters spanning ~70 % of the safe width, centred on the eclipse; `28 MAY 585 BC` a small plaque above. Holds through the S02 flash to 1.89 | `sun` (the eye) | eye at (0.5, 0.45 H), portrait (0.5, 0.42 H) |
 | S02, S03 beats | each line its own large beat, bottom-centred, cap height 8.5 % of the frame height; S03 rewinds out with S04 | — | — |
 | S05, S24 cartouche | painted tablet hangs on a cord from above the frame; slab thickness, brushwork, craquelure, fillet, iron ring, tasselled pendant. HALYS / JADE WANG on cue; S24 is lowered in (1.1 s, settling bounce), its words gilding on the sung onsets | `light` | 16:9 top centre (34 % / 50 % of the width); portrait 80 % / 90 % |
 | S06 map | LYDIA / MEDIA laid flat on the banks (squashed, leaning to the vanishing point), outline engraved in, then gilded, on beats 1–2; sub-labels beat 3; foot label beat 4; slow drift with the descent | `light` | 16:9 centred on each bank; portrait side-aligned and staggered in depth |
@@ -238,7 +238,7 @@ together):
 | S35 Glover caption | 22 + 51 | 110.58–114.20 | 6.1 + 14.1, **20.2** together | each line passes alone; read together the pair needs ≈ 4.9 s. It also competes with the four slams. A shorter credit, e.g. `VICTOR GLOVER · ARTEMIS II · 2026` (33), gives 15.2 |
 | S53 forecast question | 50 | 186.40–187.65 | **40** | inherent to a ≤ 1.3 s card: a pause-frame easter egg, unreadable in real time |
 | S64 Antikythera | 27 + 29 | 3.40 s | **16.5** together | e.g. `GEARS PREDICT ECLIPSES` (22) gives 14.4 |
-| S66 1919 | 24 + 32 | 3.39 s | **16.5** together | e.g. `LIGHT BENDS: EINSTEIN WAS RIGHT` does not help; `EINSTEIN WAS RIGHT` (18) gives 12.4 |
+| S66 1919 | 24 + 32 | 3.39 s | **16.5** together | e.g. `EINSTEIN WAS RIGHT` (18) as the fact gives 12.4 |
 | S67 Concorde | 19 + 32 | 3.39 s | 15.0 together | at the limit |
 | S81 end-card plaque | 47 | 277.80–281.0 | 14.7 | fixed by tightening the stagger (it needs the film to run to 281.0, as the padded master does) |
 

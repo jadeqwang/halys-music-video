@@ -14,6 +14,15 @@
 //      (k, t) -> cam of the shot's progress k (0..1) and song time t.
 
 import { loadImage, loadJSON, pixels } from '../../assets.js';
+// plate frames and maps are decoded, read once and closed at once (ImageBitmaps hold decoded pixels outside the JS
+// heap, so a cache of them grows the renderer by GBs over a long render; the Float32 results are cached instead)
+async function decodeOnce(url, optional = true) {
+  let r;
+  try { r = await fetch(url); } catch (e) { if (optional) return null; throw e; }
+  if (!r.ok) { if (optional) return null; throw new Error(`${url}: HTTP ${r.status}`); }
+  return createImageBitmap(await r.blob(), { premultiplyAlpha: 'none', colorSpaceConversion: 'none' });
+}
+const closeBmp = b => { try { b && b.close && b.close(); } catch (e) { /* already closed */ } };
 import { PLATES, plateTime, plateFrameIndex, plateMeta } from '../../plates.js';
 import { clamp, lerp, sstep, LRU, resample, sampleField, makeCanvas, kf, linear, blur, blurFast } from './util.js';
 
@@ -62,9 +71,10 @@ const _fields = new LRU(12);
 async function fieldFromImage(url, kind, w, h) {      // kind: 'depth16' (R hi, G lo) | 'grey'
   const key = `${url}|${kind}|${w}x${h}`;
   const hit = _fields.get(key); if (hit) return hit;
-  const img = await loadImage(url, { optional: true });
+  const img = await decodeOnce(url);
   if (!img) return null;
   const sw = img.width, sh = img.height, d = pixels(img, sw, sh, null), N = sw * sh, f = new Float32Array(N);
+  closeBmp(img);
   if (kind === 'depth16') for (let i = 0; i < N; i++) f[i] = (d[i * 4] * 256 + d[i * 4 + 1]) / 65535;
   else for (let i = 0; i < N; i++) f[i] = d[i * 4] / 255;
   const out = { w, h, data: resample(f, sw, sh, w, h) };
@@ -157,9 +167,10 @@ async function mapField(id, kind, f, w, h) {         // one channel (or two for 
   let url;
   if (kind === 'd' || kind === 'm') { if (!(kind === 'd' ? P.depth : P.mattes)) return null; const last = 1 + Math.floor((P.n - 1) / 2) * 2; const ff = Math.min(last, 1 + Math.round((f - 1) / 2) * 2); url = kind === 'm' ? `plates/${id}/masks/m${String(ff).padStart(4, '0')}.png` : `plates/${id}/maps/d${String(ff).padStart(4, '0')}.png`; }
   else url = `plates/${id}/maps/${kind}${pad}.png`;
-  const img = await loadImage(url, { optional: true });
+  const img = await decodeOnce(url);
   if (!img) { _maps.set(key, null); return null; }
   const d = pixels(img, img.width, img.height, null), N = img.width * img.height;
+  closeBmp(img);
   let out;
   if (kind === 'v') { const fx = new Float32Array(N), fy = new Float32Array(N); for (let i = 0; i < N; i++) { fx[i] = (d[i * 4] - 128) / 4; fy[i] = (d[i * 4 + 1] - 128) / 4; } out = { w: img.width, h: img.height, fx, fy }; }
   else { const a = new Float32Array(N); for (let i = 0; i < N; i++) a[i] = d[i * 4] / 255; out = { w: img.width, h: img.height, data: a }; }
@@ -227,10 +238,11 @@ export async function plateSource(f, id, cam, opts = {}) {
   const [aw, ah] = analysisSize(f.W, f.H, opts), shot = f.shot;
   const tp = plateTimeOf(shot, f.t, opts), loop = !!(opts.loop || (shot.plate && shot.plate.loop));
   const k = plateFrameIndex(id, tp, { loop });
-  const img = await loadImage(`plates/${id}/frames/f${String(k).padStart(4, '0')}.jpg`);
+  const img = await decodeOnce(`plates/${id}/frames/f${String(k).padStart(4, '0')}.jpg`, false);
   const sw = img.width, sh = img.height;
   const c = camAt(cam, f), X = camXform(c, sw, sh, aw, ah);
   const rgb = cropRGB(img, X.T, aw, ah);
+  closeBmp(img);
   const gain = opts.gain ?? 1;
   if (gain !== 1) for (const ch of [rgb.R, rgb.G, rgb.B]) for (let i = 0; i < ch.length; i++) ch[i] = Math.min(1, ch[i] * gain);
   const [dm, mm] = await Promise.all([mapField(id, 'd', k, 0, 0), opts.noMatte ? null : mapField(id, 'm', k, 0, 0)]);
