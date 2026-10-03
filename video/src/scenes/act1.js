@@ -810,7 +810,8 @@ scene('S31', async f => {
 // structured, the faces catching the pale light as they turn up.
 scene('S31b', async f => {
   const t = f.t, real = hasPlate('P47'), up = sstep(102.15, 102.6, t);
-  const pc = k => ({ cx: .5, cy: .5, zoom: 1.04 + .04 * k });
+  // (portrait crops left of centre so the comrade and the raised arm share the frame; the fallen Mede leaves it)
+  const cx = f.W / f.H > 1.2 ? .5 : .36, pc = k => ({ cx, cy: .5, zoom: 1.04 + .04 * k });
   const src = real ? await rp(f, 'P47', null, pc, { keys: KEYS.S31b.P47 })
     : await rp(f, 'P13', { id: 'a_duel', cam: pc }, pc, { keys: KEYS.S31b.P13 });
   await bronze(f, src, plateLook(src, { lightDir: [0, -1], lightPoint: [.5, .4], keep: .58, keepDim: .92, fromLight: .55, rim: .95, poolMatte: .45 + .2 * up, body: .3,
