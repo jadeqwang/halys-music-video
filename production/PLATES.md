@@ -845,3 +845,43 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 * **Checks:** Face, hair, headphones and jacket match the sheet and P41's look · The expression is the reference's, not a deadpan · Clean eyes for the drawn wink.
 * **Review sheet:** `media/plates/P58/take2.review.jpg`; 8-frame contact `media/plates/P58/take2.sheet.jpg`.
 * Take 1: pass 4: the same smirk with a smoother shoulder drift (no clear presses).
+
+### P48 · The first exchange, in the middle of the battle (v2, ACT1; REVISION_V2 decision 2)
+
+* **Shots:** S17. **Window:** song [44.06, 49.06], audio reference cut at t0 = 44.06 s (Halys.mp3), 5 s, 2 take(s) reviewed.
+* **Chosen:** take 1 → `media/plates/P48/take1.mp4`; analysis in `video/plates/P48/` (frames 121, fields 121, mattes 61, depth 61, gain 1.105). The lion shield swings across face-on and turns the spear exactly on the asked beat, with a burst of spray; take 2 turns it with the shield's edge and its background reads as men wading in rather than fighting.
+* **Delivers:** S17 v2: side-on at waist height in the knee-deep shallows; the Lydian (left, facing right) and the Mede (right, facing left) circle (0-1.6 s); the Mede lunges (1.6-1.9 s) and the Lydian swings his lion shield across, lion to camera, and turns the point aside at 2.00 s (f49); recovery and circling (2.2-4.4 s); the Lydian's counter-thrust at ~4.7 s. Behind them both lines fight in the shallows across the whole frame (pairs thrusting, shields up, spray), a dense crowd beyond in golden dust.
+* **Sync keys** (song s → plate s, offset = plate − (song − t0)):
+  * 46.057 → 2.00 (+0.00 s) · beat: the Mede's thrust turned by the lion shield
+* **Timing notes:** S17 = plate 0.67-2.43 at 1:1 (in during the circling, the turn on the 46.06 beat, out on the recovery). The motion curve's peak (1.75) is the lunge; the turn itself is the frame-exact 2.00.
+* **Checks:** Correct (crest, braids, crimson tunic, bronze scales, lion shield; red cap, black beard, ochre tunic, iron scales, wicker shield, sword on the right thigh) · Match the sheets · Golden dust haze over the far melee (asked for clear air): the renderer paints its sky and the low sun into it.
+* **Notes for the renderer:** 1:1 from t0 (keys in act1.js); the sun is ours, at the top right (v1's place).
+* **Review sheet:** `media/plates/P48/take1.review.jpg` (motion curve + frames at the hits); 8-frame contact `media/plates/P48/take1.sheet.jpg`.
+* Take 2: pass 3: The spear is turned by the shield's edge (lion barely seen, +0.04 s); the background reads as men wading in. Its files are renamed `media/plates/P48/rejected_take2.*`, so a pipeline run without ids can never extract it over take 1 (the genlog still records `take2.mp4`).
+
+### P49 · The battle line on the horizon (v2, ACT1; REVISION_V2 decision 2)
+
+* **Shots:** S18. **Window:** song [46.49, 52.49], audio reference cut at t0 = 46.49 s (Halys.mp3), 6 s, 2 take(s) reviewed.
+* **Chosen:** take 2 → `media/plates/P49/take2.mp4`; analysis in `video/plates/P49/` (frames 145, fields 145, mattes 73, depth 73, gain 1.029). A large low sun on a flat horizon behind a continuous fighting line in crisp black silhouette, separate pairs and groups, figures 0.11-0.15 of the frame tall; take 1's line is a dense frieze of tiny figures under a sun lost in haze.
+* **Delivers:** S18 v2: extreme telephoto at ground level; the horizon at v 0.868; along the whole width Lydians (crested helmets, round shields, spears) and Medes (soft caps, wicker shields) fight in pairs and small groups (thrusts, shield clashes, swords swung, grappling) and never stop or look up; sparse for the first ~0.7 s, then the line fills.
+* **Sync:** no hit to land (S18: "the bite is the only event"); 1:1 from 0.7 s in (46.49 → 0.70, 51.72 → 5.93).
+* **Checks:** Silhouette shapes correct (crests, round shields, spears; soft caps, wicker shields) · Silhouettes only · The plate's own sun sits on the horizon behind the fighters: the renderer keys the silhouettes and paints its own sun higher (v1's place), so the bite at 5 o'clock stays clear above their heads.
+* **Notes for the renderer:** Key = luminance < 0.3 above the horizon row (sky p5 = 0.40, figures < 0.1); the silhouettes stand on S18's horizon at the plate's own scale.
+* **Review sheet:** `media/plates/P49/take2.review.jpg` (motion curve; the head turns are measured by frame inspection, the curve follows the bodies); 8-frame contact `media/plates/P49/take2.sheet.jpg`.
+* Take 1: pass 3: A dense frieze of tiny figures (~1/12 of the frame) on a bright water line; the sun is a diffuse glow, no disk.
+
+### P50 · Caught mid-fight, faces turn up (v2, ACT1; REVISION_V2 decision 3)
+
+* **Shots:** S28 (replaces P18's row of six). **Window:** song [88.28, 93.28], audio reference cut at t0 = 88.28 s (Halys.mp3), 5 s, 2 take(s) reviewed.
+* **Chosen:** take 2 → `media/plates/P50/take2.mp4`; analysis in `video/plates/P50/` (frames 121, fields 121, mattes 61, depth 61, gain 1.849). All three asked actions read (a Mede's spear thrust caught on a Lydian's lion shield, a raised sword over a Mede braced under his wicker shield, a Lydian and a Mede grappling), and the poses hold while the faces turn up left to right; take 1 muddles the left group (two Medes on one Lydian, who also holds the sword) and its look-ups are small.
+* **Delivers:** S28 v2: low angle at waist height in the shallows, cold silvery light from the sun beyond the top right corner, a steel-blue sky; 0-1.7 s all three pairs fight (the sword swings, the grapplers shove, the spear grinds on the shield); then the faces turn up one after another: the left Lydian ~1.9 s, the sword-bearer ~2.2, the right Lydian ~2.55, the right Mede ~2.75, the left Mede ~2.85; all up by ~3.0 and holding, the sword still raised, the spear still on the shield, the hands still locked. The central Mede stays hidden behind his shield.
+* **Sync keys** (song s → plate s, offset = plate − (song − t0)):
+  * 89.780 → 1.90 (+0.40 s) · 'halo': the left Lydian looks up
+  * 90.200 → 2.25 (+0.33 s) · 'in': the sword-bearer
+  * 90.600 → 2.60 (+0.28 s) · 'the': the right Lydian
+  * 90.870 → 2.90 (+0.31 s) · 'sky': the right Mede, then the left Mede
+  * 91.310 → 3.30 (+0.27 s) · boom 'warriors': all up, cut to the sky (S28b)
+* **Checks:** Correct (crests, crimson, bronze scales, lion shield; red caps, black beards, ochre, iron scales, wicker shields) · Match the sheets · The central Mede's face is never seen (behind his shield): five faces turn, not six.
+* **Notes for the renderer:** S28 = plate 1.3-3.3 through the keys (fighting at the cut-in, one face per word, all up on the boom). MediaPipe locks onto the lion shield as a face from frame 45 on, so act1.js ignores the plate's faces and keys the five heads by hand.
+* **Review sheet:** `media/plates/P50/take2.review.jpg` (motion curve; the head turns are measured by frame inspection, the curve follows the bodies); 8-frame contact `media/plates/P50/take2.sheet.jpg`.
+* Take 1: pass 3: The left group is two Medes against the Lydian who also raises the sword; the turn-ups are small; more open sky.

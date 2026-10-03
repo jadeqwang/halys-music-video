@@ -1,0 +1,41 @@
+{
+ "plate": "P49",
+ "chosen": 2,
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "A dense frieze of tiny silhouettes (~1/12 of the frame) fighting along a bright water line under a diffuse sun glow.",
+   "costume": "Silhouette shapes plausible.",
+   "identity": "Silhouettes only.",
+   "artefacts": "Figures too small and packed; no sun disk.",
+   "notes": "Alternate.",
+   "sync": [],
+   "cuts_s": [],
+   "sheet": null,
+   "contact": "media/plates/P49/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.3872,
+   "job": null,
+   "reviewed": "2026-10-03T23:38:30"
+  },
+  "2": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S18 v2: a continuous fighting line in crisp silhouette along a flat horizon (v 0.868) against a big low sun; pairs and groups thrust, clash, swing and grapple across the whole width; sparse for ~0.7 s, then full.",
+   "costume": "Crested helmets, round shields, spears; soft caps, wicker shields (silhouettes).",
+   "identity": "Silhouettes only.",
+   "artefacts": "The plate's sun sits on the horizon behind the fighters (S18 keys the silhouettes and paints its own sun higher).",
+   "notes": "Chosen. 1:1 from 0.70 s in (46.49 -> 0.70).",
+   "sync": [],
+   "cuts_s": [],
+   "sheet": "media/plates/P49/take2.review.jpg",
+   "contact": "media/plates/P49/take2.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.3872,
+   "job": null,
+   "reviewed": "2026-10-03T23:38:30",
+   "chosen": true
+  }
+ }
+}

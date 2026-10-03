@@ -1,0 +1,82 @@
+{
+ "plate": "P50",
+ "chosen": 2,
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "Three groups fight then look up; the left group is two Medes against the Lydian who also raises the sword; small turn-ups; big open sky.",
+   "costume": "Correct.",
+   "identity": "Matches.",
+   "artefacts": "Muddled left group; small head moves.",
+   "notes": "Alternate.",
+   "sync": [],
+   "cuts_s": [],
+   "sheet": null,
+   "contact": "media/plates/P50/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T23:38:30"
+  },
+  "2": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S28 v2: three pairs locked in combat (spear thrust caught on the lion shield; sword raised over a braced wicker shield; grappling) fight to ~1.7 s, then the faces turn up left to right (left Lydian ~1.9, sword-bearer ~2.2, right Lydian ~2.55, right Mede ~2.75, left Mede ~2.85) while the poses hold; all up by ~3.0.",
+   "costume": "Correct (crests, crimson, bronze scales, lion shield; red caps, black beards, ochre, iron scales, wicker shields).",
+   "identity": "Matches the sheets.",
+   "artefacts": "The central Mede stays behind his shield (five faces, not six); MediaPipe takes the lion shield for a face from frame 45 on.",
+   "notes": "Chosen.",
+   "sync": [
+    {
+     "song_t": 89.78,
+     "event": "'halo': the left Lydian looks up",
+     "expected_plate_t": 1.5,
+     "measured_plate_t": 1.9,
+     "offset_s": 0.4,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 90.2,
+     "event": "'in': the sword-bearer looks up",
+     "expected_plate_t": 1.92,
+     "measured_plate_t": 2.25,
+     "offset_s": 0.33,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 90.6,
+     "event": "'the': the right Lydian looks up",
+     "expected_plate_t": 2.32,
+     "measured_plate_t": 2.6,
+     "offset_s": 0.28,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 90.87,
+     "event": "'sky': the right Mede, then the left Mede",
+     "expected_plate_t": 2.59,
+     "measured_plate_t": 2.9,
+     "offset_s": 0.31,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 91.31,
+     "event": "boom 'warriors': all faces up, cut to the sky",
+     "expected_plate_t": 3.03,
+     "measured_plate_t": 3.3,
+     "offset_s": 0.27,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P50/take2.review.jpg",
+   "contact": "media/plates/P50/take2.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T23:38:30",
+   "chosen": true
+  }
+ }
+}

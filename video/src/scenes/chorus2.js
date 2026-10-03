@@ -124,13 +124,16 @@ scene('S61', async f => {
 // P52 (take 2): the Lydian's hand holds his sword point-down in the red shallows, backlit. Through the held "blade" (the
 // low end is out from 210.177) the fingers open (plate ~2.9) and the sword slides down into the water; its guard meets
 // the surface in a splash just before "Home" (plate 3.92 = 211.30). The type's BLADE sinks with it.
-// (landscape: the sword right of centre, clear of the lyric block on the left; portrait: on the centre line)
+// (landscape: the sword right of centre, clear of the lyric block on the left. Portrait, where the lyric is centred at the
+// bottom: the sword at x .8, beside the short top lines, and the camera tilts down with it so its hilt comes to rest
+// above the last line)
 const S61B_KEYS = [[210.18, 2.5], [210.42, 2.88], [211.30, 3.92], [211.44, 4.04]];
 shot({ id: 'S61b', t0: 210.18, t1: 211.44, world: 'gold', cadence: 12, scene: 'S61b', parent: 'S61', params: { label: 'S61b one hand lets go (held "blade")' } });
 scene('S61b', async f => {
-  const k = seg(f.t, 210.18, 211.44), land = f.W / f.H > 1.2, z = land ? 1.32 + .02 * k : 1.1 + .03 * k;
-  const so = .503;                                                    // the sword's axis in plate uv
-  const cam = land ? { cx: so - .16 / z, cy: .47 + .04 * k, zoom: z } : { cx: so, cy: .48 + .04 * k, zoom: z };
+  const k = seg(f.t, 210.18, 211.44), land = f.W / f.H > 1.2, so = .503;        // (so: the sword's axis in plate uv)
+  let cam;
+  if (land) { const z = 1.32 + .02 * k; cam = { cx: so - .16 / z, cy: .47 + .04 * k, zoom: z }; }
+  else { const z = 1.25, { wU } = camRect(f, { zoom: z }), d = sstep(210.35, 211.3, f.t); cam = { cx: so - .3 * wU, cy: lerp(.4, .6, d), zoom: z }; }
   const src = await plate(f, 'P52', cam, { keys: S61B_KEYS, standin: 'c_armies' });
   redRiver(src, .3);
   await gold2(f, src, { cam, sky: false, groundFlow: { y0: .35, k: .85 }, detail: .9, tag: 'S61b', typeDir: [.6, -.8] });

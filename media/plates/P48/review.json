@@ -1,0 +1,59 @@
+{
+ "plate": "P48",
+ "chosen": 1,
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S17 v2: the Mede lunges (1.6-1.9 s) and the Lydian swings his lion shield across, lion to camera, turning the spear point aside at 2.00 s (f49) with a burst of spray; recovery and circling; counter-thrust ~4.7 s. Both lines fight in the shallows behind them, a dense crowd beyond in golden dust.",
+   "costume": "Correct on both (crest, braids, crimson, bronze scales, lion shield; red cap, beard, ochre, iron scales, wicker shield, sword on the right thigh).",
+   "identity": "Matches the sheets.",
+   "artefacts": "Golden dust haze over the far melee (asked for clear air).",
+   "notes": "Chosen. Turn 46.057 -> plate 2.00 (+0.00 s).",
+   "sync": [
+    {
+     "song_t": 46.057,
+     "event": "beat: the Mede's thrust turned by the lion shield",
+     "expected_plate_t": 2.0,
+     "measured_plate_t": 2.0,
+     "offset_s": 0.0,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P48/take1.review.jpg",
+   "contact": "media/plates/P48/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T23:38:30",
+   "chosen": true
+  },
+  "2": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "Same exchange; the spear is turned by the shield's edge (lion barely seen); background reads as men wading in rather than fighting.",
+   "costume": "Correct.",
+   "identity": "Matches.",
+   "artefacts": "Edge-on turn; background charge.",
+   "notes": "Renamed rejected_take2.* (a pipeline run without ids must not extract it over take 1).",
+   "sync": [
+    {
+     "song_t": 46.057,
+     "event": "beat: the Mede's thrust turned by the lion shield",
+     "expected_plate_t": 2.0,
+     "measured_plate_t": 2.04,
+     "offset_s": 0.04,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P48/rejected_take2.review.jpg",
+   "contact": "media/plates/P48/rejected_take2.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T23:38:30"
+  }
+ }
+}
