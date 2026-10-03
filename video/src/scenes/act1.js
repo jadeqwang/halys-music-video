@@ -181,6 +181,22 @@ async function wideLook(f, cam, o = {}) {
   const pools = (real ? WIDE.poolsPlate : WIDE.poolsStandin).map(p => real ? { ...p } : { ...p, x: (p.x - sc.cx) * sc.zoom + .5, y: (p.y - sc.cy) * sc.zoom + .5, rx: p.rx * sc.zoom, ry: p.ry * sc.zoom });
   return { sun, hz, pools, real };
 }
+// the standards of the master composition (P01, plate uv at plate 0-4.5 s): lions over the Lydians, horses over the Medes
+const STANDARDS = [{ u: .19, v: .47, kind: 'lion', h: .075 }, { u: .335, v: .385, kind: 'lion', h: .045 }, { u: .8, v: .46, kind: 'horse', h: .075 }, { u: .665, v: .38, kind: 'horse', h: .045 }];
+function crowdOver(f, src, L, cam, o = {}) {
+  if (!L.real || !src.depth || !src.mat) return null;
+  const c = camAt(cam, f), stds = o.standards === false ? [] : STANDARDS.map(s => ({ ...s, u: (s.u - c.cx) * c.zoom + .5, v: (s.v - c.cy) * c.zoom + .5, h: s.h * c.zoom }));
+  // the army blocks of the master composition (plate uv): between two lines from the vanishing point to each side's
+  // frame edge, clear of the vanishing point itself; frame uv -> plate uv through the camera
+  const VP = [.5, .31], inArmy = (fu, fv) => {
+    const pu = (fu - .5) / c.zoom + c.cx, pv = (fv - .5) / c.zoom + c.cy, dx = Math.abs(pu - VP[0]);
+    if (dx < .07 || pv < VP[1] + .02) return false;
+    const top = VP[1] + dx / .5 * .11, bot = VP[1] + dx / .5 * .5;
+    return pv > top && pv < bot;
+  };
+  return ({ pal, drawIdx }) => PR.crowdStrokes(src, { W: f.W, H: f.H, pal, horizonY: L.hz, vanishX: L.sun[0], drawIdx, standards: stds, light: 1 - .7 * E(f.t).eL,
+    region: o.region === false ? null : inArmy, ...o });
+}
 const wideOpts = (t, L, o = {}) => ({
   pool: L.pools, poolMatte: 0, envDim: .85, lightDir: [L.sun[0] - .5, L.sun[1] - .62],
   // the stand-in's depth is normalised per crop, so a camera tilted above the image top loses its depth sky: the
@@ -189,7 +205,8 @@ const wideOpts = (t, L, o = {}) => ({
   sun: SUN(t, { x: L.sun[0], y: L.sun[1], r: o.sunR ?? .026, ppd: o.ppd ?? 16, ...(o.sun || {}) }),
   crushFloor: .14, crush: .3, satOut: .6, glintReach: 30, accents: .5, aerial: { color: [.72, .52, .32], near: .45, far: .05, k: .45 },
   // Altdorfer paints every soldier: the armies keep the plate's own values and the small brushes work the ranks
-  ...(L.real ? { plateKeep: .55, keepDim: .85, brushes: [20, 11, 6.2, 3.4, 2.0], T: [0, .05, .055, .062, .068], midGate: .12, fineGate: .15 } : { T: [0, .06, .07, .095, .11], midGate: .2, fineGate: .3 }),
+  // the land deepens into umbers (value contrast under the luminous sky and the river's glitter), not all-over orange
+  ...(L.real ? { plateKeep: .5, keepDim: .68, envDim: .72, satOut: .5, brushes: [20, 11, 6.2, 3.4, 2.0], T: [0, .05, .055, .062, .068], midGate: .12, fineGate: .15 } : { T: [0, .06, .07, .095, .11], midGate: .2, fineGate: .3 }),
   ...o.extra,
 });
 
@@ -281,29 +298,34 @@ scene('S04', async f => {
 scene('S05', async f => {
   const cam = { cx: .5, cy: .27, zoom: 1.0 + .025 * f.k };          // the sun at mid-frame, under the title tablet
   const L = await wideLook(f, cam);
-  await bronze(f, await wideSource(f, cam), wideOpts(f.t, L, { sky: { drama: .55 } }));
+  const src = await wideSource(f, cam);
+  await bronze(f, src, wideOpts(f.t, L, { sky: { drama: .55 }, extra: { overStrokes: crowdOver(f, src, L, cam) } }));
 });
 scene('S06', async f => {
   // slow descent toward the river: tilt down and push in, the horizon rising out of frame
   const k = smooth(f.k), real = hasPlate('P01');
   const cam = real ? { cx: .5, cy: .5, zoom: 1.0 + .06 * k } : { cx: .5, cy: .5 + .1 * k, zoom: 1.0 + .22 * k };   // P01 descends by itself
   const L = await wideLook(f, cam, real ? { horizonV: .31 - .06 * k } : {});
-  await bronze(f, await wideSource(f, cam), wideOpts(f.t, L, {}));
+  const src = await wideSource(f, cam);
+  await bronze(f, src, wideOpts(f.t, L, { extra: { overStrokes: crowdOver(f, src, L, cam, { standards: false }) } }));
 });
 scene('S16', async f => {
   const cam = { cx: .5, cy: .5, zoom: 1.0 + .02 * f.k };
   const L = await wideLook(f, cam);
-  await bronze(f, await wideSource(f, cam), wideOpts(f.t, L, { sunR: .034, sky: { drama: .7, fire: 1, vortex: .26 } }));
+  const src = await wideSource(f, cam);
+  await bronze(f, src, wideOpts(f.t, L, { sunR: .034, sky: { drama: .7, fire: 1, vortex: .26 }, extra: { overStrokes: crowdOver(f, src, L, cam) } }));
 });
 scene('S20', async f => {
   const cam = { cx: .5, cy: .5, zoom: 1.04 - .02 * f.k };
   const L = await wideLook(f, cam);
-  await bronze(f, await wideSource(f, cam), wideOpts(f.t, L, { sunR: .03 }));
+  const src = await wideSource(f, cam);
+  await bronze(f, src, wideOpts(f.t, L, { sunR: .03, extra: { overStrokes: crowdOver(f, src, L, cam) } }));
 });
 scene('S24', async f => {
   const cam = { cx: .5, cy: .27, zoom: 1.0 + .03 * f.k };
   const L = await wideLook(f, cam);
-  await bronze(f, await wideSource(f, cam), wideOpts(f.t, L, { sunR: .03, sky: { drama: .65 } }));
+  const src = await wideSource(f, cam);
+  await bronze(f, src, wideOpts(f.t, L, { sunR: .03, sky: { drama: .65 }, extra: { overStrokes: crowdOver(f, src, L, cam) } }));
 });
 
 // ---------------------------------------------------------------- S07 the Lydian arms · S08 the Mede, his mirror

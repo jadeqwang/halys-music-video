@@ -86,6 +86,20 @@
    "est_cost_usd": 3.468,
    "job": null,
    "reviewed": "2026-10-03T01:59:16"
+  },
+  "3": {
+   "verdict": "abandoned",
+   "score": 0,
+   "purpose": "Retake without the WIDE board: a high, constant-height drift over a battle already raging at the ford.",
+   "costume": "",
+   "identity": "",
+   "artefacts": "",
+   "notes": "Submitted 2026-10-03 02:21:49 (job halys-plate-P01-20261003-022147-2fa82b); the provider still reported it running at 07:55 (5.5 h), so it was abandoned. No completion is logged in media/genlog.jsonl (est. $3.47 if the provider bills it). The job record stays in media/jobs/: `python3 tools/plates.py --collect` will save it as take3 if it ever finishes.",
+   "short": "Never returned by the provider (abandoned after 5.5 h).",
+   "sync": [],
+   "sheet": null,
+   "contact": null,
+   "reviewed": "2026-10-03T07:56:00"
   }
  },
  "shots": "S04-06, S16, S20, S24, S30, S35, S44",
@@ -95,6 +109,6 @@
  ],
  "audio_t0": 7.18,
  "chosen": 1,
- "chosen_why": "Opens exactly on the canonical master composition (halys_wide3) and holds it for 4.5 s, then a clean descent that fits S06 1:1 while the armies surge into the ford; the river stays visible. Take 2 floods the riverbed. Take 3 (no-board retake for a high drift over a battle already raging) was still queued at the provider after 60 min.",
+ "chosen_why": "Opens exactly on the canonical master composition (halys_wide3) and holds it for 4.5 s, then a clean descent while the armies surge into the ford; the river stays visible. Take 2 floods the riverbed. Take 3 (no-board retake for a high drift over a battle already raging) never came back from the provider and was abandoned.",
  "t_chosen": "2026-10-03T03:08:12"
 }

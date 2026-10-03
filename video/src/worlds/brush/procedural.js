@@ -238,6 +238,7 @@ export function crowdStrokes(src, o) {
     const v = y / ah, p = clamp((v - hz) / (1 - hz)), rw = .012 + river * p;
     for (let x = 1; x < aw - 1; x++) {
       const uu = x / aw; if (Math.abs(uu - vx) < rw) continue;                    // not on the river
+      if (o.region && !o.region(uu, v)) continue;                                  // inside the army blocks
       const i = y * aw + x, bump = depth[i] - Db[i];
       if (bump < (o.bump ?? .004)) continue;                                      // a figure stands out of the ground
       const mx = mat.mx[i] / cell, my = mat.my[i] / cell, cx = Math.floor(mx), cy = Math.floor(my);
@@ -259,8 +260,9 @@ export function crowdStrokes(src, o) {
       const lean = lean0 + .05 * (hash3(cx, cy, seed + 17) - .5) + boil, len = fh * (1.05 + .45 * hash3(cx, cy, seed + 19));
       const bx = px + (h2 - .5) * fh * .1, by = py - fh * .25, tx = bx + Math.sin(lean) * len, ty = by - Math.cos(lean) * len;
       const w = Math.max(.55 * u1, fh * .009), q = .84;
-      out.push({ pts: [[bx, by], [lerp(bx, tx, q), lerp(by, ty, q)]], r: w, c0: shaft, c1: shaft, a: .78, thick: .3, seed: h1, key: 3 + h1 * 1e-3, layer: 11, taper: .15 });
-      out.push({ pts: [[lerp(bx, tx, q), lerp(by, ty, q)], [tx, ty]], r: w * 1.15, c0: tip, c1: tip, a: .55 + .4 * light, thick: .45, seed: h2, key: 3.5 + h2 * 1e-3, layer: 12, taper: .5 });
+      // a dark shaft with no paint body (a thin ridge would catch the varnish and read as rain), a short lit tip
+      out.push({ pts: [[bx, by], [lerp(bx, tx, q), lerp(by, ty, q)]], r: w, c0: shaft, c1: shaft, a: .82, thick: 0, seed: h1, key: 3 + h1 * 1e-3, layer: 11, taper: .15 });
+      out.push({ pts: [[lerp(bx, tx, q), lerp(by, ty, q)], [tx, ty]], r: w * 1.2, c0: tip, c1: tip, a: .5 + .4 * light, thick: .15, seed: h2, key: 3.5 + h2 * 1e-3, layer: 12, taper: .5 });
     }
     // helmet glint on the head, a shield's rim catching the light lower down (the lit side of the ranks)
     const g = hash3(cx, cy, seed + 23);

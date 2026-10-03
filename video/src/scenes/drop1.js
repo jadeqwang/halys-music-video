@@ -20,44 +20,64 @@ const snap = audio.snap;
 const STAB36 = [112.74, 113.173, 113.607, 115.783, 116.217, 116.652, 117.086];   // SHOTLIST S36 inversions (timing.json stabs)
 const steer = (f, o) => { f.type = Object.assign(f.type || {}, o); };
 const typeSun = s => s ? { x: s[0], y: s[1], r: s[2] } : undefined;
-// where the eclipse hangs in the drop's opening (the master composition): the CHOP fill radiates from it in S35-S36
-const dropSun = f => ({ x: .5 * f.W, y: .343 * f.H, r: .028 * f.W });
 const segAt = (t, cuts) => { let i = 0; while (i < cuts.length && snap(cuts[i]) <= t + 1e-6) i++; return i; };
 
 // ---------------------------------------------------------------- looks
-// close-ups: crisp weighted contours lead, interior lines spaced wide enough that a face reads as form, not texture
-const CU_TRACE = { contourW: [1.3, 2.6], contourB: 1.5, innerB: .95, innerHi: .17, rim: 1, lightDir: [-.4, -.9],
-  dsepMin: 3.4, dsepMax: 10, bgSepMin: 20, bgSepMax: 36, bgGain: .2, subjBright: [.25, .9], minLen: 26 };
-// the master composition: generic settings work on any plate (sky by depth, sun at the river's vanishing point); the
-// board-specific geometry (F2's river, army masks, light pools, horizon) is stand-in only (standinTrace)
+// Hierarchy (director's notes on round 1): the corona is the brightest element of any frame it is in; subject contours
+// lead everything else; few, bright interior lines (a steep tone curve: lit planes get lines, mid-greys get none); a
+// sparse, dim background; lots of black.
+const CU_TRACE = { contourW: [1.5, 2.9], contourB: 2.0, innerB: 1.0, innerHi: .2, innerLo: .09, rim: 1, lightDir: [-.4, -.9],
+  dsepMin: 4.4, dsepMax: 12.5, bgSepMin: 34, bgSepMax: 60, bgGain: .1, bgCut: .3, subjBright: [.16, .85], gamma: 1.6, shadowCut: .1, minLen: 30 };
+// behind the giant CHOP words (S41-S44): the face by its contours and a handful of lit lines, almost no background
+const CHOP_TRACE = { ...CU_TRACE, dsepMin: 6, dsepMax: 16, subjBright: [.12, .72], gamma: 1.9, innerB: .75, innerHi: .26, bgGain: .03, bgCut: .45 };
+// the master composition on P01: sky by depth, the eclipse on the plate's own sun (meta: 0.508, 0.247), the armies'
+// light pools on both banks as the subject (P01's matte is the river's glare, not the armies: poolMatte 0). The board's
+// geometry (F2's river, army masks, horizon, its sun at the vanishing point) is stand-in only (standinTrace).
 const MASTER_TRACE = {
-  sky: { maxDepth: .03, soft: .02, horizonY: .37, below: .40 }, sun: { x: .5, y: .343, r: .028, tilt: .35 },
-  innerEverywhere: 1, innerHi: .13, innerLo: .055, contour: 0, gamma: 1.2, bgGain: .42, shadowCut: .03, tick: [6, 15], tickMin: 2,
+  sky: { maxDepth: .03, soft: .02, horizonY: .37, below: .40 }, sun: { x: .508, y: .25, r: .028, tilt: .35 }, poolMatte: 0,
+  innerEverywhere: 1, innerHi: .15, innerLo: .065, contour: 0, gamma: 1.5, bgGain: .3, bgCut: .3, shadowCut: .05, tick: [6, 15], tickMin: 2,
+  dsepMin: 3, dsepMax: 9, bgSepMin: 18, bgSepMax: 34,
   armies: 1, pool: [{ x: .2, y: .62, rx: .23, ry: .3, k: 1 }, { x: .8, y: .62, rx: .23, ry: .3, k: 1 }],      // both banks (equal light)
 };
 const MASTER_STANDIN = {
-  sky: { horizonY: .335, below: .345, useDepth: false },
+  sky: { horizonY: .335, below: .345, useDepth: false }, sun: { x: .5, y: .343, r: .028, tilt: .35 }, poolMatte: 1,
   river: [[.497, .352], [.49, .38], [.485, .40], [.47, .42], [.475, .45], [.455, .50], [.43, .55], [.40, .60], [.375, .65], [.35, .70], [.32, .78], [.29, .88], [.27, 1.0],
     [.70, 1.0], [.66, .90], [.63, .80], [.615, .70], [.605, .62], [.58, .56], [.55, .50], [.525, .45], [.515, .42], [.51, .40], [.505, .38], [.503, .352]],
   riverFlow: { x: .5, y: .35, k: 2.5 }, riverB: 1.1,
   armies: 1, armyMask: [[[0, .37], [.46, .37], [.44, .42], [.38, .48], [.30, .55], [.22, .62], [.12, .70], [0, .75]], [[1, .37], [.54, .37], [.56, .42], [.62, .48], [.70, .55], [.78, .62], [.88, .70], [1, .75]]],
   pool: [{ x: .12, y: .82, rx: .2, ry: .32, k: 1 }, { x: .88, y: .82, rx: .2, ry: .32, k: 1 }],
 };
-const MASTER = { src: { plate: 'P01', standin: 'master' }, trace: MASTER_TRACE, standinTrace: MASTER_STANDIN, corona: {}, skyField: { gain: .5 } };
-// reaction shots (P42-P45): the dusk horizon glows orange behind the figures
-const RX_TRACE = { ...CU_TRACE, sky: { horizonY: .47, below: .5, useDepth: false }, horizon: 1, horizonBand: .02, dsepMin: 3, dsepMax: 9, innerEverywhere: 1, innerHi: .13, innerLo: .06, innerB: 1.1 };
+// the field lines sweep the whole sky, dense at the corona and thinning fast with distance (lots of black)
+const MASTER = { src: { plate: 'P01', standin: 'master' }, trace: MASTER_TRACE, standinTrace: MASTER_STANDIN, corona: { gain: 1.15 }, skyField: { gain: .42, sep0: .14, sep1: 2.4, falloff: 1.0 } };
+const masterSun = () => resolve(MASTER.src).kind === 'standin' ? MASTER_STANDIN.sun : MASTER_TRACE.sun;
+// where the eclipse hangs in the drop's opening (the master composition): the CHOP fill radiates from it in S35-S36
+const dropSun = f => { const s = masterSun(); return { x: s.x * f.W, y: s.y * f.H, r: s.r * f.W }; };
+// reaction plates (P42-P45): dark dusk skies (no lines) with the orange horizon glow behind the wides; the matte figures
+// carry the contours; eyes in extreme close-up have no meaningful matte edge (contour off, edges everywhere)
+const RX_TRACE = { ...CU_TRACE, horizon: 0 };
+const rxSky = (y, horizon = 1) => ({ sky: { horizonY: y, below: y + .03, useDepth: false }, horizon, horizonBand: .015 });
+const SKY42 = rxSky(.47), SKY43 = rxSky(.44), SKY44 = rxSky(.57), SKY45 = rxSky(.9, 0);
+const EYE_TRACE = { contour: 0, innerEverywhere: 1, innerHi: .14, innerLo: .06 };
+// plate-uv box(es) [x, y, w, h] -> screen fractions through a window (16:9 plate, 16:9 frame): the type's f.type.avoid
+function boxesOnScreen(boxes, win = {}, clampInside = true) {
+  const z = win.zoom || 1, w = 1 / z;
+  let x0 = (win.cx ?? .5) - w / 2, y0 = (win.cy ?? .5) - w / 2;
+  if (clampInside) { x0 = clamp(x0, 0, 1 - w); y0 = clamp(y0, 0, 1 - w); }
+  return (boxes || []).map(([x, y, bw, bh]) => ({ x: (x - x0) * z, y: (y - y0) * z, w: bw * z, h: bh * z }));
+}
 
 // ---------------------------------------------------------------- S35: the break, and the whole battlefield reacts
-// 110.58 the world returns as light from the black pupil (master composition) while the armies ripple: spear ticks tilt
-// and fall as men drop to their knees, others scatter, a wave running out from the eclipse. Then one chop-cut per word:
-// IN THE (110.98) a Lydian sinks to his knees, arms raised (P42); SKY (111.455) a rearing horse (P44); SKY (111.89) a
-// Mede prostrate (P43). The busiest action sits above or below the word block (the centre band).
+// 110.58 the world returns as light from the black pupil (master composition, P01) while the armies ripple: spear ticks
+// tilt and fall as men drop to their knees, others scatter, a wave running out from the eclipse. Then one chop-cut per
+// word on the real reaction plates, each landing its reaction on the cut (PLATES.md sync keys): IN THE (110.98) a Lydian
+// sinks to his knees, arms raised (P42); SKY (111.455) a rearing horse (P44); SKY (111.89) a Mede prostrate (P43). The
+// raised arms, the horse's head and the faces sit above the word block; the bodies go under the words.
 const S35_CUTS = [110.98, 111.455, 111.89];
 const S35_SUB = [
   null,
-  { src: { plate: 'P42', standin: 'r42kneel', win: { cx: .37, cy: .44, zoom: 1.55 } }, tp0: .40 },
-  { src: { plate: 'P44', standin: 'r44rear', win: { cx: .4, cy: .4, zoom: 1.25 } }, tp0: .875 },
-  { src: { plate: 'P43', standin: 'r43pros', win: { cx: .66, cy: .6, zoom: 1.7 } }, tp0: 1.31 },
+  { src: { plate: 'P42', standin: 'r42kneel', win: { cx: .43, cy: .4, zoom: 1.5 } }, tp0: .85, trace: SKY42 },      // P42 110.98 -> 1.0 (arms up), splash 1.3
+  { src: { plate: 'P44', standin: 'r44rear', win: { cx: .42, cy: .45, zoom: 1.1 } }, tp0: .875, trace: SKY44 },     // P44 111.455 -> 0.92 (the rear)
+  { src: { plate: 'P43', standin: 'r43pros', win: { cx: .6, cy: .55, zoom: 1.2 } }, tp0: .95, trace: SKY43 },       // P43 111.89 -> 1.1 (forehead down)
 ];
 // the reaction wave on the master's spear ticks: arrival time grows with distance from the sun
 function waveFx(t, sunA, S) {
@@ -74,52 +94,60 @@ function waveFx(t, sunA, S) {
 scene('S35', async f => {
   const W = f.W, H = f.H, s = H / 1080, kick = audio.kickEnv(f.t, .13), sub = segAt(f.t, S35_CUTS), phase = audio.flowPhase(f.t);
   if (sub === 0) {
-    const t0 = snap(f.shot.t0), lt = Math.max(0, f.t - t0);
-    const sunRest = [MASTER_TRACE.sun.x * W, MASTER_TRACE.sun.y * H], Rs = MASTER_TRACE.sun.r * W;
+    const t0 = snap(f.shot.t0), lt = Math.max(0, f.t - t0), SUN = masterSun();
+    const sunRest = [SUN.x * W, SUN.y * H], Rs = SUN.r * W;
     const pull = Math.exp(-lt / .085), zoom = 1 + .55 * Math.exp(-lt / .2);
-    const Rfull = .5 * Math.hypot(W, H) * 1.02, rP = Rs * zoom + (Rfull - Rs * zoom) * pull, ign = Math.exp(-lt / .22);
-    const aw = 960, sunA = [MASTER_TRACE.sun.x * aw, MASTER_TRACE.sun.y * aw / (W / H)];
+    const Rfull = .5 * Math.hypot(W, H) * 1.02 + Math.hypot(sunRest[0] - W / 2, sunRest[1] - H / 2), rP = Rs * zoom + (Rfull - Rs * zoom) * pull, ign = Math.exp(-lt / .22);
+    const aw = 960, sunA = [SUN.x * aw, SUN.y * aw / (W / H)];
     const r = await drawLines(f, {
       ...MASTER, cam: { zoom, center: sunRest }, kick, kickPush: 30, phase, tickFx: waveFx(f.t, sunA, W / aw),
       reveal: { x: sunRest[0], y: sunRest[1], r: rP, ramp: 220 * s, boost: 1.6 * ign },
       disk: { x: sunRest[0], y: sunRest[1], r: Math.max(rP, Rs * zoom) }, ring: { r: rP, w: 2.4 * s, i: 1.6 * Math.exp(-lt / .35) + .1 },
-      look: { bright: 1 + .7 * ign, glow: [.24 + .25 * ign, .09 + .12 * ign] },
+      look: { bright: 1 + .5 * ign, glow: [.22 + .25 * ign, .08 + .12 * ign] },
     });
     steer(f, { sun: typeSun(r.sun), kick, field: { center: sunRest } });
     return;
   }
   const S = S35_SUB[sub], ts = snap(S35_CUTS[sub - 1]), lt = f.t - ts;
-  await drawLines(f, { src: S.src, tp: S.tp0 + lt, chainFrom: S.tp0, trace: RX_TRACE, corona: false, cam: { zoom: 1 + .05 * Math.exp(-lt / .06) },
-    kick, kickPush: 16, phase, look: { glow: [.22, .08] } });
+  await drawLines(f, { src: S.src, tp: S.tp0 + lt, chainFrom: S.tp0, trace: { ...RX_TRACE, ...S.trace }, corona: false, cam: { zoom: 1 + .05 * Math.exp(-lt / .06) },
+    kick, kickPush: 16, phase, look: { glow: [.18, .06] } });
   steer(f, { kick, sun: dropSun(f) });
 });
 
 // ---------------------------------------------------------------- S36: the "WTF" montage
 // A hard cut on the stutter onsets, every cut a different human reaction: bar 65 (8ths) on every onset, bars 66-67
-// (16ths) on every second onset. Equal numbers of Lydian (L) and Median (M) reactions; 2-frame inversions on the stabs.
+// (16ths) on every second onset; 2-frame inversions on the stabs. A rapid human chorus: Lydian (L) and Median (M)
+// reactions alternate (9 each, plus one shot with both: the rearing Lydian horse and the Mede calming his), and the
+// shot scale changes on every cut (CU face, XCU eye, MS gesture, wide group). Each reaction is framed with the face or
+// gesture in the centre-to-upper area; `focus` (plate uv boxes) goes to the type layer as f.type.avoid, so the stutter
+// SKY takes the clear third. Plate times from the chosen takes (PLATES.md: P42 kneel 1.0 / spin 1.6 / eyes 2.9 /
+// spear 4.5; P43 prostration 1.1 / amulet 1.8 / bow 3.5 / arm 4.3; P44 rear 0.9 / calming 1.9-3.4; P45 Lydian 0-1.79,
+// Mede 1.79-3.08, Alyattes 3.08-4.38, Cyaxares 4.38-5.04).
 const RX = {
-  medeWhip: { src: { plate: 'P45', standin: 'r45mede' }, tp: 2.21 },                                                         // M
-  lydKneel: { src: { plate: 'P42', standin: 'r42kneel', win: { cx: .4, cy: .46, zoom: 1.8 } }, tp: .95 },                      // L
-  medePros: { src: { plate: 'P43', standin: 'r43pros', win: { cx: .7, cy: .7, zoom: 2.0 } }, tp: 1.6 },                        // M
-  lydHorse: { src: { plate: 'P44', standin: 'r44rear', win: { cx: .4, cy: .38, zoom: 1.45 } }, tp: 1.6 },                      // L
-  medeBow: { src: { plate: 'P43', standin: 'r43bow', win: { cx: .27, cy: .56, zoom: 2.1 } }, tp: 3.47 },                       // M
-  lydEyes: { src: { plate: 'P42', standin: 'r42eyes', win: { cx: .64, cy: .42, zoom: 2.1 } }, tp: 2.84 },                      // L
-  armsGrip: { src: { plate: 'P43', standin: 'r43arm', win: { cx: .48, cy: .42, zoom: 2.0 } }, tp: 4.73 },                      // M
-  lydSpin: { src: { plate: 'P42', standin: 'r42spin', win: { cx: .2, cy: .42, zoom: 2.0 } }, tp: 2.21 },                       // L
-  alyattes: { src: { plate: 'P45', standin: 'r45aly' }, tp: 3.47 },                                                           // L
-  cyaxares: { src: { plate: 'P45', standin: 'r45cya' }, tp: 4.73 },                                                           // M
-  medeAmulet: { src: { plate: 'P43', standin: 'r43pros', win: { cx: .43, cy: .36, zoom: 2.5 } }, tp: 1.6 },                    // M
-  lydLook: { src: { plate: 'P45', standin: 'r45lyd' }, tp: .32 },                                                             // L
-  eye: { src: { plate: 'P19', standin: 'bface', standinWin: { cx: .64, cy: .325, zoom: 4.6 }, win: { cx: .45, cy: .45, zoom: 1.5 } }, tp: 3.3, trace: { contour: 0 } },
-  lydFace: { src: { plate: 'P14', standin: 'bface', standinWin: { cx: .6, cy: .45, zoom: 1.45 } }, tp: 3.5 },                 // L
-  medeUp: { src: { plate: 'P45', standin: 'r45medeup' }, tp: 2.84 },                                                          // M
-  medeHorse: { src: { plate: 'P44', standin: 'r44calm', win: { cx: .76, cy: .5, zoom: 2.0 } }, tp: 2.84 },                    // M
-  lydKneel2: { src: { plate: 'P42', standin: 'r42eyes', win: { cx: .37, cy: .46, zoom: 2.3 } }, tp: 2.84 },                    // L
-  medePros2: { src: { plate: 'P43', standin: 'r43arm', win: { cx: .76, cy: .78, zoom: 2.4 } }, tp: 4.73 },                    // M
-  lydUp: { src: { plate: 'P45', standin: 'r45lydup' }, tp: 1.58 },                                                            // L
+  medeWhip:   { side: 'M', scale: 'CU', src: { plate: 'P45', standin: 'r45mede', win: { cx: .5, cy: .55, zoom: 1.12 } }, tp: 2.2, trace: SKY45, focus: [[.33, .05, .34, .7]] },
+  lydKneel:   { side: 'L', scale: 'MS', src: { plate: 'P42', standin: 'r42kneel', win: { cx: .43, cy: .45, zoom: 1.7 } }, tp: 1.6, trace: SKY42, focus: [[.32, .17, .22, .43]] },
+  medeEye:    { side: 'M', scale: 'XCU', src: { plate: 'P19b', standin: 'r45medeup', win: { cx: .55, cy: .47, zoom: 1.45 } }, tp: 3.3, trace: EYE_TRACE, focus: [[.35, .32, .4, .3]] },
+  lydHorse:   { side: 'L', scale: 'W', src: { plate: 'P44', standin: 'r44rear', win: { cx: .42, cy: .47, zoom: 1.05 } }, tp: 1.3, trace: SKY44, focus: [[.05, 0, .55, .9]] },
+  medeAmulet: { side: 'M', scale: 'MS', src: { plate: 'P43', standin: 'r43pros', win: { cx: .43, cy: .34, zoom: 2.6 } }, tp: 2.3, trace: SKY43, focus: [[.37, .18, .13, .27]] },
+  lydLook:    { side: 'L', scale: 'CU', src: { plate: 'P45', standin: 'r45lyd', win: { cx: .5, cy: .55, zoom: 1.12 } }, tp: .3, trace: SKY45, focus: [[.33, .05, .34, .7]] },
+  medePros:   { side: 'M', scale: 'W', src: { plate: 'P43', standin: 'r43pros', win: { cx: .56, cy: .5, zoom: 1 } }, tp: 1.9, trace: SKY43, focus: [[.66, .66, .26, .29], [.22, .15, .45, .2]] },
+  lydEyes:    { side: 'L', scale: 'MS', src: { plate: 'P42', standin: 'r42eyes', win: { cx: .6, cy: .38, zoom: 2.3 } }, tp: 3.3, trace: SKY42, focus: [[.55, .2, .15, .25]] },
+  cyaxares:   { side: 'M', scale: 'CU', src: { plate: 'P45', standin: 'r45cya', win: { cx: .5, cy: .56, zoom: 1.2 } }, tp: 4.8, trace: SKY45, focus: [[.33, .02, .34, .7]] },
+  lydSpin:    { side: 'L', scale: 'MS', src: { plate: 'P42', standin: 'r42spin', win: { cx: .2, cy: .27, zoom: 2.4 } }, tp: 2.5, trace: SKY42, focus: [[.05, .05, .17, .25]] },
+  medeUp:     { side: 'M', scale: 'CU', src: { plate: 'P45', standin: 'r45medeup', win: { cx: .5, cy: .5, zoom: 1.45 } }, tp: 2.95, trace: SKY45, focus: [[.35, .1, .3, .55]] },
+  lydWide:    { side: 'L', scale: 'W', src: { plate: 'P42', standin: 'r42eyes', win: { cx: .5, cy: .45, zoom: 1.05 } }, tp: 4.5, trace: SKY42, focus: [[.05, .05, .85, .3]] },
+  armsGrip:   { side: 'M', scale: 'MS', src: { plate: 'P43', standin: 'r43arm', win: { cx: .5, cy: .36, zoom: 2.0 } }, tp: 4.6, trace: SKY43, focus: [[.38, .2, .28, .35]] },
+  alyattes:   { side: 'L', scale: 'CU', src: { plate: 'P45', standin: 'r45aly', win: { cx: .5, cy: .55, zoom: 1.15 } }, tp: 3.9, trace: SKY45, focus: [[.3, .05, .4, .7]] },
+  horses:     { side: 'LM', scale: 'W', src: { plate: 'P44', standin: 'r44calm', win: { cx: .5, cy: .5, zoom: 1 } }, tp: 2.4, trace: SKY44, focus: [[.05, 0, .55, .9], [.75, .4, .17, .5]] },
+  lydEye:     { side: 'L', scale: 'XCU', src: { plate: 'P19', standin: 'bface', standinWin: { cx: .64, cy: .325, zoom: 4.6 }, win: { cx: .45, cy: .45, zoom: 1.5 } }, tp: 3.3, trace: EYE_TRACE, focus: [[.28, .3, .34, .3]] },
+  medeBow:    { side: 'M', scale: 'MS', src: { plate: 'P43', standin: 'r43bow', win: { cx: .32, cy: .52, zoom: 1.4 } }, tp: 3.35, trace: SKY43, focus: [[.22, .2, .14, .7]] },
+  lydAwe:     { side: 'L', scale: 'CU', src: { plate: 'P14', standin: 'bface', standinWin: { cx: .6, cy: .45, zoom: 1.45 }, win: { cx: .45, cy: .4, zoom: 1.3 } }, tp: 4.9, focus: [[.3, 0, .32, .6]] },
+  medeCalm:   { side: 'M', scale: 'MS', src: { plate: 'P44', standin: 'r44calm', win: { cx: .8, cy: .52, zoom: 2.2 } }, tp: 2.8, trace: SKY44, focus: [[.7, .35, .22, .55]] },
 };
-const ORDER36 = ['medeWhip', 'lydKneel', 'medePros', 'lydHorse', 'medeBow', 'lydEyes', 'armsGrip', 'lydSpin', 'alyattes', 'cyaxares',
-  'medeAmulet', 'lydLook', 'eye', 'lydFace', 'medeUp', 'medeHorse', 'lydKneel2', 'medePros2', 'lydUp'];
+// 19 segments: sides alternate M L M L ... (the both-sides wide on slot 14), scales never repeat on adjacent cuts, the
+// wides on the longer segments (113.08's 0.64 s holds the rearing horse)
+const ORDER36 = ['medeWhip', 'lydKneel', 'medeEye', 'lydHorse', 'medeAmulet', 'lydLook', 'medePros', 'lydEyes', 'cyaxares', 'lydSpin',
+  'medeUp', 'lydWide', 'armsGrip', 'alyattes', 'horses', 'lydEye', 'medeBow', 'lydAwe', 'medeCalm'];
 // the S36 cut list: every stutter onset in bar 65, every second onset in bars 66-67
 export function s36Cuts() {
   const st = audio.stutterTimes().filter(t => t < 117.53 - 1e-6), bar66 = 114.045;
@@ -130,11 +158,12 @@ scene('S36', async f => {
   const cuts = s36Cuts(), i = segAt(f.t, cuts), start = i ? snap(cuts[i - 1]) : snap(f.shot.t0), lt = f.t - start;
   const R = RX[ORDER36[i % ORDER36.length]], kick = audio.kickEnv(f.t, .12);
   const invert = audio.onFrames(f.t, STAB36, 2);
+  const live = resolve(R.src).kind === 'plate';
   await drawLines(f, {
     src: R.src, freeze: R.tp, trace: { ...RX_TRACE, ...(R.trace || {}) }, corona: false,
-    cam: { zoom: 1 + .06 * Math.exp(-lt / .045) }, kick, kickPush: 14, phase: audio.flowPhase(f.t), invert, look: { glow: [.2, .07] },
+    cam: { zoom: (1 + .06 * Math.exp(-lt / .045)) * (1 + .03 * lt) }, kick, kickPush: 14, phase: audio.flowPhase(f.t), invert, look: { glow: [.16, .05] },
   });
-  steer(f, { kick, invert, sun: dropSun(f) });
+  steer(f, { kick, invert, sun: dropSun(f), avoid: live ? boxesOnScreen(R.focus, R.src.win) : [] });
 });
 
 // ---------------------------------------------------------------- S37: the orbit around a frozen reaction tableau
@@ -142,9 +171,9 @@ scene('S36', async f => {
 // own parallax) plus a gentle extra yaw from depth. Until then the stand-in (both duelists looking up) orbits in 3D from
 // its depth map. Kick pulse throughout.
 const TABLEAU = { src: { plate: 'P46', standin: 'duelup' },
-  trace: { ...CU_TRACE, sky: { maxDepth: .05, soft: .03, below: .62 }, sun: { x: .22, y: .1, r: .022, tilt: .7 }, lightDir: [-.6, -.8], bgGain: .45, bgCut: .1, depthBlur: 5, relief: .3,
-    subjBright: [.38, 1.05], contourB: 1.8, innerB: 1.1 },
-  corona: {}, skyField: { gain: .32, sep0: .13, rmax: 16 } };
+  trace: { ...CU_TRACE, sky: { maxDepth: .05, soft: .03, below: .62 }, sun: { x: .22, y: .1, r: .022, tilt: .7 }, lightDir: [-.6, -.8], bgGain: .16, bgCut: .22, depthBlur: 5, relief: .3,
+    subjBright: [.22, .95], contourB: 1.9, innerB: 1.05, dsepMin: 3.6, dsepMax: 11 },
+  corona: { gain: 1.25 }, skyField: { gain: .3, sep0: .14, sep1: 2.2, rmax: 16 } };
 export function s37Cam(t, live) {
   const k = clamp((t - 117.53) / (124.47 - 117.53)), e = easeInOut(k);
   return live ? { yaw: lerp(-3, 3, e), pitch: .8 * Math.sin(k * Math.PI), zoom: 1.04 } : { yaw: lerp(-12, 13, e), pitch: 2.2 * Math.sin(k * Math.PI), zoom: 1.1 };
@@ -160,28 +189,31 @@ const ringR = H => .105 * H;
 const RING = { corona: { gain: 1.05 }, skyField: { gain: .17, sep0: .17, sep1: 1.2, locals: 5, rmax: 3.6 }, tilt: .42 };
 const RING44 = { ...RING, skyField: { ...RING.skyField, rmax: 9, gain: .24, sep1: 1.6, bounds: [-30, -30, 30, 0] } };   // above the horizon only
 const CYCLE = {
-  S41: { src: { plate: 'P14', standin: 'bface', standinWin: { cx: .58, cy: .45, zoom: 1.12 }, win: { cx: .4, cy: .2, zoom: 1.3 }, clamp: false }, trace: { ...CU_TRACE } },   // he looks up at the ring (window past the plate's top: black)
-  S42: { src: { plate: 'P04', standin: 'duelup', standinWin: { cx: .64, cy: .3, zoom: 2.1 }, win: { cx: .6, cy: .42, zoom: 1.5 } }, trace: { ...CU_TRACE } },
+  // P14 (take 2): breathing to 1.6, the eyes rise from 2.0, the long upward gaze from 2.8 to the end (5.04): plate 1.7 at
+  // the cut, so he looks up at the ring through the whole cycle (window past the plate's top: black above his helmet)
+  S41: { src: { plate: 'P14', standin: 'bface', standinWin: { cx: .58, cy: .45, zoom: 1.12 }, win: { cx: .4, cy: .2, zoom: 1.3 }, clamp: false }, tp0: 1.7, trace: { ...CHOP_TRACE } },
+  S42: { src: { plate: 'P04', standin: 'duelup', standinWin: { cx: .64, cy: .3, zoom: 2.1 }, win: { cx: .6, cy: .42, zoom: 1.5 } }, trace: { ...CHOP_TRACE } },
   S43: { plates: [
-    { src: { plate: 'P05', standin: 'kings', standinWin: { cx: .25, cy: .5, zoom: 1 }, win: { cx: .3, cy: .5, zoom: 1.05 } }, rect: [0, 0, .5, 1], trace: { ...CU_TRACE, lightDir: [.3, -1] } },
-    { src: { plate: 'P06', standin: 'kings', standinWin: { cx: .75, cy: .5, zoom: 1 }, win: { cx: .56, cy: .5, zoom: 1.05 } }, rect: [.5, 0, .5, 1], trace: { ...CU_TRACE, lightDir: [-.3, -1] } }] },
-  S44: { src: { plate: 'P01', standin: 'master', standinWin: { cx: .5, cy: .343, zoom: 1.5 }, win: { cx: .5, cy: .35, zoom: 1.5 } }, speed: .18,   // the master composition, barely drifting
-    trace: { ...MASTER_TRACE, sun: null }, standinTrace: MASTER_STANDIN },
+    { src: { plate: 'P05', standin: 'kings', standinWin: { cx: .25, cy: .5, zoom: 1 }, win: { cx: .3, cy: .5, zoom: 1.05 } }, rect: [0, 0, .5, 1], trace: { ...CHOP_TRACE, lightDir: [.3, -1] } },
+    { src: { plate: 'P06', standin: 'kings', standinWin: { cx: .75, cy: .5, zoom: 1 }, win: { cx: .56, cy: .5, zoom: 1.05 } }, rect: [.5, 0, .5, 1], trace: { ...CHOP_TRACE, lightDir: [-.3, -1] } }] },
+  // P01's static master (plate 0-4.5 s), barely drifting
+  S44: { src: { plate: 'P01', standin: 'master', standinWin: { cx: .5, cy: .343, zoom: 1.5 }, win: { cx: .5, cy: .35, zoom: 1.5 } }, speed: .18,
+    trace: { ...MASTER_TRACE, sun: null, bgGain: .14, bgCut: .4, dsepMin: 4, dsepMax: 12, tickGain: .8 }, standinTrace: MASTER_STANDIN },
 };
 async function chopCycle(f, id) {
   const W = f.W, H = f.H, cx = W / 2, cy = H / 2, kick = audio.kickEnv(f.t, .13), s = H / 1080;
-  let R = ringR(H), bright = 1, bgFade = .62, point = 0;
+  let R = ringR(H), bright = 1.25, bgFade = .5, point = 0;
   if (id === 'S44') {                       // on the last SKY the ring collapses to a point
     const tc = snap(153.03), k = clamp((f.t - tc) / .32);
-    if (f.t >= tc) { R *= 1 - Math.pow(k, 1.6); bright = 1 + 2.2 * k; bgFade *= 1 - sstep(0, .8, k); point = sstep(.55, 1, k) * Math.exp(-Math.max(0, f.t - tc - .32) / .9); }
+    if (f.t >= tc) { R *= 1 - Math.pow(k, 1.6); bright = 1.25 + 2.2 * k; bgFade *= 1 - sstep(0, .8, k); point = sstep(.55, 1, k) * Math.exp(-Math.max(0, f.t - tc - .32) / .9); }
   }
   const C = CYCLE[id];
   const ring = coronaRing(f, id === 'S44' ? 'ring44' : 'ring', { refR: ringR(H), ...(id === 'S44' ? RING44 : RING) });
   const layers = [];
   if (R > .5) layers.push({ mesh: ring, u: { ...ringU(cx, cy, R * (1 + .025 * kick)), uBright: bright, uPush: [cx, cy, 22 * kick * s, 300 * s] } });
   if (point > 0) layers.push(dynLayer([proc.circle(cx, cy, 2.2 * s, { b: 3 * point, w: 2.4 }, 10), proc.line([[cx, cy], [cx + .5, cy]], { b: 6 * point, w: 3.5, flags: FL.TIP })]));
-  const tp = (f.t - f.shot.t0) * (C.speed ?? 1);
-  const plates = C.plates ? C.plates.map(p => ({ ...p, tp, chainFrom: 0 })) : [{ src: C.src, tp, chainFrom: 0, trace: C.trace, standinTrace: C.standinTrace, analysis: C.analysis }];
+  const tp = (C.tp0 ?? 0) + (f.t - f.shot.t0) * (C.speed ?? 1);
+  const plates = C.plates ? C.plates.map(p => ({ ...p, tp, chainFrom: C.tp0 ?? 0 })) : [{ src: C.src, tp, chainFrom: C.tp0 ?? 0, trace: C.trace, standinTrace: C.standinTrace, analysis: C.analysis }];
   await drawLines(f, {
     plates, corona: false, kick, kickPush: 14, pushCenter: [cx, cy], phase: audio.flowPhase(f.t), look: { bright: bgFade, glow: [.22, .08] }, layers,
     disk: R > .5 ? { x: cx, y: cy, r: R } : false,
