@@ -108,18 +108,17 @@ export function coronaStrokes(o) {
   const { cx, cy, R, pal } = o, k = o.k ?? 1, t = o.t ?? 0, seed = o.seed ?? 3, iris = o.iris ?? 0, tilt = o.tilt ?? -.35, sc = o.scale ?? 1;
   if (k <= 0.002 || R < 2) return [];
   const T = n => pal.tube(n) || [1, 1, 1];
-  const lead = T('leadWhite'), naples = T('naples'), ochre = T('yellowOchre'), madder = T('madder'), umber = T('rawUmber'), verm = T('vermilion');
-  const pearl = [lerp(lead[0], naples[0], .18), lerp(lead[1], naples[1], .18), lerp(lead[2], naples[2], .22)];
-  const warmT = [lerp(naples[0], ochre[0], .35), lerp(naples[1], ochre[1], .35), lerp(naples[2], ochre[2], .35)];
-  const pink = [lerp(madder[0], lead[0], .42), lerp(madder[1], lead[1], .3), lerp(madder[2], lead[2], .32)];
+  const lead = T('leadWhite'), naples = T('naples'), ochre = T('yellowOchre'), madder = T('madder'), umber = T('rawUmber'), verm = T('vermilion'), bumber = T('burntUmber');
+  const mixc = (a, b, q) => [lerp(a[0], b[0], q), lerp(a[1], b[1], q), lerp(a[2], b[2], q)];
+  const pearl = mixc(lead, naples, .16), warmT = mixc(naples, ochre, .4), ash = mixc(pearl, umber, .35);
+  const pink = [lerp(madder[0], lead[0], .45), lerp(madder[1], lead[1], .32), lerp(madder[2], lead[2], .34)];
   const out = [], h = (a, b) => hash3(a, b, seed);
   const clip = o.clip || null;
   const col = (c, b) => [clamp(c[0] * b), clamp(c[1] * b), clamp(c[2] * b)];
-  // a polar path -> stroke(s), split where clipped; w in px; b brightness (0..1.3)
-  const polar = (path, n, w, b, cA, cB, thick, sd, taper = .8) => {
+  const polar = (path, n, w, b, cA, cB, thick, sd, taper = .8, alpha = 1) => {
     let cur = [];
     const flush = () => {
-      if (cur.length >= 2) out.push({ pts: cur, r: w, c0: col(cA, b), c1: col(cB, b * .55), a: clamp(.55 + .45 * b) * Math.min(1, k * 1.4), thick, seed: sd, key: sd, layer: 7, taper, maxSeg: 28 });
+      if (cur.length >= 2) out.push({ pts: cur, r: w, c0: col(cA, b), c1: col(cB, b * .6), a: clamp(alpha) * Math.min(1, k * 1.3), thick, seed: sd, key: sd, layer: 7, taper, maxSeg: 24 });
       cur = [];
     };
     for (let q = 0; q <= n; q++) {
@@ -129,53 +128,61 @@ export function coronaStrokes(o) {
     }
     flush();
   };
+  // fibres undulate a little (12 drawings a second): the iris breathing, never tentacles
   const rip = (j, r, amp) => amp * Math.sin(r / R * 5 + t * (1.4 + .6 * h(j, 71)) + h(j, 72) * TAU) * Math.min(1, (r / R - 1) * 1.5);
-  // 1. iris fibres: dense radial strokes hugging the limb, mostly short; long ones rare and dimmer; waving
-  const nF = Math.round((300 + 1700 * iris) * Math.min(2.2, R / 60) * sc);
+  const outerR = 1 + (.5 + .45 * iris);                       // where the iris ends (in moon radii)
+  // 1. the fibrous body: broad, semi-transparent radial strokes in pearl, Naples and ash, crypts between bundles
+  const nF = Math.round((380 + 1400 * iris) * Math.min(2.2, R / 60) * sc);
   for (let j = 0; j < nF; j++) {
-    const phi0 = h(j, 1) * TAU, q2 = Math.pow(h(j, 2), 2.4), len = R * (.07 + (.32 + .75 * iris) * q2), r0 = R * (1.0 + .015 * h(j, 3));
-    const amp = (.03 + .08 * iris) * (h(j, 4) - .5);
-    const b = (.5 + .55 * h(j, 5)) * (1 - .5 * q2) * k;
-    const crypt = iris > 0 && Math.sin(phi0 * 23 + 2 * Math.sin(phi0 * 5)) > .55 ? .5 : 1;   // darker crypts between bundles
-    const inner = q2 < .15;                                                                   // the collarette: warm, broad
-    polar(q => { const r = r0 + len * q; return [r, phi0 + rip(j, r, amp) + .035 * Math.sin(q * 3 + h(j, 6) * 6)]; }, 5,
-      Math.max(.8, R * (.008 + .016 * h(j, 7)) * (1 + .6 * iris) * (inner ? 1.5 : 1)), b * crypt, inner ? warmT : pearl, inner ? pearl : warmT, .5, h(j, 8), .9);
+    const phi0 = h(j, 1) * TAU, q2 = Math.pow(h(j, 2), 1.6), r0 = R * (1.0 + .012 * h(j, 3));
+    const len = R * (.12 + (outerR - 1.05) * q2);
+    const bundle = .5 + .5 * Math.sin(phi0 * 19 + 2.2 * Math.sin(phi0 * 4 + seed));      // bundles and crypts
+    const crypt = iris > .3 && bundle < .22 ? .45 : 1;
+    const b = (.55 + .5 * h(j, 5)) * (1 - .45 * q2) * crypt * k;
+    const tone = h(j, 9), cA = tone < .55 ? pearl : tone < .85 ? warmT : ash;
+    polar(q => { const r = r0 + len * q; return [r, phi0 + rip(j, r, .05 * (h(j, 4) - .5)) + .03 * Math.sin(q * 3 + h(j, 6) * 6)]; }, 5,
+      Math.max(.9, R * (.012 + .022 * h(j, 7)) * (1 + .5 * iris)), b, cA, mixc(cA, umber, .4), .45, h(j, 8), .85, .32 + .38 * h(j, 10));
   }
-  // 2. helmet streamers: bulbous bases of curved strokes, then long open strokes converging slowly and fraying
-  const streamers = o.streamers || [[.12, 3.0, .5, 1], [3.02, 2.5, .42, .85], [3.8, 1.5, .26, .55], [-.8, 1.9, .3, .6], [1.85, 1.2, .22, .45]];
+  // 2. the collarette: a bright, warm, broken ring of short strokes close to the limb
+  const nC = Math.round(140 * Math.min(3, R / 40) * sc);
+  for (let j = 0; j < nC; j++) {
+    const phi0 = (j + h(j, 31)) / nC * TAU, r0 = R * (1.02 + .02 * h(j, 32)), len = R * (.06 + .1 * h(j, 33));
+    polar(q => [r0 + len * q, phi0 + .02 * (h(j, 34) - .5)], 2, Math.max(.9, R * .022), (.85 + .3 * h(j, 35)) * k, lead, naples, .6, h(j, 36), .7, .7);
+  }
+  // 3. streamers: a few long soft brushes along the solar-minimum wings, faint; very few on the eye
+  const streamers = o.streamers || [[.12, 2.2, .45, 1], [3.02, 1.9, .4, .85], [3.8, 1.2, .26, .5], [-.8, 1.5, .3, .55]];
+  const nS = Math.round((iris > .5 ? 6 : 18) * sc * Math.min(2, R / 50));
   streamers.forEach(([da, len, ws, bs], si) => {
     const ph = tilt + da;
-    for (let m = 0; m < Math.round(26 * sc * Math.min(2, R / 50)); m++) {
-      const u = (m + .5) / 26 * 2 - 1, phi0 = ph + u * ws * 1.1 + .05 * ws * (h(si * 50 + m, 5) - .5), q0 = Math.abs(u);
-      const rEnd = R * (1 + len * (.35 + .65 * Math.pow(h(si * 50 + m, 6), .7))), r0 = R * (1.01 + .25 * Math.max(0, 1 - q0 * q0));
-      const b = bs * (.6 + .5 * h(si * 50 + m, 7)) * k;
-      polar(q => { const r = lerp(r0, rEnd, Math.pow(q, 1.15)); return [r, ph + (phi0 - ph) * (.35 + .65 * Math.pow(R / r, 1.2)) + rip(si * 50 + m, r, .008)]; }, 14,
-        Math.max(.9, R * (.012 + .012 * h(si * 50 + m, 8))), b, pearl, warmT, .45, h(si * 50 + m, 9), .85);
+    for (let m = 0; m < nS; m++) {
+      const u = (m + .5) / nS * 2 - 1, phi0 = ph + u * ws, rEnd = R * (1 + len * (.4 + .6 * h(si * 50 + m, 6)) * (iris > .5 ? .8 : 1)), r0 = R * outerR * .85;
+      polar(q => { const r = lerp(r0, rEnd, Math.pow(q, 1.1)); return [r, ph + (phi0 - ph) * (.4 + .6 * Math.pow(R / r, 1.2))]; }, 10,
+        Math.max(1, R * (.025 + .02 * h(si * 50 + m, 8))), bs * (.4 + .3 * h(si * 50 + m, 7)) * k, pearl, ash, .3, h(si * 50 + m, 9), .9, .3);
     }
   });
-  // 3. polar plumes: fine near-straight brush lines at both poles
-  for (const pole of [tilt - Math.PI / 2, tilt + Math.PI / 2]) for (let m = 0; m < Math.round(18 * sc); m++) {
-    const phi0 = pole + (m / 17 - .5) * 1.0, rEnd = R * (1.25 + .6 * h(m, pole > tilt ? 11 : 12));
-    polar(q => { const r = lerp(R * 1.02, rEnd, q); return [r, phi0 + (phi0 - pole) * .4 * (r - R) / R]; }, 6, Math.max(.7, R * .008), .55 * (.5 + .7 * h(m, 13)) * k, pearl, pearl, .4, h(m, 14), .9);
+  // 4. polar plumes (not on the eye)
+  if (iris < .5) for (const pole of [tilt - Math.PI / 2, tilt + Math.PI / 2]) for (let m = 0; m < Math.round(12 * sc); m++) {
+    const phi0 = pole + (m / 11 - .5) * .9, rEnd = R * (1.3 + .5 * h(m, pole > tilt ? 11 : 12));
+    polar(q => { const r = lerp(R * 1.04, rEnd, q); return [r, phi0 + (phi0 - pole) * .4 * (r - R) / R]; }, 6, Math.max(.8, R * .012), .5 * (.5 + .6 * h(m, 13)) * k, pearl, pearl, .35, h(m, 14), .9, .45);
   }
-  // 4. the limb: a ring of short tangential strokes, bright
+  // 5. the limb: a ring of short tangential strokes, bright
   const nL = Math.round(90 * Math.min(3, R / 40));
   for (let j = 0; j < nL; j++) {
     const a0 = (j + h(j, 21)) / nL * TAU, span = TAU / nL * (1.4 + h(j, 22));
-    polar(q => [R * (1.012 + .006 * h(j, 23)), a0 + span * q], 3, Math.max(.8, R * .016), 1.15 * k, lead, pearl, .7, h(j, 24), .4);
+    polar(q => [R * (1.01 + .006 * h(j, 23)), a0 + span * q], 3, Math.max(.8, R * .014), 1.1 * k, lead, pearl, .7, h(j, 24), .4, .9);
   }
-  // 5. prominences: small madder-pink tongues on the limb
-  const proms = o.prominences || [[1.15, .07, .11], [2.25, .05, .07], [-2.45, .085, .13]];
+  // 6. prominences: a broken ring of small madder-pink tongues on the limb (the eye: more, like f1's ring)
+  const proms = o.prominences || (iris > .5 ? Array.from({ length: 11 }, (_, i) => [i / 11 * TAU + h(i, 51) * .4, .04 + .05 * h(i, 52), .04 + .07 * h(i, 53)]) : [[1.15, .07, .11], [2.25, .05, .07], [-2.45, .085, .13]]);
   proms.forEach(([da, dw, hh], pi) => {
     for (let j = 0; j < 3; j++) {
       const dl = dw * (.5 + .2 * j), ht = R * hh * (.7 + .15 * j);
-      polar(q => [R * 1.0 + ht * Math.sin(Math.PI * q), tilt + da - dl + 2 * dl * q], 6, Math.max(.8, R * .012), 1.0 * Math.min(1, k * 1.5), pink, [verm[0], verm[1] * .8, verm[2] * .8], .5, h(pi, 31 + j), .5);
+      polar(q => [R * 1.0 + ht * Math.sin(Math.PI * q), tilt + da - dl + 2 * dl * q], 6, Math.max(.8, R * .012), Math.min(1.1, k * 1.5), pink, [verm[0], verm[1] * .8, verm[2] * .8], .5, h(pi, 31 + j), .5, .9);
     }
   });
-  // 6. the darker limbal ring of the iris (S01): a broken ring of umber strokes at the fibres' outer edge
-  if (iris > .3) for (let j = 0; j < 160; j++) {
-    const a0 = h(j, 41) * TAU, rr = R * (1.6 + .35 * iris + .12 * (h(j, 42) - .5));
-    polar(q => [rr + R * .05 * Math.sin(q * 3), a0 + .12 * q], 3, Math.max(1, R * .03), .5 * iris, umber, umber, .3, h(j, 43), .6);
+  // 7. the iris's darker limbal ring (the eye): a broken ring of umber strokes at the fibres' outer edge
+  if (iris > .3) for (let j = 0; j < 200; j++) {
+    const a0 = h(j, 41) * TAU, rr = R * (outerR + .02 + .08 * (h(j, 42) - .5));
+    polar(q => [rr + R * .04 * Math.sin(q * 3), a0 + .1 * q], 3, Math.max(1, R * .035), .6 * iris, bumber, umber, .3, h(j, 43), .6, .55);
   }
   return out;
 }

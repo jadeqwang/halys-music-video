@@ -151,7 +151,7 @@ export function skyField(F, mask, sk0, sun, P, t = 0) {
       const C = sk.corona, cdx = x - C.x, cdy = y - C.y, cr = Math.sqrt(cdx * cdx + cdy * cdy);
       if (cr > C.R * .98) {
         const ca = Math.atan2(cdy, cdx), fib = .75 + .5 * vnoise(ca * 9 + 3, Math.log(cr / C.R) * 4, seed + 61);
-        const k = C.k * Math.pow(C.R / cr, 2.6) * fib * (1 - .5 * night * 0);
+        const k = C.k * Math.pow(C.R / cr, C.fall ?? 2.6) * fib;
         L = lerp(L, .9, clamp(k * .85)); a = lerp(a, naples[1] * .4, clamp(k)); b = lerp(b, naples[2] * .5, clamp(k));
       }
     }

@@ -314,7 +314,7 @@
      0.4
     ],
     [
-     85.91,
+     84.83,
      0.8
     ],
     [
@@ -554,7 +554,7 @@
    "shot": "S26",
    "glint": 84.38,
    "t0": 81.36,
-   "t1": 85.91,
+   "t1": 84.83,
    "world": "bronze",
    "worlds": [
     "bronze"
@@ -602,20 +602,6 @@
       }
      ],
      "t": 84.38
-    },
-    {
-     "key": "below",
-     "role": "carved",
-     "text": "EXCHANGE-",
-     "reveal": "words",
-     "words": [
-      {
-       "w": "EXCHANGE-",
-       "t": 85.055,
-       "e": 85.91
-      }
-     ],
-     "t": 85.055
     }
    ]
   },
@@ -629,7 +615,7 @@
    ],
    "coverage": 0.8,
    "size": "reference",
-   "t0": 85.91,
+   "t0": 84.83,
    "t1": 89.22,
    "world": "bronze",
    "worlds": [
@@ -639,12 +625,12 @@
     {
      "key": "l1",
      "role": "carved",
-     "text": "-ING TURNS AND STRIKES",
+     "text": "EXCHANGING TURNS AND STRIKES",
      "reveal": "words",
      "words": [
       {
-       "w": "-ING",
-       "t": 85.93,
+       "w": "EXCHANGING",
+       "t": 85.055,
        "e": 86.05
       },
       {
@@ -663,7 +649,7 @@
        "e": 87.67
       }
      ],
-     "t": 85.93
+     "t": 85.055
     },
     {
      "key": "l2",
@@ -2621,14 +2607,14 @@
      "role": "carved",
      "text": "JADE WANG",
      "reveal": "line",
-     "t": 277.85
+     "t": 277.7
     },
     {
      "key": "next",
      "role": "plaque",
      "text": "NEXT TOTALITY · 2027-08-02 · NEAR LUXOR · 6M23S",
      "reveal": "line",
-     "t": 278.1
+     "t": 277.8
     }
    ]
   }

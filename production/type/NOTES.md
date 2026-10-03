@@ -8,11 +8,12 @@ Look in this folder first:
 
 | file | what |
 |---|---|
-| `contact_16x9.jpg`, `contact_4x5.jpg` | every text event at its key frame (61 frames), 1920×1080 and 1080×1350, over dark stand-ins |
-| `test_00.0-10.0s_hook_title.mp4` | the hook (date, three carved lines, the rewind) and the Altdorfer cartouche title, with the song |
-| `test_85.5-97.0s_strange_halo_eye.mp4` | EXCHANGE- / -ING, the letters eclipsed to crescents, A HALO IN THE SKY on its circle, the pupil |
-| `test_110.4-118.0s_halo_hal_sky_stutter.mp4` | LOVE backlit, the counter at 00:00, HALO with the HAL frames, IN THE, SKY, SKY, the stutter and inversions, the Glover caption, the HUD |
-| `test_140.0-147.0s_chop_cycle.mp4` | chop cycles 1–2 with the ring locked centre |
+| `contact_16x9.jpg`, `contact_4x5.jpg` | every text event at its key frame (62 frames), 1920×1080 and 1080×1350, over dark stand-ins |
+| `test_00.0-10.0s_hook_title.mp4` | the hook at title size (date plaque, THE SUN WENT OUT over the eye, the two large beats, the rewind) and the Altdorfer cartouche title, with the song |
+| `test_84.0-97.0s_bronze_strange_halo_eye.mp4` | BRONZE and its glint, EXCHANGING whole on the sung "exchange-", the letters eclipsed to crescents, A HALO IN THE SKY on its circle, the pupil |
+| `test_110.4-118.0s_halo_hal_sky_stutter.mp4` | LOVE backlit, the counter at 00:00, HALO with the HAL frames, IN THE, SKY, SKY, the stutter and inversions, the two-line Glover caption, the HUD |
+| `test_140.0-147.0s_chop_cycle.mp4` | chop cycles 1–2 with the ring locked centre (unchanged by the revision, not re-rendered) |
+| `still_103.7s.jpg`, `still_106.0s.jpg`, `stills_S32_S33.jpg` | the director's check frames (16:9), and a sheet of S32/S33 at 103.7, 105.7, 106.0, 109.6 and 110.4 s in 16:9 and 4:5: at 103.7 and 106.0 the lines have only just started (THROW at 103.64, GO at 105.85), so the sheet adds the frames where each line is complete |
 
 The backgrounds in the sheets and tests are **stand-ins** (the look-dev stills, graded dark, plus a crude eclipse/pupil
 where an effect needs one). The tests and sheets come from the real harness page (`studio.html` → `renderFrame`), so
@@ -30,14 +31,14 @@ video/src/type/
   gild.js         CARVED gold leaf: glyph masks -> edge / chisel-height / shadow fields -> WebGL2 lit shader
   chop.js         CHOP: Archivo 900 at width 125, corona streamers in the letters, orange rim, slam, echo, HAL disk
   cartouche.js    the Altdorfer hanging tablet (painted slab, cord, tassel, incised gilded lettering, sway)
-  terminal.js     the room's terminal and side panes (ROOM.md + FACTCHECK.md), procedural glyphs, quad warp
+  terminal.js     the room's terminal and side panes (ROOM.md, verbatim), procedural glyphs, quad warp
   style.js        faces, palette, light presets, kerning-aware layout, balanced line breaking, anchors
   tgl.js          the type layer's own WebGL2 context (one canvas, resized per block)
   standin.js      test scaffolding only (loaded with ?typebg): stand-in backgrounds + scene parameters
   track.gen.js    GENERATED text track (the page imports this copy: render.mjs hashes src/ for stale frames)
 video/data/texttrack.json   the same track, for tools
 tools/type/
-  build_track.py  SHOTLIST.md + timing.json (+ ROOM/FACTCHECK terminal) -> texttrack.json + track.gen.js; reading report
+  build_track.py  SHOTLIST.md + timing.json (+ the ROOM.md terminal) -> texttrack.json + track.gen.js; reading report
   typetest.mjs    look-dev driver: stills or frame ranges + song -> MP4, through the real harness page, with ?typebg
   sheets.py       both contact sheets (key frames, labels from the track)
   contact.py      tiles stills into a labelled sheet
@@ -94,15 +95,21 @@ anything missing falls back to the track's defaults (which is how the sheets wer
 
 `python3 tools/type/build_track.py` (or `--check`). Run it after any SHOTLIST or timing change. It does the following:
 
-* re-parses SHOTLIST.md with `tools/shotlist.parse()` (the checked-in `video/data/shotlist.json` is stale: it still has
-  the pre-FACTCHECK S12/S16/S64/S66/S68/S70/S81 strings; re-run `python3 tools/shotlist.py` for the harness);
+* re-parses SHOTLIST.md with `tools/shotlist.parse()` (the same parser that writes `video/data/shotlist.json`);
 * applies the `DESIGN` table: which renderer, anchor, holds across cuts, beats for unsung labels, effect parameters;
-* matches every sung word to its onset in `timing.json`: the longest consecutive run of lyric words nearest the shot;
+* matches every sung word to its onset in `timing.json`: the consecutive run of lyric words nearest the shot. A display
+  word may span a lyric-sheet split: `EXCHANGING` matches the sung `exchange-` + `ing` and takes the first part's onset
+  (85.06) and the last part's end;
+* fails if a lyric display (CARVED, CHOP, INSCR) shows a lyric-sheet artefact: a word starting or ending in a hyphen, or
+  parentheses. The sheet's `exchange- / -ing` split only makes the singer rhyme "exchange" with "strange";
+* takes the counter's magnitude keys at the shot boundaries (S24, S27, S28 in and out), so they follow cut moves;
 * refines chop times to the measured onsets when SHOTLIST's two-decimal time is the same event (within 20 ms);
 * takes S36's stutter onsets from `chops[word=stutter]` inside the shot (all of bar 65, every second from bar 66, as
   the picture cuts) and S78's ticks from `events.snares`;
-* builds the terminal timeline from ROOM.md, using FACTCHECK.md's corrected lines where the two differ;
-* fails if any SHOTLIST cue is unplaced or doubled; prints characters per second for every item.
+* builds the terminal timeline from ROOM.md, whose terminal block now carries FACTCHECK.md's corrected lines, and fails
+  if any terminal line is not in ROOM.md verbatim;
+* fails if any SHOTLIST cue is unplaced or doubled; prints characters per second for every item (and for each two-line
+  caption read together).
 
 Event schema: `{id, fx, shot, t0, t1, world, items: [{key, role, text, t, reveal: words|line|none, words: [{w, t, e}]}],
 anchor, ...fx params}`. Bookkeeping items (`ghost: true`) are cues another event renders (S34's `LOVE`, S18's `00:00`).
@@ -123,14 +130,16 @@ per event, so it never changes. The shadow is cast away from the light, longer t
 * *Boil*: on 12 fps drawings a sub-pixel warp at letter scale plus edge roughness, both seeded per drawing (`f.seed`).
   Consecutive drawings differ by 2–3 grey levels on average, all at the edges: the letters live, they do not strobe.
   MARBLE (30) and the 60 fps worlds do not boil.
-* *Gild-in*: a word appears on the drawing that contains its sung onset (up to one 12 fps drawing early, the 2–4 frame
-  lead subtitle practice asks for). A slanted glint frontier crosses it in 0.2–0.4 s, then it holds.
+* *Gild-in*: a word never appears before its sung onset. It appears on the first drawing at or after it (at 12 fps up to
+  83 ms later; chops are frame-exact). A slanted glint frontier crosses it in 0.2–0.4 s, then it holds.
+* *Linger*: a sung word may stay up to about 1.5 s past a cut, when the sentence ends on it (see §6).
 * *Incised* (the cartouche, S49): the same field cut in, a V-groove. The wall nearest the light shades the groove, and
   deeper is darker. Stone palette for the plinth.
 
 **PLAQUE**: Cinzel 500 tracked +0.16 em in bone (pearl in the light worlds), with a soft dark underlay for legibility.
 Glyphs fade in left to right over about 0.3 s, and lower-left labels get a hairline rule. Cinzel's lowercase are small
-capitals, so the mixed-case Glover caption sets as caps and small caps.
+capitals, so the mixed-case Glover quote sets as caps and small caps. The Glover caption is two lines, 110.58–114.20:
+the quote (Cinzel 600, 40 design px) over the smaller attribution (27 px), centred low.
 
 **CHOP** (`chop.js`). Archivo 900 at width 125, one word across the safe width. Multi-word chops (THROW DOWN) stack
 when one line would be smaller than 20 % of the frame height.
@@ -159,13 +168,15 @@ look, no logo.
 
 | event | what it does | scene parameters | default when the scene passes nothing |
 |---|---|---|---|
+| S01 title | THE SUN WENT OUT as a title over the eye: one or two balanced lines, cap height up to 13 % of the frame height (12.3 % as set, two lines), filling 75 % of the safe width, centred on the eclipse; `28 MAY 585 BC` a small plaque above. Holds through the S02 flash to 1.89 | `sun` (the eye) | eye at (0.5, 0.45 H), portrait (0.5, 0.42 H) |
+| S02, S03 beats | each line its own large beat, bottom-centred, cap height 8.5 % of the frame height; S03 rewinds out with S04 | — | — |
 | S05, S24 cartouche | painted tablet hangs on a cord from above the frame; slab thickness, brushwork, craquelure, fillet, iron ring, tasselled pendant. HALYS / JADE WANG on cue; S24 is lowered in (1.1 s, settling bounce), its words gilding on the sung onsets | `light` | 16:9 top centre (34 % / 50 % of the width); portrait 80 % / 90 % |
 | S06 map | LYDIA / MEDIA laid flat on the banks (squashed, leaning to the vanishing point), outline engraved in, then gilded, on beats 1–2; sub-labels beat 3; foot label beat 4; slow drift with the descent | `light` | 16:9 centred on each bank; portrait side-aligned and staggered in depth |
 | S09 / S22 / S43 divider | gilded moulding down the centre (portrait: across); S09 splits open 23.33–24.63 with the swell; captions under each panel; S43 in pearl and orange lines | — | frame centre |
 | S18–S34 counter | `TOTALITY IN 55:28` engraved small caps (tabular digits), holds 0.86 s, then follows the eclipse magnitude to `00:00` at 110.40, held to the cut | `magnitude` | magnitude keys from SHOTLIST (S24 ≈ 30 % of the disk, S27 0.8, S28 0.9–0.95) |
 | S25 mirrored | LYDIANS left / MEDES right at equal size, SLEW EACH OTHER ON THE SHORE across the bottom | — | — |
-| S26 bronze | SUN BURNING ON THE / BRONZE (half the frame wide) / EXCHANGE-, a strong glint on 84.38, then a slower second glint while held | `light` | — |
-| S27 crescents | on "strange" a disk passes right to left over every letter and stops at 0.8 coverage, leaving gold crescents on dark silhouettes; the gold drains toward cool metal | `disk.k` | — |
+| S26 bronze | SUN BURNING ON THE (small) / BRONZE (half the frame wide), a strong glint on 84.38 as it gilds in; the cut is now 84.83, so BRONZE holds 0.45 s and the slower second glint only runs when a hold is 1.5 s or longer | `light` | — |
+| S27 crescents | EXCHANGING TURNS AND STRIKES / WHEN LIGHT WENT STRANGE (EXCHANGING whole on the sung "exchange-", 85.06; four lines in the left half at the reference size); on "strange" a disk passes right to left over every letter and stops at 0.8 coverage, leaving gold crescents on dark silhouettes; the gold drains toward cool metal | `disk.k` | — |
 | S28 ring | coin legend around the sun: A HALO IN THE SKY clockwise over the top, WARRIORS AWED counter-clockwise along the bottom, letter by letter on the sung onsets | `sun` | sun at (0.63, 0.45) r = 0.1 H (portrait (0.5, 0.36) r = 0.11 W) |
 | S29 pupil | lines fitted to the pupil's chords (best of all 2–4-line breaks), pale cool light from the reflected crescent | `pupil` | (0.5, 0.47) r = 0.22 H |
 | S30 shadow | the umbra edge comes down through the letters: gold to silhouette with a warm rim on the edge still facing the light | `front` | 98.62 → 99.75 |
@@ -173,11 +184,12 @@ look, no logo.
 | S57 spark | white-hot burst with three fine gilt ripples racing out, cooling to gold, then fading as gold dust lifts off | `light` | — |
 | S58 shadow (rise) | each letter sits low and dark until the light reaches it, then rises 0.13 em into gold | `front` | 200.55 → 203.45 |
 | S49 incised | inscription cut into the plinth face | `plinth` | a marble block running out of the bottom of frame |
-| S52 Thales | THALES on its onset; ΘΑΛΗΣ (Cardo 700, half size) gilds in on the next downbeat as an echo; THALES OF MILETUS plaque one beat later | `light` | — |
+| S52 Thales | THALES on its onset (182.49); ΘΑΛΗΣ (Cardo 700, half size) gilds in on the next downbeat as an echo; THALES OF MILETUS plaque one beat later; the block stays into S53 to 184.60 and fades. 16:9 top left, portrait centred high | `light` | — |
+| S53 foretold | FORETOLD THE SUN WOULD GO DARK word by word from the cut (183.34, on "foretold"); 16:9 left half low (0.67 H), clear of the lingering Thales block; portrait bottom-centred | `place` | — |
 | S53 card | 186.40–187.65: the question, YES ticking 3¢ → 99¢ in steps from 186.55, NO falling, the price line jumping | — | top right (portrait top) |
-| S64–S71 eras | year / place (orange) / fact, staggered 0, 0.16, 0.3 s; the earlier years stacked dim above on a hairline timeline | — | lower left |
+| S64–S71 eras | two lines: YEAR · PLACE (year pearl, place orange; 84 design px, 82 in portrait, splitting into year / place when one row would not fit) over the FACT (72 px: cap height 4.7 % of the short side, so of the height in 16:9 and of the width in 4:5 and 9:16; up to three balanced lines). Staggered 0, 0.12, 0.25 s; the last three years stacked dim above on a hairline timeline | — | lower left |
 | S78–S80 terminal | one line per tick (14 ticks 266.12–269.62); spinner cycling while newest; commit typed in bursts on the ticks and the three key clicks; output on the third; cursor blinking | `screen` | two rectangles (16:9 left/right; portrait top/bottom) |
-| S81 end card | HALYS gilds in 277.60, JADE WANG 277.85, the NEXT TOTALITY plaque 278.10, to 281.0 | — | — |
+| S81 end card | HALYS gilds in 277.60, JADE WANG 277.70, the NEXT TOTALITY plaque (32 px, legible on a phone) 277.80, to 281.0 | — | — |
 
 ---
 

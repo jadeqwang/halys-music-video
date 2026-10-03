@@ -146,7 +146,7 @@ export async function paint(f, src, opts = {}) {
     const mask = src.sky ? Float32Array.from(src.sky) : skyMask(F0, cfg.sky);
     const sunA = sd ? { sx: sd.cx / S, sy: sd.cy / S, sr: sd.r / S, e: sd.e, obsc: sd.obsc } : { sx: aw * .5, sy: ah * .2, sr: 10, e: 0, obsc: 0 };
     const sk = { ...cfg.sky, alt: cfg.sky.alt ?? cfg.sun?.alt ?? 9, layoutScale: S, below: cfg.sky.below };
-    if (cfg.corona && sd && cfg.corona.glow !== 0) sk.corona = { x: sd.mx / S, y: sd.my / S, R: sd.mr / S, k: (cfg.corona.k ?? 1) * (cfg.corona.glow ?? .55) };
+    if (cfg.corona && sd && cfg.corona.glow !== 0) sk.corona = { x: sd.mx / S, y: sd.my / S, R: sd.mr / S, k: (cfg.corona.k ?? 1) * (cfg.corona.glow ?? .9), fall: cfg.corona.fall ?? (1.6 + 1.2 * (1 - (cfg.corona.iris ?? 0))) };
     const Sf = skyField(F0, mask, sk, sunA, pal, f.t);
     const R = ref.R.slice(), G = ref.G.slice(), B = ref.B.slice(), L = ref.L.slice(), pool = ref.pool.slice(), focus = ref.focus.slice();
     const skyPool = cfg.sky.pool ?? .5;

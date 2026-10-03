@@ -30,6 +30,7 @@ CPS_MAX = 15.0
 
 # ---------------------------------------------------------------- timing helpers
 LYRIC = [(w[0], w[1], w[2]) for ln in TIMING["lines"] for w in ln["words"]]
+SHOTS = {s["id"]: s for s in shotlist.parse()}
 BEATS = TIMING["beats"]
 DOWNBEATS = TIMING["downbeats"]
 
@@ -44,25 +45,41 @@ def beat_after(t, n=1):
     return round(bs[n - 1], 3)
 
 
+def sung_join(a, b):
+    """the display word a lyric-sheet split stands for: 'exchange-' + 'ing' -> 'exchanging' (the split is only there to make
+    the singer sing a rhyme; on screen the word is always whole)"""
+    if not a.endswith("-"):
+        return None
+    stem, tail = norm(a), norm(b)
+    return {stem + tail, (stem[:-1] + tail) if stem.endswith("e") and tail[:1] in "aeiouy" else stem + tail}
+
+
 def match_words(tokens, t_from, t_to):
-    """tokens (display words, e.g. ['-ING', 'TURNS']) -> [{w, t, e}] with their sung onsets. The words must be sung
+    """tokens (display words, e.g. ['EXCHANGING', 'TURNS']) -> [{w, t, e}] with their sung onsets. The words must be sung
     consecutively; of all such runs the one nearest the window [t_from, t_to] wins (lines often start before their cut).
-    Punctuation-only tokens ('…') get no onset."""
+    A display word may span a lyric-sheet split ('exchange-' + 'ing'): it takes the first part's onset and the last part's
+    end. Punctuation-only tokens ('…') get no onset."""
     keys = [(i, norm(tok)) for i, tok in enumerate(tokens) if norm(tok)]
-    n = len(keys)
     best = None
-    for s0 in range(len(LYRIC) - n + 1):
-        if all(norm(LYRIC[s0 + j][1]) == k for j, (_, k) in enumerate(keys)):
+    for s0 in range(len(LYRIC)):
+        p, spans = s0, []
+        for i, k in keys:
+            if p < len(LYRIC) and norm(LYRIC[p][1]) == k:
+                spans.append((i, p, p)); p += 1
+            elif p + 1 < len(LYRIC) and k in (sung_join(LYRIC[p][1], LYRIC[p + 1][1]) or ()):
+                spans.append((i, p, p + 1)); p += 2
+            else:
+                break
+        else:
             t = LYRIC[s0][0]
             dist = 0 if t_from <= t <= t_to else min(abs(t - t_from), abs(t - t_to))
             if best is None or dist < best[0]:
-                best = (dist, s0)
+                best = (dist, spans)
     if best is None or best[0] > 3.0:
         raise ValueError(f"no sung run {' '.join(tokens)!r} near {t_from}-{t_to}")
     out = [{"w": tok, "t": None, "e": None} for tok in tokens]
-    for j, (i, _) in enumerate(keys):
-        w = LYRIC[best[1] + j]
-        out[i] = {"w": tokens[i], "t": round(w[0], 3), "e": round(w[2], 3)}
+    for i, a, b in best[1]:
+        out[i] = {"w": tokens[i], "t": round(LYRIC[a][0], 3), "e": round(LYRIC[b][2], 3)}
     return out
 
 
@@ -118,7 +135,8 @@ ev("S18.contact", "plaque", "S18", [("17:25 · FIRST CONTACT", {"key": "p", "rev
 ev("S18.counter", "counter", "S18", [("TOTALITY IN 55:28", {"key": "counter", "reveal": "line", "t": beat_after(46.49, 1)}),
                                      ("00:00", {"key": "zero", "shot": "S35", "reveal": "none", "t": 110.40, "ghost": True})],
    t1=110.58, anchor="corner", total=55 * 60 + 28, hold=0.86, zero=110.40,
-   magnitude=[[46.93, 0.0], [67.42, 0.40], [85.91, 0.80], [89.22, 0.90], [93.0, 0.95], [110.40, 1.0]])
+   magnitude=[[46.93, 0.0], [SHOTS["S24"]["t0"], 0.40], [SHOTS["S27"]["t0"], 0.80], [SHOTS["S28"]["t0"], 0.90],
+              [SHOTS["S28"]["t1"], 0.95], [110.40, 1.0]])
 
 # 4 · verse 1
 ev("S24.cartouche", "cartouche", "S24", [("THE RIVER HALYS,", {"key": "l1", "reveal": "words"}),
@@ -129,9 +147,9 @@ ev("S25.mirror", "mirrored", "S25", [("LYDIANS", {"key": "left", "reveal": "word
                                      ("MEDES", {"key": "right", "reveal": "words"}),
                                      ("SLEW EACH OTHER ON THE SHORE", {"key": "foot", "reveal": "words"})])
 ev("S26.bronze", "bronze", "S26", [("SUN BURNING ON THE", {"key": "above", "reveal": "words"}),
-                                   ("BRONZE", {"key": "big", "reveal": "words"}),
-                                   ("EXCHANGE-", {"key": "below", "reveal": "words"})], glint=84.38)
-ev("S27.strange", "crescents", "S27", [("-ING TURNS AND STRIKES", {"key": "l1", "reveal": "words"}),
+                                   ("BRONZE", {"key": "big", "reveal": "words"})], glint=84.38)
+# EXCHANGING is one whole word on the sung "exchange-" (85.06): match_words joins the lyric sheet's "exchange- / ing"
+ev("S27.strange", "crescents", "S27", [("EXCHANGING TURNS AND STRIKES", {"key": "l1", "reveal": "words"}),
                                        ("WHEN LIGHT WENT STRANGE", {"key": "l2", "reveal": "words"})],
    eclipse=[88.69, 89.17], coverage=0.8, size="reference")
 
@@ -213,9 +231,10 @@ ev("S75.chop", "chop", "S75", [("THROW DOWN", {"key": "c1"})])
 ev("S76.chop", "chop", "S76", [("BLADE", {"key": "c1"})])
 
 # 14 · outro: the terminal (built below from ROOM.md, whose block carries FACTCHECK.md's corrections) and the end card
+# end card after the 0.6 s wink hold (277.55); a short stagger so the 47-character plaque still reads at <= 15 cps by 281.0
 ev("S81.end", "endcard", "S81", [("HALYS", {"key": "title", "reveal": "line", "t": 277.60}),
-                                 ("JADE WANG", {"key": "byline", "reveal": "line", "t": 277.85}),
-                                 ("NEXT TOTALITY · 2027-08-02 · NEAR LUXOR · 6M23S", {"key": "next", "reveal": "line", "t": 278.10})],
+                                 ("JADE WANG", {"key": "byline", "reveal": "line", "t": 277.70}),
+                                 ("NEXT TOTALITY · 2027-08-02 · NEAR LUXOR · 6M23S", {"key": "next", "reveal": "line", "t": 277.80})],
    t0=277.55)
 
 # ---------------------------------------------------------------- the terminal (S78–S80)
@@ -313,6 +332,11 @@ def build():
             later = [c for c in st if c["bar"] >= 66]
             e["onsets"] = sorted([round(c["t"], 3) for c in st if c["bar"] < 66] + [round(c["t"], 3) for c in later[::2]])
         events.append(e)
+
+    for e in events:
+        for it in e["items"]:
+            if it["role"] in ("carved", "chop", "inscr") and re.search(r"(^|\s)-\w|\w-(\s|$)|[()\[\]]", it["text"]):
+                errors.append(f"{e['id']}: lyric-sheet artefact on screen (hyphen split or parentheses): {it['text']!r}")
 
     room = (ROOT / "production" / "ROOM.md").read_text(encoding="utf-8")
     term = [s for _, s in MAIN if s.strip() and s != PROMPT] + SIDE + [PROMPT + COMMIT] + [o["text"] for o in TERMINAL["output"] if o["text"] != PROMPT]

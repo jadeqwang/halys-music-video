@@ -52,13 +52,13 @@ function eyeOf(f) {
   const L = f.L, T = f.type || {};
   return T.sun ? { x: T.sun.x, y: T.sun.y, r: T.sun.r } : { x: L.cx, y: (L.portrait ? .42 : .45) * L.H, r: (L.portrait ? .3 * L.W : .3 * L.H) };
 }
-// the hook title: centred over the eye, one or two balanced lines, the longest filling ~75 % of the safe width (portrait:
-// ~92 %), never taller than a 13 % cap
+// the hook title: centred over the eye, one or two balanced lines. The longest line's advance width (tracking included)
+// is 86 % of the safe width, so its visible letters span ~70 % (portrait: 92 % / ~80 %); never taller than a 13 % cap
 function titleLayout(e, f) {
   const L = f.L, face = FACE.carved, it = e.items[0], words = it.text.split(' '), eye = eyeOf(f);
   const key = `${e.id}|title|${L.W}x${L.H}|${eye.x}|${eye.y}`;
   if (_lay.has(key)) return _lay.get(key);
-  const fill = (L.portrait ? .92 : .75) * L.safe.w, capMax = (L.portrait ? .1 * L.W : .13 * L.H) / face.cap;
+  const fill = (L.portrait ? .92 : .86) * L.safe.w, capMax = (L.portrait ? .1 * L.W : .13 * L.H) / face.cap;
   let best = null;
   for (const n of [1, 2]) {
     const lines = n === 1 ? [words] : breakLines(words, face, 100, textWidth(face, 100, words.join(' ')) * .6, 2);
@@ -476,7 +476,7 @@ function mirrored(g, f, e, t) {
   gild(g, runs, gildOpts(c, e));
 }
 
-// ---------------------------------------------------------------- S26: SUN BURNING ON THE / BRONZE / EXCHANGE-
+// ---------------------------------------------------------------- S26: SUN BURNING ON THE / BRONZE (an optional 'below' line)
 function bronze(g, f, e, t) {
   const L = f.L, c = ctxOf(f, e, t), S = L.safe, P = L.portrait;
   const [ia, ib, ic] = ['above', 'big', 'below'].map(k => e.items.find(i => i.key === k));
@@ -484,7 +484,7 @@ function bronze(g, f, e, t) {
   const pxB = bigW / textWidth(FACE.carved, 1, ib.text), pxA = (P ? 54 : 58) * u(L), pxC = SIZE.lyric * u(L);
   const x = P ? L.cx - bigW / 2 : S.x, capB = FACE.carved.cap * pxB;
   const yB = P ? .72 * L.H : .6 * L.H;
-  const rows = [[ia, pxA, yB - capB - .5 * pxA], [ib, pxB, yB], [ic, pxC, yB + .3 * pxB + FACE.carved.cap * pxC]];
+  const rows = [[ia, pxA, yB - capB - .5 * pxA], [ib, pxB, yB], [ic, pxC, yB + .3 * pxB + FACE.carved.cap * pxC]].filter(r => r[0]);
   const runs = [];
   for (const [it, px, y] of rows) {
     let xx = x;
@@ -495,7 +495,7 @@ function bronze(g, f, e, t) {
         if (it === ib) {
           r.boost = .06 + .06 * Math.exp(-(t - e.glint) * 2);      // the sun burning on the bronze
           const k2 = (t - e.glint - .55) / .95;                        // the moving glint: a slower second pass while held
-          if (k2 > 0 && k2 < 1) { r.sweep = null; r.shine = { k: k2, band: 1.5 * px, peak: .75 }; }
+          if (e.t1 - e.glint >= 1.5 && k2 > 0 && k2 < 1) { r.sweep = null; r.shine = { k: k2, band: 1.5 * px, peak: .75 }; }   // only when the hold allows it
         }
         runs.push(r);
       }
@@ -751,13 +751,19 @@ const ERA_HEAD = { ...FACE.plaqueBold, track: .06 }, ERA_FACT = { ...FACE.plaque
 function era(g, f, e, t) {
   const L = f.L, S = L.safe, P = L.portrait;
   const head = e.items.find(i => i.key === 'head'), fact = e.items.find(i => i.key === 'fact');
-  const hpx = (P ? 74 : 80) * u(L), fpx = (P ? 66 : 69) * u(L);
+  // mobile first: the fact line's cap height is >= 4.5 % of the frame's short side (frame height in 16:9, width in 4:5 and
+  // 9:16, where u = W / 1080), the YEAR · PLACE line larger; either shrinks only if a single row would not fit the safe width
   const x = S.x + 18 * u(L), mw = S.w - 18 * u(L);
   const [year, ...rest] = head.text.split(' · '), place = rest.join(' · ');
+  let hpx = (P ? 82 : 84) * u(L);
   const oneLine = textWidth(ERA_HEAD, hpx, head.text) <= mw;
-  const factLines = breakLines(fact.text.split(' '), ERA_FACT, fpx, mw, 3);
+  hpx = Math.min(hpx, ...(oneLine ? [head.text] : [year, place]).filter(Boolean).map(r => hpx * mw / textWidth(ERA_HEAD, hpx, r)));
+  let fpx = 72 * u(L), factLines = breakLines(fact.text.split(' '), ERA_FACT, fpx, mw, 3);
+  while (fpx > 40 * u(L) && (factLines.length > 3 || factLines.some(ws => textWidth(ERA_FACT, fpx, ws.join(' ')) > mw))) {
+    fpx *= .96; factLines = breakLines(fact.text.split(' '), ERA_FACT, fpx, mw, 3);
+  }
   const flh = fpx * 1.22, hlh = hpx * 1.16, yBot = S.y + S.h - .004 * L.H;
-  const yFact0 = yBot - (factLines.length - 1) * flh, yHead1 = yFact0 - fpx * 1.42 - (oneLine ? 0 : hlh), headRows = oneLine ? 1 : 2;
+  const yFact0 = yBot - (factLines.length - 1) * flh, yHead1 = yFact0 - fpx * 1.42 - (oneLine ? 0 : hlh);
   const t0 = head.t;
   const hist = e.history || [], tpx = 24 * u(L), tlh = tpx * 1.6;
   const top = yHead1 - ERA_HEAD.cap * hpx - .55 * tpx - hist.length * tlh;
@@ -769,7 +775,7 @@ function era(g, f, e, t) {
   g.restore();
   hist.forEach((h, i) => drawLabel(g, f, h, { x, y: top + tpx + i * tlh, px: tpx, color: C.pearl, alpha: .45, t0: t0 - 1, t, shadow: false }));
   if (oneLine) {
-    const yw = textWidth(ERA_HEAD, hpx, year + ' · '), x2 = x + measure(ERA_HEAD, hpx, year + ' · ');
+    const x2 = x + measure(ERA_HEAD, hpx, year + ' · ');
     drawLabel(g, f, year, { x, y: yHead1, px: hpx, face: ERA_HEAD, color: C.pearl, t0, t, stagger: .02 });
     drawLabel(g, f, '·', { x: x + measure(ERA_HEAD, hpx, year + ' '), y: yHead1, px: hpx, face: ERA_HEAD, color: C.pearl, alpha: .55, t0: t0 + .1, t });
     if (place) drawLabel(g, f, place, { x: x2, y: yHead1, px: hpx, face: ERA_HEAD, color: C.orange, t0: t0 + .12, t, stagger: .01 });
@@ -801,7 +807,7 @@ function endcard(g, f, e, t) {
   if (t >= by.t) runs.push({ text: by.text, x: L.cx - bw / 2, y: y + .55 * px, face: bf, px: bpx, sweep: { p: clamp((c.tq - by.t) / .5), band: bpx } });
   gild(g, runs, gildOpts(c, e, { light: LIGHT.end, shadow: .5, boil: 0 }));
   if (t >= nx.t) {
-    const npx = (P ? 25 : 27) * u(L), lines = breakLines(nx.text.split(' '), FACE.plaque, npx, L.safe.w);
+    const npx = 32 * u(L), lines = breakLines(nx.text.split(' '), FACE.plaque, npx, L.safe.w);   // the one practical line: legible on a phone
     lines.forEach((ws, i) => drawLabel(g, f, ws.join(' '), { x: L.cx, y: L.safe.y + L.safe.h - .01 * L.H - (lines.length - 1 - i) * npx * 1.6, align: 'center', px: npx, t0: nx.t, t }));
   }
 }
