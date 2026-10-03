@@ -35,7 +35,7 @@ const KEYS = {
   S04: { P01: [[5.40, 1.78], [7.18, 0]] },              // the rewind runs the plate backwards
   S06: { P01: [[10.69, 3.51], [14.19, 7.01]] }, S16: { P01: [[41.24, 7.0], [44.73, 10.49]] }, S20: { P01: [[55.22, 10.5], [58.72, 14.0]] },
   S24: { P01: [[67.42, 3.0], [74.41, 9.99]] }, S30: { P01: [[96.89, 11.0], [100.24, 14.35]] },
-  S19: { P12: [[51.72, 4.5], [55.22, 8.0]] }, S27: { P12: [[85.91, 2.0], [87.68, 3.77]] }, S18: { P12: [[46.49, 1.5], [51.72, 6.73]] },
+  S19: { P12: [[51.72, 4.5], [55.22, 8.0]] }, S27: { P12: [[84.83, .9], [87.68, 3.75]] },   // S27 starts on the bar-49 downbeat (84.83) S18: { P12: [[46.49, 1.5], [51.72, 6.73]] },
   S22: { P05: [[62.2, 2.5], [65.67, 5.97]], P06: [[62.2, 2.5], [65.67, 5.97]] },
   S15: { P11: [[39.48, .5], [40.357, 1.6], [40.358, 3.3], [41.24, 4.4]] },   // the plate itself cuts from the Lydian to the Mede
   S31: { P20: [[100.24, 0], [102.21, 2.0], [103.64, 3.4]] },
@@ -439,7 +439,7 @@ scene('S26', async f => {
   const cam = k => ({ cx: .465, cy: .5, zoom: 3.0 + .25 * k }), pcam = k => ({ cx: .5, cy: .5, zoom: 1.04 + .05 * k });
   const src = await rp(f, 'P16', { id: 'a_duel', cam }, pcam);
   const egg = t >= 84.38 - 1e-6 && t < 84.38 + 10 / 60 - 1e-6;
-  const gk = seg(t, 84.2, 85.0), gx = lerp(.25, .8, smooth(gk));               // the glint sweeps across on "bronze"
+  const gk = seg(t, 84.2, 84.82), gx = lerp(.25, .8, smooth(gk));              // the glint sweeps across on "bronze", before the 84.83 cut
   const mirror = real ? { cx: .5, cy: .5, R: .34 } : { cx: .48, cy: .5, R: .42 };
   await bronze(f, src, {
     lightDir: [-.85, -.5], pool: [{ x: .45, y: .45, rx: .5, ry: .5, feather: .8, k: .95 }, { x: gx, y: .42, rx: .08, ry: .3, rot: .4, feather: .6, k: gk > 0 && gk < 1 ? 1 : 0 }],
@@ -451,7 +451,7 @@ scene('S26', async f => {
 // ---------------------------------------------------------------- S27: "-ing turns and strikes when light went strange" (eclipse ~0.8)
 scene('S27', async f => {
   const t = f.t;
-  if (t < 87.68) {                                     // strikes cut on "turns" 86.06 and "strikes" 87.20
+  if (t < 87.68) {                                     // 84.83 "exchang-": the duel; strikes cut on "turns" 86.06 and "strikes" 87.20
     const part = t < 86.06 ? 0 : t < 87.205 ? 1 : 2;
     const cams = [{ cx: .5, cy: .46, zoom: 1.25 }, { cx: .4, cy: .38, zoom: 1.7 }, { cx: .56, cy: .48, zoom: 1.45 }];
     const pc = [{ cx: .5, cy: .5, zoom: 1.08 }, { cx: .4, cy: .45, zoom: 1.4 }, { cx: .58, cy: .5, zoom: 1.25 }][part];
