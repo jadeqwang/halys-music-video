@@ -39,7 +39,7 @@
    "t0": 1.0,
    "cue": "a/b. Distant battle bed: in at 1.7 s, low under the intro and verse 1, swell on 'slew each other on the shore', drains from 'when light went strange' to silence by 'warriors awed'",
    "source": "ElevenLabs music-v2 (sfx:battle_bed, sfx:horses_far, sfx:river, sfx:blade_drop + test sfx_bronze_swords)",
-   "processing": "crowd/rumble LP 1.3 kHz, cavalry LP 1.6 kHz, river BP 250-2600 Hz, stitched without loop points; 34 far bronze clashes (pitched -3..+1 st, LP 1.4-2.8 kHz, 75% wet open-air tail, random pan, never within 120 ms of a sung onset); presence dip -5 dB @ 2.6 kHz; ducked 4 dB under the lead vocal; drain = low-pass glide 7 kHz -> 220 Hz + gain to silence (87.68 -> 92.39 s)",
+   "processing": "crowd/rumble LP 1.3 kHz, cavalry LP 1.6 kHz, river BP 250-2600 Hz, stitched without loop points; 29 far bronze clashes (pitched -3..+1 st, LP 1.4-2.8 kHz, 75% wet open-air tail, random pan, only in vocal gaps); presence dip -5 dB @ 2.6 kHz; ducked 4 dB under the lead vocal; drain = low-pass glide 7 kHz -> 220 Hz + gain to silence (87.68 -> 92.39 s)",
    "rationale": "the war is going on out of frame; when the light goes strange the world loses its top end and goes quiet",
    "clashes": [
     3.77,
@@ -70,18 +70,13 @@
     58.12,
     59.67,
     62.47,
-    68.99,
-    73.72,
-    74.3,
-    74.89,
-    79.34,
-    83.48
+    73.72
    ],
    "t1": 93.5,
-   "peak_rms_dbfs": -37.1,
-   "cue_LUFS_S": -37.3,
-   "music_LUFS_S": -17.4,
-   "rel_LU": -19.9,
+   "peak_rms_dbfs": -37.3,
+   "cue_LUFS_S": -39.1,
+   "music_LUFS_S": -17.1,
+   "rel_LU": -21.9,
    "file": "media/sfx/cue_a2_b_battle_bed.flac"
   },
   {
