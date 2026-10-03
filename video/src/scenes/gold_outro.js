@@ -33,7 +33,7 @@ export const P54_KEYS = [[259.36, .20], [260.45, 1.58], [260.72, 1.90], [260.83,
 function cam(f, t) {
   const k = seg(t, 259.36, 262.72);
   if (f.W / f.H > 1.2) return { cx: .5, cy: .5, zoom: 1.02 + .02 * k };
-  const p = seg(t, 260.5, 260.95), e = p * p * (3 - 2 * p);
+  const p = seg(t, 260.45, 260.8), e = p * p * (3 - 2 * p);
   return { cx: lerp(.5, .29, e), cy: .5, zoom: 1.02 + .02 * k };
 }
 // S74's dive lands on S75's first drawing; S77's pull-back starts from S76's last one (drop2.js S77 traces s76End() in

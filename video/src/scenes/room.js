@@ -30,6 +30,7 @@ import { drawWindow, WIN39, SCR39, subQuad, toOut, qpt, drawEarthPanel, drawDTMa
 import { initDecals, decalZones, drawDecals } from '../worlds/ink/decals.js';
 import { drawWink } from '../worlds/ink/eye.js';
 import { drawExpression } from '../worlds/ink/expr.js';
+import { drawRim } from '../worlds/ink/rim.js';
 
 let SH = null, MODE = 'plates';
 const SET = {};
@@ -47,7 +48,7 @@ async function initRoom() {
   else await initDecals({ P57: takes.P57 });
   const wideZones = e => { const z = celZones(e), d = decalZones(SET.wide, e); return { ...z, clear: [...(z.clear || []), ...d.clear], ...(d.allowBlue ? { allowBlue: d.allowBlue } : {}) }; };
   SET.wide = INK.setup({ id: 'wide', space: 'P39', reg: { P40: REG['P40:take2.mp4->P39'], P57: REG[`P57:${takes.P57}->P39`] },
-    calib: { P57: { src: 'P57', pf: 13 } }, calibOpts: { flat: ['white', 'brow'], sheenZone: HAIR57, sheenP: .62, sheenSpread: .02 }, celFor: wideZones, strand: '#3d4252' });
+    calib: { P57: { src: 'P57', pf: 13 } }, calibOpts: { flat: ['white', 'brow'], sheenZone: HAIR57, sheenP: .62, sheenSpread: .02 }, celFor: wideZones, strand: '#3d4252', rim: HAIR57 });
   SET.close = INK.setup({ id: 'close', space: 'P58', calib: { P58: { src: 'P58', pf: 30 } }, celFor: celZones, wScale: 1.3 });
 }
 
@@ -64,7 +65,8 @@ async function character(f, S, sheet, view) {
   const e = expose(sheet, f.i);
   const res = await INK.cel(S, e);
   if (DBG) { INK.debugDraw(f.g, res, view, DBG, f.L.u); return { e, res }; }
-  INK.drawCel(f.g, res, view, f.L.u, { wScale: S.wScale || 1, strand: S.strand, beforeLines: (cg, maskOf) => drawDecals(cg, view, S, e, f.L.u, maskOf) });
+  INK.drawCel(f.g, res, view, f.L.u, { wScale: S.wScale || 1, strand: S.strand, beforeLines: (cg, maskOf) => drawDecals(cg, view, S, e, f.L.u, maskOf),
+    after: S.rim && MODE === 'plates' ? cg => drawRim(cg, view, res, S.rim, f.L.u) : null });
   return { e, res };
 }
 

@@ -737,12 +737,14 @@ const hashS = j => { let n = (j * 2654435761) >>> 0; n ^= n >>> 15; n = Math.imu
 // drawing, 91.40). The type's ring sits where S28b's sun is in both parts, so the halo of words holds still across the cut
 // and the thin crescent appears inside it.
 // (higher than v1's .52: over the warriors the ring's top arc then runs above their heads, its ends in the gaps between
-// them, clear of the counter; S28b keeps the same ring, Jupiter just above its words)
-const S28_SUN = { x: .625, y: .355, r: .055 };
+// them, clear of the counter; S28b keeps the same ring, Jupiter just above its words. Portrait: a smaller ring, higher,
+// over the sword-bearer's head and under the counter)
+const S28_SUN = { '16:9': { x: .625, y: .355, r: .055 }, portrait: { x: .62, y: .3, r: .046 } };
+const s28Sun = f => S28_SUN[f.W / f.H > 1.2 ? '16:9' : 'portrait'];
 shotOverride('S28', { t1: 91.31 });
 shot({ id: 'S28b', t0: 91.31, t1: 93.0, world: 'bronze', cadence: 12, scene: 'S28', parent: 'S28', params: { label: 'S28 the sky (cut on the 91.31 boom)', sky: 1 } });
 scene('S28', async f => {
-  const t = f.t, ringSun = () => ({ x: S28_SUN.x * f.W, y: S28_SUN.y * f.H, r: S28_SUN.r * f.W });
+  const t = f.t, S = s28Sun(f), ringSun = () => ({ x: S.x * f.W, y: S.y * f.H, r: S.r * f.W });
   if (!f.params.sky) {
     const k = seg(t, 89.22, 91.31);
     (f.type || (f.type = {})).sun = ringSun();
@@ -772,7 +774,7 @@ scene('S28', async f => {
     return;
   }
   // S28b, the sky: the thin crescent, Jupiter beside it (11 deg above, 5.5 deg left), the land a dark strip at the foot
-  const hz = .93, sun = S28_SUN;
+  const hz = .93, sun = S;
   const src = await canvasSource(f, 'sky-s28', PR.horizonCanvas({ horizonY: hz, river: false, hill: 1.6 }), { sky: PR.horizonSkyMask({ horizonY: hz, hill: 1.6 }), cache: true });
   await bronze(f, src, {
     lightDir: [.2, -1], pool: [{ x: .5, y: .97, rx: .5, ry: .05, feather: .8, k: .4 }], poolMatte: 0,
