@@ -35,8 +35,9 @@ const r = await drawLines(f, { src: { plate: 'P12', standin: 'duelup' }, tp,    
 * **Lines** (`trace.js`): `{ xy, n, d, b, w, o, s, len, phase, spd, flags }` in analysis px; `d` = lift depth (1 near,
   -1 = sky/infinity), `b` brightness, `w` width (px at 1080p), `o` colour (0 pearl, 1 signal orange, 2 H-alpha red),
   `s` arc length (px) for travelling pulses, `flags` (`FL.SHARP` never glows, `FL.TIP` a point, `FL.NOFADE`, ...).
-  Hierarchy (STYLE_BIBLE): tier 1 matte silhouettes + coherent inner edges (brightest, crisp, tapered, orange where the
-  rim faces the light); tier 2 evenly spaced streamlines (Jobard & Lefer) through the flow, spaced by tone; tier 3 a
+  Hierarchy (STYLE_BIBLE): tier 1 matte silhouettes (the matte's 0.5 iso-line, so soft half-resolution plate mattes
+  seen through a zoomed window still close; `contourFloor` / `contourToneK` keep the shadow side bright) + coherent
+  inner edges (brightest, crisp, tapered, orange where the rim faces the light); tier 2 evenly spaced streamlines (Jobard & Lefer) through the flow, spaced by tone; tier 3 a
   sparse dim background; massed soldiers as **spear ticks** with a bright tip (`trace.armies`, `armyMask` polygons);
   a designed river (`trace.river` polygon: orange banks, water flowing to its vanishing point).
 * **Corona** (`corona.js`): `coronaLines(sun, opts)`: limb ring, asymmetric helmet streamers (loops + long fraying
@@ -65,7 +66,7 @@ const r = await drawLines(f, { src: { plate: 'P12', standin: 'duelup' }, tp,    
 | `src`, `tp`, `freeze`, `chainFrom` | source spec; plate time; hold a video plate at plate time `freeze`; plate time where the reference chain starts (the shot's first plate time) |
 | `trace` | `TRACE_DEFAULTS` overrides: `sky` {horizonY, maxDepth, below}, `sun` {x, y, r (fraction of width), tilt}, `pool` light-pool ellipses (subject when there is no matte), `armies`/`armyMask`, `river`/`riverFlow`, spacing `dsepMin/Max`, `bgSepMin/Max`, `contour`, `innerEdges`, `innerEverywhere`, `lightDir`, `relief`, `calm` |
 | `corona`, `skyField` | `false` or option objects (`gain`, `streamers`, `prominences`, ...; `sep0/sep1`, `tilt`, `locals`, ...) |
-| `analysis` | `analyze()` options, e.g. `{ gain: 1.7 }` for a dark painting |
+| `analysis` | `analyze()` options, e.g. `{ gain: 1.7 }` for a dark painting, or `{ autoGain: .85 }`: expose a plate window for its SUBJECT (the matte region's p90 luminance -> .85, `gainRange` [.8, 3.2]); the pipeline's per-take gain leaves dark figures against a bright sky dim (P44, P05/P06, P24) |
 | `cam` | `{ yaw, pitch, zoom, pan: [x, y], center: [x, y], focal, pivot }` |
 | `kick`, `kickWidth`, `kickPush`, `pushCenter`, `push` | the kick response (0..1 envelope) |
 | `phase`, `pulse`, `lambda` | travelling pulses: travel, depth 0..1, wavelength px |
@@ -84,6 +85,8 @@ const r = await drawLines(f, { src: { plate: 'P12', standin: 'duelup' }, tp,    
 
 Scenes set `f.type = { sun: {x, y, r}, kick, invert, field: { center } }` (the CHOP fill circles the eclipse, pulses
 with the same kick and inverts on the same frames). Drop 1 inverts only on the S36 stabs (same list as the type track).
+S36 also sets `f.type.avoid = [{x, y, w, h}]` (frame fractions): the face / gesture box of each reaction shot, so the
+stutter SKY takes the clear third.
 
 ## For the marble world (S45, the breakdown)
 

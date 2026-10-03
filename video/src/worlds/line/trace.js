@@ -335,7 +335,7 @@ export function contourLines(F, f, cfg) {
       if (kind === 0 && f.M) { const gx = samp(F, f.M, x + 1, y) - samp(F, f.M, x - 1, y), gy = samp(F, f.M, x, y + 1) - samp(F, f.M, x, y - 1), gm = Math.hypot(gx, gy) || 1; face = Math.max(0, (-gx / gm) * Lx + (-gy / gm) * Ly); }
       const vary = .8 + .4 * Math.sin(k * .09 + strength * 7) * Math.sin(k * .031 + 1.7);
       const tone = clamp(samp(F, F.T, x, y) * 1.4);
-      b[k] = (kind === 0 ? cfg.contourB * (.55 + .45 * face) * (.6 + .4 * tone) : cfg.innerB * (.4 + .6 * tone) * clamp(strength * 2.5)) * taper;
+      b[k] = (kind === 0 ? cfg.contourB * lerp(cfg.contourFloor ?? .55, 1, face) * lerp(1 - (cfg.contourToneK ?? .4), 1, tone) : cfg.innerB * (.4 + .6 * tone) * clamp(strength * 2.5)) * taper;
       w[k] = (kind === 0 ? lerp(cfg.contourW[0], cfg.contourW[1], face * vary) : lerp(cfg.innerW[0], cfg.innerW[1], clamp(strength * 2) * vary)) * (.3 + .7 * taper);
       o[k] = kind === 0 ? cfg.rim * Math.pow(face, 2) * .9 : kind === 2 ? 1 : 0;
     }
@@ -344,10 +344,17 @@ export function contourLines(F, f, cfg) {
   if (F.M && cfg.contour) {
     const g = new Float32Array(N), sil = new Float32Array(N), Mb = f.M;
     for (let y = 1; y < ah - 1; y++) for (let x = 1; x < aw - 1; x++) { const i = y * aw + x; g[i] = Math.hypot(Mb[i + 1] - Mb[i - 1], Mb[i + aw] - Mb[i - aw]); }
+    // the silhouette is the matte's 0.5 iso-line (its inside boundary pixels): independent of how soft the matte's edge
+    // is, so a half-resolution plate matte seen through a zoomed window still gives a closed contour (a gradient
+    // threshold lost most of it once the edge spread over more than ~8 analysis px)
+    // a window that extends past the plate (clamp: false) pads it with black: the matte's cut at the plate's own edge is
+    // not a silhouette
+    let bx0 = 0, by0 = 0, bx1 = aw, by1 = ah;
+    if (F.win && F.srcW) { const [wx, wy, ww, wh] = F.win; bx0 = Math.max(0, -wx / ww * aw); by0 = Math.max(0, -wy / wh * ah); bx1 = Math.min(aw, (F.srcW - wx) / ww * aw); by1 = Math.min(ah, (F.srcH - wy) / wh * ah); }
     for (let y = 1; y < ah - 1; y++) for (let x = 1; x < aw - 1; x++) {
-      const i = y * aw + x, m = g[i]; if (m < .12) continue;
-      const dx = Math.round((Mb[i + 1] - Mb[i - 1]) / m), dy = Math.round((Mb[i + aw] - Mb[i - aw]) / m);
-      if (m >= g[i + dy * aw + dx] && m >= g[i - dy * aw - dx]) sil[i] = Math.min(1, m);
+      const i = y * aw + x; if (Mb[i] < .5 || g[i] < .02) continue;
+      if (x < bx0 + 3 || x > bx1 - 4 || y < by0 + 3 || y > by1 - 4) continue;
+      if (Mb[i - 1] < .5 || Mb[i + 1] < .5 || Mb[i - aw] < .5 || Mb[i + aw] < .5) sil[i] = Math.max(.3, Math.min(1, g[i] * 4));
     }
     for (const ch of edgeChains(F, { E: sil, hi: .25, lo: .1, minLen: 14, smooth: 5 })) mk(ch.pts, 0, ch.s);
   }

@@ -199,7 +199,9 @@ function makeStroke(F, J, sx, sy, Ra, Rs, rb, gb, bb, cR, cG, cB, painted, cfg, 
   // paint body: thin in the darks, loaded in the lights, lead white piles up (impasto) inside the pool
   const thick = (lerp(cfg.thinDark, cfg.thick, sstep(.12, .55, lum)) * lerp(.45, 1, p) + cfg.thickHi * sstep(.55, .88, lum) * p) * lerp(1.1, .8, li / Math.max(1, nL - 1));
   const eb = cfg.endBlend;
-  const rr = Rs * (.9 + .2 * hash4(cx, cy, li, seed + 13)) * (li === 0 && st.pts.length <= 2 ? 1.45 : 1);
+  // water / open ground (groundFlow): long, narrower horizontal flicks rather than round dabs
+  const gwk = F.gw ? F.gw[Math.round(sy) * F.aw + Math.round(sx)] || 0 : 0;
+  const rr = Rs * (.9 + .2 * hash4(cx, cy, li, seed + 13)) * (li === 0 && st.pts.length <= 2 ? 1.45 : 1) * (1 - .38 * sstep(.3, .7, gwk));
   return { pts: st.pts.map(([x, y]) => [x * S, y * S]), apts: st.pts, ra: Ra, r: rr, c0, c1: [lerp(c0[0], c1e[0], eb), lerp(c0[1], c1e[1], eb), lerp(c0[2], c1e[2], eb)],
     a: .96 + .04 * k, thick: Math.min(.95, thick), seed: hash4(cx, cy, li, seed + 17), key: hash4(cx, cy, li, seed + 29), layer: li };
 }

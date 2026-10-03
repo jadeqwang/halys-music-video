@@ -26,7 +26,7 @@ const segAt = (t, cuts) => { let i = 0; while (i < cuts.length && snap(cuts[i]) 
 // Hierarchy (director's notes on round 1): the corona is the brightest element of any frame it is in; subject contours
 // lead everything else; few, bright interior lines (a steep tone curve: lit planes get lines, mid-greys get none); a
 // sparse, dim background; lots of black.
-const CU_TRACE = { contourW: [1.5, 2.9], contourB: 2.0, innerB: 1.0, innerHi: .2, innerLo: .09, rim: 1, lightDir: [-.4, -.9],
+const CU_TRACE = { contourW: [1.5, 2.9], contourB: 2.0, contourFloor: .8, contourToneK: .2, innerB: 1.0, innerHi: .2, innerLo: .09, rim: 1, lightDir: [-.4, -.9],
   dsepMin: 4.4, dsepMax: 12.5, bgSepMin: 34, bgSepMax: 60, bgGain: .1, bgCut: .3, subjBright: [.16, .85], gamma: 1.6, shadowCut: .1, minLen: 30 };
 // behind the giant CHOP words (S41-S44): the face by its contours and a handful of lit lines, almost no background
 const CHOP_TRACE = { ...CU_TRACE, dsepMin: 6, dsepMax: 16, subjBright: [.12, .72], gamma: 1.9, innerB: .75, innerHi: .26, bgGain: .03, bgCut: .45 };
@@ -55,6 +55,9 @@ const dropSun = f => { const s = masterSun(); return { x: s.x * f.W, y: s.y * f.
 // reaction plates (P42-P45): dark dusk skies (no lines) with the orange horizon glow behind the wides; the matte figures
 // carry the contours; eyes in extreme close-up have no meaningful matte edge (contour off, edges everywhere)
 const RX_TRACE = { ...CU_TRACE, horizon: 0 };
+const SUBJ_EXPOSE = { autoGain: .85 };            // expose each plate window for its matte subject (source.js)
+// faces in close-up: wide-spaced lit lines (shadows go black), the features (inner edges) and the head's contour brightest
+const FACE_TRACE = { dsepMin: 6.5, dsepMax: 16, subjBright: [.1, .8], gamma: 1.8, innerB: 1.4, innerHi: .17, innerLo: .075, contourB: 2.4, contourW: [1.8, 3.3] };
 const rxSky = (y, horizon = 1) => ({ sky: { horizonY: y, below: y + .03, useDepth: false }, horizon, horizonBand: .015 });
 const SKY42 = rxSky(.47), SKY43 = rxSky(.44), SKY44 = rxSky(.57), SKY45 = rxSky(.9, 0);
 const EYE_TRACE = { contour: 0, innerEverywhere: 1, innerHi: .14, innerLo: .06 };
@@ -109,7 +112,7 @@ scene('S35', async f => {
     return;
   }
   const S = S35_SUB[sub], ts = snap(S35_CUTS[sub - 1]), lt = f.t - ts;
-  await drawLines(f, { src: S.src, tp: S.tp0 + lt, chainFrom: S.tp0, trace: { ...RX_TRACE, ...S.trace }, corona: false, cam: { zoom: 1 + .05 * Math.exp(-lt / .06) },
+  await drawLines(f, { src: S.src, tp: S.tp0 + lt, chainFrom: S.tp0, trace: { ...RX_TRACE, dsepMin: 5.2, dsepMax: 14, ...S.trace }, analysis: SUBJ_EXPOSE, corona: false, cam: { zoom: 1 + .05 * Math.exp(-lt / .06) },
     kick, kickPush: 16, phase, look: { glow: [.18, .06] } });
   steer(f, { kick, sun: dropSun(f) });
 });
@@ -126,7 +129,7 @@ scene('S35', async f => {
 const RX = {
   medeWhip:   { side: 'M', scale: 'CU', src: { plate: 'P45', standin: 'r45mede', win: { cx: .5, cy: .55, zoom: 1.12 } }, tp: 2.2, trace: SKY45, focus: [[.33, .05, .34, .7]] },
   lydKneel:   { side: 'L', scale: 'MS', src: { plate: 'P42', standin: 'r42kneel', win: { cx: .43, cy: .45, zoom: 1.7 } }, tp: 1.6, trace: SKY42, focus: [[.32, .17, .22, .43]] },
-  medeEye:    { side: 'M', scale: 'XCU', src: { plate: 'P19b', standin: 'r45medeup', win: { cx: .55, cy: .47, zoom: 1.45 } }, tp: 3.3, trace: EYE_TRACE, focus: [[.35, .32, .4, .3]] },
+  medeEye:    { side: 'M', scale: 'XCU', src: { plate: 'P19b', standin: 'r45medeup', win: { cx: .55, cy: .47, zoom: 1.45 } }, tp: 3.3, trace: { ...EYE_TRACE, poolMatte: 0, pool: [{ x: .55, y: .5, rx: .42, ry: .5, k: 1 }] }, focus: [[.35, .32, .4, .3]] },
   lydHorse:   { side: 'L', scale: 'W', src: { plate: 'P44', standin: 'r44rear', win: { cx: .42, cy: .47, zoom: 1.05 } }, tp: 1.3, trace: SKY44, focus: [[.05, 0, .55, .9]] },
   medeAmulet: { side: 'M', scale: 'MS', src: { plate: 'P43', standin: 'r43pros', win: { cx: .43, cy: .34, zoom: 2.6 } }, tp: 2.3, trace: SKY43, focus: [[.37, .18, .13, .27]] },
   lydLook:    { side: 'L', scale: 'CU', src: { plate: 'P45', standin: 'r45lyd', win: { cx: .5, cy: .55, zoom: 1.12 } }, tp: .3, trace: SKY45, focus: [[.33, .05, .34, .7]] },
@@ -160,7 +163,7 @@ scene('S36', async f => {
   const invert = audio.onFrames(f.t, STAB36, 2);
   const live = resolve(R.src).kind === 'plate';
   await drawLines(f, {
-    src: R.src, freeze: R.tp, trace: { ...RX_TRACE, ...(R.trace || {}) }, corona: false,
+    src: R.src, freeze: R.tp, trace: { ...RX_TRACE, ...(R.scale === 'CU' || R.scale === 'XCU' ? FACE_TRACE : {}), ...(R.trace || {}) }, analysis: { ...SUBJ_EXPOSE, ...(R.analysis || {}) }, corona: false,
     cam: { zoom: (1 + .06 * Math.exp(-lt / .045)) * (1 + .03 * lt) }, kick, kickPush: 14, phase: audio.flowPhase(f.t), invert, look: { glow: [.16, .05] },
   });
   steer(f, { kick, invert, sun: dropSun(f), avoid: live ? boxesOnScreen(R.focus, R.src.win) : [] });
@@ -172,8 +175,8 @@ scene('S36', async f => {
 // its depth map. Kick pulse throughout.
 const TABLEAU = { src: { plate: 'P46', standin: 'duelup' },
   trace: { ...CU_TRACE, sky: { maxDepth: .05, soft: .03, below: .62 }, sun: { x: .22, y: .1, r: .022, tilt: .7 }, lightDir: [-.6, -.8], bgGain: .16, bgCut: .22, depthBlur: 5, relief: .3,
-    subjBright: [.22, .95], contourB: 1.9, innerB: 1.05, dsepMin: 3.6, dsepMax: 11 },
-  corona: { gain: 1.25 }, skyField: { gain: .3, sep0: .14, sep1: 2.2, rmax: 16 } };
+    subjBright: [.2, .9], contourB: 1.5, innerB: .9, dsepMin: 3.6, dsepMax: 11 },
+  corona: { gain: 1.25 }, skyField: { gain: .3, sep0: .14, sep1: 2.2, rmax: 16 }, analysis: SUBJ_EXPOSE };
 export function s37Cam(t, live) {
   const k = clamp((t - 117.53) / (124.47 - 117.53)), e = easeInOut(k);
   return live ? { yaw: lerp(-3, 3, e), pitch: .8 * Math.sin(k * Math.PI), zoom: 1.04 } : { yaw: lerp(-12, 13, e), pitch: 2.2 * Math.sin(k * Math.PI), zoom: 1.1 };
@@ -198,7 +201,7 @@ const CYCLE = {
     { src: { plate: 'P06', standin: 'kings', standinWin: { cx: .75, cy: .5, zoom: 1 }, win: { cx: .56, cy: .5, zoom: 1.05 } }, rect: [.5, 0, .5, 1], trace: { ...CHOP_TRACE, lightDir: [-.3, -1] } }] },
   // P01's static master (plate 0-4.5 s), barely drifting
   S44: { src: { plate: 'P01', standin: 'master', standinWin: { cx: .5, cy: .343, zoom: 1.5 }, win: { cx: .5, cy: .35, zoom: 1.5 } }, speed: .18,
-    trace: { ...MASTER_TRACE, sun: null, bgGain: .14, bgCut: .4, dsepMin: 4, dsepMax: 12, tickGain: .8 }, standinTrace: MASTER_STANDIN },
+    trace: { ...MASTER_TRACE, sun: null, bgGain: .14, bgCut: .4, dsepMin: 4, dsepMax: 12, tickGain: .8 }, standinTrace: MASTER_STANDIN, analysis: {} },
 };
 async function chopCycle(f, id) {
   const W = f.W, H = f.H, cx = W / 2, cy = H / 2, kick = audio.kickEnv(f.t, .13), s = H / 1080;
@@ -213,7 +216,7 @@ async function chopCycle(f, id) {
   if (R > .5) layers.push({ mesh: ring, u: { ...ringU(cx, cy, R * (1 + .025 * kick)), uBright: bright, uPush: [cx, cy, 22 * kick * s, 300 * s] } });
   if (point > 0) layers.push(dynLayer([proc.circle(cx, cy, 2.2 * s, { b: 3 * point, w: 2.4 }, 10), proc.line([[cx, cy], [cx + .5, cy]], { b: 6 * point, w: 3.5, flags: FL.TIP })]));
   const tp = (C.tp0 ?? 0) + (f.t - f.shot.t0) * (C.speed ?? 1);
-  const plates = C.plates ? C.plates.map(p => ({ ...p, tp, chainFrom: C.tp0 ?? 0 })) : [{ src: C.src, tp, chainFrom: C.tp0 ?? 0, trace: C.trace, standinTrace: C.standinTrace, analysis: C.analysis }];
+  const plates = C.plates ? C.plates.map(p => ({ analysis: SUBJ_EXPOSE, ...p, tp, chainFrom: C.tp0 ?? 0 })) : [{ src: C.src, tp, chainFrom: C.tp0 ?? 0, trace: C.trace, standinTrace: C.standinTrace, analysis: C.analysis ?? SUBJ_EXPOSE }];
   await drawLines(f, {
     plates, corona: false, kick, kickPush: 14, pushCenter: [cx, cy], phase: audio.flowPhase(f.t), look: { bright: bgFade, glow: [.22, .08] }, layers,
     disk: R > .5 ? { x: cx, y: cy, r: R } : false,
@@ -237,7 +240,7 @@ function slowPhase(t) {
 export async function drawCrystallise(f, { widen = widenAt(f.t), t = f.t, tp = Math.max(0, t - S45_T0) } = {}) {
   const w = clamp(widen);
   return drawLines(f, {
-    src: S45_PLATE, tp, chainFrom: 0, trace: S45_TRACE, corona: false, phase: slowPhase(t), pulse: .5 * (1 - w),
+    src: S45_PLATE, tp, chainFrom: 0, trace: S45_TRACE, analysis: SUBJ_EXPOSE, corona: false, phase: slowPhase(t), pulse: .5 * (1 - w),
     look: { width: 1 + 4.6 * w * w, flat: .85 * w, white: .7 * w, glow: [.22 * (1 - w) + .03 * w, .08 * (1 - w)], endFade: 10 + 60 * w, exposure: 1.6 - .15 * w },
   });
 }
@@ -256,17 +259,17 @@ const S38 = { t0: 124.475, touch: 124.92, tear: 125.109, tear2: 125.991, t1: 126
 // P24 (take 1) raises the arm 1.0-3.8 s and presses the spread palm ~1.6-2.3 s: retimed so the palm meets the membrane
 // on the touch (124.92 -> plate 1.6), then 1:1 through the bar (126.21 -> 2.9)
 const handTp = t => t < S38.touch ? lerp(.95, 1.6, clamp((t - S38.t0) / (S38.touch - S38.t0))) : 1.6 + (t - S38.touch);
-const HAND = { src: { plate: 'P24', standin: 'hand' }, trace: { ...CU_TRACE, lightDir: [-.3, -1], contourW: [1.8, 3.0], contourB: 1.9, bgGain: 0, dsepMin: 5.5, dsepMax: 14, subjBright: [.15, .55], innerHi: .3 }, corona: false };
+const HAND = { src: { plate: 'P24', standin: 'hand' }, trace: { ...CU_TRACE, lightDir: [-.3, -1], contourW: [1.8, 3.0], contourB: 1.9, bgGain: 0, dsepMin: 5.5, dsepMax: 14, subjBright: [.15, .55], innerHi: .3 }, corona: false, analysis: { autoGain: .75 } };
 function membraneLines(W, H, s) {
-  const out = [], n = 64;
+  const out = [], n = 42;
   for (let i = 0; i < n; i++) {                         // the firmament: a dome of latitude lines seen from below
     const v = i / (n - 1), y0 = lerp(-.12, .92, Math.pow(v, 1.25)) * H, bow = lerp(.2, .06, v) * H, pts = [];
     for (let k = 0; k <= 120; k++) { const u = k / 120, x = lerp(-.05, 1.05, u) * W; pts.push([x, y0 - bow * Math.sin(Math.PI * u) + .005 * H * Math.sin(u * 9 + i * 1.7)]); }
-    out.push(proc.line(pts, { b: (.55 + .3 * hash3(i, 3, 1)) * lerp(1.1, .55, v), w: .95, o: .04, phase: hash3(i, 3, 2) * TAU, spd: .6, id: i + 1 }));
+    out.push(proc.line(pts, { b: (u) => (.4 + .25 * hash3(i, 3, 1)) * lerp(1, .5, v) * (.45 + .55 * Math.exp(-Math.pow((u - .55) / .3, 2))), w: .9, o: .04, phase: hash3(i, 3, 2) * TAU, spd: .6, id: i + 1 }));
   }
-  for (let i = 0; i < 22; i++) {                        // meridians converging at the zenith (off the top of frame)
-    const a = lerp(-1.25, 1.25, i / 21), pts = []; for (let k = 0; k <= 60; k++) { const r = lerp(.15, 1.25, k / 60) * H; pts.push([W / 2 + Math.sin(a) * r * 1.4, -.35 * H + Math.cos(a) * r]); }
-    out.push(proc.line(pts, { b: .32, w: .8, o: .04, phase: i, spd: .5 }));
+  for (let i = 0; i < 14; i++) {                        // meridians converging at the zenith (off the top of frame)
+    const a = lerp(-1.25, 1.25, i / 13), pts = []; for (let k = 0; k <= 60; k++) { const r = lerp(.15, 1.25, k / 60) * H; pts.push([W / 2 + Math.sin(a) * r * 1.4, -.35 * H + Math.cos(a) * r]); }
+    out.push(proc.line(pts, { b: .2, w: .8, o: .04, phase: i, spd: .5 }));
   }
   for (let k = 0; k < 260; k++) { const x = hash3(k, 7, 1) * W, y = hash3(k, 7, 2) * H; out.push(proc.line([[x, y], [x + .5, y]], { b: .35 + .9 * Math.pow(hash3(k, 7, 3), 3), w: 1.3 + 1.2 * hash3(k, 7, 4), flags: FL.TIP | FL.SHARP })); }
   return out;
@@ -332,31 +335,65 @@ scene('S38', async f => {
 });
 
 // ================================================================ S39-S40: the agents
-// Top-down, the soldiers are particles (agents) that re-form on the beat like a drone show: two mirrored blocks ->
-// ranks along the banks -> flow -> a vortex -> rings around the river bend -> an iris; formations snap on the listed stabs.
-// S40: the iris tightens into an eye that mirrors the sky; the camera tilts up from the eye on the ground to the eye in
-// the sky (the corona, which lands exactly where S41's centre-locked ring is); at 138.6 s the sky's eye is HER eye for
-// two master frames. Design space: 1920 x 1080 "map px", (960, 540) = the bend.
-const NP = 1300;                                   // agents per side (Lydians sigma = -1 west, Medes sigma = +1 east)
+// Top-down, the soldiers become particles and re-form on the beat like a drone show. Formation 0 is the armies where
+// they stand in the master composition (P01's ranked banks lifted onto the ground plane); then, snapping on the listed
+// stabs: two mirrored blocks -> streams along the banks -> a vortex -> rings -> one bold ring around the river bend ->
+// an iris. S40: the iris tightens into an eye that mirrors the sky; the camera tilts up from the eye on the ground to the
+// eye in the sky (the corona, which lands exactly where S41's centre-locked ring is); at 138.6 s the sky's eye is HER
+// eye for two master frames. Every soldier is a crisp point with a tiny spear tick (2 x 2600 of them, sharp, no bloom);
+// a snap streaks them for a few frames (motion trails), then they hold still and sharp. Design space: 1920 x 1080
+// "map px", (960, 540) = the bend.
+const NP = 2600;                                   // agents per side (Lydians sigma = -1 west, Medes sigma = +1 east)
 const riverX = y => 960 + 150 * Math.sin(Math.PI * (y - 540) / 980);
 // formation snaps on the listed stabs; a stab 1-10 ms after a kick lands on the kick's frame (one visual hit, not two)
 const onKick = t => { for (const k of audio.kickTimes()) if (Math.abs(k - t) < .012) return Math.min(k, snap(t)); return snap(t); };
 const SNAPS = [126.206, 127.505, 128.803, 129.236, 130.967, 131.828, 132.694, 133.126].map(onKick);
-const easeBack = k => { const c = 1.25; k = clamp(k); return 1 + (c + 1) * Math.pow(k - 1, 3) + c * Math.pow(k - 1, 2); };
+const easeBack = k => { const c = 1.7; k = clamp(k); return 1 + (c + 1) * Math.pow(k - 1, 3) + c * Math.pow(k - 1, 2); };
+// P01's armies from above: samples of the master plate's detailed (ranked) bank regions, lifted onto the ground plane
+// (pinhole camera, horizon through the river's vanishing point) and laid along the stylised river: lateral distance from
+// the river -> distance from riverX (compressed), log depth -> map y (near at the bottom). Cached per page.
+const P01_VP = [.5, .355];
+let P01POS = null;
+async function p01Positions() {
+  if (P01POS) return P01POS;
+  const pos = { '-1': null, '1': null };
+  let F = null;
+  try { F = await sourceFields(MASTER.src, 1.0, 480, 16 / 9); } catch (e) { F = null; }
+  if (F && F.kind === 'plate') {
+    const { aw, ah } = F, [vx, vy] = P01_VP, vn = .8, vf = .38, lz = Math.log((vn - vy) / (vf - vy));
+    const at = (u, v) => { const x = clamp(u * aw | 0, 0, aw - 1), y = clamp(v * ah | 0, 0, ah - 1), i = y * aw + x; return F.detail[i] * (F.M ? 1 - sstep(.15, .4, F.M[i]) : 1); };
+    for (const sg of [-1, 1]) {
+      const out = [];
+      for (let n = 0; out.length < NP && n < NP * 80; n++) {
+        const v = vy + (vn - vy) * Math.exp(-hash3(n, sg > 0 ? 47 : 53, 5) * lz), edge = .03 + .281 * (v - vy);   // uniform in log depth; the river's half-width at v
+        const u = sg < 0 ? (vx - edge) * hash3(n, 41, 3) : vx + edge + (1 - vx - edge) * hash3(n, 43, 3);
+        if (at(u, v) < .3 + .4 * hash3(n, sg, 77)) continue;                                                         // denser where the ranks are detailed
+        const X = Math.abs(u - vx) * (16 / 9) / (v - vy), zeta = clamp(Math.log((vn - vy) / (v - vy)) / lz);
+        const y = 1050 - zeta * 1010, x = riverX(y) + sg * (92 + 380 * (1 - Math.exp(-Math.max(0, X - .5) / 2.4))) + 8 * (hash3(n, sg, 13) - .5);
+        out.push([x, y]);
+      }
+      if (out.length >= NP * .5) { while (out.length < NP) { const q = out[out.length % Math.max(1, out.length)]; out.push([q[0] + 3 * (hash3(out.length, sg, 9) - .5), q[1] + 3 * (hash3(out.length, sg, 11) - .5)]); } }
+      out.sort((a, b) => a[1] - b[1] || a[0] - b[0]);
+      pos[String(sg)] = out.length >= NP ? out : null;
+    }
+  }
+  return (P01POS = pos);
+}
 function formation(F, j, sg, t, ts) {
-  const h1 = hash3(j, sg > 0 ? 17 : 23, 5), dt = t - ts;
+  const dt = t - ts;
   switch (F) {
-    case 0: { const col = j % 50, row = Math.floor(j / 50); return [960 + sg * (560 + (col - 24.5) * 9.5), 540 + (row - 12.5) * 10.5, -sg, 0]; }
-    case 1: { const r = j % 10, i = Math.floor(j / 10), y = 70 + i * (940 / 129); return [riverX(y) + sg * (95 + r * 27), y, -sg, 0]; }
-    case 2: { const r = j % 10, i = Math.floor(j / 10), span = 1040, y0 = i * (span / 129) - sg * 150 * dt * (1 + .15 * (r % 3)); const y = ((y0 % span) + span) % span - 20; return [riverX(y) + sg * (95 + r * 27 + 10 * Math.sin(y / 70 + r)), y, 0, -sg]; }
-    case 3: { const a = j % 6, u = Math.floor(j / 6) / (NP / 6), r = 140 + 430 * u, th = a * TAU / 6 + (sg > 0 ? Math.PI / 6 : 0) + 1.9 * Math.log(r / 140) * -sg + -sg * .85 * dt; return [960 + r * Math.cos(th), 540 + r * Math.sin(th), -Math.sin(th) * -sg, Math.cos(th) * -sg]; }
-    case 4: { const kk = 2 * (j % 4) + (sg > 0 ? 1 : 0), m = Math.floor(j / 4), r = 210 + kk * 19, th = m / (NP / 4) * TAU + -sg * .6 * dt + kk * .3; return [960 + r * Math.cos(th), 540 + r * Math.sin(th), -Math.sin(th) * -sg, Math.cos(th) * -sg]; }
-    case 5: { const kk = sg > 0 ? 1 : 0, r = 248 + kk * 38 + (j % 3) * 6, th = j / NP * TAU + -sg * 1.3 * dt; return [960 + r * Math.cos(th), 540 + r * Math.sin(th), -Math.sin(th) * -sg, Math.cos(th) * -sg]; }
-    case 6: { const sp = j % 45, u = Math.floor(j / 45) / (NP / 45), r = 150 + 175 * u, th = (2 * sp + (sg > 0 ? 1 : 0)) * TAU / 90; return [960 + r * Math.cos(th), 540 + r * Math.sin(th), Math.cos(th), Math.sin(th)]; }
+    case 0: { const P = P01POS && P01POS[String(sg)]; if (P) return [P[j][0], P[j][1], -sg, 0];
+      const r = j % 12, i = Math.floor(j / 12), y = 70 + i * (940 / (NP / 12 - 1)); return [riverX(y) + sg * (95 + r * 24), y, -sg, 0]; }       // ranks along the banks
+    case 1: { const col = j % 60, row = Math.floor(j / 60); return [960 + sg * (560 + (col - 29.5) * 8.4) + 2.6 * (hash3(j, sg, 21) - .5), 540 + (row - 21.5) * 10.4 + 2.6 * (hash3(j, sg, 22) - .5), -sg, 0]; }   // two mirrored blocks
+    case 2: { const r = j % 10, i = Math.floor(j / 10), span = 1040, y0 = i * (span / (NP / 10 - 1)) - sg * 150 * dt * (1 + .15 * (r % 3)); const y = ((y0 % span) + span) % span - 20; return [riverX(y) + sg * (95 + r * 27 + 10 * Math.sin(y / 70 + r)), y, 0, -sg]; }
+    case 3: { const a = j % 6, u = Math.floor(j / 6) / (NP / 6), r = 140 + 430 * u + 30 * (hash3(j, sg, 23) - .5), th = a * TAU / 6 + (sg > 0 ? Math.PI / 6 : 0) + 1.9 * Math.log(r / 140) * -sg + -sg * .85 * dt + .11 * (hash3(j, sg, 24) - .5); return [960 + r * Math.cos(th), 540 + r * Math.sin(th), -Math.sin(th) * -sg, Math.cos(th) * -sg]; }
+    case 4: { const kk = 2 * (j % 4) + (sg > 0 ? 1 : 0), m = Math.floor(j / 4), r = 210 + kk * 19 + 9 * (hash3(j, sg, 25) - .5), th = m / (NP / 4) * TAU + -sg * .6 * dt + kk * .3; return [960 + r * Math.cos(th), 540 + r * Math.sin(th), -Math.sin(th) * -sg, Math.cos(th) * -sg]; }
+    case 5: { const kk = sg > 0 ? 1 : 0, r = 236 + kk * 46 + (j % 5) * 7, th = j / NP * TAU + -sg * 1.3 * dt; return [960 + r * Math.cos(th), 540 + r * Math.sin(th), -Math.sin(th) * -sg, Math.cos(th) * -sg]; }   // the ring: two bold bands
+    case 6: { const sp = j % 45, u = Math.floor(j / 45) / (NP / 45), r = 150 + 175 * u, th = (2 * sp + (sg > 0 ? 1 : 0)) * TAU / 90 + .025 * (hash3(j, sg, 27) - .5); return [960 + r * Math.cos(th), 540 + r * Math.sin(th), Math.cos(th), Math.sin(th)]; }
     case 7: {
-      if (j % 3 === 0) {                           // eyelids (almond) and lashes from a third of the agents
-        const q = (Math.floor(j / 3) / (NP / 3)), upper = sg < 0, x = 960 + (q - .5) * 980, lid = Math.sin(Math.PI * q);
-        const y = upper ? 540 - 255 * lid : 540 + 205 * lid;
+      if (j % 3 === 0) {                           // eyelids (almond, four rows deep) from a third of the agents
+        const q = (Math.floor(j / 3) / (NP / 3)), upper = sg < 0, x = 960 + (q - .5) * 980, lid = Math.sin(Math.PI * q), row = (Math.floor(j / 3) % 4) * 6;
+        const y = upper ? 540 - 255 * lid - row * lid : 540 + 205 * lid + row * lid;
         return [x, y, upper ? (q - .5) * .6 : 0, upper ? -1 : 1];
       }
       const jj = j - Math.floor(j / 3) - 1, sp = jj % 45, u = Math.floor(jj / 45) / (NP * 2 / 3 / 45), r = 108 + 122 * u, th = (2 * sp + (sg > 0 ? 1 : 0)) * TAU / 90;
@@ -365,24 +402,25 @@ function formation(F, j, sg, t, ts) {
   }
   return [960, 540, 0, -1];
 }
-// agent j of side sg at time t: blend from the previous formation to the current one after each snap
+// agent j of side sg at time t: a hard snap (fast, overshooting) from the previous formation after each listed stab
 function agentAt(j, sg, t) {
   let k = 0; while (k + 1 < SNAPS.length && t >= SNAPS[k + 1] - 1e-6) k++;
-  const ts = SNAPS[k], D = k === 7 ? .9 : .24, st = .06 * hash3(j, sg > 0 ? 3 : 4, 9);
+  const ts = SNAPS[k], D = k === 7 ? .9 : .16, st = .03 * hash3(j, sg > 0 ? 3 : 4, 9);
   const B = formation(k, j, sg, t, ts);
   if (k === 0) return B;
-  const A = formation(k - 1, j, sg, t, SNAPS[k - 1]);
   const e = k === 7 ? easeInOut(clamp((t - ts - st) / D)) : easeBack((t - ts - st) / D);
+  if (e >= 1 && k !== 7) return B;
+  const A = formation(k - 1, j, sg, t, SNAPS[k - 1]);
   return [lerp(A[0], B[0], e), lerp(A[1], B[1], e), lerp(A[2], B[2], e), lerp(A[3], B[3], e)];
 }
 function groundLines() {                          // the river (orange banks, flowing water) and a sparse map of the land
   const out = [];
   for (const sg of [-1, 1]) {
     const bank = []; for (let y = -40; y <= 1120; y += 6) bank.push([riverX(y) + sg * (40 + 5 * Math.sin(y / 47 + sg)), y]);
-    out.push(proc.line(bank, { b: 1.15, w: 1.6, o: 1, flags: FL.NOFADE }));
-    for (let r = 1; r <= 3; r++) { const pts = []; for (let y = -40; y <= 1120; y += 10) pts.push([riverX(y) + sg * (40 + r * r * 22 + 90 * r + 14 * Math.sin(y / (90 + 13 * r) + r)), y]); out.push(proc.line(pts, { b: .09 - .018 * r, w: .7, o: .05, phase: r, spd: .4 })); }
+    out.push(proc.line(bank, { b: .8, w: 1.5, o: 1, flags: FL.NOFADE }));
+    for (let r = 1; r <= 3; r++) { const pts = []; for (let y = -40; y <= 1120; y += 10) pts.push([riverX(y) + sg * (40 + r * r * 22 + 90 * r + 14 * Math.sin(y / (90 + 13 * r) + r)), y]); out.push(proc.line(pts, { b: .07 - .015 * r, w: .7, o: .05, phase: r, spd: .4 })); }
   }
-  for (let i = -3; i <= 3; i++) { const pts = []; for (let y = -40; y <= 1120; y += 8) pts.push([riverX(y) + i * 10 + 3 * Math.sin(y / 30 + i * 2), y]); out.push(proc.line(pts, { b: .34, w: .8, o: .03, phase: i * 1.3, spd: 1.4 })); }
+  for (let i = -3; i <= 3; i++) { const pts = []; for (let y = -40; y <= 1120; y += 8) pts.push([riverX(y) + i * 10 + 3 * Math.sin(y / 30 + i * 2), y]); out.push(proc.line(pts, { b: .24, w: .8, o: .03, phase: i * 1.3, spd: 1.4 })); }
   return out;
 }
 // map px -> screen: orthographic top-down (S39) or the S40 tilt camera
@@ -390,7 +428,7 @@ function mapCam(f, t) {
   const W = f.W, H = f.H, s = H / 1080, F = 1.2 * W;
   const k = clamp((t - snap(135.716)) / (snap(138.316) - snap(135.716))), e = easeInOut(k);
   const th = lerp(-90, 6, e) * Math.PI / 180, wk = 1 / 540;
-  const h0 = F / (540 * s) * (960 * wk) / (960 / 540) * 1, camY = lerp(F / (H / 2) * 1.0, .55, e), camZ = lerp(0, 5.5, Math.pow(e, .8));
+  const camY = lerp(F / (H / 2) * 1.0, .55, e), camZ = lerp(0, 5.5, Math.pow(e, .8));
   const ct = Math.cos(th), st = Math.sin(th);
   const proj = (x, y, Y = 0) => {
     const X = (x - 960) * wk, Z = (y - 540) * wk, rx = X, ry = Y - camY, rz = Z - camZ;
@@ -400,7 +438,7 @@ function mapCam(f, t) {
   const alt = 6 * Math.PI / 180, ya = alt - th;
   const sun = Math.cos(ya) > .05 ? [W / 2, H / 2 - F * Math.tan(ya)] : null;
   const horizon = Math.cos(-th) > .05 ? H / 2 - F * Math.tan(-th) : null;
-  return { proj, sun, horizon, e, F, top: k <= 0 };
+  return { proj, sun, horizon, e, F, top: k <= 0, z0: F / (H / 2) };
 }
 function projectLines(lines, C, f) {
   const out = [];
@@ -413,45 +451,66 @@ function projectLines(lines, C, f) {
   }
   return out;
 }
+// every agent: a crisp point and a tiny spear tick along its facing (both sharp: they never bloom); while a snap is in
+// flight a short trail (where it was three frames ago) streaks behind it
 function agentLines(f, t, C) {
   const out = [], s = f.H / 1080, kick = audio.kickEnv(t, .12);
   let ki = 0; while (ki + 1 < SNAPS.length && t >= SNAPS[ki + 1] - 1e-6) ki++;
-  const flash = 1 + 1.3 * Math.exp(-(t - SNAPS[ki]) / .12) * (ki > 0 ? 1 : 0);
+  const ds = t - SNAPS[ki], flash = 1 + .8 * Math.exp(-ds / .08) * (ki > 0 ? 1 : 0), flying = ki > 0 && ds < (ki === 7 ? 1 : .26);
   const pupilPump = 1 + .1 * kick;
+  const pump = p => { const dx = p[0] - 960, dy = p[1] - 540, r = Math.hypot(dx, dy); if (r < 260 && r > 1) { p[0] = 960 + dx * pupilPump; p[1] = 540 + dy * pupilPump; } return p; };
   for (const sg of [-1, 1]) for (let j = 0; j < NP; j++) {
-    let a = agentAt(j, sg, t), b = agentAt(j, sg, t - .04);
-    if (t >= SNAPS[7]) { for (const p of [a, b]) { const dx = p[0] - 960, dy = p[1] - 540, r = Math.hypot(dx, dy); if (r < 260 && j % 3 !== 0) { const rr = 960 + dx / r * (r * pupilPump), yy = 540 + dy / r * (r * pupilPump); p[0] = rr; p[1] = yy; } } }
-    const pa = C.proj(a[0], a[1]), pb = C.proj(b[0], b[1]); if (!pa || !pb) continue;
-    let dx = pa[0] - pb[0], dy = pa[1] - pb[1], len = Math.hypot(dx, dy);
-    const depth = Math.min(1.6, 1 / pa[2] * (C.top ? 1 : 1.2));
-    if (len < 4 * s || len > 160 * s) { const fl = Math.hypot(a[2], a[3]) || 1; dx = a[2] / fl * 5 * s * depth; dy = a[3] / fl * 5 * s * depth; }
-    const head = [pa[0], pa[1]], tail = [pa[0] - dx * 1.5, pa[1] - dy * 1.5], o = sg < 0 ? .85 : .12, b0 = (1.25 + .5 * hash3(j, sg, 1)) * flash * (1 + .6 * kick);
-    const dk = Math.min(1.6, depth);
-    out.push(proc.line([tail, head], { b: b0 * .9, w: 1.4 * dk, o: o * .6, flags: 0 }));                         // the trail glows
-    out.push(proc.line([head, [head[0] + .5, head[1]]], { b: b0 * 2.6, w: 3.4 * dk, o, flags: FL.TIP }));          // a point of light
+    const a = agentAt(j, sg, t); if (t >= SNAPS[7] && j % 3 !== 0) pump(a);
+    const pa = C.proj(a[0], a[1]); if (!pa) continue;
+    const dk = Math.min(1.8, C.z0 / pa[2]) * s, o = sg < 0 ? .85 : .12;
+    const b0 = (1.45 + .45 * hash3(j, sg, 1)) * flash * (1 + .45 * kick);
+    if (flying) {
+      const b = agentAt(j, sg, t - .5 / FPS); if (t - .5 / FPS >= SNAPS[7] && j % 3 !== 0) pump(b);
+      const pb = C.proj(b[0], b[1]);
+      if (pb) { const len = Math.hypot(pa[0] - pb[0], pa[1] - pb[1]); if (len > 4 * s && len < 420 * s) out.push(proc.line([[pb[0], pb[1]], [pa[0], pa[1]]], { b: u => b0 * .3 * u, w: 1.2 * dk, o, flags: FL.SHARP })); }
+    }
+    const fl = Math.hypot(a[2], a[3]) || 1, tip = C.proj(a[0] + a[2] / fl * 10, a[1] + a[3] / fl * 10);
+    if (tip) out.push(proc.line([[pa[0], pa[1]], [tip[0], tip[1]]], { b: b0 * .8, w: 1.3 * dk, o, flags: FL.SHARP }));             // the spear tick
+    out.push(proc.line([[pa[0], pa[1]], [pa[0] + .5, pa[1]]], { b: b0 * 2.1, w: 3.6 * dk, o, flags: FL.TIP | FL.SHARP }));       // the soldier: a point of light
+  }
+  return out;
+}
+// the bold outlines that make the ring and the eye read at a glance (phone size): drawn once the agents have landed
+function boldShapes(t) {
+  const out = [], kick = audio.kickEnv(t, .13);
+  const circ = (r, b, w, o) => { const pts = []; for (let k = 0; k <= 180; k++) { const a = k / 180 * TAU; pts.push([960 + r * Math.cos(a), 540 + r * Math.sin(a)]); } return proc.line(pts, { b, w, o, flags: FL.NOFADE | FL.SHARP }); };
+  const ringK = t >= SNAPS[5] && t < SNAPS[6] ? sstep(SNAPS[5] + .1, SNAPS[5] + .3, t) : 0;
+  if (ringK > 0) { out.push(circ(229, 1.1 * ringK, 2.8, .85), circ(271, .7 * ringK, 1.6, .5), circ(317, 1.1 * ringK, 2.8, .12)); }
+  const irisK = t >= SNAPS[6] && t < SNAPS[7] + .4 ? sstep(SNAPS[6] + .1, SNAPS[6] + .3, t) * (1 - sstep(SNAPS[7], SNAPS[7] + .4, t)) : 0;
+  if (irisK > 0) out.push(circ(330, 1.4 * irisK, 2.4, .5), circ(148, 1.2 * irisK, 2, .5));
+  const eyeK = sstep(SNAPS[7] + .5, SNAPS[7] + 1.1, t);
+  if (eyeK > 0) {
+    for (const upper of [true, false]) { const pts = []; for (let k = 0; k <= 120; k++) { const q = k / 120, lid = Math.sin(Math.PI * q); pts.push([960 + (q - .5) * 980, upper ? 540 - 255 * lid - 22 * lid : 540 + 205 * lid + 22 * lid]); } out.push(proc.line(pts, { b: 1.3 * eyeK, w: 3.2, o: upper ? .85 : .12, flags: FL.NOFADE | FL.SHARP })); }
+    out.push(circ(236 * (1 + .03 * kick), 1.5 * eyeK, 2.6, .5));
   }
   return out;
 }
 scene('S39', async f => {
-  const t = f.t, C = mapCam(f, 0), ground = projectLines(groundLines(), C, f);
-  await drawLines(f, { layers: [dynLayer(ground, { uT: audio.flowPhase(t) }), dynLayer(agentLines(f, t, C), {})], kick: audio.kickEnv(t, .12), look: { glow: [.3, .12] }, disk: false });
-  steer(f, { kick: audio.kickEnv(t, .12) });
+  const t = f.t, C = mapCam(f, 0); await p01Positions();
+  const ground = projectLines(groundLines(), C, f), kick = audio.kickEnv(t, .12);
+  await drawLines(f, { layers: [dynLayer(ground, { uT: audio.flowPhase(t) }), dynLayer(projectLines(boldShapes(t), C, f), {}), dynLayer(agentLines(f, t, C), {})], kick, kickWidth: .5, look: { glow: [.08, .03] }, disk: false });
+  steer(f, { kick });
 });
 const ANIME = [snap(138.6), snap(138.6) + 1 / FPS];
 scene('S40', async f => {
   const t = f.t, W = f.W, H = f.H, s = H / 1080, C = mapCam(f, t), kick = audio.kickEnv(t, .13);
-  const layers = [dynLayer(projectLines(groundLines(), C, f), { uT: audio.flowPhase(t) }), dynLayer(agentLines(f, t, C), {})];
-  // the ground pupil's limb (a thin ring of light) once the eye has formed
+  const layers = [dynLayer(projectLines(groundLines(), C, f), { uT: audio.flowPhase(t) }), dynLayer(projectLines(boldShapes(t), C, f), {}), dynLayer(agentLines(f, t, C), {})];
+  // the ground pupil's limb (a bold ring of light) once the eye has formed
   const pupilK = sstep(SNAPS[7] + .3, SNAPS[7] + .9, t);
-  if (pupilK > 0) { const pts = []; for (let k = 0; k <= 96; k++) { const a = k / 96 * TAU, r = 100 * (1 + .1 * kick); pts.push([960 + r * Math.cos(a), 540 + r * Math.sin(a)]); } layers.push(dynLayer(projectLines([proc.line(pts, { b: 1.6 * pupilK, w: 1.5 })], C, f), {})); }
+  if (pupilK > 0) { const pts = []; for (let k = 0; k <= 96; k++) { const a = k / 96 * TAU, r = 100 * (1 + .1 * kick); pts.push([960 + r * Math.cos(a), 540 + r * Math.sin(a)]); } layers.push(dynLayer(projectLines([proc.line(pts, { b: 2.2 * pupilK, w: 3.2, flags: FL.NOFADE })], C, f), {})); }
   let disk = false, sun = null;
   if (C.horizon != null) layers.push(dynLayer([proc.line([[-50, C.horizon], [W + 50, C.horizon]], { b: .9, w: 1.4, o: 1, flags: FL.NOFADE }), proc.line([[-50, C.horizon + 6 * s], [W + 50, C.horizon + 6 * s]], { b: .3, w: 1, o: 1, flags: FL.NOFADE })], {}));
   if (C.sun && C.sun[1] < H + 300 * s) {
     const R = ringR(H); sun = [C.sun[0], C.sun[1], R];
     const anime = Math.round(t * FPS) >= Math.round(ANIME[0] * FPS) && Math.round(t * FPS) <= Math.round(ANIME[1] * FPS);
     if (anime) { layers.push(dynLayer(proc.animeEye(C.sun[0], C.sun[1], 4.6 * R, { b: 1.5, w: 2.4 * s }), {})); disk = { x: C.sun[0] + .02 * 4.6 * R, y: C.sun[1], r: .3 * .2 * 4.6 * R }; }
-    else { layers.push({ mesh: coronaRing(f, 'ring', { refR: R, ...RING }), u: { ...ringU(C.sun[0], C.sun[1], R * (1 + .025 * kick)), uPush: [C.sun[0], C.sun[1], 22 * kick * s, 300 * s] } }); disk = { x: C.sun[0], y: C.sun[1], r: R }; }
+    else { layers.push({ mesh: coronaRing(f, 'ring', { refR: R, ...RING }), u: { ...ringU(C.sun[0], C.sun[1], R * (1 + .025 * kick)), uBright: 1.25, uPush: [C.sun[0], C.sun[1], 22 * kick * s, 300 * s] } }); disk = { x: C.sun[0], y: C.sun[1], r: R }; }
   }
-  await drawLines(f, { layers, kick, look: { glow: [.28, .1] }, disk });
+  await drawLines(f, { layers, kick, kickWidth: .5, look: { glow: [.14, .05] }, disk });
   steer(f, { kick, sun: sun ? typeSun(sun) : undefined });
 });

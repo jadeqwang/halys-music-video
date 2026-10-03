@@ -14,8 +14,9 @@
 import { LRU, makeCanvas } from '../../assets.js';
 import { initSources, plateRef, standinRef, drawingInput } from './source.js';
 import { analyzeCel, calibrate } from './cel.js';
+import { smearCel } from './smear.js';
 import { drawFills, drawChains } from './render.js';
-import { LABEL_HEX, NLAB, LINE, LINE_SKIN } from './palette.js';
+import { LABEL_HEX, NLAB, LINE, LINE_SKIN, BROW_LINE } from './palette.js';
 import { drawingKey } from './xsheet.js';
 
 export { expose, exposeIndex, frameAt } from './xsheet.js';
@@ -53,7 +54,8 @@ export async function cel(S, e) {
   }
   const inp = await drawingInput(S, e);
   if (!inp) return null;
-  const res = analyzeCel(inp, { ...S.cel, ...(S.celFor ? S.celFor(e) : {}), shadeT: S.thresholds[e.src] });
+  let res = analyzeCel(inp, { ...S.cel, ...(S.celFor ? S.celFor(e) : {}), shadeT: S.thresholds[e.src] });
+  if (e.smear) res = smearCel(res, e.smear);           // a smear drawing of the spin (smear.js)
   res.e = e; res.key = `${S.id}|${key}`;
   // keep only what drawing needs (memory: workers hold several drawings per setup)
   res.inp = { faces: inp.faces, W: inp.W, H: inp.H, ...(DEBUG ? { rgba: inp.rgba, matte: inp.matte } : {}) };
@@ -77,7 +79,7 @@ export function drawCel(g, res, view, u, opts = {}) {
     const cg = c.getContext('2d');
     const pal = opts.pal || LABEL_HEX;
     res.packed = drawFills(cg, res.lab, res.W, res.H, pal, LABEL_ALPHA, view, { packed: res.packed });
-    if (opts.lines !== false) drawChains(cg, res.chains, view, u, { ink: opts.ink || LINE, skin: opts.skin || LINE_SKIN, strand: opts.strand || '#30343e' }, { wScale: opts.wScale || 1 });
+    if (opts.lines !== false) drawChains(cg, res.chains, view, u, { ink: opts.ink || LINE, skin: opts.skin || LINE_SKIN, strand: opts.strand || '#30343e', brow: BROW_LINE }, { wScale: opts.wScale || 1 });
     if (opts.after) opts.after(cg);
     _layers.set(key, c);
   }

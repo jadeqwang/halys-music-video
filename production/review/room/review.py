@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """Room review: render 262-281 s through the real harness, encode with the final mix, contact sheet, event strips, timing.
 
-    python3 production/review/room/review.py [--tag=r1] [--from=262] [--to=281] [--workers=3] [--skip-render]
+    python3 production/review/room/review.py [--tag=r2] [--from=266.134] [--to=281] [--workers=1] [--skip-render]
+
+S78-S81 only (266.12-281.0; S76/S77 belong to other worlds). The renders run at nice 10 with one worker by default (the
+machine is shared by several renderers).
 
 Frames go to video/out/frames_room (gitignored; render.mjs --dir, its own keys.json ledger). Outputs here:
   room_<tag>.mp4          H.264 1920x1080 60 fps + the sound-design master (<= 15 MB)
@@ -16,7 +19,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[3]
 HERE = pathlib.Path(__file__).resolve().parent
 args = {a[2:].split('=', 1)[0]: (a.split('=', 1)[1] if '=' in a else True) for a in sys.argv[1:] if a.startswith('--')}
 TAG = args.get('tag', 'r1')
-T0, T1 = float(args.get('from', 262)), float(args.get('to', 281))
+T0, T1 = float(args.get('from', 266.134)), float(args.get('to', 281))   # 266.134 s = f15968, the first frame of S78
 DIR = ROOT / 'video/out/frames_room'
 FPS = 60
 
@@ -60,11 +63,13 @@ def events(out):
     js = ("import('" + str(ROOT / 'video/src/worlds/ink/sheets.js') + "').then(async m => { const x = await import('" + str(ROOT / 'video/src/worlds/ink/xsheet.js') +
           "'); const S = m.roomSheets({}); const land = S.wide.find(e => e.tag === 'land').F; const keys = S.close.filter(e => e.tag === 'key').map(e => e.F);" +
           " let shut = 0; for (let i = x.frameAt(m.EV.ting) - 30; i < x.frameAt(m.EV.ting) + 30; i++) if (m.lidAt(i / 60) >= 1) { shut = i; break; }" +
-          " console.log(JSON.stringify({ land, keys, shut, wink0: x.frameAt(m.EV.ting - .40) })); })")
+          " const sm = S.wide.filter(e => e.tag === 'smear').map(e => e.F);" +
+          " console.log(JSON.stringify({ land, keys, shut, sm, wink0: x.frameAt(m.EV.ting - .40) })); })")
     ev = subprocess.run(['node', '-e', js], capture_output=True, text=True, cwd=ROOT / 'video').stdout.strip()
     import json
     E = json.loads(ev)
-    rows = [('spin lands on the final chord', E['land'], (420, 120, 1380, 1080)), *[(f'key click {k + 1}', F, (0, 560, 900, 1080)) for k, F in enumerate(E['keys'])],
+    rows = [*([('spin smears (A, B) between the turn drawings', E['sm'][0] + 2, (200, 60, 1160, 1020))] if E.get('sm') else []),
+            ('spin lands on the final chord', E['land'], (420, 120, 1380, 1080)), *[(f'key click {k + 1}', F, (0, 560, 900, 1080)) for k, F in enumerate(E['keys'])],
             ('eyelid shuts on the ting', E['shut'], (660, 270, 1120, 530))]
     w, h, n = 300, 0, 5
     tiles = []
@@ -91,21 +96,23 @@ def events(out):
 
 def main():
     if not args.get('skip-render'):
-        run(['node', 'render.mjs', f'--frames={T0}:{T1}', f'--workers={args.get("workers", 3)}', '--dir=out/frames_room', '--stale'], cwd=ROOT / 'video')
+        run(['nice', '-n', '10', 'node', 'render.mjs', f'--frames={T0}:{T1}', f'--workers={args.get("workers", 1)}', '--dir=out/frames_room', '--stale'], cwd=ROOT / 'video')
     mp4 = HERE / f'room_{TAG}.mp4'
-    run(['node', 'render.mjs', '--encode', '--dir=out/frames_room', f'--range={T0}:{T1}', f'--out={mp4}', '--crf=23', '--preset=slow'], cwd=ROOT / 'video')
+    run(['nice', '-n', '10', 'node', 'render.mjs', '--encode', '--dir=out/frames_room', f'--range={T0}:{T1}', f'--out={mp4}', '--crf=23', '--preset=slow'], cwd=ROOT / 'video')
     if mp4.stat().st_size > 15e6:   # re-encode to a size cap
         tmp = mp4.with_suffix('.tmp.mp4')
         kbps = int(14.2e6 * 8 / (T1 - T0) / 1000) - 192
-        run(['ffmpeg', '-y', '-v', 'error', '-i', str(mp4), '-c:v', 'libx264', '-b:v', f'{kbps}k', '-maxrate', f'{kbps * 2}k', '-bufsize', f'{kbps * 2}k', '-preset', 'slow',
+        run(['nice', '-n', '10', 'ffmpeg', '-y', '-v', 'error', '-i', str(mp4), '-c:v', 'libx264', '-b:v', f'{kbps}k', '-maxrate', f'{kbps * 2}k', '-bufsize', f'{kbps * 2}k', '-preset', 'slow',
              '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', str(tmp)])
         tmp.replace(mp4)
     print(mp4, round(mp4.stat().st_size / 1e6, 2), 'MB')
-    times = [(262.5, 'S76 (not INK)'), (264.5, 'S77 pull-back (line engine)'), (266.14, 'S78 first frame: Earth on the monitor'), (266.6, 'terminal tick 2'),
-             (267.2, 'warn tick'), (267.9, 'commands'), (268.25, 'dT band slides north'), (268.6, 'band on the Halys'), (269.4, 'commit burst'),
-             (269.75, 'spin'), (269.85, 'spin'), (269.95, 'spin'), (270.02, 'lands on the chord'), (270.3, 'settle'), (271.0, 'deadpan'), (272.8, 'deadpan (freeze)'),
-             (273.42, 'S80 close-up'), (273.47, 'key 1'), (274.04, 'key 2'), (274.94, 'key 3: enter'), (275.3, 'commit printed'), (276.4, 'sly smile'), (276.8, 'the eclipse lid'), (276.96, 'shut on the ting'),
-             (277.3, 'wink held'), (278.2, 'end card'), (280.5, 'end card')]
+    times = [(266.14, 'S78 first frame: Earth on the monitor'), (266.6, 'terminal tick 2'), (267.2, 'warn tick'), (267.9, 'commands'),
+             (268.25, 'dT band slides north'), (268.6, 'band on the Halys'), (269.4, 'commit burst'), (269.77, 'spin f49'),
+             (269.85, 'smear A'), (269.9, 'smear B'), (269.95, 'spin f67'), (270.02, 'lands on the chord'),
+             (270.2, 'settle: headphones bob'), (270.45, 'the lock of hair settles'), (271.5, 'deadpan'), (272.8, 'deadpan (freeze)'),
+             (273.42, 'S80 close-up'), (273.47, 'key 1'), (274.04, 'key 2'), (274.94, 'key 3: enter'),
+             (275.3, 'commit printed'), (276.1, 'deadpan'), (276.4, 'the smirk, eyes narrowed'), (276.8, 'the eclipse lid'),
+             (276.96, 'shut on the ting'), (277.3, 'wink held'), (278.2, 'end card'), (280.5, 'end card')]
     sheet(times, HERE / f'room_{TAG}_sheet.jpg', cols=4, w=480)
     events(HERE / f'room_{TAG}_events.jpg')
     r = subprocess.run(['node', 'production/review/room/check_timing.mjs', '--frames=video/out/frames_room'], capture_output=True, text=True, cwd=ROOT)

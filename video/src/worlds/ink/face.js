@@ -11,7 +11,7 @@ const TAU = Math.PI * 2;
 const pts = (arr, W, H) => { const o = []; for (let i = 0; i + 1 < arr.length; i += 2) o.push([arr[i] * W, arr[i + 1] * H]); return o; };
 
 export function smallFace(res, maxIris = 10) {
-  if (!res || !res.inp || !res.inp.faces) return null;
+  if (!res || res.noFace || !res.inp || !res.inp.faces) return null;
   if (res._sf !== undefined) return res._sf;
   const fc = res.inp.faces[0], W = res.W, H = res.H;
   let out = null;

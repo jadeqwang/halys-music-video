@@ -1,6 +1,8 @@
-// decals.js: costume lettering drawn as type, never traced (the plate's letters would come out as garbled squiggles):
-// RARE EARTH under the light-blue circle on her back, and the round 1420 MHz patch on her left sleeve. Each decal has a
-// clear zone the cel analysis paints flat first (cel.js `clear`), so nothing of the plate's marks shows under it.
+// decals.js: costume graphics drawn, never traced (the plate's letters would come out as garbled squiggles): the
+// light-blue circle on her back as a perfect disk with RARE EARTH set beneath it (the graphic match with the Earth on her
+// monitor), the hair's ends above it, and the round 1420 MHz patch on her left sleeve (back view, then the front view
+// from the landing on, placed per drawing). Each decal has a clear zone the cel analysis paints flat first (cel.js
+// `clear`), so nothing of the plate's marks shows under it.
 // Positions are in setup px for drawings whose body is a held cel (S78 typing: ref f40; S79 deadpan: f104).
 
 import { P } from './props.js';
@@ -12,18 +14,36 @@ const TAU = Math.PI * 2;
 // same blue, same circle), RARE EARTH set beneath it, as on her model sheet. On the sheet her hair ends at the top of the
 // circle; the plate's hair hangs over it, so the hair is cut there (cel `clear` zone: hair and the plate's blue become
 // jacket) and finished with drawn tips that stop just above the disk.
-const DISK = { x: 290.5, y: 350, r: 34 };
-const TIPS = [[253, 287], [348, 287], [353, 296], [351, 306], [346, 300], [340, 310], [333, 303], [325, 312], [316, 305], [305, 314], [296, 306],
-  [286, 313], [277, 305], [268, 311], [261, 303], [254, 308], [249, 300], [250, 293]];
-const BACK = { text: { x: 290.5, y: 404, size: 13.6, rot: .07, w: 76 }, patch: { x: 435, y: 358.5, r: 18.2, rot: -.42 }, disk: DISK, tips: TIPS,
-  cut: [[238, 295], [364, 295], [364, 392], [238, 392]] };
-// P40 f104 registered into P39 space (front view, her left sleeve)
+const DISK = { x: 290.5, y: 358, r: 30 };      // the radius of the Earth disk on the side monitor (S78 framing): the same circle
+// the hair's new ends: locks of different lengths (longest in the middle), each a pointed shape with curved sides.
+// [notch-left, tip, ...] from her left (frame left) to right; the first and last points sit on the hair's outer edges
+const LOCKS = { start: [248, 306], tips: [[255, 316], [278, 325], [295, 325], [317, 322], [336, 316], [349, 310]],
+  notches: [[265, 310], [286, 313], [305, 312], [326, 311], [343, 307]], end: [351, 302], top: [[346, 290], [251, 290]] };
+const BACK = { text: { x: 290.5, y: 406, size: 13.6, rot: .07, w: 76 }, patch: { x: 435, y: 358.5, r: 18.2, rot: -.42 }, disk: DISK, locks: LOCKS,
+  cut: [[238, 304], [364, 304], [364, 394], [238, 394]] };
+// the locks' outline as one path (output px): curved sides into each tip
+function locksPath(view, L) {
+  const p = new Path2D(), Q = ([x, y]) => P(view, x, y);
+  let a = L.start; p.moveTo(...Q(a));
+  L.tips.forEach((t, k) => {
+    const b = k < L.notches.length ? L.notches[k] : L.end;
+    // left side: straight down first, then into the point; right side: out of the point, curving up to the notch
+    p.quadraticCurveTo(...Q([a[0] + (t[0] - a[0]) * .15, a[1] + (t[1] - a[1]) * .75]), ...Q(t));
+    p.quadraticCurveTo(...Q([b[0] - (b[0] - t[0]) * .2, b[1] + (t[1] - b[1]) * .7]), ...Q(b));
+    a = b;
+  });
+  return p;
+}
+// P40 registered into P39 space (front view, her left sleeve): measured on the landing and settle drawings, then f100+
 const FRONT = { patch: { x: 482, y: 361, r: 16.5, rot: -.12 } };
+const FRONT40 = { 79: { x: 465.2, y: 359.1, r: 13.7, rot: -.2 }, 84: { x: 477.8, y: 357, r: 15.8, rot: -.15 }, 90: { x: 484.1, y: 360.2, r: 16.8, rot: -.12 },
+  96: { x: 484.1, y: 362.8, r: 16.8, rot: -.12 } };
 
 function decalsFor(e) {
   if (!e) return null;
   if (e.src === 'P39' && e.ref === 40) return BACK;
   if (e.src === 'P39') return BACK;
+  if (e.src === 'P40' && !e.smear && FRONT40[e.pf]) return { patch: FRONT40[e.pf] };
   if (e.src === 'P40' && e.pf >= 100) return FRONT;
   return null;
 }
@@ -32,7 +52,7 @@ function decalsFor(e) {
 export function clearZones(e) {
   const D = decalsFor(e); if (!D) return [];
   const z = [];
-  if (D.cut) z.push({ poly: D.cut.map(([x, y]) => [x / 960, y / 540]), mat: 'jacket', from: ['black', 'blue'] });
+  if (D.cut) z.push({ poly: D.cut.map(([x, y]) => [x / 960, y / 540]), mat: 'jacket', from: ['black', 'blue'], flat: true });
   if (D.text) z.push({ cx: D.text.x / 960, cy: (D.text.y - 6) / 540, rx: (D.text.w * .62) / 960, ry: 13 / 540, mat: 'jacket', rot: D.text.rot });
   if (D.patch) z.push({ cx: D.patch.x / 960, cy: D.patch.y / 540, rx: (D.patch.r + 2.5) / 960, ry: (D.patch.r + 2.5) / 540, mat: 'white' });
   return z;
@@ -45,14 +65,17 @@ export function drawDecals(g, view, e, u) {
     const [x, y] = P(view, D.disk.x, D.disk.y);
     g.fillStyle = MAT.blue.base; g.beginPath(); g.arc(x, y, D.disk.r * s, 0, TAU); g.fill();
   }
-  if (D.tips) {   // the hair's new ends: black lock tips over the cut, outlined along the tips (the top edge is inside the hair)
-    const T = D.tips.map(([x, y]) => P(view, x, y));
-    g.fillStyle = MAT.black.base; g.beginPath(); T.forEach(([x, y], k) => k ? g.lineTo(x, y) : g.moveTo(x, y)); g.closePath(); g.fill();
-    g.strokeStyle = LINE; g.lineWidth = 2.2 * u; g.lineJoin = 'round'; g.lineCap = 'round';
-    g.beginPath(); for (let k = 1; k < T.length; k++) k === 1 ? g.moveTo(...T[k]) : g.lineTo(...T[k]); g.stroke();
-    // two strand lines in the sheen tone running into the longest tips
+  if (D.locks) {   // the hair's new ends over the cut: black locks, outlined along the tips (the top edge is inside the hair)
+    const L = D.locks, edge = locksPath(view, L), fill = new Path2D(edge);
+    for (const q of [L.end, ...L.top]) fill.lineTo(...P(view, ...q));
+    fill.closePath();
+    g.fillStyle = MAT.black.base; g.fill(fill);
+    g.strokeStyle = LINE; g.lineWidth = 2.2 * u; g.lineJoin = 'round'; g.lineCap = 'round'; g.stroke(edge);
+    // strand lines in the sheen tone running down into the longer locks
     g.strokeStyle = '#30343e'; g.lineWidth = 1.1 * u;
-    for (const [a, b] of [[[300, 280], [305, 312]], [[282, 281], [286, 311]], [[330, 282], [325, 310]]]) { g.beginPath(); g.moveTo(...P(view, ...a)); g.quadraticCurveTo(...P(view, (a[0] + b[0]) / 2 + 1.5, (a[1] + b[1]) / 2), ...P(view, ...b)); g.stroke(); }
+    for (const [a, b] of [[[281, 286], [278, 320]], [[297, 285], [295, 320]], [[315, 287], [317, 317]], [[262, 288], [256, 311]]]) {
+      g.beginPath(); g.moveTo(...P(view, ...a)); g.quadraticCurveTo(...P(view, (a[0] + b[0]) / 2 + 1.2, (a[1] + b[1]) / 2), ...P(view, ...b)); g.stroke();
+    }
   }
   if (D.text) {
     const T = D.text, [x, y] = P(view, T.x, T.y);

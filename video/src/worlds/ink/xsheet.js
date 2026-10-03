@@ -1,7 +1,7 @@
 // xsheet.js: INK timing. The room is animated like cel anime: on twos (12 drawings a second, a drawing every 5 master
 // frames at 60 fps) with real holds, and every drawing that must hit the music is placed on an exact master frame.
 //
-// A sheet is a list of exposures sorted by master frame: { F, src, pf, ref?, region?, tag? }. From frame F until the next
+// A sheet is a list of exposures sorted by master frame: { F, src, pf, ref?, region?, dy?, smear?, tag? }. From frame F until the next
 // exposure, the character cel is drawn from plate `src` frame `pf` (1-based). With `ref` + `region`, only the region
 // (plate-normalised ellipse {cx, cy, rx, ry, feather}) comes from `pf` and everything else from frame `ref`: the
 // limited-animation trick (the held head and body stay on their cel, only the typing arm is redrawn), done in plate
@@ -50,10 +50,10 @@ export function sheet(...parts) {
   // collapse consecutive identical drawings into one exposure (a held drawing is one drawing)
   return out.filter((e, k) => k === 0 || !same(e, out[k - 1]));
 }
-const same = (a, b) => a.src === b.src && a.pf === b.pf && a.ref === b.ref && (a.dy || 0) === (b.dy || 0) && JSON.stringify(a.region || null) === JSON.stringify(b.region || null) && a.tag === b.tag;
+const same = (a, b) => a.src === b.src && a.pf === b.pf && a.ref === b.ref && (a.dy || 0) === (b.dy || 0) && JSON.stringify(a.region || null) === JSON.stringify(b.region || null) && JSON.stringify(a.smear || null) === JSON.stringify(b.smear || null) && a.tag === b.tag;
 
 // a stable key for the drawing an exposure shows (cache key for the cel)
-export const drawingKey = e => e ? `${e.src}:${e.pf}${e.ref ? `<${e.ref}` : ''}${e.dy ? `^${e.dy}` : ''}${e.region ? JSON.stringify(e.region) : ''}` : 'none';
+export const drawingKey = e => e ? `${e.src}:${e.pf}${e.ref ? `<${e.ref}` : ''}${e.dy ? `^${e.dy}` : ''}${e.region ? JSON.stringify(e.region) : ''}${e.smear ? `~${JSON.stringify(e.smear)}` : ''}` : 'none';
 
 // the unique plate frames a sheet needs (for matte prep and warm-up)
 export function framesUsed(sh) {

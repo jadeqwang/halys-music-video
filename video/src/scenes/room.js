@@ -18,12 +18,13 @@ import { PLATES } from '../plates.js';
 import { drawText } from '../type/index.js';
 import * as INK from '../worlds/ink/index.js';
 import { roomSheets, standinSheets, setEvents, EV, REG, celZones, lidAt } from '../worlds/ink/sheets.js';
-import { expose } from '../worlds/ink/xsheet.js';
+import { expose, frameAt } from '../worlds/ink/xsheet.js';
 import { paintBG, drawBG } from '../worlds/ink/bg.js';
 import { drawWindow, WIN39, SCR39, subQuad, toOut, qpt, drawEarthPanel, drawDTMap, drawCloseBG, drawSidebar, drawLamp39, CLOSE41, poly } from '../worlds/ink/props.js';
 import { drawDecals, clearZones } from '../worlds/ink/decals.js';
 import { drawWink } from '../worlds/ink/eye.js';
 import { drawSmallFace } from '../worlds/ink/face.js';
+import { drawExpression, drawSettleStrand } from '../worlds/ink/expr.js';
 
 let SH = null, MODE = 'plates';
 const SET = {};
@@ -84,7 +85,8 @@ async function wide(f) {
   drawDTMap(g, view, Q.map, f.t, { shiftAt: EV.dtShift });
   f.type = { manual: true, screen: { main: toOut(view, Q.term), side: toOut(view, Q.panes) } };
   await drawText(f.t, f, { fromScene: true });
-  await character(f, SET.wide, SH.wide, view);
+  const { res } = await character(f, SET.wide, SH.wide, view);
+  if (!DBG && MODE === 'plates') drawSettleStrand(g, view, res, f.i, frameAt(EV.chord), f.L.u);   // S79: the lock of hair settling
 }
 
 // ---------------------------------------------------------------- the close-up: S80 + S81
@@ -99,7 +101,9 @@ async function close(f) {
   f.type = { manual: true, screen: { main: toOut(view, CLOSE41.screen) } };
   await drawText(f.t, f, { fromScene: true });
   const { res } = await character(f, SET.close, SH.close, view);
-  drawWink(g, view, res, lidAt(f.t), f.t, f.L.u, EV);
+  if (DBG) return;
+  const nar = drawExpression(g, view, res, f.t, f.L.u);          // warmth, the smirk, the narrowed eyes
+  drawWink(g, view, res, lidAt(f.t), f.t, f.L.u, EV, 'R', nar);  // the eclipse lid starts from the narrowed eye
 }
 
 // The S77 -> S78 hand-off: where the line-drawn Earth sits on S78's first frame (output px), and the bezel of the monitor

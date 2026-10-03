@@ -49,7 +49,8 @@ palette's OKLab box (`palette.js`), bible hexes as tubes.
 - `faceMin` faces from the source (score >= faceMin) become focus regions; `eyes` / `eyeStrokes` catchlights
 
 **Eclipse** `eclipse` (0..1 of the light gone strange): pool edges sharpen, colour drains, lights go metallic, crush
-deepens (`light.js eclipseCfg`). The clock itself is `eclipse.js` (first contact 46.49 s, totality 110.58 s, moon
+deepens (`light.js eclipseCfg`; how far: `eclipseLift`, `eclipseCrush`, `eclipseContrast`, `metalK`; lit figure plates
+at totality use low values so they glow instead of going to mud). The clock itself is `eclipse.js` (first contact 46.49 s, totality 110.58 s, moon
 from 5 o'clock, `magnitude`, `moonOffset`, `beads`, `diamondRing`, `jupiterAt`, `coronaStrokes`).
 
 **Sky** `sky: {...}` an Altdorfer vortex wound around the sun (see `sky.js` `SKY_DEFAULTS`: `vortex, twist, arms,
@@ -67,6 +68,14 @@ painted fibres (iris = the S01 eye).
 
 **Finish** `impasto`, `thick`, `thickHi`, `thinDark`, `spec`, `weave`, `crack`, `varnish`, `vignette`,
 `exposure`, `warmFlash`, `white` (the S34 white-out), `metal`.
+
+## Procedural layers (`procedural.js`)
+
+`crowdStrokes(src, o)` Altdorfer's troops over a painted army (spears with lit tips, helmet/shield glints, standards;
+one candidate per material cell from the plate's depth relief) · `bronzeSpecular(o)` a hot specular sweep and the
+sun's reflection on metal · `crescentField` / `crescentStrokes2` pinhole crescents · `mirrorFigure` the S26 reflection
+· `arrowStrokes`, `umbraField`, `horizonCanvas`. They return stroke lists for `strokes` / `overStrokes`, so they are
+painted with the same brushes, impasto and varnish as the rest.
 
 ## Temporal coherence ("boil, never strobe")
 

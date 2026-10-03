@@ -37,6 +37,13 @@ export function setEvents(TM) {
   return EV;
 }
 
+// the two smear drawings of the spin (setup px; the streaks trail to the right: her face and the jacket front sweep left
+// as she turns to camera). Region: head, hair and shoulders in the P39 setup frame.
+const SMEAR_A = { dx: 30, dy: 1, region: { cx: .292, cy: .45, rx: .13, ry: .22 }, drag: .5, lambda: 30, seed: 1, speed: 5 };
+const SMEAR_B = { dx: 20, dy: 1, region: { cx: .31, cy: .45, rx: .13, ry: .22 }, drag: .45, lambda: 30, seed: 2, speed: 3 };
+// the headphones around her neck after the landing (P40 frames registered into the P39 setup), plate-normalised
+const PHONES40 = { cx: .353, cy: .52, rx: .05, ry: .05, feather: .45 };
+
 // P40 (take 2) -> P39 (take 1) plate-space similarity (960x540 frames)
 export const REG = { 'P40:take2.mp4->P39': { s: 1 / 0.95163, tx: -21.31 / 0.95163, ty: -0.242 / 0.95163 } };
 
@@ -57,17 +64,31 @@ export function roomSheets(takes = {}) {
   // on twos at speed. Then the spin (P40) starts 0.33 s before the chord and lands on it.
   const poses = [12, 22, 30, 46, 52, 60, 75, 88];
   const s78 = [];
-  T.ticks.forEach((t, k) => { if (t < T.burst[0] - 1e-3) s78.push(...hold(F(Math.max(t, T.shots.S78[0])), 'P39', poses[k % poses.length], { ref: 40, region: ARM39, tag: 'tick' })); });
+  const tk = T.ticks.filter(t => t < T.burst[0] - 1e-3).map(t => F(Math.max(t, T.shots.S78[0])));
+  tk.forEach((Fk, k) => {
+    const pose = poses[k % poses.length], prev = k ? poses[(k - 1) % poses.length] : null;
+    // an in-between on the way to each new key (when the gap allows and the hand is not wrapping to the start of the
+    // cycle): the hand travels instead of popping
+    if (prev != null && pose > prev && Fk - tk[k - 1] >= 10) s78.push(...hold(Fk - 4, 'P39', Math.round((prev + pose) / 2), { ref: 40, region: ARM39, tag: 'ib' }));
+    s78.push(...hold(Fk, 'P39', pose, { ref: 40, region: ARM39, tag: 'tick' }));
+  });
   const Fb = F(T.burst[0]);
   const Fland = F(T.chord);                     // the landing drawing: her face, on the chord
-  const Fspin = Fland - 4 * TWOS;               // four drawings of turn before it
+  const Fspin = Fland - 4 * TWOS;               // the turn takes the last 20 frames before it
   s78.push(...run(Fb, Fspin, 'P39', 60, 70, TWOS, { ref: 40, region: ARM39, tag: 'burst' }));
-  // the spin: P40 (registered into P39 space). f40 head turning, f49 profile, f57 three-quarter, f67 front with the
-  // hair flying out, f79 square to camera = the stinger
-  s78.push(...seq(Fspin, 'P40', [40, 49, 57, 67], TWOS, { tag: 'spin' }));
+  // the spin: P40 (registered into P39 space). f40 head turning, f49 three-quarter profile, then two smear drawings on
+  // threes (the fastest part of the turn: shapes dragged into streaks, features gone, speed lines; smear.js), f67 front
+  // with the hair flying out, f79 square to camera = the stinger
+  s78.push(...seq(Fspin, 'P40', [40, 49], TWOS, { tag: 'spin' }));
+  s78.push({ F: Fspin + 2 * TWOS, src: 'P40', pf: 55, smear: SMEAR_A, tag: 'smear' });
+  s78.push({ F: Fspin + 2 * TWOS + 3, src: 'P40', pf: 61, smear: SMEAR_B, tag: 'smear' });
+  s78.push(...hold(Fspin + 3 * TWOS + 1, 'P40', 67, { tag: 'spin' }));
   s78.push(...hold(Fland, 'P40', 79, { tag: 'land' }));
-  // S79: settle on twos (the hair falls back), then one held drawing: deadpan, through the frozen chord
-  const s79 = [...hold(Fland, 'P40', 79, { tag: 'land' }), ...seq(Fland + TWOS, 'P40', [84, 90, 96, 100], TWOS, { tag: 'settle' }),
+  // S79: settle on twos (the hair falls back) while the headphones bob once (they keep going down when she stops, come
+  // back up past rest, settle: the region redrawn a few px lower / higher), then one held drawing: deadpan, through the
+  // frozen chord
+  const s79 = [...hold(Fland, 'P40', 79, { tag: 'land' }),
+    ...[[84, 5], [90, 7], [96, 2], [100, -2]].map(([pf, dy], k) => ({ F: Fland + (k + 1) * TWOS, src: 'P40', pf, ref: pf, region: PHONES40, dy, tag: 'settle' })),
     ...hold(Fland + 5 * TWOS, 'P40', 104, { tag: 'deadpan' })];
   out.wide = sheet(s78, s79);
 
@@ -84,12 +105,13 @@ export function roomSheets(takes = {}) {
     ...hold(K[1], 'P41', 48, { ...dn, tag: 'key' }), ...seq(K[1] + 2 * TWOS, 'P41', [51, 53], TWOS, { ...rel, tag: 'release' }),
     ...seqEnd(K[2] - TWOS, 'P41', [55, 57, 59], TWOS, { ...up, tag: 'lift' }),
     ...hold(K[2], 'P41', 62, { ...dn, tag: 'key' }), ...seq(K[2] + 2 * TWOS, 'P41', [65, 67], TWOS, { ...rel, tag: 'release' }),
-    // deadpan hold after the commit, then the sly smile creeps in (plate f73-f85) 0.7 s before the wink and holds
+    // deadpan hold after the commit, then the mischievous turn from 276.20 (plate f73-f84 on twos, the drawn smirk and
+    // narrowed eyes on top: expr.js), held on f95 from before the eyelid starts (no drawing change during the wink)
     ...hold(K[2] + 4 * TWOS, 'P41', 70, { tag: 'deadpan' }),
   ];
-  const Fsmile = F(T.ting - .70);
-  s80.push(...seq(Fsmile, 'P41', [73, 75, 77, 79, 81, 84], TWOS, { tag: 'smile' }));
-  s80.push(...hold(Fsmile + 6 * TWOS, 'P41', 95, { tag: 'smile-hold' }));
+  const Fsmile = F(EXPR.smirk);
+  s80.push(...seq(Fsmile, 'P41', [73, 77, 81, 84], TWOS, { tag: 'smile' }));
+  s80.push(...hold(Fsmile + 4 * TWOS, 'P41', 95, { tag: 'smile-hold' }));
   out.close = sheet(s80);
   return out;
 }
@@ -98,6 +120,8 @@ export function roomSheets(takes = {}) {
 // eclipse. The lid starts 0.40 s before the ting, crosses the iris with the Moon's limb, the last sliver flares as a
 // diamond ring on 276.92-276.95, and the eye is shut exactly on the ting; it stays shut to the cut to black.
 export const WINK = { t0: () => EV.ting - .40, t1: () => EV.ting };
+// the close-up's acting (expr.js): the smirk and the narrowed eyes start here, ramping over three drawings on twos
+export const EXPR = { smirk: 276.20 };
 export function lidAt(t) {
   const a = WINK.t0(), b = WINK.t1();
   if (t < a) return 0;
@@ -120,17 +144,23 @@ export function standinSheets() {
 const E = (cx, cy, rx, ry) => ({ cx, cy, rx, ry });
 const SKIN40 = {
   40: [E(.365, .38, .028, .06), E(.53, .76, .038, .055)],
-  49: [E(.307, .393, .034, .085), E(.398, .788, .038, .06), E(.366, .97, .038, .075)],
-  57: [E(.259, .389, .04, .09), E(.47, .826, .03, .045), E(.357, .99, .035, .065)],
+  49: [E(.307, .393, .04, .085), E(.398, .788, .038, .06), E(.366, .97, .038, .075)],
+  55: [E(.282, .39, .048, .088), E(.45, .81, .035, .05), E(.36, .985, .036, .07)],
+  57: [E(.272, .389, .05, .09), E(.47, .826, .03, .045), E(.357, .99, .035, .065)],
+  61: [E(.279, .388, .046, .085), E(.49, .85, .035, .055), E(.36, .98, .035, .065)],
   67: [E(.508, .866, .04, .06), E(.36, .98, .035, .065)],
 };
+// the desk lamp behind her left shoulder once she faces camera: the matte catches pieces of its orange shade, which
+// are background (the lamp is painted in the room), never her
+const LAMP40 = { cx: .262, cy: .36, rx: .046, ry: .165 };
 const POST40 = [E(.179, .915, .045, .075), E(.48, .933, .045, .075), E(.508, .866, .04, .06)];
 export function celZones(e) {
   if (!e) return {};
   if (e.src === 'sa') return { faces: false, skin: [E(.597, .69, .035, .045)], allowBlue: E(.29, .6, .055, .095), navy: null };
   if (e.src === 'sb' || e.src === 'sc') return { faces: true, skin: [], navy: null, allowBlue: null };
   if (e.src === 'P39') return { faces: false, skin: [E(.505, .657, .036, .046)], allowBlue: E(.302, .646, .05, .085), navy: null };
-  if (e.src === 'P40') return { faces: true, flatFace: e.pf >= 59, skin: SKIN40[e.pf] || POST40, navy: E(.39, .95, .17, .13), allowBlue: null };
-  if (e.src === 'P41') return { faces: true, skin: [], navy: null, allowBlue: null };
+  if (e.src === 'P40') return { faces: true, flatFace: e.pf >= 59 || !!e.smear, skin: SKIN40[e.pf] || POST40, navy: E(.39, .95, .17, .13), allowBlue: null,
+    noOrange: e.pf >= 60 ? [LAMP40] : null };
+  if (e.src === 'P41') return { faces: true, skin: [], navy: null, allowBlue: null, brows: true };
   return {};
 }

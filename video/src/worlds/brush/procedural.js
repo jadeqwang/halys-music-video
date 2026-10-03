@@ -299,13 +299,13 @@ export function bronzeSpecular(o) {
   const sw = o.sweep;
   if (sw && sw.k > 0) {
     const ca = Math.cos(sw.ang ?? 1.1), sa = Math.sin(sw.ang ?? 1.1), cx = sw.pos * W, width = (sw.width ?? .07) * W;
-    for (let j = 0; j < 120; j++) {
+    for (let j = 0; j < 220; j++) {
       const along = (hash3(j, 1, seed) - .5) * 1.4 * H, across = (hash3(j, 2, seed) - .5) * 2, core = Math.exp(-across * across * 3);
       const x = cx + across * width + along * ca * .25, y = H * .5 + along * sa;
       if (x < -20 || x > W + 20 || y < -20 || y > H + 20) continue;
       const m = o.mask ? o.mask(x, y) : 1; if (m <= .05) continue;
       const len = (8 + 26 * core) * u1, dx = ca * len * .5, dy = sa * len * .5;
-      out.push({ pts: [[x - dx, y - dy], [x + dx, y + dy]], r: (1.4 + 3.2 * core) * u1, c0: core > .6 ? hot : gold, c1: gold, a: clamp((.35 + .6 * core) * sw.k * m), thick: .55 + .3 * core, seed: hash3(j, 3, seed), key: 7 + j * 1e-4, layer: 12, taper: .45 });
+      out.push({ pts: [[x - dx, y - dy], [x + dx, y + dy]], r: (1.8 + 4 * core) * u1, c0: core > .5 ? lead : hot, c1: gold, a: clamp((.5 + .7 * core) * sw.k * Math.sqrt(m)), thick: .6 + .3 * core, seed: hash3(j, 3, seed), key: 7 + j * 1e-4, layer: 12, taper: .45 });
     }
   }
   const sn = o.sun;

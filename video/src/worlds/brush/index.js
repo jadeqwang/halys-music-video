@@ -181,7 +181,8 @@ export async function paint(f, src, opts = {}) {
     const W2 = new Float32Array(N), y0 = Math.floor((g.y0 ?? 0) * ah), M = F0.M, skyM = ref.sky, kk = g.k ?? .7;
     for (let y = y0; y < ah; y++) for (let x = 0; x < aw; x++) {
       const i = y * aw + x;
-      W2[i] = kk * (1 - sstep(g.cohLo ?? .2, g.cohHi ?? .65, F0.coh[i])) * (M ? 1 - sstep(.15, .5, M[i]) : 1) * (skyM ? 1 - skyM[i] : 1);
+      // (ripples are coherent too, so by default the coherence only gates where it is very strong: edges of things)
+      W2[i] = kk * (1 - sstep(g.cohLo ?? .75, g.cohHi ?? .97, F0.coh[i])) * (M ? 1 - sstep(.15, .5, M[i]) : 1) * (skyM ? 1 - skyM[i] : 1);
     }
     F = withTensor(F, T, W2, g.gain ?? 1.6);
     F.gw = W2;

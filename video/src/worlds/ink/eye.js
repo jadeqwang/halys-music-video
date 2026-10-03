@@ -64,15 +64,27 @@ function phases(k) {
   return { kd, ks };
 }
 
-export function drawWink(g, view, res, k, t, u, EV, side = 'R') {
+// smooth, interpolated opening profiles of a measured eye: top(x), bot(x) for x0 <= x <= x1 (analysis px)
+export function eyeProfiles(E) {
+  if (E._pr) return E._pr;
+  const xs0 = E.xs, x0 = xs0[0], x1 = xs0[xs0.length - 1];
+  const prof = M => { const a = xs0.map(x => M.get(x)); const o = a.map((_, j) => { let sum = 0, c = 0; for (let q = -4; q <= 4; q++) { const v = a[j + q]; if (v != null) { const w = Math.exp(-q * q / 8); sum += v * w; c += w; } } return sum / c; }); return x => { const f = Math.max(0, Math.min(o.length - 1.001, x - x0)), i = Math.floor(f), r = f - i; return o[i] * (1 - r) + o[i + 1] * r; }; };
+  return (E._pr = { top: prof(E.top), bot: prof(E.bot), x0, x1 });
+}
+// the narrowed opening (expr.js): upper lid down by nt, lower lid up by nb (fractions of the opening, the lower lid
+// rising most in the middle like a cheek pushing up)
+export function narrowed(E, nar) {
+  const { top, bot, x0, x1 } = eyeProfiles(E), nt = (nar && nar.t) || 0, nb = (nar && nar.b) || 0;
+  const bump = x => { const v = (x - (x0 + x1) / 2) / ((x1 - x0) / 2 || 1); return .45 + .55 * Math.max(0, 1 - v * v); };
+  return { top: x => top(x) + nt * (bot(x) - top(x)), bot: x => bot(x) - nb * bump(x) * (bot(x) - top(x)), top0: top, bot0: bot, x0, x1 };
+}
+
+export function drawWink(g, view, res, k, t, u, EV, side = 'R', nar = null) {
   if (!res || k <= 0) return;
   const E = eyeGeom(res, side); if (!E) return;
   const s = view.s, X = x => view.ox + x * s, Y = y => view.oy + y * s;
   const { kd, ks } = phases(k);
-  // smooth, interpolated opening profiles
-  const xs0 = E.xs, x0 = xs0[0], x1 = xs0[xs0.length - 1];
-  const prof = M => { const a = xs0.map(x => M.get(x)); const o = a.map((_, j) => { let sum = 0, c = 0; for (let q = -4; q <= 4; q++) { const v = a[j + q]; if (v != null) { const w = Math.exp(-q * q / 8); sum += v * w; c += w; } } return sum / c; }); return x => { const f = Math.max(0, Math.min(o.length - 1.001, x - x0)), i = Math.floor(f), r = f - i; return o[i] * (1 - r) + o[i + 1] * r; }; };
-  const top = prof(E.top), bot = prof(E.bot);
+  const NP = narrowed(E, nar), x0 = NP.x0, x1 = NP.x1, top = NP.top, bot = NP.bot, top0 = NP.top0, bot0 = NP.bot0;
   const Rm = E.r * 1.066;
   // the Moon's path: from first contact (tangent above the iris, a little to the upper right) to concentric (totality)
   const c0 = [E.cx + E.r * .55, top(E.cx) - Rm * .98], c1 = [E.cx, E.cy];
@@ -94,7 +106,7 @@ export function drawWink(g, view, res, k, t, u, EV, side = 'R') {
   const N = Math.max(8, Math.round((x1 - x0) * 2)), XS = [], EY = [];
   for (let j = 0; j <= N; j++) { const x = x0 + (x1 - x0) * j / N; XS.push(x); EY.push(shut ? closedY(x) : edgeOpen(x)); }
   const EYs = EY.map((_, j) => { let sum = 0, c = 0; for (let q = -3; q <= 3; q++) { const v = EY[j + q]; if (v != null) { const w = Math.exp(-q * q / 4); sum += v * w; c += w; } } return sum / c; });
-  const lashTop = x => top(x) - E.lash - 2, M = 2.6;
+  const lashTop = x => top0(x) - E.lash - 2, M = 2.6;      // the cel's own lash sits above the unnarrowed opening
   g.save();
   // 1. the lid: skin from above the old lash line down to the edge (when shut, down past the lower lid line)
   g.fillStyle = MAT.skin.base;
@@ -102,7 +114,7 @@ export function drawWink(g, view, res, k, t, u, EV, side = 'R') {
   g.moveTo(X(x0 - M), Y(lashTop(x0)));
   for (let j = 0; j <= N; j++) g.lineTo(X(XS[j]), Y(lashTop(XS[j]) - 1.5));
   g.lineTo(X(x1 + M), Y(lashTop(x1)));
-  const low = j => shut ? Math.max(EYs[j], bot(XS[j])) + M : EYs[j];
+  const low = j => shut ? Math.max(EYs[j], bot0(XS[j])) + M : EYs[j];
   g.lineTo(X(x1 + M), Y(low(N)));
   for (let j = N; j >= 0; j--) g.lineTo(X(XS[j]), Y(low(j)));
   g.lineTo(X(x0 - M), Y(low(0)));

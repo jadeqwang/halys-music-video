@@ -14,14 +14,16 @@ Frames: `video/out/frames_drop1/` (1920x1080@60, `node render.mjs --frames=108:1
 | `beatcheck.py` | measures cuts / inversions / kick pulses in rendered frames against timing.json |
 | `contact.py`, `encode_review.sh`, `make_standins.py` | sheet, review encode, temporary stand-ins from plate takes |
 
-## Plates used (final round, 2026-10-03 04:40)
+## Plates used (round 5, 2026-10-03 08:00: every plate analysed, with mattes and depth)
 
-Every Drop 1 plate had landed by the final round and the resolver switched to it by itself: P01 (S35 master, S44),
-P04 (S42), P05+P06 (S43 diptych, two plate layers), P14 (S36, S41), P19 (S36 eye), P24 (S38), P25 (S45), P42-P45
-(S35 reaction cuts, S36 montage), P46 (S37 tableau, its own orbit). Most arrived WITHOUT mattes/depth yet (P01, P25,
-P42-P46): the engine falls back to a detail-based subject and keeps detailed regions out of the sky; contours come from
-image edges, so those shots are softer than they will be once the plate unit adds mattes/depth (picked up automatically).
-Stand-ins (`src/worlds/line/standins/`, 4.9 MB) are now only a fallback and can be deleted.
+Every Drop 1 shot runs on its real plate and chosen take, timed by PLATES.md's sync keys: S35 master P01 (static
+master, its own sun at (0.508, 0.25)), IN THE P42 take 2 (plate 0.85 at the cut: arms up at 1.0, splash 1.3), SKY P44
+(0.875: the rear at 0.92), SKY P43 take 2 (0.95: forehead to the stones at 1.1); S36 P42-P45 + P14 + P19 + P19b frozen at
+the listed reaction times; S37 P46 take 4, 1:1 from 117.53 (its own ~30-degree arc + a little yaw from depth); S38 P24
+retimed so the palm meets the membrane on the touch (124.92 -> plate 1.6, then 1:1); S39 formation 0 = P01's armies
+(its ranked banks lifted onto the ground plane), S40 procedural; S41 P14 take 2 from plate 1.7 (eyes rise at 2.0, the
+gaze runs to the end); S42 P04; S43 P05 + P06; S44 P01's static master; S45 P25 take 2 (hand-off at plate 3.2).
+Stand-ins (`src/worlds/line/standins/`, 4.9 MB) are unused now (fallback only) and can be deleted.
 
 ## Beat sync (beatcheck.py over the rendered frames 108-156 s)
 

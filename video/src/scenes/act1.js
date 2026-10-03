@@ -114,6 +114,8 @@ function brightSky(src, hzY, lo = .42, hi = .56) {
   return m;
 }
 
+const mix3c = (a, b, q) => [a[0] + (b[0] - a[0]) * q, a[1] + (b[1] - a[1]) * q, a[2] + (b[2] - a[2]) * q];
+
 // a balanced look for well-lit real plates: their own light (poolFromLight) and value design (plateKeep) under our
 // tenebrist push (the dark crushes outside the light, a warm key on faces), rim light from the light's side
 function plateLook(src, o = {}) {
@@ -286,9 +288,12 @@ scene('S04', async f => {
   const src = await wideSource(f, cam);
   const W = f.W, H = f.H, sx = L.sun[0] * W, sy = L.sun[1] * H;
   const e = E(t);
+  // the rewind starts in the totality glow (the band, the pearly dome) and winds back into the gold of the day
   await bronze(f, src, wideOpts(t, L, {
     sun: { beads: e.off < .16, moonVis: sstep(.25, .08, e.off), limb: e.off < .2 ? [1.2 * sstep(.2, .07, e.off), 1.5, .5, -Math.PI * .66] : null },
-    extra: { swirl: rewindSwirl(f.k, sx, sy, W, { amount: 3.4 }), corona: e.off < .3 ? { k: sstep(.3, .06, e.off), iris: .2, scale: .7 } : null },
+    sky: { night: TOTALITY_SKY.night * e.night, ring: TOTALITY_SKY.ring * e.ring, zenith: lerp(.16, TOTALITY_SKY.zenith, e.night) },
+    // (the land is P01's day plate run backwards: it keeps the eclipse's dark here; only the drain is eased, so the band stays warm)
+    extra: { swirl: rewindSwirl(f.k, sx, sy, W, { amount: 3.4 }), corona: e.off < .3 ? { k: sstep(.3, .06, e.off), iris: .2, scale: .7 } : null, metalK: .3 },
   }));
 });
 
@@ -381,8 +386,11 @@ scene('S10', async f => {
   const src = await rp(f, 'P07', { id: 'a_duel', cam: k => ({ cx: .5, cy: .66 - .03 * k, zoom: 1.35 + .05 * k }) }, pcam);
   if (hasPlate('P07')) {
     const sun = (await plateSunUV(f, 'P07', pcam)) || [.93, .06];
-    await bronze(f, src, plateLook(src, { lightDir: [.75, -.65], lightPoint: sun, keep: .45, rim: .9, poolMatte: .4,
-      extra: { groundFlow: { y0: .5, k: .8 } } }));
+    // the low sun in the corner throws the charge into silhouette: our sky and sun there, the water's glitter kept
+    // the charge in silhouette against the bright low sky: the plate's own light (the sky and the water's glitter keep
+    // their value), the ranks dark with a rim
+    await bronze(f, src, plateLook(src, { lightDir: [.75, -.65], lightPoint: sun, keep: .68, keepDim: 1, fromLight: .9, bg: .8, rim: .7, poolMatte: .3,
+      extra: { groundFlow: { y0: .5, k: .8 }, glint: 1.3, glintT: .6 } }));
     return;
   }
   await bronze(f, src, { lightDir: [-.7, -.7], pool: [{ x: .5, y: .45, rx: .4, ry: .35, feather: .8, k: .9 }, { x: .5, y: .85, rx: .45, ry: .2, feather: .8, k: .6 }], poolMatte: .6, envDim: .65, crushFloor: .1 });
@@ -429,8 +437,10 @@ scene('S12', async f => {
 // ---------------------------------------------------------------- S13 Lydian cavalry · S14 Median archers loose a volley · S15 they see each other
 scene('S13', async f => {
   const src = await rp(f, 'P09', { id: 'c_armies', cam: k => ({ cx: .16 + .03 * k, cy: .79, zoom: 2.6 + .1 * k }) }, k => ({ cx: .5, cy: .5, zoom: 1.02 + .04 * k }));
-  await bronze(f, src, { lightDir: [-.6, -.8], pool: [{ x: .5, y: .5, rx: .45, ry: .4, feather: .8, k: .9 }], poolMatte: .5, envDim: .7, crushFloor: .11, accents: .9,
-    sky: hasPlate('P09') ? SKY(f.t, { maxDepth: .02, soft: .02, below: .45, horizonY: .35 }) : null });
+  // P09: the Lydian cavalry charging through the shallows, side-lit gold against a dark bank, the spray blazing
+  await bronze(f, src, hasPlate('P09') ? plateLook(src, { lightDir: [.85, -.4], keep: .5, rim: .8, poolMatte: .55, body: .5,
+    pool: [{ x: .5, y: .4, rx: .35, ry: .35, feather: .8, k: .85, fig: true }], extra: { accents: 1.1, glint: 1.2, groundFlow: { y0: .6, k: .75 } } })
+    : { lightDir: [-.6, -.8], pool: [{ x: .5, y: .5, rx: .45, ry: .4, feather: .8, k: .9 }], poolMatte: .5, envDim: .7, crushFloor: .11, accents: .9 });
 });
 scene('S14', async f => {
   const src = await rp(f, 'P10', { id: 'c_armies', cam: k => ({ cx: .79 - .02 * k, cy: .63, zoom: 2.3 + .08 * k }) }, k => ({ cx: .5, cy: .5, zoom: 1.02 + .04 * k }));
@@ -594,7 +604,7 @@ scene('S26', async f => {
       const sunK = bi >= 0 ? sstep(.55, .85, bl) * (.75 + .25 * sstep(83.6, 84.4, t)) : 0;
       const mask = (x, y) => { const ax = clamp(Math.round(x / f.W * aw), 0, aw - 1), ay = clamp(Math.round(y / f.H * ah), 0, ah - 1), i = ay * aw + ax; return sstep(.18, .45, .2126 * src.R[i] + .7152 * src.G[i] + .0722 * src.B[i]); };
       out.push(...PR.bronzeSpecular({ W: f.W, H: f.H, pal, mask, sweep: { pos: gx, k: gk > 0 && gk < 1 ? Math.sin(Math.PI * gk) : 0, ang: 1.15, width: .06 },
-        sun: bi >= 0 ? { x: (bi % aw + .5) / aw * f.W, y: (Math.floor(bi / aw) + .5) / ah * f.H, r: 7, k: sunK } : null }));
+        sun: bi >= 0 ? { x: (bi % aw + .5) / aw * f.W, y: (Math.floor(bi / aw) + .5) / ah * f.H, r: 11, k: sunK * 1.2 } : null }));
       if (egg) out.push(...PR.mirrorFigure({ cx: f.W * mirror.cx, cy: f.H * mirror.cy, R: f.H * mirror.R, u: mirror.u, v: mirror.v, h: mirror.h, pal, tint: [1, .62, .45], tintK: .6, k: .88 }));
       return out;
     },
@@ -629,7 +639,7 @@ scene('S27', async f => {
   }
   // soft crescent light on the figure (round-bodied: his bronze faces the sun), drifting a little as the shield moves
   const fig = src.matte || (src.depth ? src.depth.map(v => sstep(.3, .5, v)) : null);
-  const cf = PR.crescentField(aw, ah, { mag: e.m, stretch: 1.25, ang: -.45, size: aw * .013, density: .55, spacing: 3.2, seed: 21, region: fig, offset: [k * aw * .03, -k * ah * .02] });
+  const cf = PR.crescentField(aw, ah, { mag: e.m, stretch: 1.4, ang: -.45, size: aw * .016, density: .8, spacing: 3.0, seed: 21, region: null, offset: [k * aw * .03, -k * ah * .02] });
   const S2 = f.W / aw;
   await bronze(f, src, {
     lightDir: [.6, -.8], lightPoint: real ? [.85, .05] : null,
@@ -638,8 +648,23 @@ scene('S27', async f => {
     strokes: ({ pal }) => {
       // the brightest specks of the plate's own dappled light, repainted as crisp crescents (bright edge at 7 o'clock:
       // pinhole images are flipped)
-      const col = [.88, .86, .8], out = [];
-      specks.slice(0, 26).forEach(([x, y, v], j) => out.push(...PR.crescentStrokes2(x * S2, y * S2, f.H * (.011 + .008 * hashS(j)), e.m, Math.PI * .75, { color: col, stretch: 1.1, stretchAng: -.4, a: .8, thick: .8, key: 3 + j * .01, seed: hashS(j + 7) })));
+      const col = [.88, .86, .8], warm = [.95, .86, .62], out = [];
+      specks.slice(0, 26).forEach(([x, y, v], j) => out.push(...PR.crescentStrokes2(x * S2, y * S2, f.H * (.014 + .01 * hashS(j)), e.m, Math.PI * .75, { color: col, stretch: 1.2, stretchAng: -.4, a: .85, thick: .8, key: 3 + j * .01, seed: hashS(j + 7) })));
+      // the field the wicker throws over everything (bronze, cloth and ground): a jittered lattice of stretched crescent
+      // suns, gaps where the weave is closed; it slides as the shield moves. Warm and bright on the metal.
+      for (let gy = 0; gy < 8; gy++) for (let gx = 0; gx < 13; gx++) {
+        const h1 = hashS(gx * 31 + gy * 7 + 1), h2 = hashS(gx * 13 + gy * 17 + 5), h3 = hashS(gx * 7 + gy * 29 + 9);
+        if (h3 < .22) continue;
+        const u = (gx + .15 + .7 * h1) / 13 + k * .025, v = (gy + .15 + .7 * h2) / 8 - k * .018;
+        if (u < -.02 || u > 1.02 || v < -.02 || v > 1.02) continue;
+        const ax = clamp(Math.round(u * aw), 0, aw - 1), ay = clamp(Math.round(v * ah), 0, ah - 1), i = ay * aw + ax;
+        const lum = .2126 * src.R[i] + .7152 * src.G[i] + .0722 * src.B[i], metal = sstep(.25, .55, lum);
+        // light lands on surfaces only: none on the dark void behind him, brightest on the bronze
+        const surf = sstep(.06, .16, lum) * (src.depth ? sstep(.2, .35, src.depth[i]) : 1);
+        if (surf < .15) continue;
+        out.push(...PR.crescentStrokes2(u * f.W, v * f.H, f.H * (.02 + .016 * h3), e.m, Math.PI * .75,
+          { color: mix3c(col, warm, metal), stretch: 1.45 + .35 * h1, stretchAng: -.4, a: (.28 + .45 * metal) * surf, thick: .35 + .4 * metal, key: 4 + (gy * 13 + gx) * .001, seed: h2 }));
+      }
       return out;
     },
   });
@@ -664,7 +689,7 @@ scene('S28', async f => {
   const src = await canvasSource(f, 'sky-s28', PR.horizonCanvas({ horizonY: hz, river: false, hill: 1.6 }), { sky: PR.horizonSkyMask({ horizonY: hz, hill: 1.6 }), cache: true });
   await bronze(f, src, {
     lightDir: [.2, -1], pool: [{ x: .5, y: .97, rx: .5, ry: .05, feather: .8, k: .4 }], poolMatte: 0,
-    sky: SKY(t, { horizonY: hz, glowR: .22, drama: .45, cover: .56, vortex: .3 }),
+    sky: SKY(t, { horizonY: hz, glowR: .42, glow: 2.4, drama: .3, cover: .45, vortex: .3, zenith: .3, ring: .6 }),   // the thin crescent still lights a halo of sky
     sun: SUN(t, { x: sun.x, y: sun.y, r: sun.r, ppd: 34 }), accents: 0,
   });
   f.type.sun = { x: sun.x * f.W, y: sun.y * f.H, r: sun.r * f.W };

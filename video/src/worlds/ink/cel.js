@@ -40,7 +40,7 @@ export const CEL_DEFAULTS = {
 };
 
 const ID = Object.fromEntries(MATS.map(m => [m.name, m.id]));
-const NMAT = MATS.length + 1;     // material ids 0..8
+const NMAT = MATS.length + 1;     // material ids 0..9
 
 // ---------------------------------------------------------------- 1-3: colour and classification
 function oklabOf(rgba, N, gain) {
@@ -115,13 +115,30 @@ function skinZones(faces, cfg) {
   return z;
 }
 
+// brow zones (close-up only, cfg.brows): around the landmark brows, tight, so the fringe beside them stays hair
+export function browZones(faces, cfg) {
+  const fc = cfg.brows && cfg.faces !== false ? faces && faces[0] : null;
+  if (!fc || fc.src !== 'mp' || !fc.lines) return [];
+  const z = [];
+  for (const side of ['R', 'L']) {
+    const a = fc.lines[`brow${side}`], b = fc.lines[`brow${side}u`]; if (!a) continue;
+    let x0 = 1, x1 = 0, y0 = 1, y1 = 0;
+    for (const arr of [a, b || []]) for (let i = 0; i + 1 < arr.length; i += 2) { x0 = Math.min(x0, arr[i]); x1 = Math.max(x1, arr[i]); y0 = Math.min(y0, arr[i + 1]); y1 = Math.max(y1, arr[i + 1]); }
+    const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+    // never below the top of the eye's upper lid line (the lashes stay black)
+    const up = fc.lines[`eye${side}_up`]; let ey = 1; if (up) for (let i = 1; i < up.length; i += 2) ey = Math.min(ey, up[i]);
+    z.push({ cx, cy, rx: (x1 - x0) / 2 * 1.18, ry: Math.max((y1 - y0) / 2 * 1.5, .012), ymax: ey - .016 });
+  }
+  return z;
+}
+
 // Classification. Orange and the back circle are decided per pixel (their chroma is unmistakable); skin only inside skin
 // zones and only where the pixel is warm (a lamp-lit sleeve and a hand have the same colour, so position decides);
 // eyes inside the eye zones; everything else is the white jacket (bright) or black (dark), navy only in the trouser
 // zone. Then regions: a small bright patch walled in by black is the hair's sheen, not a piece of jacket.
 function classify(L, A, B, line, alpha, W, H, cfg, eyes, faces) {
   const N = W * H, mat = new Uint8Array(N), UNK = 255;
-  const zones = skinZones(faces, cfg);
+  const zones = skinZones(faces, cfg), brows = browZones(faces, cfg);
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
     const i = y * W + x;
     if (alpha[i] < .5) { mat[i] = 0; continue; }
@@ -141,6 +158,26 @@ function classify(L, A, B, line, alpha, W, H, cfg, eyes, faces) {
     if (l >= cfg.brightL) mat[i] = inSkin && a > cfg.skinA && b > cfg.skinB ? ID.skin : ID.jacket;
     else if (cfg.navy && inEllipse(cfg.navy, u, v) && b < -.022 && C > .022) mat[i] = ID.navy;
     else mat[i] = inSkin && l > .3 && a > cfg.skinA + .01 && b > cfg.skinB ? ID.skin : ID.black;
+  }
+  // brows: black components lying mostly inside a brow zone become brow (the brow strokes); the hair mass beside them
+  // (one big component reaching far outside) stays black
+  if (brows.length) {
+    const inB = i => { const x = i % W, y = (i / W) | 0; return brows.some(z => y / H <= z.ymax && inEllipse(z, x / W, y / H)); };
+    const seen = new Uint8Array(N), st = new Int32Array(N), CAP = 3000;
+    for (const z of brows) {
+      const x0 = Math.max(0, Math.floor((z.cx - z.rx) * W)), x1 = Math.min(W - 1, Math.ceil((z.cx + z.rx) * W));
+      const y0 = Math.max(0, Math.floor((z.cy - z.ry) * H)), y1 = Math.min(H - 1, Math.ceil(Math.min(z.cy + z.ry, z.ymax) * H));
+      for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
+        const s0 = y * W + x; if (seen[s0] || mat[s0] !== ID.black || !inB(s0)) continue;
+        let sp = 0, n = 0, nin = 0; const px = []; st[sp++] = s0; seen[s0] = 1;
+        while (sp) {
+          const i = st[--sp]; n++; if (px.length <= CAP) px.push(i); if (inB(i)) nin++;
+          const xx = i % W, yy = (i / W) | 0;
+          for (const j of [xx > 0 ? i - 1 : -1, xx < W - 1 ? i + 1 : -1, yy > 0 ? i - W : -1, yy < H - 1 ? i + W : -1]) if (j >= 0 && !seen[j] && mat[j] === ID.black) { seen[j] = 1; st[sp++] = j; }
+        }
+        if (n <= CAP && nin / n > .55) for (const i of px) mat[i] = ID.brow;
+      }
+    }
   }
   return mat;
 }
@@ -209,6 +246,11 @@ export function analyzeCel(inp, cfg0 = {}) {
   const eyes = cfg.faces === false ? [] : eyeRegions(inp.faces, W, H);
   // 3. materials
   let mat = classify(L, A, B, lineHi, alpha, W, H, cfg, eyes, inp.faces);
+  // matte errors: orange inside a noOrange zone is a background object the matte caught (the lamp), cut it out of her
+  if (cfg.noOrange) for (const z of cfg.noOrange) {
+    const [x0, x1, y0, y1] = zoneBox(z, W, H);
+    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) { const i = y * W + x; if (mat[i] === ID.orange && inZone(z, x / W, y / H)) { mat[i] = 0; alpha[i] = 0; inside[i] = 0; } }
+  }
   mat = propagate(mat, W, H);
   // 4. region smoothing
   mat = modeFilter(mat, W, H, cfg.mode[0], NMAT, inside, cfg.mode[1]);
@@ -247,7 +289,7 @@ export function analyzeCel(inp, cfg0 = {}) {
   for (const z of cfg.clear || []) {
     const id = ID[z.mat] || ID.jacket;
     const [x0, x1, y0, y1] = zoneBox(z, W, H);
-    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) { const i = y * W + x; if (mat[i] === id && (z.from ? forced[i] : inZone(z, x / W, y / H))) lab[i] = label(id, false); }
+    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) { const i = y * W + x; if (mat[i] === id && (z.from && !z.flat ? forced[i] : inZone(z, x / W, y / H))) lab[i] = label(id, false); }
   }
   // the small face (face.js draws its features): flat skin inside the face oval, the eye zones cleared to skin
   if (cfg.flatFace && eyes.length && cfg.faces !== false) {
@@ -265,14 +307,14 @@ export function analyzeCel(inp, cfg0 = {}) {
   for (let i = 0; i < N; i++) if (!inside[i]) labS[i] = 0;
   const t1 = performance.now();
   // 6. line art
-  const chains = clipChains(lineArt(inp, cfg, { L, R, alpha, inside, mat, labS, eyes, W, H, g1, g2 }), cfg.clear || [], W, H);
+  const chains = clipChains(lineArt(inp, cfg, { L, R, alpha, inside, mat, labS, eyes, W, H, g1, g2, brows: browZones(inp.faces, cfg) }), cfg.clear || [], W, H);
   return { W, H, lab: labS, mat, alpha, chains, eyes, Ls, R, stats: { ms: Math.round(performance.now() - t0), msFill: Math.round(t1 - t0), chains: chains.length } };
 }
 
 // per-setup calibration: shadow thresholds per material from the reference drawing (Otsu inside each material, used
 // only when the two tones really separate; otherwise the material stays flat)
 export function calibrate(res, opts = {}) {
-  const t = {}, N = res.W * res.H, flat = opts.flat || ['blue', 'white'];
+  const t = {}, N = res.W * res.H, flat = opts.flat || ['blue', 'white', 'brow'];
   for (const m of MATS) {
     const msk = new Uint8Array(N); let n = 0;
     for (let i = 0; i < N; i++) if (res.mat[i] === m.id) { msk[i] = 1; n++; }
@@ -332,7 +374,8 @@ function lineArt(inp, cfg, F) {
     let pts = ch.pts;
     let len = 0; for (let k = 1; k < pts.length; k++) len += Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1]);
     const mid = pts[pts.length >> 1], mi = Math.round(mid[1]) * W + Math.round(mid[0]);
-    const eye = eyes.find(ey => inEllipse({ ...ey, rx: ey.rx * 1.15, ry: ey.ry * 1.25 }, mid[0] / W, mid[1] / H));
+    const browMid = F.brows && F.brows.some(z => mid[1] / H <= z.ymax && inEllipse(z, mid[0] / W, mid[1] / H));
+    const eye = browMid ? null : eyes.find(ey => inEllipse({ ...ey, rx: ey.rx * 1.15, ry: ey.ry * 1.25 }, mid[0] / W, mid[1] / H));
     if (len < cfg.lineMin && !eye) continue;
     if ((cfg.clear || []).some(z => !z.poly && inEllipse({ ...z, rx: z.rx * 1.15, ry: z.ry * 1.25 }, mid[0] / W, mid[1] / H))) continue;
     if (cfg.flatFace && eye) continue;
@@ -342,9 +385,10 @@ function lineArt(inp, cfg, F) {
     const kk = clamp((s - cfg.ridgeLo) / (cfg.ridgeHi * 2.2 - cfg.ridgeLo));
     let w = cfg.lineW[0] + (cfg.lineW[1] - cfg.lineW[0]) * kk;
     if (eye) w *= cfg.eyeBoost * (mid[1] / H < eye.cy ? 1 : .6);
-    // colour trace: a line with skin on both sides (nose, cheek) is a darker skin, not black
+    // colour trace: a line with skin on both sides (nose, cheek) is a darker skin, not black; the brows are soft brown
     const lb = labS[mi], skinBoth = sideIs(labS, W, H, pts, ID.skin);
-    chains.push({ pts, kind: eye ? 'eye' : 'int', w, s, col: skinBoth && !eye ? 'skin' : 'ink', len });
+    const brow = browMid;
+    chains.push({ pts, kind: eye ? 'eye' : 'int', w: brow ? w * .85 : w, s, col: brow ? 'brow' : skinBoth && !eye ? 'skin' : 'ink', len });
   }
   // hair strands: bright ridges inside the hair (the plate's highlight strokes), drawn as thin sheen-tone lines so the
   // black mass reads as hair, not a hole

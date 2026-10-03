@@ -37,11 +37,13 @@ export const MAT = {
   jacket: { id: 2, base: '#f2f0ea', shadow: '#c7c6ce' },   // white bomber; the shadow is a neutral-cool grey, never blue
   orange: { id: 3, base: '#f08a2a', shadow: '#c8641d' },   // stripes, headphones, straps
   navy:   { id: 4, base: '#1e2433', shadow: '#141925' },   // cargo pants
-  skin:   { id: 5, base: '#f6dac8', shadow: '#e2ab96' },   // warm skin
+  skin:   { id: 5, base: '#f8d6c2', shadow: '#e4a893' },   // warm skin (a touch warmer than the plate, as on the sheet)
   iris:   { id: 6, base: '#7d4b2b', shadow: '#3f2418' },   // brown eyes (sheet)
   white:  { id: 7, base: '#f7f5f1', shadow: '#d9d3d3' },   // eye whites, patch disc
   blue:   { id: 8, base: '#86b5e6', shadow: '#6e9acb' },   // the RARE EARTH circle (back only)
+  brow:   { id: 9, base: '#3b2826', shadow: '#3b2826' },   // brows in the close-up: a soft dark brown, not the hair's black
 };
+export const BROW_LINE = '#3b2826';
 export const MATS = Object.entries(MAT).filter(([k]) => k !== 'none').map(([name, m]) => ({ name, ...m }));
 // label index = material id * 2 - 1 (+1 for shadow); 0 = not character
 export const label = (id, shadow) => id ? id * 2 - 1 + (shadow ? 1 : 0) : 0;

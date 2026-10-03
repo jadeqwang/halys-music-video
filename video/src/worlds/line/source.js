@@ -78,6 +78,16 @@ export async function sourceFields(spec, tp = 0, aw = 960, aspect = 16 / 9, opt 
     const ta = performance.now();
     // exposure: plates carry the pipeline's gain; stand-ins are normalised here (window p95 luminance -> .82)
     let gain = opt.gain ?? (r.kind === 'plate' ? (r.P.gain || 1) : null);
+    // autoGain (plates): expose for the SUBJECT, not the frame: the window's matte region (else the whole window) p90
+    // luminance -> autoGain. The pipeline's gain is per take and a bright sky behind dark figures (P44, P05/P06, P24)
+    // leaves them dim.
+    if (opt.autoGain && r.kind === 'plate' && opt.gain == null) {
+      const hist = new Uint32Array(256), d = id.data, useM = M && (() => { let c = 0; for (let i = 0; i < M.length; i += 13) if (M[i] > .5) c++; return c > M.length / 13 * .02; })();
+      for (let i = 0, q = 0; i < d.length; i += 4, q++) if (!useM || M[q] > .5) hist[(d[i] * 54 + d[i + 1] * 183 + d[i + 2] * 19) >> 8]++;
+      let tot = 0; for (const v of hist) tot += v; let acc = 0, p90 = 255; for (let v = 0; v < 256; v++) { acc += hist[v]; if (acc >= tot * .9) { p90 = v; break; } }
+      const [lo, hi] = opt.gainRange || [.8, 3.2];
+      gain = Math.min(hi, Math.max(lo, opt.autoGain * 255 / Math.max(p90, 1)));
+    }
     if (gain == null) {
       const hist = new Uint32Array(256), d = id.data; for (let i = 0; i < d.length; i += 16) hist[(d[i] * 54 + d[i + 1] * 183 + d[i + 2] * 19) >> 8]++;
       let tot = 0; for (const v of hist) tot += v; let acc = 0, p95 = 255; for (let v = 0; v < 256; v++) { acc += hist[v]; if (acc >= tot * .95) { p95 = v; break; } }
