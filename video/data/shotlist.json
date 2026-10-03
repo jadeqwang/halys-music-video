@@ -700,7 +700,7 @@
   {
    "id": "S31",
    "t0": 100.24,
-   "t1": 103.64,
+   "t1": 101.61,
    "world": "bronze",
    "worlds": [
     "bronze"
@@ -716,9 +716,26 @@
     }
    ],
    "section": "6 · Chorus 1, 96.89–110.58 (B56–63), full orchestra and choir; riser from 108.0",
-   "picture": "The black Sun with Baily's beads and the corona emerging, over the armies. On **102.21** (biggest boom) every face turns up in unison: the formation moment.",
+   "picture": "The black Sun with Baily's beads and the corona emerging over the armies: a real totality, no eye shapes.",
    "text": "CARVED `EYE OF GODS ABOVE`",
    "sync": "Booms 100.27, 102.21"
+  },
+  {
+   "id": "S31b",
+   "t0": 101.61,
+   "t1": 103.64,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P47"
+   ],
+   "cues": [],
+   "section": "6 · Chorus 1, 96.89–110.58 (B56–63), full orchestra and choir; riser from 108.0",
+   "picture": "**The arm-pull.** In the shallows the Lydian hero stands over the fallen Mede (down on one knee), sword raised to strike. On the **102.21** boom his comrade grabs the raised forearm from behind and pulls; the Lydian turns; the comrade points up; all three look at the sky. Behind them every face in both armies turns up in unison.",
+   "text": "(EYE OF GODS ABOVE lingers from S31)",
+   "sync": "Grab lands on the 102.21 boom"
   },
   {
    "id": "S32",
@@ -739,7 +756,7 @@
     }
    ],
    "section": "6 · Chorus 1, 96.89–110.58 (B56–63), full orchestra and choir; riser from 108.0",
-   "picture": "The duelists stop, lower their weapons and look at each other (mirrored two-shot). A sword drops into the water on \"blade\" 104.96.",
+   "picture": "The Lydian lowers his sword; he and the Mede look at each other (mirrored two-shot). A sword drops into the water on \"blade\" 104.96.",
    "text": "CARVED `THROW DOWN YOUR BLADE`",
    "sync": ""
   },
@@ -944,7 +961,7 @@
    ],
    "cues": [],
    "section": "7 · Drop 1, 110.58–153.83 (B64–88). Totality: CORONA, 60 fps.",
-   "picture": "The ground ring tightens into an eye that mirrors the sky; tilt up from the eye on the ground to the eye in the sky. At ≈138.6 the sky's eye is **her** anime eye for 2 frames.",
+   "picture": "The ground ring fills into a **real eclipse made of particles** (a black disk ringed by a particle corona) that mirrors the eclipse in the sky; tilt up from the eclipse on the ground to the real one. No eye shapes and no eyelids anywhere: the eclipse always looks like an actual eclipse.",
    "text": "—",
    "sync": ""
   },

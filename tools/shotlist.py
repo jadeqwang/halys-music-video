@@ -99,7 +99,7 @@ def parse(src=SRC):
         if line.startswith("## "):
             section = line[3:].strip()
             continue
-        if not re.match(r"^\|\s*S\d+\s*\|", line):
+        if not re.match(r"^\|\s*S\d+[a-z]?\s*\|", line):
             continue
         c = cells(line)
         if len(c) < 6:

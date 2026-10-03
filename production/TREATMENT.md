@@ -78,7 +78,7 @@ A single shaft of light picks out one duel in the shallows. *"Sun burning on the
 **Drop 1 — TOTALITY, CORONA.** On the first kick the paint flakes off like embers and the world is light. The camera orbits the frozen battle.
 **HALO · IN THE · SKY · SKY** slam full-frame on the chops. The eye's pupil pumps with the sidechained strings, and brass stabs invert the frame.
 Seen from above, the soldiers become particles, agents in the simulation, and re-form on the beat like a drone show into the ring, then the eye.
-For two frames near the end the eye in the sky is an anime eye (rewatch bait).
+(Cut: the anime-eye flash. The eclipse always looks like a real eclipse.)
 
 **Breakdown + verse 2 — MARBLE (time paused).** Piano. The light cools and the particles settle into stone. The camera drifts through the frozen battle like a museum at night.
 Lyrics are small italic inscriptions, some cut into the plinths. *"Birds went quiet"*: a flock stopped mid-air. *"what we do next is how history unfolds"*:
@@ -127,8 +127,7 @@ The final chord may be held a few seconds longer (spectral freeze) to give the w
   animates on twos with real holds and smears. The drop literally changes how reality is sampled.
 * **Foreshadowing, rewatch bait (each ≤ 12 frames, never called out):** a convex bronze shield reflects a tiny figure in orange headphones holding a Yagi
   antenna (Van Eyck's *Arnolfini* mirror trick) on "Sun burning on the bronze"; in the pre-chorus a vector-flat orange disc briefly slides over the
-  painted sun (the simulation leaking); on the first chopped "HALO" the O is eclipsed for 3–4 frames leaving **HAL**; near the end of Drop 1 the eye in the
-  sky is her eye for two frames.
+  painted sun (the simulation leaking); on the first chopped "HALO" the O is eclipsed for 3–4 frames leaving **HAL**; (the anime-eye flash is cut).
 * **Drop 1 caption:** "we just went sci-fi." — V. Glover, Artemis II, during totality, 6 Apr 2026 (small, accurately attributed, no agency marks).
 * **The Flammarion moment** (the 1888 engraving of a man pushing his head through the firmament) for *"What was it like when reality suddenly broke"*.
 * **Thales section:** a generic forecast card ("Will the sun go dark over the Halys before sunset?" YES 3¢ → 99¢, ≤ 2 s, no real-market UI) and
@@ -170,3 +169,10 @@ The final chord may be held a few seconds longer (spectral freeze) to give the w
   "No blue until Earth" is historically literate, not just a rule.
 * **Totality probably missed the Halys** by a hair under standard ΔT (96–99 %). Herodotus never names the river as the battlefield. The film follows the
   legend, and the ending's `dt.shift(+300)` is the in-joke that admits it.
+
+## v0.3: direction from the singer
+
+* **The eclipse always looks like an actual eclipse.** It never has eyelids, an iris drawing or an almond eye shape, and the sky never turns into her eye. The "vacant eye of a god" lives in the lyric
+  and in how people react to the sky. The only eyelid in the film is hers, in the wink, drawn with the Moon's curved edge. The rhyme is now implied rather than drawn.
+* **The arm-pull** (S31b, on the 102.21 boom): the Lydian hero is about to strike the fallen Mede when his comrade grabs his arm; all three look up.
+  A comrade stopping the strike makes the moment of stopping human.
