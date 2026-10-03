@@ -169,11 +169,11 @@ async function mapField(id, kind, f, w, h) {         // one channel (or two for 
   else url = `plates/${id}/maps/${kind}${pad}.png`;
   const img = await decodeOnce(url);
   if (!img) { _maps.set(key, null); return null; }
-  const d = pixels(img, img.width, img.height, null), N = img.width * img.height;
+  const iw = img.width, ih = img.height, d = pixels(img, iw, ih, null), N = iw * ih;
   closeBmp(img);
   let out;
-  if (kind === 'v') { const fx = new Float32Array(N), fy = new Float32Array(N); for (let i = 0; i < N; i++) { fx[i] = (d[i * 4] - 128) / 4; fy[i] = (d[i * 4 + 1] - 128) / 4; } out = { w: img.width, h: img.height, fx, fy }; }
-  else { const a = new Float32Array(N); for (let i = 0; i < N; i++) a[i] = d[i * 4] / 255; out = { w: img.width, h: img.height, data: a }; }
+  if (kind === 'v') { const fx = new Float32Array(N), fy = new Float32Array(N); for (let i = 0; i < N; i++) { fx[i] = (d[i * 4] - 128) / 4; fy[i] = (d[i * 4 + 1] - 128) / 4; } out = { w: iw, h: ih, fx, fy }; }
+  else { const a = new Float32Array(N); for (let i = 0; i < N; i++) a[i] = d[i * 4] / 255; out = { w: iw, h: ih, data: a }; }
   _maps.set(key, out);
   return out;
 }
