@@ -1,0 +1,73 @@
+{
+ "plate": "P27",
+ "take": 5,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 200.8,
+ "est_cost_usd": 0.9248,
+ "duration_s": 4.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 181.23,
+   "dur": 4.0,
+   "file": "media/plates/P27/audio_song_0181.23_4.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 4,
+  "takes": 2,
+  "refs": [
+   "THALES",
+   "LYD",
+   "MED"
+  ],
+  "audio": {
+   "t0": 181.23,
+   "src": "song"
+  },
+  "t_song": [
+   181.23,
+   185.23
+  ],
+  "shots": "S52",
+  "sync": [
+   [
+    182.485,
+    "'Thales' (plate 1.26)"
+   ]
+  ],
+  "prompt": "During a total solar eclipse, on a flat riverbank, Thales of Miletus, the man from reference image 1 (about 40, SHORT CURLY dark hair bound with a thin fillet, a short trimmed curly beard, a lively, clever face; a saffron-ochre wool himation with a dark woven border over an undyed cream chiton, leather sandals; a wax tablet in his left hand and a short wooden shadow-stick, a gnomon about 40 cm long, in his right hand; no long staff, no red robe, no long hair) walks toward the camera: four slow, clear steps (left foot, right foot, left, right), the shadow-stick in his right hand, tablet in his left, his face tilted up to the sky with sharp, amused curiosity, as if checking a calculation. He walks along a path between warriors frozen like statues mid-battle on both sides of him: a Lydian like reference image 2 (crested bronze helmet, crimson tunic, lion shield) frozen mid-thrust on the left, a Mede like reference image 3 (red felt cap, ochre tunic, wicker shield) frozen behind his shield on the right, more frozen warriors further back. The warriors are completely motionless; Thales is the only thing that moves. Readable dusk light of a total eclipse: dim, even twilight, an orange glow low along the horizon, every face and costume still clearly readable. No fog, no smoke. He is lit a little warmer than the frozen men. Camera static on a tripod at chest height: he starts in the middle distance and ends in a medium shot. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "notes": "The only living thing walks between the statues (painted in colour by the renderer).",
+  "prompt_v1": "During a total solar eclipse, on a riverbank, Thales of Miletus, the man from reference image 1 (about 40, lean, dark hair knotted at the nape under a braided fillet, short pointed beard with a shaved upper lip, crinkled off-white linen chiton, terracotta-red wool mantle over the left shoulder, leather sandals, a tall wooden staff in his hand), walks slowly toward the camera between warriors frozen like statues mid-battle: Lydians like reference image 2 (crested bronze helmets, crimson tunics, lion shields) and Medes like reference image 3 (red felt caps, ochre tunics, wicker shields), caught mid-strike and completely motionless. He is the only thing that moves: calm, unhurried steps, head tilted back, looking up at the sky with quiet curiosity, his mantle swaying. Readable dusk light of a total eclipse: dim, even twilight, an orange glow low along the horizon, every face and costume still clearly readable. No fog, no smoke. He is lit a little warmer than the frozen men. Camera: slow, steady tracking shot moving backward in front of him at chest height. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "refs_v1": [
+   "THALES",
+   "LYD",
+   "MED"
+  ],
+  "retake_note": "Thales redesign: v1/v2 used the old sheet (long knotted hair, terracotta mantle, long staff), which read as Jesus; v3 uses the new philosopher-herm sheet and keeps v2's static camera and explicit steps",
+  "prompt_v2": "During a total solar eclipse, on a flat riverbank, Thales of Miletus, the man from reference image 1 (about 40, lean, dark hair knotted at the nape under a braided fillet, short pointed beard with a shaved upper lip, crinkled off-white linen chiton, terracotta-red wool mantle over the left shoulder, leather sandals), walks toward the camera: four slow, clear steps (left foot, right foot, left, right), his tall wooden staff in his right hand touching the ground with each step, his mantle swaying, his face tilted up to the sky with quiet curiosity. He walks along a path between warriors frozen like statues mid-battle on both sides of him: a Lydian like reference image 2 (crested bronze helmet, crimson tunic, lion shield) frozen mid-thrust on the left, a Mede like reference image 3 (red felt cap, ochre tunic, wicker shield) frozen behind his shield on the right, more frozen warriors further back. The warriors are completely motionless; Thales is the only thing that moves. Readable dusk light of a total eclipse: dim, even twilight, an orange glow low along the horizon, every face and costume still clearly readable. No fog, no smoke. He is lit a little warmer than the frozen men. Camera static on a tripod at chest height: he starts in the middle distance and ends in a medium shot. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "avatar": true
+ },
+ "request": {
+  "prompt": "During a total solar eclipse, on a flat riverbank, Thales of Miletus, the man from reference image 1 (about 40, SHORT CURLY dark hair bound with a thin fillet, a short trimmed curly beard, a lively, clever face; a saffron-ochre wool himation with a dark woven border over an undyed cream chiton, leather sandals; a wax tablet in his left hand and a short wooden shadow-stick, a gnomon about 40 cm long, in his right hand; no long staff, no red robe, no long hair) walks toward the camera: four slow, clear steps (left foot, right foot, left, right), the shadow-stick in his right hand, tablet in his left, his face tilted up to the sky with sharp, amused curiosity, as if checking a calculation. He walks along a path between warriors frozen like statues mid-battle on both sides of him: a Lydian like reference image 2 (crested bronze helmet, crimson tunic, lion shield) frozen mid-thrust on the left, a Mede like reference image 3 (red felt cap, ochre tunic, wicker shield) frozen behind his shield on the right, more frozen warriors further back. The warriors are completely motionless; Thales is the only thing that moves. Readable dusk light of a total eclipse: dim, even twilight, an orange glow low along the horizon, every face and costume still clearly readable. No fog, no smoke. He is lit a little warmer than the frozen men. Camera static on a tripod at chest height: he starts in the middle distance and ends in a medium shot. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "duration": 4,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(561 KB)",
+   "data:image/jpeg;base64...(582 KB)",
+   "data:image/jpeg;base64...(557 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(130 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T13:04:03"
+}

@@ -8,7 +8,8 @@ Frames: `video/out/frames_drop1/` (1920x1080@60, `nice -n 10 node render.mjs --f
 | file | what |
 |---|---|
 | `drop1_r5_108-126.mp4` | hand-off (S34, brush) -> the break -> stutter montage -> orbit -> Flammarion, with the song (720p review encode) |
-| `drop1_r5_126-157.mp4` | agents -> eye + tilt -> the four chop cycles -> collapse -> S45 widening to the 157.03 hand-off |
+| `drop1_r6_126-157.mp4` | agents -> the particle eclipse + tilt to the real one -> the four chop cycles -> collapse -> S45 widening to the 157.03 hand-off |
+| `drop1_r6_eclipse_sheet.jpg` | S39-S40 after the singer's change (18 frames) |
 | `drop1_r5_sheet.jpg` | contact sheet (46 frames); `drop1_r1_sheet.jpg` is the round-1 sheet the director's notes were written on |
 | `temporal_P04_transport_vs_naive.mp4` | left: the temporal engine on plate P04 (references + flow transport + crossfade); right: naive per-frame tracing |
 | `beatcheck.py` | measures cuts / inversions / kick pulses in rendered frames against timing.json |
@@ -120,3 +121,20 @@ Critique: close-up faces still read as engraved flow lines (the features are not
 P19b (the Mede's eye) has no usable matte, so that XCU is texture without a contour; S38's tear opens beside the hand,
 because P24 is a reach, not a push-through; S44's spear ticks are busy behind HALO; the first snap (P01 positions ->
 blocks) is a long flight, so it streaks more than the others.
+
+## Round 6 (the singer: the eclipse always looks like an actual eclipse, no eyelids or eye shapes)
+
+* S39: the iris formation (radial spokes) is gone: on 132.69 the ring tightens onto the limb of a crisp black disk (the
+  river is cut out of it).
+* S40: the almond lids and the iris are gone: on 133.13 the ring fills outward into a real eclipse made of the 5200
+  particles: a saturated limb, three small red prominences, helmet streamers flowing slowly outward, polar plumes and the
+  inner corona, fading outward in brightness and point size. It uses the sky corona's own streamer table and tilt
+  (CORONA_DEFAULTS, RING.tilt), so seen top-down it matches the sky's eclipse and after the tilt it is its reflection.
+  The corona breathes with the kick (radial push outside the limb, the disk fixed). The 2-frame anime-eye flash at
+  138.6 is removed (proc.animeEye is no longer used anywhere).
+* Checked every other shot: S35's opening is the eclipse's black disk, S41-S44 the centre-locked eclipse, S37 the
+  tableau's corona; no drawn eye shapes remain. (S36 still has the two plate eye close-ups P19 / P19b: human reactions,
+  not the eclipse.)
+* Check render 126-141 s (`--workers=1`, `nice -n 10`): 900 frames in 740 s (0.82 s/frame at load 9-11). Snaps 6/6
+  within one frame; kick pulses 94 % on the frame; the S39 -> S40 boundary is now a continuous fill that starts on the
+  133.126 frame (diff 4.5x median there, 0.0-0.1x before), not a hard cut.
