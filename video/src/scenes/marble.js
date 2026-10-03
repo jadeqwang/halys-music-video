@@ -30,6 +30,7 @@ const smooth = k => k * k * (3 - 2 * k);
 const sstep = (a, b, x) => smooth(clamp((x - a) / (b - a)));
 const seg = (t, a, b) => clamp((t - a) / (b - a));
 const easeInOut = k => k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+const kfl = (t, keys) => { if (t <= keys[0][0]) return keys[0][1]; for (let i = 1; i < keys.length; i++) if (t <= keys[i][0]) { const [a, va] = keys[i - 1], [b, vb] = keys[i]; return va + (vb - va) * (t - a) / (b - a); } return keys[keys.length - 1][1]; };
 
 // plate time 0 = the song time each plate was generated against (production/PLATES.md)
 const T0 = { P14: 65.67, P19: 93.0, P20: 100.24, P25: 153.83, P26: 178.66, P27: 181.23, P28: 184.64, P29: 194.86 };
@@ -298,8 +299,10 @@ function dustStrokes(f, ctx, lt) {
 
 // ================================================================ S52-S54: Thales, the only living thing, in BRONZE
 // One paint pass with a palette that holds both worlds: the statues are the stone reference, Thales (his matte: the
-// middle figure of P27; the whole matte of P28, plus his staff from the depth) is the plate re-lit as living paint and
-// mapped into the BRONZE box.
+// middle figure of P27; the whole matte of P28, wax tablet and short gnomon included) is the plate re-lit as living
+// paint and mapped into the BRONZE box (the saffron himation paints as yellow ochre and Naples over umber shadows).
+// The redesigned Thales (2026-10-03): short curly hair with a fillet, trimmed beard, saffron himation with a dark
+// border, a wax tablet and a short gnomon; no staff.
 const BRONZE = () => getPalette('bronze');
 function livingRef(st, src, TM, o = {}) {
   const { aw, ah } = src, N = aw * ah, box = BRONZE(), lab = [0, 0, 0], rgb = [0, 0, 0], m = [0, 0, 0];
@@ -313,7 +316,9 @@ function livingRef(st, src, TM, o = {}) {
     const keyK = clamp(1.15 - .55 * kx - .45 * ky);
     rgb2lab(Math.min(1, src.R[i] * gain), Math.min(1, src.G[i] * gain), Math.min(1, src.B[i] * gain), lab);
     const L = clamp(Math.pow(clamp(lab[0]), .92) * lerp(.7, 1.08, keyK), .04, .95);
-    lab2rgb(L, lab[1] * 1.2 + .006, lab[2] * 1.2 + .02, rgb);
+    // (chroma kept, the red pulled back: the saffron himation lands on yellow ochre and Naples, its folds in umber)
+    const aC = lab[1] > .02 ? .02 + (lab[1] - .02) * (o.redK ?? .62) : lab[1] * 1.1;
+    lab2rgb(L, aC + .004, lab[2] * 1.18 + .016, rgb);
     box.map(rgb[0], rgb[1], rgb[2], m);
     rgb2lab(m[0], m[1], m[2], lab); lab2rgb(lab[0], lab[1] - .004, lab[2] - .012, rgb);
     st.R[i] = lerp(st.R[i], rgb[0], tm); st.G[i] = lerp(st.G[i], rgb[1], tm); st.B[i] = lerp(st.B[i], rgb[2], tm);
@@ -335,32 +340,59 @@ function componentNear(M, aw, ah, cx, thr = .5) {
 }
 async function thalesFrame(f, o) {
   const src = await plate(f, o.plate, o.cam, { keys: o.keys });
+  // P28's dark sky has a depth gradient the relief would carve into stone: the sky is everything above the silhouetted
+  // crowd (its line sinks a little as the plate pushes in), never Thales
+  if (o.skyLine != null) {
+    const { aw, ah } = src, sk = new Float32Array(aw * ah), R0 = camRect(f, o.cam);
+    for (let y = 0; y < ah; y++) { const V = (y / ah - .5) * R0.hU + o.cam.cy; const k = 1 - sstep(o.skyLine - .025, o.skyLine + .004, V);
+      for (let x = 0; x < aw; x++) { const i = y * aw + x; sk[i] = k * (1 - (src.matte ? src.matte[i] : 0)); } }
+    src.sky = sk; src.key += '|skyLine' + o.skyLine.toFixed(3);
+    // the silhouetted crowd under that line becomes the marble statues behind him: dark against the horizon glow in a
+    // band below the line (the glow between their heads stays sky-bright land), the dark mass below them stone too
+    const crowd = new Float32Array(aw * ah);
+    for (let y = 0; y < ah; y++) {
+      const V = (y / ah - .5) * R0.hU + o.cam.cy; if (V < o.skyLine - .01 || V > o.skyLine + .2) continue;
+      let mx = 0; for (let x = 0; x < aw; x++) { const i = y * aw + x, l = .2126 * src.R[i] + .7152 * src.G[i] + .0722 * src.B[i]; if (l > mx) mx = l; }
+      const deep = sstep(o.skyLine + .07, o.skyLine + .12, V) * (1 - sstep(o.skyLine + .15, o.skyLine + .2, V));
+      for (let x = 0; x < aw; x++) { const i = y * aw + x, l = .2126 * src.R[i] + .7152 * src.G[i] + .0722 * src.B[i];
+        crowd[i] = Math.max(1 - sstep(mx * .38, mx * .62, l), deep) * (1 - sk[i]); }
+    }
+    o.stone = { ...(o.stone || {}), statueMask: (x, y, m) => Math.max(m, crowd[y * aw + x]) };
+  }
   const st = stoneSource(f, src, { sky: o.sky, water: { k: .4 }, ...(o.stone || {}) });
   // his region
   let TM;
   if (o.plate === 'P27') TM = src.matte ? componentNear(src.matte, src.aw, src.ah, o.thalesX ?? .47) : new Float32Array(src.aw * src.ah);
-  else { TM = new Float32Array(src.aw * src.ah); for (let i = 0; i < TM.length; i++) TM[i] = Math.max(src.matte ? src.matte[i] : 0, src.depth ? sstep(.55, .7, src.depth[i]) : 0) * (1 - st.S[i]); TM = blurFast(TM, src.aw, src.ah, .7); }
+  else { TM = new Float32Array(src.aw * src.ah); for (let i = 0; i < TM.length; i++) TM[i] = (src.matte ? src.matte[i] : 0) * (1 - st.S[i]); TM = blurFast(TM, src.aw, src.ah, .7); }
   livingRef(st, src, TM, o.living || {});
   const T = f.type || (f.type = {});
   T.light = { dir: [-.6, -.8], elev: .5, color: '#f3dcb0', intensity: 1.0, cool: .25 };
   return { st, TM, src };
 }
-// S52: Thales walks toward the lens between the Lydian and the Mede (P27, 1:1); his name on 182.49
+// S52: Thales walks toward the lens between the Lydian and the Mede (P27 from 0.42 s, 1:1: before that his matte
+// joins the warriors' spears); his name on 182.49
+const S52_KEYS = [[181.23, .42], [183.34, 2.53]];
 scene('S52', async f => {
   const k = seg(f.t, 181.23, 183.34), cam = { cx: .5, cy: .5, zoom: 1.03 + .02 * k };
-  const { st } = await thalesFrame(f, { plate: 'P27', cam, sky: { dLo: .02, dHi: .08, below: .55, run: 3 } });
+  const { st } = await thalesFrame(f, { plate: 'P27', cam, keys: S52_KEYS, sky: { dLo: .02, dHi: .08, below: .55, run: 3 } });
   await paintStone(f, st, { stars: { toScreen: camScreen(f, cam), n: 140, k: .75 }, paint: { palette: SPARK_PAL } });
   f.type.light = { dir: [-.6, -.8], elev: .5, color: '#f3dcb0', intensity: 1.0, cool: .25 };
 });
-// S53: close; the gold construction lines bloom around him (theorem, saros dial, gear into code); S54: the glance
-const S53_KEYS = [[183.34, .15], [186.9, 2.0], [187.65, 2.8], [188.51, 3.7]];
+// S53: close; the gold construction lines bloom around him (theorem, saros dial, gear into code); S54: the glance.
+// P28: he studies the sky 0-2.2 (played slower, under the bloom), lowers his head with a blink 2.25-2.7 at plate speed,
+// his eyes meet the lens on 187.65 (2.75), then 1:1 into the sly half-smile (~3.25)
+const S53_KEYS = [[183.34, .05], [187.13, 2.23], [187.65, 2.75], [188.51, 3.61]];
 async function s53(f, dim) {
   const k = seg(f.t, 183.34, 188.51), cam = { cx: .5, cy: .5, zoom: 1.04 + .03 * k };
-  const { st, TM } = await thalesFrame(f, { plate: 'P28', cam, keys: S53_KEYS, sky: { dLo: .02, dHi: .09, below: .6, run: 3 }, stone: { horizonY: .52 } });
+  const tp = kfl(f.t, S53_KEYS), line = .405 + .011 * tp, hzF = (line - cam.cy) / camRect(f, cam).hU + .5;
+  const { st, TM } = await thalesFrame(f, { plate: 'P28', cam, keys: S53_KEYS, skyLine: line, sky: { dLo: .02, dHi: .05, below: .55, run: 3 }, stone: { horizonY: hzF + .035 } });
   await paintStone(f, st, { stars: { toScreen: camScreen(f, cam), n: 120, k: .7 }, paint: { palette: SPARK_PAL }, statueDetail: .9 });
   // the diagrams, behind him (his matte cuts them)
   const L = f.layer(7);
-  thalesDiagrams(L.g, f.W, f.H, f.t, { dial: [.845, .56], dialR: .145, theorem: [.2, .31], gear: [.905, .86], codeAt: 'left', t0: 183.45, dim });
+  // (anchored to the new composition: the theorem in the dark beside the head he tilts up to the sky, the saros dial
+  // over the silhouetted crowd off his shoulder, the gear by his wax tablet unravelling into code; all clear of the
+  // lyric (lower left) and the forecast card (upper right))
+  thalesDiagrams(L.g, f.W, f.H, f.t, { dial: [.835, .5], dialR: .135, theorem: [.17, .33], gear: [.905, .85], codeAt: 'left', t0: 183.45, dim });
   cutMatte(L, TM, st.aw, st.ah, f);
   const g = f.g; g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(L.c, 0, 0); g.restore();
 }
