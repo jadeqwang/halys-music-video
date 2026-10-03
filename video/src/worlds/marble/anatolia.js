@@ -138,18 +138,18 @@ export function mapSource(f, o = {}) {
     let nx = -hx * rel * .06, ny = hy * rel * .06, nz = 1; const nl = Math.hypot(nx, ny, nz); nx /= nl; ny /= nl; nz /= nl;   // board space: x east, y north
     const land = onBoard ? gs(G.land, n, m, u, v) : 0, riv = onBoard ? gs(G.river, n, m, u, v) : 0, lake = onBoard ? gs(G.lake, n, m, u, v) : 0;
     // marble: land a warm white, the sea a polished darker grey-violet slab, the rim dark
-    let alb = lerp(.2, .8, land) * (1 - .6 * riv) * (1 + .06 * (vnoise(u * 160, v * 160, 3) - .5));
+    let alb = lerp(.085, .8, land) * (1 - .6 * riv) * (1 + .06 * (vnoise(u * 160, v * 160, 3) - .5));
     alb = lerp(alb, .7, lake * .6);
     const veins = Math.abs(Math.sin((u * 3.1 + v * 1.7) * 22 + 3 * fbm(u * 6, v * 6, 9, 3))); alb *= 1 - .18 * (1 - sstep(0, .045, veins)) * land;
     const kd = clamp(nx * key[0] + ny * key[1] + nz * key[2]);
     const kw = clamp(nx * west[0] + ny * west[1] + nz * west[2]) * sstep(.85, .1, u) * .9;    // the glow from the western (sunset) edge
-    const tint = land > .5 ? [1.0, .97, .92] : [.86, .9, 1.0];
+    const tint = land > .5 ? [1.0, .97, .92] : [.8, .88, 1.05];
     let r = alb * (.06 + .95 * kd) * .9 * tint[0] + kw * .85 * alb;
     let g = alb * (.06 + .95 * kd) * .9 * tint[1] + kw * .45 * alb;
     let b = alb * (.08 + .95 * kd) * .9 * tint[2] + kw * .16 * alb;
     // specular sheen on the polished sea
-    if (!land && onBoard) { const s = Math.pow(clamp(1 - Math.abs(u - .25) * 2) * clamp(1 - Math.abs(v - .45) * 2), 3) * .25; r += s; g += s * .9; b += s * .85; }
-    if (!onBoard) { const k = sstep(-.08, 0, Math.min(u, v)) * sstep(1.08, 1, u) * sstep(1.12, 1, v); r = g = b = .04 + .08 * k; r += .06 * sstep(.3, -.08, u); }
+    if (!land && onBoard) { const s = Math.pow(clamp(1 - Math.abs(u - .25) * 2) * clamp(1 - Math.abs(v - .45) * 2), 3) * .12; r += s; g += s * .9; b += s * .85; }
+    if (!onBoard) { const k = sstep(-.08, 0, Math.min(u, v)) * sstep(1.08, 1, u) * sstep(1.12, 1, v); r = g = b = .025 + .05 * k; r += .05 * sstep(.3, -.08, u); }
     // the umbra and its penumbra
     if (sh) { const q = umbraAt(u, v, sh); const dk = 1 - .88 * q.umbra - .3 * q.pen * (1 - q.umbra); r *= dk; g *= dk * .98; b *= dk * .97; }
     // to sRGB (simple gamma), a soft shoulder
@@ -166,8 +166,8 @@ export function mapSource(f, o = {}) {
 export function armyPawns(f, cam, aw, ah, o = {}) {
   const P = [], toS = boardToScreen(cam, aw, ah), [bu, bv] = toBoard(...BATTLE), S = f.W / aw;
   for (const side of [-1, 1]) for (let r = 0; r < 4; r++) for (let c = 0; c < 6; c++) {
-    const u = bu + side * (.012 + .0045 * r) + (hash3(r, c, side + 5) - .5) * .001, v = bv - .012 + .0048 * c + (side < 0 ? .002 : -.002);
-    const base = toS(u, v, 0), top = toS(u, v, .006); if (!base || !top) continue;
+    const u = bu + side * (.013 + .0062 * r) + (hash3(r, c, side + 5) - .5) * .0014, v = bv - .016 + .0066 * c + (side < 0 ? .002 : -.002);
+    const base = toS(u, v, 0), top = toS(u, v, .0105); if (!base || !top) continue;
     P.push({ x: base[0] * S, y: base[1] * S, tx: top[0] * S, ty: top[1] * S, side, z: base[2] });
   }
   return P.sort((a, b) => b.z - a.z);

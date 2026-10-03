@@ -118,7 +118,8 @@ export function lodA() {
   for (const piece of ANATOLIA) { const pts = []; for (let i = 0; i < piece.p.length; i += 2) pts.push(K(piece.p[i] / 1000, piece.p[i + 1] / 1000)); if (piece.c) pts.push(pts[0]); out.push(mkLine(pts, { b: 1.15, w: 1.25, o: .05, flags: FL.NOFADE | FL.SHARP })); }
   const rv = R.pts.filter((p, i) => i % 6 === 0 || i === R.pts.length - 1);
   out.push(mkLine(rv.map(p => [p[0], p[1]]), { b: 1.5, w: 2.1, o: 1, flags: FL.NOFADE, spd: .8 }));
-  out.push(mkLine(TUZ_LL.map(([a, b]) => K(a, b)), { b: .8, w: 1.1, o: .15, flags: FL.NOFADE }));
+  { const P = TUZ_LL.slice(0, -1).map(([a, b]) => K(a, b)), n = P.length, Q = catmull([P[n - 1], ...P, P[0], P[1]], 10).slice(10, 10 * (n + 1) + 1);
+    out.push(mkLine(Q, { b: .8, w: 1.1, o: .15, flags: FL.NOFADE })); }
   const levels = [700, 950, 1200, 1450, 1700, 2000, 2350, 2700, 3100, 3500];
   out.push(...contourSet(-560, -420, 920, 420, 420, (x, y, d) => valley(landH(x, y), d, 180, 6), levels, lv => ({ b: .16 + .1 * clamp((lv - 700) / 2800), w: .8, o: .35 + .3 * clamp((lv - 1200) / 2400), spd: .3 })));
   return out.filter(Boolean);
@@ -135,13 +136,13 @@ export function lodB() {
 // LOD C: the valley floor (9 x 6 km): banks at their width, sandbars, terraces, fields
 export function lodC() {
   const R = river(), out = [];
-  const seg = R.pts.filter(p => Math.abs(p[0]) < 6 && Math.abs(p[1]) < 4.5), half = .022;
+  const seg = R.pts.filter(p => Math.abs(p[0]) < 6 && Math.abs(p[1]) < 4.5), halfAt = p => .022 - .018 * Math.exp(-((p[2] / .35) ** 2));
   for (const sg of [-1, 1]) {
-    const bank = seg.map((p, i) => { const a = seg[Math.max(0, i - 1)], b = seg[Math.min(seg.length - 1, i + 1)], tx = b[0] - a[0], ty = b[1] - a[1], m = Math.hypot(tx, ty) || 1; return [p[0] - ty / m * half * sg, p[1] + tx / m * half * sg]; });
+    const bank = seg.map((p, i) => { const a = seg[Math.max(0, i - 1)], b = seg[Math.min(seg.length - 1, i + 1)], tx = b[0] - a[0], ty = b[1] - a[1], m = Math.hypot(tx, ty) || 1, half = halfAt(p); return [p[0] - ty / m * half * sg, p[1] + tx / m * half * sg]; });
     out.push(mkLine(bank, { b: 1.3, w: 1.5, o: 1, flags: FL.NOFADE, spd: .7 }));
   }
   for (let j = -2; j <= 2; j++) {                                // water: flow lines inside the banks
-    const fl = seg.map((p, i) => { const a = seg[Math.max(0, i - 1)], b = seg[Math.min(seg.length - 1, i + 1)], tx = b[0] - a[0], ty = b[1] - a[1], m = Math.hypot(tx, ty) || 1, o = j * half * .36; return [p[0] - ty / m * o, p[1] + tx / m * o]; });
+    const fl = seg.map((p, i) => { const a = seg[Math.max(0, i - 1)], b = seg[Math.min(seg.length - 1, i + 1)], tx = b[0] - a[0], ty = b[1] - a[1], m = Math.hypot(tx, ty) || 1, o = j * halfAt(p) * .36; return [p[0] - ty / m * o, p[1] + tx / m * o]; });
     out.push(...splitLine(mkLine(fl, { b: .45, w: .8, o: .05, spd: 1.6, phase: j }), (x, y, k) => h2(k >> 5, j + 9, 3) > .25));
   }
   const levels = []; for (let h = 900; h < 1150; h += 6) levels.push(h);
@@ -157,8 +158,78 @@ export function lodC() {
 
 // ---------------------------------------------------------------- the cloud deck (unit space, centred at 0)
 export function cloudLayer(seed, n = 170) {
-  const levels = [.5, .54, .58, .62, .66, .7, .74];
-  return plainContours(-1, -1, 1, 1, n, (x, y) => { const r = Math.hypot(x, y); return fbm(x * 2.4 + seed, y * 2.4 - seed, seed + 3, 5) + .12 * Math.cos(r * 9 + seed) - .25 * sstep(.95, 1.4, r); }, levels, lv => ({ b: .5 + 1.4 * (lv - .5), w: 1.0, o: 0, spd: .5 }));
+  const levels = []; for (let v = .4; v < .8; v += .028) levels.push(v);
+  return plainContours(-1, -1, 1, 1, n, (x, y) => { const r = Math.hypot(x, y); return fbm(x * 2.4 + seed, y * 2.4 - seed, seed + 3, 5) + .12 * Math.cos(r * 9 + seed) - .25 * sstep(.95, 1.4, r); }, levels, lv => ({ b: .45 + 1.6 * Math.max(0, lv - .4), w: 1.0, o: 0, spd: .5 }));
+}
+
+// ---------------------------------------------------------------- the cloud deck in lines (the Earth's own language)
+// cloudDeck(seed): cloud streets as evenly spaced streamlines (Jobard & Lefer) of a westerly with curl-noise eddies, lit
+// where the cloud is thick, in unit coordinates (|x|, |y| < R): the scenes scale a deck past the camera (parallax).
+export function cloudDeck(seed, o = {}) {
+  const R = o.R ?? 1.45, dsep = o.dsep ?? .019, step = dsep * .35, dtest = .55, maxN = Math.round((o.maxLen ?? .9) / step);
+  const inv = 1 / dsep, grid = new Map(), key = (i, j) => i * 100003 + j;
+  const psi = (x, y) => fbm(x * 1.25 + seed, y * 1.25 - seed * .7, seed + 11, 4);
+  const vel = (x, y) => { const e = .004; return [1.0 + .36 * (psi(x, y + e) - psi(x, y - e)) / (2 * e), -.36 * (psi(x + e, y) - psi(x - e, y)) / (2 * e)]; };
+  const dens = (x, y) => {
+    const n = fbm(x * 2.2 - seed, y * 2.2 + seed * .6, seed + 5, 5), st = .5 + .5 * Math.cos(y * 26 + 3 * fbm(x * 1.1, y * 1.1, seed + 2, 2));
+    return sstep(.47, .72, .8 * n + .2 * st + (o.cover ?? 0)) * (1 - sstep(R * .8, R, Math.max(Math.abs(x), Math.abs(y))));
+  };
+  const pts0 = [];
+  const tooClose = (x, y, d, lid, idx) => {
+    const i0 = Math.floor(x * inv), j0 = Math.floor(y * inv), d2 = d * d, near = Math.ceil(2.5 * d / step);
+    for (let i = i0 - 1; i <= i0 + 1; i++) for (let j = j0 - 1; j <= j0 + 1; j++) {
+      const c = grid.get(key(i, j)); if (!c) continue;
+      for (const q of c) { if (q[2] === lid && Math.abs(q[3] - idx) < near) continue; const dx = q[0] - x, dy = q[1] - y; if (dx * dx + dy * dy < d2) return true; }
+    }
+    return false;
+  };
+  const insert = (x, y, lid, idx) => { const k = key(Math.floor(x * inv), Math.floor(y * inv)); let c = grid.get(k); if (!c) grid.set(k, c = []); c.push([x, y, lid, idx]); };
+  const inside = (x, y) => Math.abs(x) < R && Math.abs(y) < R;
+  const adv = (x, y, dir) => {
+    let [u, v] = vel(x, y), m = Math.hypot(u, v) || 1; const mx = x + u / m * step * .5 * dir, my = y + v / m * step * .5 * dir;
+    [u, v] = vel(mx, my); m = Math.hypot(u, v) || 1; return [x + u / m * step * dir, y + v / m * step * dir];
+  };
+  const lines = [];
+  const grow = (x0, y0) => {
+    if (!inside(x0, y0)) return null;
+    const lid = lines.length; if (tooClose(x0, y0, dsep * .95, lid, 0)) return null;
+    const br = [[], []];
+    for (const [bi, dir] of [[0, 1], [1, -1]]) {
+      let x = x0, y = y0;
+      for (let k = 1; k < maxN; k++) { const [nx, ny] = adv(x, y, dir); if (!inside(nx, ny) || tooClose(nx, ny, dsep * dtest, lid, dir * k)) break; x = nx; y = ny; br[bi].push([x, y]); }
+    }
+    const pts = [...br[1].reverse(), [x0, y0], ...br[0]];
+    if (pts.length * step < dsep * 4) return null;
+    pts.forEach(([x, y], i) => insert(x, y, lid, i - br[1].length));
+    lines.push(pts); return pts;
+  };
+  const queue = [];
+  const enqueue = P => { for (let k = 1; k < P.length - 1; k += 3) { const [ax, ay] = P[k - 1], [bx, by] = P[k + 1], tx = bx - ax, ty = by - ay, tm = Math.hypot(tx, ty) || 1, nx = -ty / tm * dsep, ny = tx / tm * dsep; queue.push([P[k][0] + nx, P[k][1] + ny], [P[k][0] - nx, P[k][1] - ny]); } };
+  for (let gy = -R; gy < R; gy += dsep * 6) for (let gx = -R; gx < R; gx += dsep * 6) {
+    const P = grow(gx + (h2(gx * 1e3 | 0, gy * 1e3 | 0, seed) - .5) * dsep, gy + (h2(gy * 1e3 | 0, gx * 1e3 | 0, seed + 1) - .5) * dsep);
+    if (P) { enqueue(P); while (queue.length) { const q = queue.pop(), L = grow(q[0], q[1]); if (L) enqueue(L); } }
+  }
+  const out = [];
+  lines.forEach((P, li) => {
+    const b = P.map(([x, y]) => { const d = dens(x, y); return Math.pow(d, 2.2) * (o.gain ?? 1.6); });
+    const L = mkLine(P, { b, w: .95, o: 0, spd: .55, phase: h2(li, 7, seed) * 6.28 });
+    if (L) for (const piece of splitLine(L, (x, y, k) => b[k] > .05, 3)) out.push(piece);
+  });
+  return out;
+}
+// flying through cloud: streaks radiating from the frame centre, outward (dir 1, diving) or inward (dir -1, pulling
+// back); env 0..1; a pure function of the clock t
+export function mistStreaks(W, H, t, env, dir = 1, n = 240) {
+  const out = [], s = H / 1080, cx = W / 2, cy = H / 2, Rm = Math.hypot(W, H) * .6;
+  if (env <= .01) return out;
+  for (let i = 0; i < n; i++) {
+    const a = h2(i, 1, 77) * 6.2832, life = .28 + .2 * h2(i, 2, 77), ph = ((t * dir) / life + h2(i, 3, 77)) % 1, u = ph < 0 ? ph + 1 : ph;
+    const r = Rm * (.04 + 1.1 * u * u), len = (14 + 160 * u * u) * s * (.6 + .8 * h2(i, 4, 77)), c = Math.cos(a), sn = Math.sin(a);
+    const b = env * (.25 + 1.1 * h2(i, 5, 77) ** 2) * Math.sin(Math.PI * u);
+    if (b < .02) continue;
+    out.push(mkLine([[cx + c * r, cy + sn * r], [cx + c * (r + len), cy + sn * (r + len)]], { b: [b * .3, b], w: (.8 + 1.4 * u) * s, o: 0, spd: 1.5 }));
+  }
+  return out.filter(Boolean);
 }
 
 // ---------------------------------------------------------------- the ground camera (perspective, heading = +y)
@@ -186,5 +257,47 @@ export function groundLines(lines, cam, W, H, bK = 1) {
     }
     flush();
   }
+  return out;
+}
+
+// ---------------------------------------------------------------- the armies at the landing (km, z in km), P38's layout
+// the near bank: the front row of seven, shoulder to shoulder, 4.5 m in front of the landing camera (LAND_CAM); the far
+// bank: both armies massed (Lydians west, Medes east) in ranks that thin with distance. Each figure is a spear tick:
+// body + spear (vertical, to 2.5 m) with a bright tip, so from above they read as Drop 1's ranks of points.
+export const LAND_CAM = { y: -.0153, h: .0009 };
+let _armies = null;
+export function armies() {
+  if (_armies) return _armies;
+  const out = [];
+  for (let k = 0; k < 7; k++) out.push({ x: (k - 3) * .00049 - .00006, y: LAND_CAM.y + .0045, hgt: .00175, side: k < 4 ? -1 : 1, near: 1 });
+  for (let r = 0; r < 30; r++) {
+    const y = .007 + r * .0016 * (1 + r * .12), dx = .0012 * (1 + r * .05), n = Math.floor(.24 / dx);
+    for (let i = 0; i < n; i++) {
+      const x = -.12 + i * dx + (h2(i, r, 77) - .5) * dx * .6;
+      if (Math.abs(x) < .004 + r * .0006) continue;                          // the gap between the armies
+      out.push({ x, y: y + (h2(i, r, 78) - .5) * .0006, hgt: .0017 + .0002 * h2(i, r, 79), side: x < 0 ? -1 : 1, near: 0 });
+    }
+  }
+  return (_armies = out);
+}
+// the figures through the ground camera: a dim body line and a bright spear tip (FL.TIP); Lydians orange, Medes pearl
+export function armyLines(cam, W, H, k = 1) {
+  const out = [];
+  for (const a of armies()) {
+    const foot = groundProject(cam, a.x, a.y, 0), tip = groundProject(cam, a.x, a.y, a.near ? a.hgt : .0025);
+    if (!foot || !tip || foot[0] < -40 || foot[0] > W + 40 || tip[1] > H + 40 || foot[1] < -40) continue;
+    const len = Math.hypot(tip[0] - foot[0], tip[1] - foot[1]), o = a.side < 0 ? .85 : .15, b = k * (a.near ? .9 : .7) * clamp(1.6 - foot[2] * 4);
+    if (b < .02) continue;
+    if (len > 1.2) out.push(mkLine([[foot[0], foot[1]], [tip[0], tip[1]]], { b: b * .6, w: a.near ? 2.2 : 1.0, o: o * .6, flags: FL.SHARP }));
+    out.push(mkLine([[tip[0], tip[1]], [tip[0] + .5, tip[1]]], { b: b * 1.6, w: a.near ? 3.2 : 1.8, o, flags: FL.TIP | FL.SHARP }));
+  }
+  return out;
+}
+// the horizon of a pitched ground camera (screen y) and its warm glow lines, when it is in frame
+export function horizonLines(cam, W, H, k = 1) {
+  const y = cam.cy - cam.F * Math.tan(cam.pitch);
+  if (y < -20 || y > H + 20 || k <= .01) return [];
+  const out = [mkLine([[-20, y], [W + 20, y]], { b: 1.1 * k, w: 1.6, o: 1, flags: FL.NOFADE })];
+  for (let j = 1; j <= 5; j++) out.push(mkLine([[-20, y - j * j * 7], [W + 20, y - j * j * 7]], { b: .32 * k / j, w: 1.0, o: .7, spd: .3, phase: j }));
   return out;
 }

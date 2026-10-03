@@ -13,6 +13,7 @@ import { paint, eclipse } from '../brush/index.js';
 import { clamp, lerp, sstep, hash3 } from '../brush/util.js';
 import { MARBLE_PAL, marbleBox } from './palette.js';
 import { cutInStrokes } from './cutin.js';
+import { findArrows, arrowStrokes, paintOutArrows } from './arrows.js';
 
 export const STONE_PAINT = {
   palette: MARBLE_PAL,
@@ -20,10 +21,11 @@ export const STONE_PAINT = {
   pool: [{ x: .5, y: .5, rx: 4, ry: 4, feather: .05, k: 1 }], poolMatte: 0, poolBlur: 0, poolLo: 0, poolHi: .5, poolFromLight: null,
   gammaIn: 1, liftIn: 1, contrastIn: 1, satIn: 1, satOut: 1, warmIn: 0, crushFloor: 0, crush: 0, darkVar: 0, glint: 0, envDim: 1,
   focusLift: 0, rim: 1e-4, fringe: 0, plateKeep: 0, eclipse: 0, metal: 0, liftDark: 0, aerial: null,
-  // stone brushwork: long smooth strokes, little impasto, broken colour kept low
-  brushes: [24, 13, 7.5, 4.2, 2.3], fg: [2.0, 1.5, 1.25, 1.1, 1.0], T: [0, .045, .05, .06, .07],
-  minLen: [2, 2, 2, 2, 1], maxLen: [5, 7, 7, 6, 4], step: [1.05, 1.0, .95, .85, .8], fc: .5, maxTurn: .3,
-  jitter: .6, boil: .07, boilColor: .08, colorJit: .026, endBlend: .25, focusGain: .7, darkRaise: 1, midGate: .15, fineGate: .2,
+  // stone brushwork: smooth strokes, little impasto, broken colour kept low
+  // (the carving needs the small brushes: low error thresholds and short fine strokes, or the faces go to soap)
+  brushes: [24, 12, 6, 3.2, 1.7], fg: [2.0, 1.5, 1.25, 1.1, 1.0], T: [0, .022, .025, .027, .03],
+  minLen: [2, 1, 1, 1, 1], maxLen: [5, 5, 3, 2, 2], step: [1.05, 1.0, .95, .85, .8], fc: .5, maxTurn: .3,
+  jitter: .6, boil: .07, boilColor: .08, colorJit: .026, endBlend: .25, focusGain: .7, darkRaise: 1, midGate: 0, fineGate: .02,
   thinDark: .05, thick: .22, thickHi: .3, impasto: .22, spec: .12, weave: .8, crack: .1, varnish: .5, vignette: .38,
   accents: 0, eyeStrokes: 0, faceMin: null, underAlpha: .95, underTone: .95, bristle: .8, smoothRef: 0,
 };
@@ -76,11 +78,23 @@ export function starPoints(f, st, toScreen, o = {}) {
 // o.points: extra exact points (planets) [{x, y, r, k, col}] px ; o.stars: {toScreen, n, k, seed} ; o.paint: overrides
 const DBG = new URLSearchParams(location.search).get('mdebug'), MVAR = new URLSearchParams(location.search).get('mvar');
 // look-dev variants (URL mvar=name)
-const MVARS = {
+export const MVARS = {
   fine: { T: [0, .03, .035, .04, .045], fineGate: 0, midGate: 0 },
   fine2: { T: [0, .03, .035, .04, .045], fineGate: 0, midGate: 0, maxLen: [5, 6, 5, 4, 3], brushes: [24, 13, 7, 3.6, 1.8] },
   short: { maxLen: [4, 5, 4, 3, 2], fineGate: .05 },
   nojit: { jitter: .3, colorJit: .015 },
+  flat: { impasto: .22, spec: .12, varnish: .5, thick: .22, thickHi: .3 },
+  flatfine: { impasto: .22, spec: .12, varnish: .5, thick: .22, thickHi: .3, T: [0, .03, .035, .04, .045], fineGate: 0, midGate: 0, maxLen: [5, 6, 5, 4, 3], brushes: [24, 13, 7, 3.6, 1.8] },
+  noface: { faceMin: null, eyeStrokes: 0 },
+  engb: { brushes: [26, 14, 8, 4.4, 2.4], T: [0, .055, .06, .075, .085], minLen: [2, 2, 2, 1, 1], maxLen: [4, 5, 5, 4, 3], fc: .45, maxTurn: .38, jitter: .8, colorJit: .055, endBlend: .15, darkRaise: 1.3, midGate: .18, fineGate: .26, bristle: undefined, smoothRef: 1 },
+  nobristle: { bristle: undefined },
+  shortb: { maxLen: [4, 5, 5, 4, 3] },
+  mpal: { palette: MARBLE_PAL },
+  rawgpu: { impasto: 0, weave: 0, bristle: 0, varnish: 0, crack: 0, spec: 0, underAlpha: 0 },
+  nobr: { bristle: 0 },
+  nounder: { underAlpha: 0 },
+  carve: { T: [0, .025, .028, .03, .032], fineGate: 0, midGate: 0, maxLen: [5, 6, 4, 3, 2], minLen: [2, 2, 1, 1, 1] },
+  carve2: { T: [0, .02, .022, .024, .026], fineGate: 0, midGate: 0, maxLen: [5, 5, 3, 2, 2], minLen: [2, 1, 1, 1, 1], brushes: [24, 12, 6, 3.2, 1.7] },
 };
 // debug views (URL mdebug=ref|mask|sky|depth): the stone reference itself, the statue (R) / sky (B) masks, depth
 function debugStone(f, st, mode) {
@@ -115,13 +129,17 @@ export async function paintStone(f, st, o = {}) {
     if (o.strokes) out.push(...(typeof o.strokes === 'function' ? o.strokes({ ...ctx, pal }) : o.strokes));
     return out;
   };
+  // the hanging arrows, repainted crisp over everything (o.arrows: true or findArrows options)
+  const arrows = o.arrows ? findArrows(st, o.arrows === true ? {} : o.arrows) : null;
+  if (arrows && (arrows.length || arrows.junk)) paintOutArrows(st, arrows);
   // the small brushes work the statues (their carving), the big ones the sky and the land
   let detailField = null;
   if (st.M && (o.statueDetail ?? .85) > 0) { const k = o.statueDetail ?? .85; detailField = new Float32Array(st.M.length); for (let i = 0; i < detailField.length; i++) detailField[i] = st.M[i] * k; }
   // open ground: horizontal flicks below the horizon (not the plate's pebble texture)
   let groundFlow = null;
   if (st.hz && o.groundFlow !== false) { let h = 1; for (let x = 0; x < st.aw; x++) h = Math.min(h, st.hz[x] / st.ah); if (h > .05 && h < .95) groundFlow = { y0: h, k: .85, angle: 0, cohLo: .5, cohHi: .9, ...(o.groundFlow || {}) }; }
-  const look = await paint(f, st, { ...STONE_PAINT, detailField, groundFlow, ...(o.paint || {}), sun: sunSpec, strokes: extra, overStrokes: o.overStrokes || null, target: o.target,
+  const over = (arrows && arrows.length) || o.overStrokes ? ctx => [...(o.overStrokes ? (typeof o.overStrokes === 'function' ? o.overStrokes(ctx) : o.overStrokes) : []), ...(arrows ? arrowStrokes(arrows, W / st.aw, H / 1080) : [])] : null;
+  const look = await paint(f, st, { ...STONE_PAINT, detailField, groundFlow, ...(o.paint || {}), sun: sunSpec, strokes: extra, overStrokes: over, target: o.target,
     ...(DBG === 'eref' ? { debug: 'ref' } : DBG === 'canvas' ? { debugCanvas: 1 } : {}), ...(MVAR ? MVARS[MVAR] : {}) });
   if (DBG === 'eref' || DBG === 'canvas') return look;
   if (new URLSearchParams(location.search).has('mlog')) console.log('marble', f.shot && f.shot.id, JSON.stringify(look.perLayer), look.strokes, JSON.stringify(look.ms));

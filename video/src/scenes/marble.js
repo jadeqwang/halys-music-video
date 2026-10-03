@@ -38,7 +38,9 @@ async function plate(f, id, cam, o = {}) {
   return resolvePlate(f, id, standin, cam, o.keys ? { keys: o.keys, ...(o.extra || {}) } : { at: o.at ?? T0[id], ...(o.extra || {}) });
 }
 // a synthetic camera's map from source uv to screen px (for stars, planets and the sun drawn in plate space)
-const camScreen = (f, c) => (u, v) => [((u - c.cx) * c.zoom + .5) * f.W, ((v - c.cy) * c.zoom + .5) * f.H];
+// the visible source rect of a camera (camXform's convention: the source covers the frame) and source uv -> screen px
+const camRect = (f, c, so = 16 / 9) => { const oo = f.W / f.H; let hU = 1 / c.zoom, wU = oo / so / c.zoom; if (wU > 1 / c.zoom) { wU = 1 / c.zoom; hU = so / oo / c.zoom; } return { wU, hU }; };
+const camScreen = (f, c, so) => { const { wU, hU } = camRect(f, c, so); return (u, v) => [((u - c.cx) / wU + .5) * f.W, ((v - c.cy) / hU + .5) * f.H]; };
 const frozen = (f, t) => ({ ...f, t, k: f.k });       // a frame context that reads the plate at a held time
 
 // the sun in the marble world: mid-totality (centred moon), the limb's thin bright ring, pink near the C3 contact
@@ -84,7 +86,7 @@ scene('S45b', async f => {
   const cam = { cx: .54, cy: .47, zoom: 1.42 + .08 * smooth(k) };
   const src = await plate(f, 'P25', cam, { keys: [[157.03, 3.2], [160.70, 4.25]] });
   const st = stoneSource(f, src, { sky: { dLo: .02, dHi: .07, below: .75, run: 3 }, water: { k: .6 } });
-  await paintStone(f, st, { stars: { toScreen: camScreen(f, cam), n: 170, k: .8 } });
+  await paintStone(f, st, { stars: { toScreen: camScreen(f, cam), n: 170, k: .8 }, arrows: true });
 });
 
 // ================================================================ S46: the drift through the frozen battle
@@ -94,29 +96,41 @@ scene('S46', async f => {
   const cam = { cx: .49 + .03 * k, cy: .5, zoom: 1.08 };
   const src = await plate(f, 'P25', cam, { keys: [[160.70, .35], [164.13, 2.6]] });
   const st = stoneSource(f, src, { sky: { dLo: .02, dHi: .07, below: .72, run: 3 }, water: { k: .7 } });
-  await paintStone(f, st, { stars: { toScreen: camScreen(f, cam), n: 170, k: .8 }, overStrokes: ctx => glassBeads(f, st, ctx, { seed: 46 }) });
+  await paintStone(f, st, { stars: { toScreen: camScreen(f, cam), n: 170, k: .8 }, arrows: true, overStrokes: ctx => glassBeads(f, st, ctx, { seed: 46 }) });
 });
 
-// frozen spray: glass beads hanging in the air near the feet and the water (anchored in the source's material space,
-// so they drift with the camera). Each bead: a dark refracting rim, a pale body catching the corona, a hot highlight.
+// frozen spray: glass beads hanging in the air where the feet strike the ground, strung on little frozen arcs (the
+// feet are found per drawing: the lowest points of the statue mask; each splash is seeded from the material cell under
+// its foot, so it stays put as the camera drifts). Each bead: a pale glassy body catching the corona, a hot highlight
+// up and to the left, a thin dark refraction on its lower right, a warm speck of the horizon glow at its foot.
 function glassBeads(f, st, ctx, o = {}) {
   const { aw, ah } = st, S = ctx.S, out = [], mx = st.mat && st.mat.mx, my = st.mat && st.mat.my;
   if (!mx) return out;
-  const cell = (o.cell ?? 9) * aw / 960, seen = new Set(), seed = o.seed ?? 7;
-  for (let y = Math.floor(ah * .5); y < ah - 2; y += 2) for (let x = 2; x < aw - 2; x += 2) {
-    const i = y * aw + x; if (st.S[i] > .3) continue;
-    // where spray would hang: just above the land around the figures' feet and over the water
-    const nearFig = st.M[i] < .5 && (st.M[Math.min(st.aw * st.ah - 1, i + 6 * aw)] > .5 || st.M[Math.max(0, i - 8 * aw)] > .5);
-    const water = st.Lp && st.Lp[i] > .55 && st.M[i] < .3;
-    if (!nearFig && !water) continue;
-    const cx = Math.floor(mx[i] / S / cell), cy = Math.floor(my[i] / S / cell), key = cx * 92821 + cy;
-    if (seen.has(key)) continue; seen.add(key);
-    if (hash3(cx, cy, seed) > (water ? .32 : .5)) continue;
-    const jx = (hash3(cx, cy, seed + 1) - .5) * cell, jy = (hash3(cx, cy, seed + 2) - .5) * cell - (hash3(cx, cy, seed + 3)) * cell * 2.5;
-    const px = (x + jx) * S, py = (y + jy) * S, r = (1.2 + 2.4 * Math.pow(hash3(cx, cy, seed + 4), 2)) * f.H / 1080;
-    out.push({ pts: [[px - r * .1, py], [px + r * .1, py]], r: r * 1.05, c0: [.16, .17, .2], c1: [.16, .17, .2], a: .85, thick: .3, seed: hash3(cx, cy, 5), key: 9 + hash3(cx, cy, 6), layer: 12, taper: 0, maxSeg: 4 });
-    out.push({ pts: [[px - r * .1, py + r * .05], [px + r * .1, py + r * .05]], r: r * .72, c0: [.62, .66, .72], c1: [.78, .62, .45], a: .9, thick: .4, seed: hash3(cx, cy, 7), key: 9.1 + hash3(cx, cy, 8), layer: 12, taper: 0, maxSeg: 4 });
-    out.push({ pts: [[px - r * .35, py - r * .38], [px - r * .2, py - r * .42]], r: r * .26, c0: [1, .99, .96], c1: [1, .97, .9], a: 1, thick: 1.2, seed: hash3(cx, cy, 9), key: 9.2 + hash3(cx, cy, 10), layer: 12, taper: .2, maxSeg: 4 });
+  const seed = o.seed ?? 7, u = f.H / 1080, low = new Int32Array(aw).fill(-1);
+  for (let x = 0; x < aw; x++) for (let y = ah - 2; y > ah * .5; y--) if (st.M[y * aw + x] > .5) { low[x] = y; break; }
+  const feet = [], win = Math.round(aw * .02);
+  for (let x = win; x < aw - win; x++) {
+    const y = low[x]; if (y < ah * .62) continue;
+    let ok = true; for (let d = -win; d <= win && ok; d++) if (low[x + d] > y) ok = false;
+    if (ok && !feet.some(p => Math.abs(p.x - x) < aw * .06)) feet.push({ x, y });
+  }
+  feet.sort((a, b) => b.y - a.y);
+  for (const p of feet.slice(0, o.n ?? 5)) {
+    const i = p.y * aw + p.x, cx = Math.floor(mx[i] / (S * 30)), cy = Math.floor(my[i] / (S * 30));
+    const nArc = 3, side = hash3(cx, cy, seed + 2) < .5 ? -1 : 1;
+    for (let a = 0; a < nArc; a++) {
+      const ang = -Math.PI / 2 + side * (.25 + .45 * a) + (hash3(cx, cy, seed + 3 + a) - .5) * .3, reach = (34 + 46 * hash3(cx, cy, seed + 7 + a)) * u;
+      const nb = 4 + (hash3(cx, cy, seed + 11 + a) * 3 | 0);
+      for (let k = 1; k <= nb; k++) {
+        const q = k / (nb + 1), hk = hash3(cx * 7 + a, cy * 13 + k, seed + 19);
+        const px = p.x * S + Math.cos(ang) * reach * q * 1.6, py = p.y * S + Math.sin(ang) * reach * q * 1.4 + reach * 1.1 * q * q;   // a parabola
+        const r = (3 + 4.5 * (1 - q) * (.6 + .8 * hk)) * u, kk = 9 + hk * .5;
+        out.push({ pts: [[px - r * .1, py], [px + r * .1, py]], r: r * .98, c0: [.62, .66, .72], c1: [.76, .79, .84], a: .92, thick: .45, seed: hk, key: kk, layer: 12, taper: 0, maxSeg: 4 });
+        out.push({ pts: [[px + r * .35, py + r * .4], [px + r * .5, py + r * .2]], r: r * .32, c0: [.12, .13, .16], c1: [.12, .13, .16], a: .7, thick: .3, seed: hk + .1, key: kk + .01, layer: 12, taper: .3, maxSeg: 3 });
+        out.push({ pts: [[px - r * .1, py + r * .62], [px + r * .1, py + r * .62]], r: r * .22, c0: [1, .66, .36], c1: [1, .6, .3], a: .6, thick: .3, seed: hk + .2, key: kk + .02, layer: 12, taper: 0, maxSeg: 3 });
+        out.push({ pts: [[px - r * .38, py - r * .36], [px - r * .24, py - r * .44]], r: r * .28, c0: [1, .99, .96], c1: [1, .98, .92], a: 1, thick: 1.2, seed: hk + .3, key: kk + .03, layer: 12, taper: .2, maxSeg: 3 });
+      }
+    }
   }
   return out;
 }
@@ -155,42 +169,59 @@ scene('S48', async f => {
 const S49 = { plinth: { u0: .3, u1: .74, top: .705, face: .722 }, sun: [.63, .32], ppd: 8.5 };
 scene('S49', async f => {
   const t = f.t, k = easeInOut(seg(t, 171.3, 174.39));
-  const cam = { cx: .52, cy: .6 - .17 * k, zoom: 1.18 };
+  const cam = { cx: .52, cy: .6 - .1 * k, zoom: 1.18 };       // (the tilt stops while the inscription is still whole)
   const src = await plate(frozen(f, 159.23), 'P25', cam, { keys: [[0, 5.4], [999, 5.4]] });
   const toS = camScreen(f, cam), [sx, sy] = toS(...S49.sun), sunUV = { x: sx / f.W, y: sy / f.H, r: .026 };
   // the plinth, drawn into the source: a marble block in the near foreground (statue mask: crisp edges, inflated)
-  const P = S49.plinth, plinthSrc = withPlinth(src, cam, P);
+  const P = S49.plinth, R49 = camRect(f, cam), plinthSrc = withPlinth(src, cam, P, R49);
   const st = stoneSource(f, plinthSrc, { sky: { dLo: .02, dHi: .07, below: .7, run: 3 }, water: { k: .5 }, sun: sunUV });
-  paintPlinth(st, cam, P);
+  paintPlinth(st, cam, P, R49);
   // the type: the plinth's front face, in frame fractions (centre x, top y, width, height), painted by us
-  const [fx0, fy0] = toS(P.u0, P.face), [fx1] = toS(P.u1, P.face);
+  // (the inscription sits in the recessed panel)
+  const Q = plinthPanel(P), [fx0, fy0] = toS(Q.u0, Q.v0), [fx1, fy1] = toS(Q.u1, Q.v1);
   f.type = f.type || {};
-  f.type.plinth = { x: (fx0 + fx1) / 2 / f.W, y: fy0 / f.H, w: (fx1 - fx0) / f.W, h: .2, draw: false };
+  f.type.plinth = { x: (fx0 + fx1) / 2 / f.W, y: fy0 / f.H, w: (fx1 - fx0) / f.W, h: (fy1 - fy0) / f.H, draw: false };
   const pts = planetPoints(sx, sy, S49.ppd * f.H / 1080, { jupiterInPass: false, saturn: [-21, 31] });
-  await paintStone(f, st, { sun: totalSun(sunUV.x, sunUV.y, sunUV.r), corona: coronaFor(t, { k: .95 }), points: pts,
+  await paintStone(f, st, { sun: totalSun(sunUV.x, sunUV.y, sunUV.r), corona: coronaFor(t, { k: .95 }), points: pts, arrows: true,
     stars: { toScreen: (u, v) => toS(u, v * 1.6 - .6), n: 230, k: .85, avoid: [{ x: sx, y: sy, r: sunUV.r * f.W * 3 }] } });
 });
-// the plinth's own light (designed, not re-lit as a statue): a pale top face under the corona, a bright arris, a cornice
-// (fillet and shadowed groove), the front face falling from light to shadow toward the ground, darker vertical edges,
-// a few grey veins, the orange horizon glow catching its left edge
-function paintPlinth(st, cam, P) {
-  const { aw, ah } = st, lab = [0, 0, 0], rgb = [0, 0, 0];
+// the plinth's own light (designed, not re-lit as a statue): a classical inscribed base. A pale top face under the
+// corona, a chipped bright arris, a cornice (fillet, shadowed groove, cyma), the front face falling from light to shadow
+// toward the ground, a recessed panel for the inscription (its upper wall in shadow, its lower wall catching the light,
+// a raised fillet around it), mottling and grey veins, weathering low down, darker vertical edges, the orange horizon
+// glow catching its left edge
+function plinthPanel(P) { return { u0: P.u0 + .05, u1: P.u1 - .05, v0: P.face + .04, v1: P.face + .18 }; }
+function paintPlinth(st, cam, P, R) {
+  const { aw, ah } = st, lab = [0, 0, 0], rgb = [0, 0, 0], Q = plinthPanel(P), bw = .0055;
   for (let y = 0; y < ah; y++) for (let x = 0; x < aw; x++) {
-    const u = (x / aw - .5) / cam.zoom + cam.cx, v = (y / ah - .5) / cam.zoom + cam.cy, i = y * aw + x;
+    const u = (x / aw - .5) * R.wU + cam.cx, v = (y / ah - .5) * R.hU + cam.cy, i = y * aw + x;
     if (u < P.u0 || u > P.u1 || v < P.top) continue;
     const e = Math.min(u - P.u0, P.u1 - u), fu = (u - P.u0) / (P.u1 - P.u0);
     let L;
-    if (v < P.face) L = .8 + .06 * (v - P.top) / (P.face - P.top);
+    if (v < P.face) L = .8 + .05 * (v - P.top) / (P.face - P.top);
     else {
       const dv = v - P.face;
-      L = .66 - .3 * sstep(0, .38, dv);
+      L = .6 - .26 * sstep(.02, .42, dv);
       if (dv < .004) L = .9;                                      // the arris catching the corona
-      else if (dv < .012) L = .78;                                // the fillet
-      else if (dv < .02) L = .4 + 10 * (dv - .012);               // the groove under the cornice
+      else if (dv < .01) L = .78;                                 // the fillet
+      else if (dv < .018) L = .36 + 8 * (dv - .01);               // the groove under the cornice
+      else if (dv < .03) L = lerp(.68, .58, (dv - .018) / .012);  // the cyma
+      // the recessed panel: walls lit from above (the upper wall in shadow, the lower one in light), a raised fillet
+      const inU = u > Q.u0 && u < Q.u1, inV = v > Q.v0 && v < Q.v1;
+      const dO = Math.max(Q.u0 - u, u - Q.u1, Q.v0 - v, v - Q.v1);   // > 0 outside the panel
+      if (dO > 0 && dO < .006) L = Math.max(L, .7 - 20 * Math.abs(dO - .003));
+      if (inU && inV) {
+        const dT = v - Q.v0, dB = Q.v1 - v, dL = u - Q.u0, dR = Q.u1 - u, m = Math.min(dT, dB, dL, dR);
+        L = .5 - .06 * sstep(Q.v0, Q.v1, v);
+        if (m < bw) L = m === dT ? .3 : m === dB ? .8 : m === dL ? .44 : .52;
+      }
+      L *= 1 - .12 * sstep(.24, .5, dv);                          // weathering toward the ground
     }
+    L *= 1 + .07 * (vnoise(fu * 7, v * 9, 81) - .5) + .04 * (vnoise(fu * 26, v * 30, 83) - .5);   // mottling
+    if (v >= P.face && v < P.face + .006 && hash3(Math.floor(fu * 90), 7, 49) < .18) L *= .72;     // chips in the arris
     L *= 1 - .3 * (1 - sstep(0, .012, e));                        // the vertical edges turning away
-    const vein = Math.abs(Math.sin((fu * 2.6 + v * 1.4) * 9 + 2.2 * vnoise(fu * 4, v * 4, 77))), vk = (1 - sstep(0, .05, vein)) * sstep(.45, .6, vnoise(fu * 2.2, v * 2.2, 79));
-    L *= 1 - .22 * vk;
+    const vein = Math.abs(Math.sin((fu * 2.6 + v * 1.4) * 9 + 2.2 * vnoise(fu * 4, v * 4, 77))), vk = (1 - sstep(0, .05, vein)) * sstep(.42, .58, vnoise(fu * 2.2, v * 2.2, 79));
+    L *= 1 - .3 * vk;
     const glow = (1 - sstep(0, .06, u - P.u0)) * .35;            // the horizon glow on its left edge
     let r = L * .93 + glow * .5, g = L * .92 + glow * .22, b = L * .9 + glow * .05;
     rgb2lab(Math.min(1, r), Math.min(1, g), Math.min(1, b), lab); lab2rgb(lab[0], lab[1] - .004, lab[2] - .012, rgb);
@@ -198,12 +229,12 @@ function paintPlinth(st, cam, P) {
   }
 }
 // a plinth in plate space: overwrite the source's pixels (light marble base, near depth, matte) inside its outline
-function withPlinth(src, cam, P) {
+function withPlinth(src, cam, P, RC) {
   const { aw, ah } = src, N = aw * ah, R = Float32Array.from(src.R), G = Float32Array.from(src.G), B = Float32Array.from(src.B);
   const depth = src.depth ? Float32Array.from(src.depth) : new Float32Array(N).fill(.5), matte = src.matte ? Float32Array.from(src.matte) : new Float32Array(N);
   const sky = new Float32Array(N);
   for (let y = 0; y < ah; y++) for (let x = 0; x < aw; x++) {
-    const u = (x / aw - .5) / cam.zoom + cam.cx, v = (y / ah - .5) / cam.zoom + cam.cy, i = y * aw + x;
+    const u = (x / aw - .5) * RC.wU + cam.cx, v = (y / ah - .5) * RC.hU + cam.cy, i = y * aw + x;
     if (u < P.u0 || u > P.u1 || v < P.top) continue;
     const front = v >= P.face, e = Math.min(u - P.u0, P.u1 - u);
     // top face lighter (lit from above), the front a little darker, a carved moulding line under the top
@@ -351,7 +382,7 @@ scene('S55', async f => {
   const cam = { cx: .5, cy: .48, zoom: 1.04 + .05 * smooth(k) };
   const src = await plate(frozen(f, 103.0), 'P20', cam, { keys: [[0, 2.6], [999, 2.6]], standin: 'c_armies' });
   const toS = camScreen(f, cam), [sx, sy] = toS(.5, .3), sun = { x: sx / f.W, y: sy / f.H, r: .034 * cam.zoom };
-  const st = stoneSource(f, src, { sky: { dLo: .02, dHi: .07, below: .78, run: 3 }, horizonY: (.725 - cam.cy) * cam.zoom + .5, water: { k: .6 }, sun, statue: { mode: 'relief', relief: [.02, .06] } });
+  const st = stoneSource(f, src, { sky: { dLo: .02, dHi: .07, below: .78, run: 3 }, horizonY: (.725 - cam.cy) / camRect(f, cam).hU + .5, water: { k: .6 }, sun, statue: { mode: 'relief', relief: [.02, .06] } });
   const off = C3off(t), pink = sstep(190, 193.2, t);
   await paintStone(f, st, { sun: totalSun(sun.x, sun.y, sun.r, { off, beads: off > .045, limb: [1.25 + .6 * pink, 1.7, .5 + .5 * pink, Math.PI / 3] }), corona: coronaFor(t, { k: .95, scale: 1 }),
     stars: { toScreen: toS, n: 160, k: .8, avoid: [{ x: sx, y: sy, r: sun.r * f.W * 3 }] }, points: planetPoints(sx, sy, 12 * f.H / 1080, { saturn: [-24, 30] }).filter(p => p.name === 'jupiter' || p.name === 'pollux' || p.name === 'castor') });
@@ -404,21 +435,50 @@ scene('S57', async f => {
   const R = frontRadius(t), aw = st.aw, ah = st.ah, env = sstep(194.86, 195.05, t) * (1 - sstep(198.8, 199.95, t));
   for (let y = 0; y < ah; y++) for (let x = 0; x < aw; x++) {
     const i = y * aw + x, u = x / aw, v = y / ah, dx = (u - bx) * W / H, dy = v - by, d = Math.hypot(dx, dy), a = Math.atan2(dy, dx);
-    const wob = (vnoise(Math.cos(a) * 2.4 + 5, Math.sin(a) * 2.4 + t * .25, 57) - .5) * .14 + (vnoise(u * 6, v * 6, 59) - .5) * .06;
-    const e = R + wob - d, light = clamp(e / .16 + .35), flesh = clamp((e - .1) / .24), band = Math.exp(-Math.pow((e - .02) / .03, 2)) * env;
+    // (the front's irregularity grows with it: a small front is round, a big one is torn)
+    const wk = clamp(R / .45), wob = ((vnoise(Math.cos(a) * 2.4 + 5, Math.sin(a) * 2.4 + t * .25, 57) - .5) * .14 + (vnoise(u * 6, v * 6, 59) - .5) * .06) * wk;
+    const e = R + wob - d, light = clamp(e / .16 + .35), flesh = clamp((e - .1) / .24), band = Math.exp(-Math.pow((e - .03) / .055, 2)) * env;
     let r = st.R[i], g = st.G[i], b = st.B[i];
     r = lerp(r, Math.min(1, r * 1.16 + .045), light); g = lerp(g, Math.min(1, g * 1.0 + .015), light); b = lerp(b, b * .74, light);
     r = lerp(r, gref.R[i], flesh); g = lerp(g, gref.G[i], flesh); b = lerp(b, gref.B[i], flesh);
-    r = lerp(r, 1, band * .6); g = lerp(g, .9, band * .55); b = lerp(b, .62, band * .5);
+    r = lerp(r, 1, band * .7); g = lerp(g, .88, band * .62); b = lerp(b, .58, band * .55);
     st.R[i] = r; st.G[i] = g; st.B[i] = b;
   }
   st.key += '|spark';
   const ringK = Math.exp(-Math.max(0, t - 194.86) / .55) * 3.2 * sstep(194.84, 194.9, t);
-  await paintStone(f, st, { sun: { ...totalSun(sunUV.x, sunUV.y, sunUV.r, { off: goldOff(t), ring: ringK + .25 * (1 - sstep(195, 196.5, t)), ringAng: Math.PI / 3, limb: [1.5 * (1 - sstep(195, 196, t)), 2, 1, Math.PI / 3] }), moonVis: 1 - sstep(195.2, 196.4, t), blaze: 1.35 },
-    corona: coronaFor(t, { k: .9 * (1 - sstep(194.9, 195.8, t)), scale: .95 }), paint: { palette: SPARK_PAL, exposure: 1 + .35 * Math.exp(-Math.max(0, t - 194.86) / .4), warmFlash: .2 * Math.exp(-Math.max(0, t - 194.86) / .5) },
+  // (once the sky is bright the moon's bite is the colour of the sky beside the sun, never a black notch)
+  const bite = sstep(195.3, 196.6, t), dark = [lerp(.012, .85, bite), lerp(.013, .64, bite), lerp(.018, .38, bite)];
+  await paintStone(f, st, { sun: { ...totalSun(sunUV.x, sunUV.y, sunUV.r, { off: goldOff(t), ring: ringK + .25 * (1 - sstep(195, 196.5, t)), ringAng: Math.PI / 3, limb: [1.5 * (1 - sstep(195, 196, t)), 2, 1, Math.PI / 3] }), moonVis: 1 - sstep(195.2, 196.4, t), blaze: 1.35, dark },
+    corona: coronaFor(t, { k: .9 * (1 - sstep(194.9, 195.8, t)), scale: .95 }), paint: { palette: SPARK_PAL, exposure: 1 + .1 * Math.exp(-Math.max(0, t - 194.86) / .3) },
     stars: { toScreen: toS, n: 120, k: .7 * (1 - sstep(195, 196.5, t)) }, statueDetail: .7 });
+  // the burst: the diamond ring's light floods the sky from the bead (exact light over the paint, white-hot to gold),
+  // a near white-out on the cut that recedes over half a second, then a lingering glow while the sun returns
+  const g = f.g, u = H / 1080, dt = Math.max(0, t - 194.86);
+  { const bk = sstep(194.84, 194.875, t) * (Math.exp(-dt / .42) + .18 * Math.exp(-dt / 2.2)), px = bx * W, py = by * H, rr = H * 1.15;
+    if (bk > .005) {
+      g.save(); g.globalCompositeOperation = 'lighter';
+      const gr = g.createRadialGradient(px, py, 0, px, py, rr);
+      gr.addColorStop(0, `rgba(255,252,240,${Math.min(1, bk * 1.2)})`); gr.addColorStop(.025, `rgba(255,246,222,${.95 * bk})`);
+      gr.addColorStop(.09, `rgba(255,228,175,${.62 * bk})`); gr.addColorStop(.24, `rgba(255,200,130,${.32 * bk})`);
+      gr.addColorStop(.55, `rgba(240,160,90,${.12 * bk})`); gr.addColorStop(1, 'rgba(220,140,80,0)');
+      g.fillStyle = gr; g.fillRect(0, 0, W, H); g.restore();
+    } }
+  // gold flecks lifting off where the front passes (painted dabs, a pure function of time)
+  { const env2 = sstep(194.95, 195.2, t) * (1 - sstep(198.6, 199.8, t));
+    if (env2 > .01) {
+      g.save(); g.globalCompositeOperation = 'lighter'; g.lineCap = 'round';
+      for (let j = 0; j < 220; j++) {
+        const h = q => hash3(j, q, 571), a = h(1) * TAU, birth = 194.95 + h(2) * 3.6, age = t - birth; if (age < 0 || age > 1.1) continue;
+        const Rb = frontRadius(birth), rad = (Rb - .02 + .06 * h(3)) * H, x = bx * W + Math.cos(a) * rad * 1.0, y0 = by * H + Math.sin(a) * rad;
+        if (x < -10 || x > W + 10 || y0 < -10 || y0 > H + 10) continue;
+        const y = y0 - age * (40 + 70 * h(4)) * u, xx = x + Math.sin(age * 5 + j) * 6 * u, al = env2 * Math.sin(Math.PI * Math.min(1, age / 1.1)) * (.35 + .5 * h(5)), len = (2 + 5 * h(6)) * u;
+        g.strokeStyle = `rgba(255,${200 + 40 * h(7) | 0},${110 + 60 * h(8) | 0},${al})`; g.lineWidth = (1 + 1.6 * h(9)) * u;
+        g.beginPath(); g.moveTo(xx, y + len); g.lineTo(xx + len * .3, y); g.stroke();
+      }
+      g.restore();
+    } }
   // ripples racing ahead of the front (exact light over the paint): thin, broken, warm, fading out
-  const g = f.g, u = H / 1080; g.save(); g.globalCompositeOperation = 'lighter'; g.lineCap = 'round';
+  g.save(); g.globalCompositeOperation = 'lighter'; g.lineCap = 'round';
   for (let q = 0; q < 3; q++) {
     const rq = (R + .04 + .1 * q) * H, aq = .45 * Math.exp(-q * .7) * (1 - sstep(196.8, 198.4, t)) * sstep(194.86, 194.95, t);
     if (aq <= .01) continue;
@@ -429,6 +489,7 @@ scene('S57', async f => {
     }
   }
   g.restore();
-  f.type.light = { dir: [.55, -.83], elev: .55, color: '#fff3d8', intensity: 1.1 };
-  f.type.sun = { x: sunUV.x * W, y: sunUV.y * H, r: sunUV.r * W };
+  const T = f.type || (f.type = {});
+  T.light = { dir: [.55, -.83], elev: .55, color: '#fff3d8', intensity: 1.1 };
+  T.sun = { x: sunUV.x * W, y: sunUV.y * H, r: sunUV.r * W };
 });

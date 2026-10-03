@@ -4,5 +4,6 @@ import './act1.js';
 import './drop1.js';
 import './marble.js';
 import './chorus2.js';
+import './gold_outro.js';
 import './drop2.js';
 import './room.js';

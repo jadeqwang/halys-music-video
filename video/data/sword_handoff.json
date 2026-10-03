@@ -1,0 +1,53 @@
+{
+ "about": "S62's last drawing (the spinning sword at rest, point up, at the apex) for the S63 match cut to the starship. Written by the marble/gold agent from video/src/scenes/chorus2.js (S62: swordAngle, s62cam, swordGeom, swordStrokes).",
+ "t_cut": 215.29,
+ "t_last_drawing": 215.283,
+ "shot": "S62",
+ "cadence_fps": 12,
+ "frame": {
+  "w": 1920,
+  "h": 1080,
+  "units": "x as a fraction of frame width, y and lengths as fractions of frame height (y down)"
+ },
+ "center": {
+  "x": 0.5,
+  "y": 0.47,
+  "px": [
+   960.0,
+   507.6
+  ]
+ },
+ "angle_deg": -90.0,
+ "angle_note": "direction hilt -> tip in screen coordinates (0 = pointing right, -90 = pointing straight up); the sword has just stopped spinning (clockwise, 2 turns since the release at 212.07)",
+ "length_h": 0.2635,
+ "length_px": 284.6,
+ "tip": {
+  "x": 0.5,
+  "y": 0.3382,
+  "px": [
+   960.0,
+   365.3
+  ]
+ },
+ "guard": {
+  "x": 0.5,
+  "y": 0.5253,
+  "half_width_h": 0.0198,
+  "px": [
+   960.0,
+   567.4
+  ]
+ },
+ "pommel": {
+  "x": 0.5,
+  "y": 0.5833,
+  "px": [
+   960.0,
+   630.0
+  ]
+ },
+ "blade_width_h": 0.0264,
+ "look": "a dark bronze leaf-bladed xiphos silhouette (umber-bronze body, a burning gold sunward edge on its left) against bright golden-hour cloud; the sky around it brightens to a warm opening (#ffdb99-ish) behind it",
+ "motion_into_cut": "angular velocity decays as (1 - s)^2 to exactly 0 at 215.29; the camera has settled (zoom 1.55, centred on the sword); no translation in the last ~0.4 s",
+ "portrait_note": "4:5 / 9:16 use the same frame-centre composition (the camera centres the sword at x = .5, y = .47 of the frame in every aspect)"
+}

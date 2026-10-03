@@ -229,7 +229,7 @@ export function project(V, p) {
 function shade(V, px, py, pz) {
   const U = V.umb; if (!U) return 1;
   const c = U.v[0] * px + U.v[1] * py + U.v[2] * pz;
-  return 1 - U.k * (.42 * sstep(U.cp, U.cp + (1 - U.cp) * .35, c) + .52 * sstep(U.cu - (1 - U.cu) * .4, U.cu + (1 - U.cu) * .2, c));
+  return 1 - U.k * (.4 * sstep(U.cp, 1, c) ** .6 + .52 * sstep(U.cu - (1 - U.cu) * .6, U.cu + (1 - U.cu) * .3, c));
 }
 // ---------------------------------------------------------------- lines for one frame
 const BLUE = 2;
@@ -282,11 +282,11 @@ export function earthLines(V, o = {}) {
         const x = V.X[0] * px + V.X[1] * py + V.X[2] * pz, y = V.Y[0] * px + V.Y[1] * py + V.Y[2] * pz, k = V.F / (V.D - z), sx = V.cx + x * k, sy = V.cy - y * k;
         if (!vis(sx, sy)) { flush(L.id, ph); last = null; continue; }
         if (last && i < L.n - 1 && Math.hypot(sx - last[0], sy - last[1]) < minStep) continue;
-        const day = sstep(-.07, .16, sun[0] * x + sun[1] * y + sun[2] * z), limb = sstep(zmin, zmin + .1, z), cd = L.cd[i], ld = L.ld[i];
+        const day = sstep(-.07, .16, sun[0] * x + sun[1] * y + sun[2] * z), limb = sstep(zmin, zmin + .1, z) * (.55 + .45 * sstep(zmin, zmin + .35, z)), cd = L.cd[i], ld = L.ld[i];
         const lit = limb * wgt * shade(V, px, py, pz);
         B0.push((.06 + 1.3 * cd * cd) * (.08 + .92 * day) * lit);
         B1.push(.3 * (1 - cd) * (1 - ld) * day * lit);
-        B2.push(.05 * (1 - cd) * ld * (.3 + .7 * day) * lit);
+        B2.push(.034 * (1 - cd) * ld * (.3 + .7 * day) * lit);
         P.push([sx, sy, 0]);
         last = [sx, sy];
       }
@@ -360,7 +360,7 @@ void main() {
     float rho = sqrt(1. - 1. / (uD * uD));
     vec3 q = vec3(dd.x * rho, -dd.y * rho, 1. / uD);
     float day = smoothstep(-.15, .3, dot(q, uSun));
-    float g = exp(-(rpx - uRs) / (uRs * .012)) * .34 + exp(-(rpx - uRs) / (uRs * .06)) * .05;
+    float g = exp(-(rpx - uRs) / (uRs * .01)) * .11 + exp(-(rpx - uRs) / (uRs * .05)) * .025;
     vec3 col = vec3(.16, .42, .95) * g * day * uHaze;
     float a = clamp(max(col.r, max(col.g, col.b)), 0., 1.) * uAlpha;
     o = vec4(col * uAlpha, a);
@@ -375,11 +375,11 @@ void main() {
   vec3 ocean = mix(vec3(.03, .16, .46), vec3(.075, .33, .78), pow(mu, .55));
   vec3 land = vec3(.06, .048, .034);
   vec3 dayc = mix(ocean, land, L);
-  dayc += vec3(.2, .45, .95) * pow(1. - mu, 4.) * .35 * uHaze;         // limb haze
+  dayc += vec3(.2, .45, .95) * pow(1. - mu, 5.) * .22 * uHaze;         // limb haze
   vec3 nightc = mix(vec3(.012, .03, .075), vec3(.01, .01, .012), L) * uNight;
   vec3 col = mix(nightc, dayc, day);
   col += vec3(.94, .54, .16) * .22 * exp(-pow(sd / .07, 2.)) * (1. - L * .5);   // the dusk band
-  if (uUmb.w > .5) { float c = dot(p, uUmb.xyz); col *= 1. - uUmbR.z * (.42 * smoothstep(uUmbR.y, uUmbR.y + (1. - uUmbR.y) * .35, c) + .55 * smoothstep(uUmbR.x - (1. - uUmbR.x) * .4, uUmbR.x + (1. - uUmbR.x) * .2, c)); }
+  if (uUmb.w > .5) { float c = dot(p, uUmb.xyz); col *= clamp(1. - uUmbR.z * (.4 * pow(smoothstep(uUmbR.y, 1., c), .6) + .55 * smoothstep(uUmbR.x - (1. - uUmbR.x) * .6, uUmbR.x + (1. - uUmbR.x) * .3, c)), 0., 1.); }
   float edge = smoothstep(uRs + .8, uRs - .8, rpx);
   o = vec4(col * uAlpha * edge, uAlpha * edge);
 }`;
@@ -403,7 +403,7 @@ export async function earthFill(f, V, o = {}) {
 // screen px -> map km (rotated by rot, scale S px/km, the landing point at uC) -> lon/lat -> the 1:10m regional mask:
 // the Black Sea and the Mediterranean stay Earth-blue while they are in view; the land is left to the lines
 const MAPFILL = `
-uniform vec2 uRes, uC, uLL0, uK, uShift; uniform float uS, uRot, uAlpha; uniform sampler2D uAnat; uniform vec4 uBox;
+uniform vec2 uRes, uC, uLL0, uK, uShift; uniform float uS, uRot, uAlpha; uniform sampler2D uAnat, uLand; uniform vec4 uBox;
 void main() {
   vec2 px = vec2(uv.x * uRes.x, (1. - uv.y) * uRes.y);
   vec2 q = vec2(px.x - uC.x, uC.y - px.y) / uS;
@@ -411,7 +411,7 @@ void main() {
   vec2 km = vec2(q.x * c + q.y * s, -q.x * s + q.y * c) + uShift;
   vec2 ll = uLL0 + km / uK;
   vec2 t = (ll - uBox.xy) / (uBox.zw - uBox.xy);
-  float L = (t.x > 0. && t.x < 1. && t.y > 0. && t.y < 1.) ? texture(uAnat, vec2(t.x, 1. - t.y)).r : 1.;
+  float L = (t.x > 0. && t.x < 1. && t.y > 0. && t.y < 1.) ? texture(uAnat, vec2(t.x, 1. - t.y)).r : texture(uLand, vec2(ll.x / 360. + .5, .5 - ll.y / 180.)).r;
   float sea = 1. - smoothstep(.35, .65, L);
   vec3 col = vec3(.06, .29, .74) * sea;
   o = vec4(col * uAlpha, sea * uAlpha);
@@ -419,7 +419,8 @@ void main() {
 export async function mapFill(f, m, o = {}) {
   const W = f.W, H = f.H, G = getGL(W, H), prog = G.program(MAPFILL);
   if (!_anatTex) _anatTex = await loadImage(ANAT_URL);
-  G.pass(prog, { uRes: [W, H], uC: [m.cx, m.cy], uS: m.S, uRot: m.rot, uLL0: m.ll0, uK: m.k, uShift: m.shift, uAlpha: o.alpha ?? 1, uAnat: G.texture(_anatTex), uBox: [19, 30.5, 50, 47.5] });
+  if (!LAND) await landMask();
+  G.pass(prog, { uRes: [W, H], uC: [m.cx, m.cy], uS: m.S, uRot: m.rot, uLL0: m.ll0, uK: m.k, uShift: m.shift, uAlpha: o.alpha ?? 1, uAnat: G.texture(_anatTex), uLand: G.texture(LAND.img, { wrap: 'repeat' }), uBox: [19, 30.5, 50, 47.5] });
   const g = f.g;
   g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = 'screen'; g.drawImage(G.canvas, 0, 0, W, H); g.restore();
 }

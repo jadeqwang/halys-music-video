@@ -16,58 +16,56 @@ export function flockList(seed = 11, n = 36) {
     // a band from lower left to upper right, passing the corona; depth sets size and parallax
     const s = h(1), along = s, off = (h(2) - .5) * .5 * (1 - .4 * Math.abs(s - .45));
     const x = lerp(-.05, 1.05, along) + off * .25, y = lerp(.9, .08, along) + off;
-    const z = .25 + .75 * Math.pow(h(3), 1.6);
+    const z = j < 3 ? 1.35 + .35 * h(3) : .25 + .75 * Math.pow(h(3), 1.6);
     out.push({ x, y, z, head: -.35 + (h(4) - .5) * 1.1, phase: h(5), kind: h(6) < .62 ? 'swallow' : 'dove', flip: h(7) < .5, tilt: (h(8) - .5) * .7, seed: j });
   }
   return out.sort((a, b) => a.z - b.z);              // far first
 }
 
-// one bird into a 2D context: (x, y) px, span px (wingtip to wingtip when spread), heading rad (screen), wing phase 0..1
-// (0 up, .5 level, 1 down), kind; fills with `col` (the caller passes white for the matte, grey for the base)
+// one bird into a 2D context, built in a tiny 3-D frame (forward f, right r, up u) and projected: the heading turns
+// the bird in the picture, the roll shows it from below (wings spread) or from the side (wings up / down), and the
+// wingbeat phase sets the wing elevation with a bend at the wrist (the M of a raised wing, the flat V of a glide).
+// (x, y) px, span px (tip to tip), fills with `col`; `lines` adds carved feather lines (the stone's detail)
 function drawBird(g, b, x, y, span, col, lines) {
-  const ph = b.phase, up = Math.cos(ph * TAU);           // +1 wings raised, -1 lowered
-  const sw = b.kind === 'swallow';
-  const L = span * (sw ? .36 : .4), bw = span * (sw ? .055 : .085);
-  g.save(); g.translate(x, y); g.rotate(b.head); if (b.flip) g.scale(1, -1);
-  g.fillStyle = col; g.strokeStyle = col;
-  // body: a tapered spindle along +x (head forward)
-  g.beginPath();
-  g.moveTo(L * .55, 0);
-  g.bezierCurveTo(L * .45, -bw * 1.1, -L * .2, -bw, -L * .45, -bw * .35);
-  g.lineTo(-L * .45, bw * .35);
-  g.bezierCurveTo(-L * .2, bw, L * .45, bw * 1.1, L * .55, 0);
-  g.fill();
-  // head
-  g.beginPath(); g.arc(L * .5, 0, bw * (sw ? .9 : 1.05), 0, TAU); g.fill();
-  // tail: a deep fork (swallow) or a fan (dove)
-  g.beginPath();
-  if (sw) { g.moveTo(-L * .4, -bw * .3); g.lineTo(-L * 1.05, -bw * 1.6); g.lineTo(-L * .62, 0); g.lineTo(-L * 1.05, bw * 1.6); g.lineTo(-L * .4, bw * .3); }
-  else { g.moveTo(-L * .4, -bw * .4); g.quadraticCurveTo(-L * .85, -bw * 1.9, -L * .95, -bw * .2); g.quadraticCurveTo(-L * .98, 0, -L * .95, bw * .2); g.quadraticCurveTo(-L * .85, bw * 1.9, -L * .4, bw * .4); }
-  g.fill();
-  // wings: the near one full, the far one foreshortened by the wingbeat; swept back
+  const sw = b.kind === 'swallow', ph = b.phase;
+  const elev0 = Math.sin(ph * TAU) * .62 + .12, bend = -Math.sin(ph * TAU) * .7 + .15;   // radians: shoulder lift, wrist bend
+  const hd = b.head, roll = b.tilt * .9 + (b.flip ? .42 : -.42);
+  const fx = Math.cos(hd), fy = Math.sin(hd), px = -fy, py = fx;                     // forward and perpendicular in the picture
+  const rr = Math.cos(roll), ru = Math.sin(roll);                                    // how much "right" and "up" project onto the perpendicular
+  const P = (af, ar, au) => [x + fx * af + px * (ar * rr + au * ru), y + fy * af + py * (ar * rr + au * ru)];
+  const L = span * (sw ? .19 : .23), half = span * .5, chord = span * (sw ? .12 : .19), sweep = sw ? .5 : .22;
+  g.save(); g.fillStyle = col; g.strokeStyle = col; g.lineJoin = 'round';
+  // the wings: leading edge out to the tip, trailing edge back (pointed for swallows, fingered for doves)
   for (const side of [-1, 1]) {
-    const fore = side < 0 ? 1 : lerp(.45, 1, .5 + .5 * Math.abs(up)) * (1 - .25 * b.tilt * side);
-    const reach = span * .5 * fore * (side < 0 ? lerp(.55, 1, .5 + .5 * Math.abs(up)) : 1);
-    const sweep = sw ? .55 : .3, rootF = L * .18, rootB = -L * .12;
-    const tipX = -reach * sweep * (1.1 - .3 * up), tipY = side * reach * (.8 + .2 * up);
-    g.beginPath();
-    g.moveTo(rootF, side * bw * .6);
-    if (sw) {
-      g.bezierCurveTo(rootF + reach * .15, side * reach * .45, tipX * .4, tipY * .95, tipX, tipY);
-      g.bezierCurveTo(tipX * .6, tipY * .7, rootB, side * reach * .25, rootB, side * bw * .5);
-    } else {
-      g.bezierCurveTo(rootF + reach * .2, side * reach * .5, tipX * .5 + reach * .05, tipY * 1.02, tipX, tipY);
-      // the trailing edge of a dove's wing: a few broad primaries
-      const n = 4; let px = tipX, py = tipY;
-      for (let q = 1; q <= n; q++) { const t = q / n, ex = lerp(tipX, rootB, t), ey = lerp(tipY, side * bw * .5, t) * (1 - .12 * Math.sin(t * Math.PI)); g.quadraticCurveTo((px + ex) / 2 + reach * .04, (py + ey) / 2 - side * reach * .05, ex, ey); px = ex; py = ey; }
+    const lead = [], trail = [];
+    for (let q = 0; q <= 10; q++) {
+      const sq = q / 10, el = elev0 + (sq > .45 ? bend * (sq - .45) * 1.8 : 0);
+      const ar = side * half * sq * Math.cos(el), au = half * sq * Math.sin(el), af = L * .12 - sweep * half * sq * sq;
+      lead.push(P(af, ar, au));
+      const c = chord * (sw ? (1 - .92 * sq) : (1 - .45 * sq) * (sq > .8 ? 1 - (sq - .8) * 2.5 : 1));
+      trail.push(P(af - c, ar * (1 - .03 * sq), au));
     }
-    g.fill();
-    if (lines) {                                           // carved feather lines (the stone's detail)
-      g.save(); g.globalAlpha = .55; g.lineWidth = Math.max(.6, span * .006); g.strokeStyle = lines;
-      for (let q = 1; q <= (sw ? 3 : 5); q++) { const t = q / (sw ? 4 : 6); g.beginPath(); g.moveTo(lerp(rootF, rootB, t), side * bw * .6); g.lineTo(lerp(tipX, rootB, t * .7) * (1 - .1 * t), lerp(tipY, side * bw, t * .6)); g.stroke(); }
+    g.beginPath(); g.moveTo(...lead[0]);
+    for (const p of lead) g.lineTo(...p);
+    if (!sw) { const tp = lead[10], tq = trail[8]; for (let k = 1; k <= 3; k++) { const t2 = k / 4; g.lineTo(lerp(tp[0], tq[0], t2) + (k % 2 ? 1 : -1) * span * .006, lerp(tp[1], tq[1], t2)); } }
+    for (let q = 10; q >= 0; q--) g.lineTo(...trail[q]);
+    g.closePath(); g.fill();
+    if (lines) {
+      g.save(); g.globalAlpha = .5; g.lineWidth = Math.max(.6, span * .005); g.strokeStyle = lines;
+      for (let k = 1; k <= (sw ? 3 : 4); k++) { const q = 3 + k * 1.6 | 0, a = lead[Math.min(10, q)], c = trail[Math.min(10, q)]; g.beginPath(); g.moveTo(...a); g.lineTo(lerp(a[0], c[0], .9), lerp(a[1], c[1], .9)); g.stroke(); }
       g.restore();
     }
   }
+  // body: a spindle along the heading, the head forward, the tail behind (a fork or a fan)
+  const bw = span * (sw ? .04 : .06);
+  g.beginPath();
+  const body = []; for (let q = 0; q <= 12; q++) { const a = q / 12 * TAU, r = (Math.cos(a) > 0 ? L * .55 : L * .45); body.push(P(Math.cos(a) * r, Math.sin(a) * bw * (1 - .4 * Math.max(0, -Math.cos(a))), 0)); }
+  g.moveTo(...body[0]); for (const p of body) g.lineTo(...p); g.fill();
+  g.beginPath(); { const c = P(L * .55, 0, 0); g.arc(c[0], c[1], bw * (sw ? .95 : 1.1), 0, TAU); } g.fill();
+  g.beginPath();
+  if (sw) { const a = P(-L * .4, -bw * .3, 0), b2 = P(-L * 1.25, -bw * 2.4, 0), c = P(-L * .72, 0, 0), d = P(-L * 1.25, bw * 2.4, 0), e = P(-L * .4, bw * .3, 0); g.moveTo(...a); g.lineTo(...b2); g.lineTo(...c); g.lineTo(...d); g.lineTo(...e); }
+  else { const a = P(-L * .38, -bw * .45, 0), b2 = P(-L * .92, -bw * 1.5, 0), c = P(-L * 1.0, 0, 0), d = P(-L * .92, bw * 1.5, 0), e = P(-L * .38, bw * .45, 0); g.moveTo(...a); g.quadraticCurveTo(...b2, ...c); g.quadraticCurveTo(...d, ...e); }
+  g.fill();
   g.restore();
 }
 
@@ -87,7 +85,7 @@ export function flockSource(f, o = {}) {
   // birds far to near; each drawn into the matte canvas (white) and the base canvas (stone grey, carved lines)
   const birds = [];
   list.forEach((b, j) => {
-    const span = (.028 + .085 * b.z) * aw * (o.scale ?? 1);
+    const span = (.032 + .09 * b.z) * aw * (o.scale ?? 1);
     const x = (b.x + drift[0] * b.z * k) * aw, y = (b.y + drift[1] * b.z * k) * ah;
     const x0 = b.x * aw, y0 = b.y * ah;                  // where it was on the shot's first drawing (material space)
     if (x < -span || x > aw + span || y < -span || y > ah + span) return;

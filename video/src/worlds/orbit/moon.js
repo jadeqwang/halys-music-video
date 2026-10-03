@@ -9,7 +9,7 @@
 
 import { proc, FL } from '../line/index.js';
 import { clamp, lerp, sstep } from '../../core.js';
-import { mkLine } from './index.js';
+import { mkLine, splitLine } from './index.js';
 
 function h3(x, y, z, s) { let n = (x * 374761393 + y * 668265263 + z * 1274126177 + s * 1442695041) | 0; n = Math.imul(n ^ (n >>> 13), 1274126177); n ^= n >>> 16; return (n >>> 0) / 4294967296; }
 function vn3(x, y, z, s) {
@@ -62,7 +62,7 @@ function craters(seed, n, region) {
   for (let i = 0; i < n; i++) {
     const u = h3(i, 1, seed, 3), v = h3(i, 2, seed, 3), sz = Math.pow(h3(i, 3, seed, 3), 3.2);
     const nx = lerp(region[0], region[1], u), ny = lerp(region[2], region[3], v), z2 = 1 - nx * nx - ny * ny; if (z2 <= .0004) continue;
-    out.push({ n: [nx, ny, Math.sqrt(z2)], r: .0035 + .055 * sz, depth: .6 + .4 * h3(i, 4, seed, 3), id: i });
+    out.push({ n: [nx, ny, Math.sqrt(z2)], r: .003 + .06 * Math.pow(sz, 1.25), depth: .6 + .4 * h3(i, 4, seed, 3), id: i });
   }
   return out.sort((a, b) => b.r - a.r);
 }
@@ -76,49 +76,58 @@ function heightAt(n, CR, seed) {
   return h;
 }
 
-// sun: screen direction toward the Sun (x right, y down), e.g. [-.9, -.3] = from the upper left
-export function lunarLimb(W, H, o = {}) {
-  const s = H / 1080, RM = (o.RM ?? 1.6) * W, yTop = (o.yTop ?? .6) * H, cx = W / 2, cy = yTop + RM, seed = o.seed ?? 5;
-  const sun = o.sun ?? [-.85, -.25], out = [];
-  const region = [-(W / 2 + 40) / RM, (W / 2 + 40) / RM, -1, (H + 40 - cy) / RM];
-  const CR = craters(seed, o.nCraters ?? 520, region);
-  // height field on a screen grid over the visible surface
-  const cell = (o.cell ?? 4) * s, gw = Math.ceil(W / cell) + 3, y0 = yTop - 2 * cell, gh = Math.ceil((H - y0) / cell) + 3, Hf = new Float32Array(gw * gh);
-  for (let j = 0; j < gh; j++) for (let i = 0; i < gw; i++) {
-    const x = (i - 1) * cell, y = y0 + j * cell, nx = (x - cx) / RM, ny = (y - cy) / RM, z2 = 1 - nx * nx - ny * ny;
-    Hf[j * gw + i] = z2 <= 0 ? NaN : heightAt([nx, ny, Math.sqrt(z2)], CR, seed);
-  }
-  let lo = Infinity, hi = -Infinity; for (const v of Hf) if (!Number.isNaN(v)) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
-  const nl = o.levels ?? 26, levels = Array.from({ length: nl }, (_, k) => lerp(lo, hi, (k + .5) / nl));
-  const toXY = (i, j) => [(i - 1) * cell, y0 + j * cell];
-  for (const c of contours(Hf, gw, gh, levels, toXY)) {
-    // brightness: lit slopes brighter (the gradient faces the Sun), dimmer toward the bottom of the frame
-    const pts = c.pts, b = pts.map(([x, y], k) => {
-      const nz2 = 1 - ((x - cx) / RM) ** 2 - ((y - cy) / RM) ** 2, near = 1 - sstep(.0, .6, Math.sqrt(Math.max(0, nz2)));
-      const p = pts[Math.max(0, k - 1)], q = pts[Math.min(pts.length - 1, k + 1)], tx = q[0] - p[0], ty = q[1] - p[1], tm = Math.hypot(tx, ty) || 1;
-      const face = .55 + .45 * ((-ty / tm) * sun[0] + (tx / tm) * sun[1]);
-      return (o.gain ?? 1) * (.1 + .17 * near) * (.45 + .75 * face * face) * (1 - .45 * sstep(.25 * H, H, y - yTop));
-    });
-    out.push(mkLine(pts, { b, w: .85, o: .03, spd: .35, phase: c.lv * 7 }));
-  }
-  // explicit rims for the larger craters: bright on the far wall (facing the Sun), the near wall in shadow
+// The surface as RIDGE LINES: rings of equal distance from the camera (orthographic: concentric arcs parallel to the
+// limb, crowding toward it as the sphere foreshortens), each lifted by the height field and cut by the nearer ones
+// (floating horizon, near to far). Calm, directional, a horizon you could walk to: craters read as dents with lit far
+// rims, the limb itself carries the relief in profile (kept below the reference circle, so the circle test that
+// occludes the Earth never leaves a gap). sun: screen direction toward the Sun (x right, y down).
+function lunarHeight(n, CR, seed) {
+  let h = .0022 * (fbm(n[0] * 7 + 3, n[1] * 7 - 1, n[2] * 7 + 5, seed, 4) - .5) + .0009 * (fbm(n[0] * 26, n[1] * 26, n[2] * 26, seed + 7, 3) - .5);
   for (const c of CR) {
-    if (c.r < .016) continue;
-    const ref = [0, 0, 1], t1 = norm3(cross3(ref, c.n)), t2 = cross3(c.n, t1), pts = [], bb = [];
-    for (let k = 0; k <= 72; k++) {
-      const a = k / 72 * Math.PI * 2, v = norm3([c.n[0] + c.r * (Math.cos(a) * t1[0] + Math.sin(a) * t2[0]), c.n[1] + c.r * (Math.cos(a) * t1[1] + Math.sin(a) * t2[1]), c.n[2] + c.r * (Math.cos(a) * t1[2] + Math.sin(a) * t2[2])]);
-      if (v[2] <= 0) continue;
-      const x = cx + RM * v[0], y = cy + RM * v[1]; pts.push([x, y]);
-      const dx = v[0] - c.n[0], dy = v[1] - c.n[1], dm = Math.hypot(dx, dy) || 1;
-      bb.push((o.gain ?? 1) * (.12 + .48 * Math.pow(Math.max(0, -(dx / dm * sun[0] + dy / dm * sun[1])), 1.5)) * (1 - .45 * sstep(.25 * H, H, y - yTop)));
-    }
-    if (pts.length > 2) out.push(mkLine(pts, { b: bb, w: 1.0 + .6 * clamp(c.r / .04), o: .05, flags: FL.NOFADE, spd: .3 }));
+    const dx = n[0] - c.n[0], dy = n[1] - c.n[1], dz = n[2] - c.n[2], d2 = (dx * dx + dy * dy + dz * dz) / (c.r * c.r);
+    if (d2 > 3.6) continue;
+    const d = Math.sqrt(d2);
+    h += c.r * c.depth * (d < 1 ? .2 * (d * d - 1) : .07 * Math.exp(-(((d - 1) / .3) ** 2)));      // bowl + raised rim
   }
-  // the limb: crisp, bright, a touch of orange (the CORONA horizon)
-  const limb = [];
-  for (let x = -20; x <= W + 20; x += 6 * s) { const dx = (x - cx) / RM; if (Math.abs(dx) >= 1) continue; limb.push([x, cy - RM * Math.sqrt(1 - dx * dx)]); }
-  out.push(mkLine(limb, { b: 1.25 * (o.gain ?? 1), w: 1.6, o: .22, flags: FL.NOFADE, spd: .4 }));
-  out.push(mkLine(limb.map(([x, y]) => [x, y + 2.5 * s]), { b: .35 * (o.gain ?? 1), w: 1.0, o: .1 }));
+  return h;
+}
+export function lunarLimb(W, H, o = {}) {
+  const s = H / 1080, RM = (o.RM ?? 1.6) * W, yTop = (o.yTop ?? .6) * H, cx = W / 2, cy = yTop + RM, seed = o.seed ?? 5, gain = o.gain ?? 1;
+  const sun = o.sun ?? [-.85, -.25], out = [];
+  const th0 = -Math.PI / 2 - Math.asin(Math.min(1, (W / 2 + 40) / RM)), th1 = -Math.PI / 2 + Math.asin(Math.min(1, (W / 2 + 40) / RM));
+  const nT = Math.ceil((th1 - th0) * RM / (2.2 * s)), dT = (th1 - th0) / nT;
+  const region = [-(W / 2 + 80) / RM, (W / 2 + 80) / RM, -1, (H + 60 - cy) / RM];
+  const CR = craters(seed, o.nCraters ?? 150, region).map(c => ({ ...c, r: c.r * .8 }));
+  // ridge radii: from the limb (j = 0) toward the camera, spacing growing ~1.5 px -> ~11 px at the frame's bottom
+  const D = (H + 50 * s) - yTop, nR = o.ridges ?? 66, rho = j => RM - D * Math.pow(j / (nR - 1), 1.45);
+  const hmax = .0013;                                   // relief is measured downward from the reference sphere
+  const rmax = new Float32Array(nT + 1).fill(-1e9);
+  const rows = [];
+  for (let j = nR - 1; j >= 0; j--) {
+    const c0 = rho(j) / RM, z = Math.sqrt(Math.max(0, 1 - c0 * c0)), pts = [], vis = [], bb = [];
+    let hp = 0;
+    for (let i = 0; i <= nT; i++) {
+      const th = th0 + i * dT, nx = c0 * Math.cos(th), ny = c0 * Math.sin(th), h = lunarHeight([nx, ny, z], CR, seed) - hmax;
+      const r = RM * (1 + h) * c0, x = cx + r * Math.cos(th), y = cy + r * Math.sin(th);
+      const ok = r > rmax[i] + .25 * s; if (r > rmax[i]) rmax[i] = r;
+      // light: the slope along the ridge facing the low Sun (from the left) is lit; dents' far walls catch it
+      const slope = i ? (h - hp) * RM / (dT * RM) : 0; hp = h;
+      const face = clamp(.5 - 1.5 * slope * Math.sign(sun[0] || -1));
+      const far = 1 - j / (nR - 1);
+      pts.push([x, y]); vis.push(ok);
+      bb.push(gain * (.1 + .2 * far + .02) * (.45 + 1.1 * face * face) * (1 - .45 * sstep(.15 * H, H, y - yTop)));
+    }
+    rows.push({ j, pts, vis, bb });
+  }
+  for (const R of rows) {
+    const L = mkLine(R.pts, { b: R.bb, w: (.75 + .2 * (R.j === 0)) * s + .2, o: .03, spd: .3, phase: R.j * .37, flags: FL.SHARP });
+    if (!L) continue;
+    if (R.j === 0) { L.b = L.b.map(v => v * 0 + 1.2 * gain); L.w.fill(1.6 * s); L.o.fill(.22); L.flags = FL.NOFADE; out.push(L); continue; }   // the limb: crisp, bright, a touch of orange
+    for (const piece of splitLine(L, (x, y, k) => R.vis[k], 3)) out.push(piece);
+  }
+  // a soft second limb line just inside (the glow of the sunlit horizon)
+  const limb = rows.find(R => R.j === 0);
+  out.push(mkLine(limb.pts.map(([x, y]) => [x, y + 2.5 * s]), { b: .32 * gain, w: 1.0, o: .1 }));
   return { lines: out.filter(Boolean), cx, cy, RM, yTop };
 }
 const cross3 = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
