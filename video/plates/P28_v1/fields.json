@@ -2,32 +2,32 @@
  "w": 480,
  "h": 270,
  "n": 121,
- "gain": 1.911,
- "edge_norm": 2.0723,
+ "gain": 1.74,
+ "edge_norm": 1.6737,
  "palette": [
   {
-   "hex": "#1c1c1f",
-   "share": 0.333
+   "hex": "#090506",
+   "share": 0.297
   },
   {
-   "hex": "#060303",
-   "share": 0.278
+   "hex": "#715d55",
+   "share": 0.167
   },
   {
-   "hex": "#894f2a",
-   "share": 0.118
+   "hex": "#61362b",
+   "share": 0.163
   },
   {
-   "hex": "#3a2924",
-   "share": 0.117
+   "hex": "#454855",
+   "share": 0.159
   },
   {
-   "hex": "#643d2b",
-   "share": 0.099
+   "hex": "#351f1a",
+   "share": 0.113
   },
   {
-   "hex": "#a57a5f",
-   "share": 0.055
+   "hex": "#96755e",
+   "share": 0.101
   }
  ],
  "encoding": {
@@ -41,8 +41,8 @@
   "h": 270,
   "model": "depth_anything_v2_vits (518x518)",
   "range": [
-   0.0905,
-   4.3984
+   0.0,
+   5.0312
   ],
   "encoding": "grey 0..255 = relative inverse depth, 255 = nearest (per-plate 2..98 percentile)"
  }

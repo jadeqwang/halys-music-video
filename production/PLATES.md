@@ -9,7 +9,7 @@ with a thin fillet, trimmed curly beard, saffron himation with a dark woven bord
 is `media/chars/thales_v1.jpg`), and P27/P28 were regenerated with it (their previous prompts are kept as `prompt_v2`). Per-plate verdicts:
 `media/plates/<id>/review.json`. Shot purposes and times: `production/SHOTLIST.md` (as of the 02:43 commit e899de3).
 
-> Status (2026-10-03 13:12): 49 plates delivered, 88 paid takes this pass (720p, 16:9, 24 fps, 483 s of video),
+> Status (2026-10-03 13:29): 49 plates delivered, 88 paid takes this pass (720p, 16:9, 24 fps, 483 s of video),
 > **$111.67** (genlog estimate at $0.2312/s; 3 real-person-filter rejections cost nothing; +$3.47 only if the provider
 > ever bills the abandoned P01 take 3; the two Thales sheet candidates added $0.34 of nano-banana-pro). All 49 chosen
 > takes are fully analysed (frames, fields, mattes, depth, meta) in `video/plates/<id>/`, and `video/plates/index.json` lists
@@ -83,7 +83,7 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 | S38 | P24 (1) | palm meets the "glass" ~1.6–2.3 |
 | S45, S46, S49 | P25 (2) | orbit through the frozen battle 0–5.6; crane/tilt to the sky 5.6–10 (S49) |
 | S51 | P26 (1) | 1:1 (only wind moves) |
-| S52 | P27 (6) | 1:1; S52 uses plate 0–2.11 (the new Thales walks toward the lens at x ≈ 0.50, clear of both statues) |
+| S52 | P27 (6) | start 0.42 s in (181.23 → 0.42), then 1:1: plate 0.42–2.53 keeps the new Thales's matte clear of both statues (x ≈ 0.42–0.65) |
 | S53–S54 | P28 (4) | looks up 0–2.2, head down 2.25–2.7, eyes on the lens 187.65 → 2.75, face square ~3.2, sly half-smile from ~3.25 |
 | S57–S58 | P29 (1) | light sweep 1.7–4.0; the roar 200.315 → 5.85 |
 | S59 / S60 | P30 (1) / P31 (1) | 1:1 |
@@ -189,7 +189,7 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 | P24 | S38 | take1 | pass 4 | 124.47 | 1:1 from t0 | Reads as a reach with spread fingers (no head push-through). |
 | P25 | S45, S46, S49 | take2 | pass 4 | 153.83 | 1:1 from t0 | Black sun drawn at the end (renderer paints over). |
 | P26 | S51 | take1 | pass 4 | 178.66 | 1:1 from t0 | Lydians wear crimson cloaks (not on the sheet). |
-| P27 | S52 | take6 | pass 5 | 181.23 | 1:1 from t0 | Slight camera drift; tablet overlaps the Mede's shield after 3.0 s (after S52). |
+| P27 | S52 | take6 | pass 5 | 181.23 | 181.23→0.42 (+0.42) | Matte joins him to the warriors at 0-0.33 s and after 2.67 s: start S52 at plate 0.42. |
 | P28 | S53, S54 | take4 | pass 5 | 184.64 | 187.65→2.75 (-0.26) | Darker frame (silhouetted crowd); no staff any more (short gnomon). |
 | P29 | S57, S58 | take1 | pass 4 | 194.86 | 200.31→5.85 (+0.40) | Back of the crowd merges slightly. |
 | P30 | S59 | take1 | pass 5 | 203.39 | 1:1 from t0 | - |
@@ -537,23 +537,24 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 ### P27 · Thales walks between the statues
 
 * **Shots:** S52. **Window:** song [181.23, 185.23], audio reference cut at t0 = 181.23 s (Halys.mp3), 4 s, 6 take(s) reviewed.
-* **Chosen:** take 6 → `media/plates/P27/take6.mp4`; analysis in `video/plates/P27/` (frames 97, fields 97, mattes 49, depth 49, gain 1.496). The new Thales reads clearly in S52's window: a larger figure, fillet and border visible, frozen statues framing him, ending in the medium shot asked for; take 5 is static and clean but Thales is small.
+* **Chosen:** take 6 → `media/plates/P27/take6.mp4`; analysis in `video/plates/P27/` (frames 97, fields 97, mattes 49, depth 49, gain 1.69). The new Thales reads clearly in S52's window: a larger figure, fillet and border visible, frozen statues framing him, ending in the medium shot asked for; take 5 is static and clean but Thales is small.
 * **Delivers:** S52 with the new Thales: on a riverbank path at dusk he walks toward the lens between a frozen Lydian mid-thrust on the left (crested helmet, crimson tunic, bronze scales, black lion on a crimson shield) and a frozen Mede on the right (red cap, black beard, ochre tunic, iron scales, wicker shield), frozen fighters along the water behind; face tilted up with amused curiosity, shadow-stick in his right hand, tablet in his left; he ends in a medium shot.
-* **Sync:** no musical hit to land; use 1:1 from t0 (plate = song − t0).
-* **Checks:** Matches the new sheet: short curly dark hair with the thin fillet visible, trimmed curly beard, saffron himation with a dark woven border over a cream chiton, wooden tablet and a short stick (no staff, no red robe, no long hair). Lydian and Mede per sheets; the Mede's sword on his right side · Three distinct men; Thales reads as an Ionian philosopher of the herm type, not as Jesus · Very slight camera drift (~8 px at 1280 over 4 s); from ~3.0 s his tablet overlaps the Mede's shield, so the matte joins them (after S52's 0-2.11 s window)
-* **Notes for the renderer:** 1:1 from t0. S52 uses plate 0-2.11, where Thales (x ~0.50-0.52) is clear of both warriors: the matte component nearest x 0.5 is him. No staff any more: a short gnomon and the tablet.
+* **Sync keys** (song s → plate s, offset = plate − (song − t0)):
+  * 181.230 → 0.42 (+0.42 s) · S52 starts 0.42 s into the plate (before that the matte joins Thales to both warriors' spears)
+* **Checks:** Matches the new sheet: short curly dark hair with the thin fillet visible, trimmed curly beard, saffron himation with a dark woven border over a cream chiton, wooden tablet and a short stick (no staff, no red robe, no long hair). Lydian and Mede per sheets; the Mede's sword on his right side · Three distinct men; Thales reads as an Ionian philosopher of the herm type, not as Jesus · Very slight camera drift (~8 px at 1280 over 4 s). Matte: the component nearest the centre joins Thales to the warriors at plate 0-0.33 s (crossing spears) and from 2.67 s (his tablet over the Mede's shield); clean in between
+* **Notes for the renderer:** Start S52 0.42 s into the plate (key 181.23 -> 0.42, constant offset), so S52 (2.11 s) runs on plate 0.42-2.53, where the matte component nearest x 0.47 is Thales alone (x 0.42-0.65 with his tablet). No staff any more: a short gnomon and the tablet.
 * **Review sheet:** `media/plates/P27/take6.review.jpg` (motion curve + frames at the hits); 8-frame contact `media/plates/P27/take6.sheet.jpg`.
 * **Previous design:** take 3 (old sheet `media/chars/thales_v1.jpg`) stays analysed in `video/plates/P27_v1/` (index key `P27_v1`, `take` = `media/plates/P27/take3.mp4`); all takes side by side: `media/plates/P27/takes.sheet.jpg`.
-* Take 1: pass 3: Old Thales design (thales_v1.jpg); He does not walk (the model orbited the camera instead).
-* Take 2: weak 2: Old Thales design (thales_v1.jpg); No real walk; sky too bright for totality.
-* Take 3: pass 4: Old Thales design (thales_v1.jpg); None; the frozen men do not move. Was the chosen take until the redesign.
-* Take 4: pass 4: Old Thales design (thales_v1.jpg); Foreground warriors are big dark masses (less readable).
+* Take 1: pass 3: Old Thales design (thales_v1.jpg); he does not walk (the model orbited the camera instead).
+* Take 2: weak 2: Old Thales design (thales_v1.jpg); no real walk; sky too bright for totality.
+* Take 3: pass 4: Old Thales design (thales_v1.jpg); clean walk, the frozen men stay still. Chosen until the redesign.
+* Take 4: pass 4: Old Thales design (thales_v1.jpg); foreground warriors are big dark masses (less readable).
 * Take 5: pass 4: Static and clean, but Thales is small; ends full-figure, not medium.
 
 ### P28 · Thales looks into the lens
 
 * **Shots:** S53, S54. **Window:** song [184.64, 189.64], audio reference cut at t0 = 184.64 s (Halys.mp3), 5 s, 4 take(s) reviewed.
-* **Chosen:** take 4 → `media/plates/P28/take4.mp4`; analysis in `video/plates/P28/` (frames 121, fields 121, mattes 61, depth 61, gain 1.74). The knowing glance lands at 2.75 (-0.26 s) with only a hint of a sly smile, and the tablet reads as a wax tablet; take 3's smile grows into a broad grin and its tablet looks like a book.
+* **Chosen:** take 4 → `media/plates/P28/take4.mp4`; analysis in `video/plates/P28/` (frames 121, fields 121, mattes 61, depth 61, gain 1.911). The knowing glance lands at 2.75 (-0.26 s) with only a hint of a sly smile, and the tablet reads as a wax tablet; take 3's smile grows into a broad grin and its tablet looks like a book.
 * **Delivers:** S53-S54 with the new Thales: medium close-up before a dark crowd of helmeted silhouettes against the orange eclipse horizon; 0-2.2 s he studies the sky with quick eyes, tapping the shadow-stick on a hinged wooden wax tablet; 2.25-2.7 s he lowers his head with a slow blink; at ~2.75 his eyes meet the lens, his face squares to camera by ~3.2 s, and a sly, knowing half-smile with a slightly raised brow builds from ~3.25 s and holds to the end; slow push-in.
 * **Sync keys** (song s → plate s, offset = plate − (song − t0)):
   * 187.650 → 2.75 (-0.26 s) · the breath: he glances at camera
@@ -561,8 +562,8 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 * **Notes for the renderer:** Glance 187.65 -> 2.75 (-0.26 s); the old take 1 glanced at 2.80, so S53's keys barely move. No staff any more (marble.js takes 'his staff from the depth'): a short stick and the tablet.
 * **Review sheet:** `media/plates/P28/take4.review.jpg` (motion curve + frames at the hits); 8-frame contact `media/plates/P28/take4.sheet.jpg`.
 * **Previous design:** take 1 (old sheet `media/chars/thales_v1.jpg`) stays analysed in `video/plates/P28_v1/` (index key `P28_v1`, `take` = `media/plates/P28/take1.mp4`); all takes side by side: `media/plates/P28/takes.sheet.jpg`.
-* Take 1: pass 5: Old Thales design (thales_v1.jpg); None. Was the chosen take until the redesign.
-* Take 2: pass 3: Old Thales design (thales_v1.jpg); A huge black sun with a bright corona is drawn directly behind his head (would pollute the light/brightness analysis).
+* Take 1: pass 5: Old Thales design (thales_v1.jpg); glance at 2.80, no corona. Chosen until the redesign.
+* Take 2: pass 3: Old Thales design (thales_v1.jpg); a huge black sun with a corona drawn right behind his head.
 * Take 3: pass 4: Glance 0.4 s early; the smile turns into a broad grin by 4.5 s; tablet looks like a book.
 
 ### P29 · Light returns: statues to flesh, the roar
