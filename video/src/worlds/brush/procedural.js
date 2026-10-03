@@ -111,8 +111,20 @@ export function mirrorFigure(o) {
   const { cx, cy, R, pal } = o, k = o.k ?? 1, h = (o.h ?? .22) * R, out = [];
   const warp = (u, v) => { const r = Math.hypot(u, v), s = r > 0 ? Math.tanh(r * 1.3) / (r * 1.3) : 1; return [cx + u * s * R, cy + v * s * R]; };
   const P = (du, dv) => warp((o.u ?? .15) + du * h / R, (o.v ?? -.1) + dv * h / R);
-  const orange = [240 / 255, 138 / 255, 42 / 255], jacket = [.93, .92, .88], hair = [.06, .065, .08], navy = [.12, .14, .2], metal = [.78, .78, .74];
+  // a reflection, not a sticker: the colours take the surface's tint (o.tint) and lose some contrast; the headphones
+  // keep most of their orange (the one thing a freeze-frame hunter should catch)
+  const tn = o.tint || [1, 1, 1], tk = o.tintK ?? 0;
+  const T = (c, q = 1) => [lerp(c[0], c[0] * tn[0] * .9 + .05, tk * q), lerp(c[1], c[1] * tn[1] * .9 + .04, tk * q), lerp(c[2], c[2] * tn[2] * .9 + .03, tk * q)];
+  const orange = T([240 / 255, 138 / 255, 42 / 255], .35), jacket = T([.93, .92, .88]), hair = T([.06, .065, .08]), navy = T([.12, .14, .2]), metal = T([.78, .78, .74]);
   const add = (pts, r, c, thick = .3, a = 1) => out.push({ pts, r: Math.max(.6, r), c0: c, c1: c, a: a * k, thick, seed: hash3(out.length, 1, 51), key: 2 + out.length * 1e-3, layer: 12, taper: .2 });
+  // the reflected window of light the figure stands in (soft, curved with the surface)
+  if (o.sheen) {
+    const sc = o.sheenColor || [.85, .62, .42];
+    for (let j = 0; j < 26; j++) {
+      const a0 = hash3(j, 7, 53), rr = .25 + .5 * hash3(j, 8, 53), dv = (hash3(j, 9, 53) - .5) * 1.1;
+      add([P(-.55 * rr - .1, dv - .05), P(0, dv - .12 * rr), P(.55 * rr + .1, dv - .05)], h * (.05 + .05 * hash3(j, 10, 53)), sc, .15, o.sheen * (.25 + .25 * a0));
+    }
+  }
   add([P(0, -.42), P(0, -.30)], h * .09, hair);                         // head / hair
   add([P(-.07, -.36), P(-.06, -.33)], h * .045, orange, .5);            // headphones
   add([P(.07, -.36), P(.06, -.33)], h * .045, orange, .5);

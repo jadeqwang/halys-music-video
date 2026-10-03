@@ -477,7 +477,7 @@ scene('S26', async f => {
       poolMatte: .3, crushFloor: .1,
     }),
     accents: 1.4, accentThick: 1.8, glint: 1, impasto: .7,
-    overStrokes: egg ? ({ pal }) => PR.mirrorFigure({ cx: f.W * mirror.cx, cy: f.H * mirror.cy, R: f.H * mirror.R, u: mirror.u, v: mirror.v, h: mirror.h, pal }) : null,
+    overStrokes: egg ? ({ pal }) => PR.mirrorFigure({ cx: f.W * mirror.cx, cy: f.H * mirror.cy, R: f.H * mirror.R, u: mirror.u, v: mirror.v, h: mirror.h, pal, tint: [1, .62, .45], tintK: .55, sheen: real ? .8 : .5 }) : null,
   });
 });
 
