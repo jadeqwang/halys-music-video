@@ -821,7 +821,9 @@ scene('S31b', async f => {
 });
 
 scene('S32', async f => {
-  const src = await rp(f, 'P21', { id: 'a_duel', cam: k => ({ cx: .5, cy: .45, zoom: 1.15 + .03 * k }) }, k => ({ cx: .5, cy: .5, zoom: 1.02 + .03 * k }));
+  // (the duelists stand at the two edges, too far apart for a portrait crop: portrait holds the Lydian, the arm-pull's swordsman)
+  const cx = f.W / f.H > 1.2 ? .5 : .23;
+  const src = await rp(f, 'P21', { id: 'a_duel', cam: k => ({ cx: .5, cy: .45, zoom: 1.15 + .03 * k }) }, k => ({ cx, cy: .5, zoom: 1.02 + .03 * k }));
   if (hasPlate('P21')) {
     await bronze(f, src, plateLook(src, { lightDir: [0, -1], keep: .55, keepDim: .9, fromLight: .5, poolMatte: .3, rim: .9, body: 0,
       pool: [{ x: .3, y: .45, rx: .13, ry: .5, feather: .6, k: .9, fig: true }, { x: .62, y: .45, rx: .13, ry: .5, feather: .6, k: .9, fig: true }],
