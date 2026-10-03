@@ -461,20 +461,6 @@
   "dur": 5.042,
   "gain": 1.443
  },
- "P27": {
-  "n": 97,
-  "mattes": 49,
-  "depth": 49,
-  "fields": 97,
-  "fps": 24,
-  "w": 960,
-  "h": 540,
-  "take": "take3.mp4",
-  "src_w": 1280,
-  "src_h": 720,
-  "dur": 4.042,
-  "gain": 1.496
- },
  "P41": {
   "n": 145,
   "mattes": 73,
@@ -713,18 +699,46 @@
   "dur": 5.042,
   "gain": 2.145
  },
- "P27_new": {
+ "P27": {
   "n": 97,
+  "mattes": 49,
+  "depth": 49,
+  "fields": 97,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take6.mp4",
+  "src_w": 1280,
+  "src_h": 720,
+  "dur": 4.042,
+  "gain": 1.69
+ },
+ "P27_v1": {
+  "n": 97,
+  "mattes": 49,
+  "depth": 49,
+  "fields": 97,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "media/plates/P27/take3.mp4",
+  "src_w": 1280,
+  "src_h": 720,
+  "dur": 4.042,
+  "gain": 1.496
+ },
+ "P28_new": {
+  "n": 121,
   "mattes": 0,
   "depth": 0,
   "fields": 0,
   "fps": 24,
   "w": 960,
   "h": 540,
-  "take": "media/plates/P27/take6.mp4",
+  "take": "media/plates/P28/take4.mp4",
   "src_w": 1280,
   "src_h": 720,
-  "dur": 4.042,
+  "dur": 5.042,
   "gain": 1.0
  }
 }

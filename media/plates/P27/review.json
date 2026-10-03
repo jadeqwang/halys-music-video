@@ -147,8 +147,8 @@
    "purpose": "S52 with the new Thales: on a riverbank path at dusk he walks toward the lens between a frozen Lydian mid-thrust on the left (crested helmet, crimson tunic, bronze scales, black lion on a crimson shield) and a frozen Mede on the right (red cap, black beard, ochre tunic, iron scales, wicker shield), frozen fighters along the water behind; face tilted up with amused curiosity, shadow-stick in his right hand, tablet in his left; he ends in a medium shot.",
    "costume": "Matches the new sheet: short curly dark hair with the thin fillet visible, trimmed curly beard, saffron himation with a dark woven border over a cream chiton, wooden tablet and a short stick (no staff, no red robe, no long hair). Lydian and Mede per sheets; the Mede's sword on his right side.",
    "identity": "Three distinct men; Thales reads as an Ionian philosopher of the herm type, not as Jesus.",
-   "artefacts": "Very slight camera drift (~8 px at 1280 over 4 s); from ~3.0 s his tablet overlaps the Mede's shield, so the matte joins them (after S52's 0-2.11 s window).",
-   "notes": "1:1 from t0. S52 uses plate 0-2.11, where Thales (x ~0.50-0.52) is clear of both warriors: the matte component nearest x 0.5 is him. No staff any more: a short gnomon and the tablet.",
+   "artefacts": "Very slight camera drift (~8 px at 1280 over 4 s). Matte: the component nearest the centre joins Thales to the warriors at plate 0-0.33 s (crossing spears) and from 2.67 s (his tablet over the Mede's shield); clean in between.",
+   "notes": "Start S52 0.42 s into the plate (key 181.23 -> 0.42, constant offset), so S52 (2.11 s) runs on plate 0.42-2.53, where the matte component nearest x 0.47 is Thales alone (x 0.42-0.65 with his tablet). No staff any more: a short gnomon and the tablet.",
    "sync": [
     {
      "song_t": 182.485,
@@ -157,6 +157,14 @@
      "measured_plate_t": 1.083,
      "offset_s": -0.172,
      "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 181.23,
+     "event": "S52 starts 0.42 s into the plate (before that the matte joins Thales to both warriors' spears)",
+     "expected_plate_t": 0.0,
+     "measured_plate_t": 0.42,
+     "offset_s": 0.42,
+     "method": "manual: matte check (connected components)"
     }
    ],
    "cuts_s": [],
@@ -167,7 +175,7 @@
    "job": null,
    "reviewed": "2026-10-03T13:09:55",
    "design": "media/chars/thales.jpg (redesign)",
-   "short": "Slight camera drift; tablet overlaps the Mede's shield after 3.0 s (after S52)."
+   "short": "Matte joins him to the warriors at 0-0.33 s and after 2.67 s: start S52 at plate 0.42."
   }
  },
  "shots": "S52",
