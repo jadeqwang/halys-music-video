@@ -86,15 +86,6 @@ export const MVARS = {
   flat: { impasto: .22, spec: .12, varnish: .5, thick: .22, thickHi: .3 },
   flatfine: { impasto: .22, spec: .12, varnish: .5, thick: .22, thickHi: .3, T: [0, .03, .035, .04, .045], fineGate: 0, midGate: 0, maxLen: [5, 6, 5, 4, 3], brushes: [24, 13, 7, 3.6, 1.8] },
   noface: { faceMin: null, eyeStrokes: 0 },
-  engb: { brushes: [26, 14, 8, 4.4, 2.4], T: [0, .055, .06, .075, .085], minLen: [2, 2, 2, 1, 1], maxLen: [4, 5, 5, 4, 3], fc: .45, maxTurn: .38, jitter: .8, colorJit: .055, endBlend: .15, darkRaise: 1.3, midGate: .18, fineGate: .26, bristle: undefined, smoothRef: 1 },
-  nobristle: { bristle: undefined },
-  shortb: { maxLen: [4, 5, 5, 4, 3] },
-  mpal: { palette: MARBLE_PAL },
-  rawgpu: { impasto: 0, weave: 0, bristle: 0, varnish: 0, crack: 0, spec: 0, underAlpha: 0 },
-  nobr: { bristle: 0 },
-  nounder: { underAlpha: 0 },
-  carve: { T: [0, .025, .028, .03, .032], fineGate: 0, midGate: 0, maxLen: [5, 6, 4, 3, 2], minLen: [2, 2, 1, 1, 1] },
-  carve2: { T: [0, .02, .022, .024, .026], fineGate: 0, midGate: 0, maxLen: [5, 5, 3, 2, 2], minLen: [2, 1, 1, 1, 1], brushes: [24, 12, 6, 3.2, 1.7] },
 };
 // debug views (URL mdebug=ref|mask|sky|depth): the stone reference itself, the statue (R) / sky (B) masks, depth
 function debugStone(f, st, mode) {

@@ -104,7 +104,79 @@ export function diamondRing(sd, strength, ang = null) {
 // madder-pink prominences. `ripple` makes the fibres undulate like iris fibres; t animates it (12 drawings a second).
 // opts: {cx, cy, R (moon radius px), k (brightness 0..1), t, seed, iris (0..1: fibre density/eye-likeness), tilt, warm,
 //        clip(x, y) -> bool (sky test, optional), pal, scale}
+// the corona as a totality photograph shows it (o.photo): a bright pearly inner corona hugging the limb, two or three
+// helmet streamers (wide at the limb, tapering into long rays, asymmetric), fans of fine polar plumes, coronal holes
+// between them, a few pink prominences. Never a symmetric radial ring (that reads as an iris).
+export function coronaPhoto(o) {
+  const { cx, cy, R, pal } = o, k = o.k ?? 1, t = o.t ?? 0, seed = o.seed ?? 3, tilt = o.tilt ?? -.35, sc = o.scale ?? 1;
+  if (k <= 0.002 || R < 2) return [];
+  const T = n => pal.tube(n) || [1, 1, 1];
+  const lead = T('leadWhite'), naples = T('naples'), umber = T('rawUmber'), madder = T('madder'), verm = T('vermilion');
+  const mixc = (a, b, q) => [lerp(a[0], b[0], q), lerp(a[1], b[1], q), lerp(a[2], b[2], q)];
+  const pearl = mixc(lead, naples, .1), cool = mixc(lead, [.78, .82, .9], .25), ash = mixc(pearl, umber, .3);
+  const pink = [lerp(madder[0], lead[0], .45), lerp(madder[1], lead[1], .32), lerp(madder[2], lead[2], .34)];
+  const out = [], h = (a, b) => hash3(a, b, seed), clip = o.clip || null;
+  const col = (c, b) => [clamp(c[0] * b), clamp(c[1] * b), clamp(c[2] * b)];
+  const polar = (path, n, w, b, cA, cB, thick, sd, taper = .8, alpha = 1) => {
+    let cur = [];
+    const flush = () => { if (cur.length >= 2) out.push({ pts: cur, r: w, c0: col(cA, b), c1: col(cB, b * .55), a: clamp(alpha) * Math.min(1, k * 1.3), thick, seed: sd, key: sd, layer: 7, taper, maxSeg: 24 }); cur = []; };
+    for (let q = 0; q <= n; q++) { const [r, phi] = path(q / n), x = cx + Math.cos(phi) * r, y = cy + Math.sin(phi) * r; if (clip && !clip(x, y)) { flush(); continue; } cur.push([x, y]); }
+    flush();
+  };
+  const dA = (a, b) => { let d = a - b; while (d > Math.PI) d -= TAU; while (d < -Math.PI) d += TAU; return d; };
+  // the streamers: [angle from the tilt axis, half-width at the limb (rad), reach (moon radii), brightness, bend]
+  const ST = o.streamers || [[.1, .5, 3.4, 1, .1], [3.0, .42, 2.6, .85, -.12], [2.2, .25, 1.7, .5, .05], [-1.05, .2, 1.45, .4, -.05]];
+  const env = phi => {                          // how far / how bright the corona reaches at this position angle
+    let e = .16 + .1 * (vn(phi * 1.7 + seed) - .5);
+    for (const [da, w, len, b] of ST) { const d = dA(phi, tilt + da); e = Math.max(e, len * b * Math.exp(-(d * d) / (w * w)) * .55); }
+    return e;
+  };
+  // 1. inner corona: dense short radial strokes, brightest at the limb, reach following env (no regular bundles)
+  const nI = Math.round(900 * Math.min(2.4, R / 60) * sc);
+  for (let j = 0; j < nI; j++) {
+    const phi0 = h(j, 1) * TAU, e = env(phi0), q2 = Math.pow(h(j, 2), 2.2);
+    const len = R * (.08 + Math.min(1.1, e) * .55 * q2 + .04 * h(j, 3));
+    const shimmer = .03 * Math.sin(t * (1.2 + .5 * h(j, 4)) + h(j, 5) * TAU);
+    const b = (.55 + .5 * h(j, 6)) * (1 - .55 * q2) * k;
+    polar(q => [R * (1.0 + .01 * h(j, 7)) + len * q, phi0 + shimmer * q], 4, Math.max(.8, R * (.008 + .012 * h(j, 8))), b, h(j, 9) < .7 ? pearl : cool, ash, .4, h(j, 10), .85, .3 + .35 * h(j, 11));
+  }
+  // 2. helmet streamers: many fine strokes from a wide base converging into a long, slightly bent ray
+  ST.forEach(([da, w, len, bs, bend], si) => {
+    const ax = tilt + da, n = Math.round((60 + 90 * bs) * sc * Math.min(2, R / 50));
+    for (let m = 0; m < n; m++) {
+      const u = (h(si * 300 + m, 1) * 2 - 1), base = ax + u * w, reach = R * (1.2 + len * (.45 + .55 * Math.pow(h(si * 300 + m, 2), .6)) * (1 - .35 * Math.abs(u)));
+      const b = bs * (.35 + .4 * h(si * 300 + m, 3)) * (1 - .4 * Math.abs(u)) * k;
+      polar(q => {
+        const r = lerp(R * 1.02, reach, Math.pow(q, 1.15)), conv = Math.pow(R / r, .9);       // converge toward the axis with height
+        return [r, ax + (base - ax) * (.25 + .75 * conv) + bend * (r - R) / R * .15];
+      }, 12, Math.max(.9, R * (.012 + .018 * h(si * 300 + m, 4))), b, pearl, ash, .3, h(si * 300 + m, 5), .92, .28 + .3 * h(si * 300 + m, 6));
+    }
+  });
+  // 3. polar plumes: fans of fine straight rays at both poles, short and faint (the coronal holes stay dark)
+  for (const [pi, pole] of [[0, tilt - Math.PI / 2], [1, tilt + Math.PI / 2]]) for (let m = 0; m < Math.round(26 * sc); m++) {
+    const u = (m + .5) / 26 * 2 - 1, phi0 = pole + u * .55, rEnd = R * (1.25 + .45 * h(m, 20 + pi) * (1 - .5 * Math.abs(u)));
+    polar(q => { const r = lerp(R * 1.03, rEnd, q); return [r, phi0 + u * .5 * (r - R) / R]; }, 6, Math.max(.7, R * .007), (.32 + .3 * h(m, 30 + pi)) * k, cool, cool, .3, h(m, 40 + pi), .9, .45);
+  }
+  // 4. the limb: a thin bright broken ring
+  const nL = Math.round(90 * Math.min(3, R / 40));
+  for (let j = 0; j < nL; j++) {
+    const a0 = (j + h(j, 21)) / nL * TAU, span = TAU / nL * (1.4 + h(j, 22));
+    polar(q => [R * (1.01 + .006 * h(j, 23)), a0 + span * q], 3, Math.max(.8, R * .012), 1.1 * k, lead, pearl, .7, h(j, 24), .4, .9);
+  }
+  // 5. a few prominences at irregular places (never a regular ring)
+  const proms = o.prominences || [[1.25, .06, .09], [2.4, .035, .05], [-2.3, .07, .11], [-.35, .03, .045]];
+  proms.forEach(([da, dw, hh], pi) => {
+    for (let j = 0; j < 3; j++) {
+      const dl = dw * (.5 + .2 * j), ht = R * hh * (.7 + .15 * j);
+      polar(q => [R + ht * Math.sin(Math.PI * q), tilt + da - dl + 2 * dl * q], 6, Math.max(.8, R * .011), Math.min(1.1, k * 1.5), pink, [verm[0], verm[1] * .8, verm[2] * .8], .5, h(pi, 31 + j), .5, .9);
+    }
+  });
+  return out;
+}
+const vn = x => { const i = Math.floor(x), f = x - i, a = hash3(i, 7, 91), b = hash3(i + 1, 7, 91); return a + (b - a) * f * f * (3 - 2 * f); };
+
 export function coronaStrokes(o) {
+  if (o.photo) return coronaPhoto(o);
   const { cx, cy, R, pal } = o, k = o.k ?? 1, t = o.t ?? 0, seed = o.seed ?? 3, iris = o.iris ?? 0, tilt = o.tilt ?? -.35, sc = o.scale ?? 1;
   if (k <= 0.002 || R < 2) return [];
   const T = n => pal.tube(n) || [1, 1, 1];

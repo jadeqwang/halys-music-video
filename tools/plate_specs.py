@@ -786,6 +786,25 @@ PLATES.update({
         notes="S37 orbit plate (replaces P12 + depth): a frozen reaction tableau, ~30 degree orbit; clean depth matters."),
 })
 
+# ---------------------------------------------------------------- the arm-pull (singer's request, 2026-10-03: SHOTLIST P47 / S31b)
+PLATES.update({
+    "P47": dict(
+        duration=5, takes=2, refs=["LYD", "MED"], audio=a(100.24, 4.76), t_song=[100.24, 105.0], shots="S31b",
+        sync=[[102.21, "BOOM: the comrade grabs the raised forearm"]],
+        prompt=("Medium-wide side-on shot at waist height in a knee-deep red-brown river during a total solar eclipse. "
+                f"{DUSK} In the centre {LYD_S.format(n=1)} stands over {MED_S.format(n=2)}, who kneels on one knee in the "
+                "water at frame right, shield lowered, looking up at him. The Lydian faces right and holds a short "
+                "iron sword raised high over his head, about to strike. Just behind him at frame left stands a second Lydian "
+                "soldier, a different, younger, clean-shaven man dressed like reference image 1 (crested bronze helmet, crimson "
+                "tunic, bronze scale corselet). Three clearly separate figures. 0-1.8 s: the blow is about to fall. At exactly "
+                "2.0 s, on the big drum hit of the reference audio, the soldier behind lunges forward, grabs the raised sword arm "
+                "by the forearm with both hands and pulls it back. At 2.4 s the striker turns his head toward him in surprise. "
+                "At 2.8 s the soldier lets go with one hand and points up at the sky. From 3.2 s all three look up at the sky in "
+                "awe and hold still, the sword held back. Behind them on the darker far bank the ranks of both armies (crested "
+                f"bronze helmets left, red felt caps right) turn their faces up together at 3.0 s. Camera static. {REAL} {NOSING} {SHEET_ONLY} {PERIOD} {NOTXT}"),
+        notes="The arm-pull: the comrade's grab lands on the 102.21 boom (plate 1.97); then the look up."),
+})
+
 # ---------------------------------------------------------------- retakes (first-pass review, 2026-10-03)
 # Each override keeps the first-pass prompt in `prompt_v1` and says what went wrong in `retake_note`; every take's
 # take<N>.json snapshots the exact spec it was generated from. Reviews: media/plates/<id>/review.json.

@@ -157,7 +157,14 @@ export function skyField(F, mask, sk0, sun, P, t = 0) {
       const C = sk.corona, cdx = x - C.x, cdy = y - C.y, cr = Math.sqrt(cdx * cdx + cdy * cdy);
       if (cr > C.R * .98) {
         const ca = Math.atan2(cdy, cdx), fib = .75 + .5 * vnoise(ca * 9 + 3, Math.log(cr / C.R) * 4, seed + 61);
-        const k = C.k * Math.pow(C.R / cr, C.fall ?? 2.6) * fib;
+        // a photograph's corona glow is not round: it follows the streamers (C.asym), the coronal holes stay dark
+        let env = 1;
+        if (C.asym) {
+          const d1 = Math.atan2(Math.sin(ca - (C.tilt ?? -.35) - .1), Math.cos(ca - (C.tilt ?? -.35) - .1)), d2 = Math.atan2(Math.sin(ca - (C.tilt ?? -.35) - 3.0), Math.cos(ca - (C.tilt ?? -.35) - 3.0));
+          const reach = .35 + 1.2 * Math.exp(-d1 * d1 / .3) + .9 * Math.exp(-d2 * d2 / .22);
+          env = lerp(1, Math.min(1.4, reach) * Math.pow(Math.min(1, reach * C.R / Math.max(cr - C.R * .7, 1e-3)), .6), C.asym);
+        }
+        const k = C.k * Math.pow(C.R / cr, C.fall ?? 2.6) * fib * env;
         L = lerp(L, .9, clamp(k * .85)); a = lerp(a, naples[1] * .4, clamp(k)); b = lerp(b, naples[2] * .5, clamp(k));
       }
     }

@@ -43,6 +43,9 @@ const KEYS = {
   S25: { P15: [[74.41, 0], [77.88, 3.38], [81.36, 6.86]] },
   S28: { P18: [[89.22, 1.44], [89.78, 2.0], [91.31, 3.5], [91.325, 3.52]] },   // the wave of upturned faces runs ~1.4 s late
   S32: { P21: [[103.64, 1.14], [104.96, 2.46], [105.85, 3.35]] },           // the weapons drop lands on 104.96
+  // S31b: P47 (t0 100.24, the grab ~2 s in) lands its grab on the 102.21 boom; the stand-in P13 is timed so its
+  // standing figure's raised weapon is at its height on the boom
+  S31b: { P47: [[101.61, 1.37], [102.21, 1.97], [103.64, 3.40]], P13: [[101.61, 2.4], [102.21, 3.0], [103.64, 4.43]] },
   // P12 (the duel, 8 s) serves four shots: its strikes (plate 2.12, 3.30, 3.88, 5.20, 6.05, 6.90) land on beats
   S17: { P12: [[44.73, .79], [46.06, 2.12], [46.49, 2.55]] },
   S18: { P12: [[46.49, 2.55], [47.56, 3.30], [48.91, 3.88], [49.53, 5.20], [50.63, 6.05], [51.48, 6.90], [51.72, 7.1]] },
@@ -213,10 +216,10 @@ const wideOpts = (t, L, o = {}) => ({
 });
 
 // ---------------------------------------------------------------- S01 THE EYE · S02 the blink · the battlefield at totality
-// The eclipse fills ~60 % of the frame: a black pupil, an iris of painted corona fibres that ripple, a broken ring of
-// madder-pink prominences, Jupiter a hard point upper left; the dark battlefield (master composition at totality) below.
-// THE EYE is the hook: the black disk ~30 % of the frame height, its iris of corona fibres filling the upper ~60 % of the
-// frame (to ~2.3 moon radii, streamers beyond), the horizon band low under it; the hook title composes below it
+// The eclipse fills ~60 % of the frame: the black disk, a photographic corona, a few madder-pink prominences, Jupiter a
+// hard point upper left; the dark battlefield (master composition at totality, P02) below.
+// THE HOOK: the black disk ~30 % of the frame height, its corona (as a totality photograph shows it: helmet streamers,
+// polar plumes, never an iris) filling the upper ~60 % of the frame, the horizon band low under it; the title below it
 const EYE = { x: .5, y: .31, rMoon: .15 };              // moon radius as a fraction of frame HEIGHT
 async function eyeFrame(f, o = {}) {
   const t = f.t, W = f.W, H = f.H, hzTarget = .79;
@@ -227,10 +230,10 @@ async function eyeFrame(f, o = {}) {
   return bronze(f, src, {
     eclipse: 1, pool: [{ x: .5, y: .86, rx: .5, ry: .08, feather: .9, k: .55 }, { x: .5, y: .93, rx: .05, ry: .12, feather: .8, k: .75, fig: true }], poolMatte: 0, envDim: .7, lightDir: [0, -1],
     ...TOTALITY, metalK: .12, plateKeep: real ? .55 : 0,
-    sky: SKY(t, { maxDepth: real ? .02 : .012, soft: .02, below: hzTarget + .03, horizonY: hzTarget, horizonLine: [[0, hzTarget], [1, hzTarget]], ignoreMatte: true, ...TOTALITY_SKY, cover: .32, clouds: .6 }),
+    sky: SKY(t, { maxDepth: real ? .02 : .012, soft: .02, below: hzTarget + .03, horizonY: hzTarget, horizonLine: [[0, hzTarget], [1, hzTarget]], ignoreMatte: true, ...TOTALITY_SKY, cover: 0, clouds: 0, vortex: .05 }),
     sun: { x: EYE.x, y: EYE.y, r: rSun, off: o.off ?? 0, moonVis: 1, limb: [1.6 + (o.ring || 0) * 2, 2.2, 1, -Math.PI * .66], ring: o.ring || 0,
       ringAng: -Math.PI * .66, jupiter: { x: .2, y: .14 }, vis: 0 },
-    corona: { k: o.corona ?? 1, iris: 1, scale: 1.35, tilt: -.35 + .03 * t, reach: 2.3, glow: 1.1, fall: 1.9, noLimbal: true, t },
+    corona: { k: o.corona ?? 1, photo: true, scale: 1.35, tilt: -.42, glow: 1.15, fall: 1.7, asym: .9, t },
     crushFloor: .08, crush: .25, satOut: .5, accents: .2, crack: .3, T: [0, .07, .08, .1, .12], midGate: .3, fineGate: .4,
     exposure: o.exposure ?? 1, ...o.extra,
   });
@@ -254,7 +257,7 @@ scene('S02', async f => {
   await bronze(f, src, wideOpts(t, L, {
     sunR: .024, ppd: 17, sky: { ...TOTALITY_SKY, ignoreMatte: true },   // P02's matte is its black sun
     sun: { off: 0, moonVis: 1, limb: [1.4, 1.6, .6, -Math.PI * .66], beads: false },
-    extra: { eclipse: 1, corona: { k: 1, iris: .15, scale: 1.4, glow: 1.3 }, crushFloor: .06, envDim: .75, pool: L.pools.map(p => ({ ...p, k: p.k * .85, fig: true })),
+    extra: { eclipse: 1, corona: { k: 1, photo: true, scale: 1.2, glow: 1.3, tilt: -.42 }, crushFloor: .06, envDim: .75, pool: L.pools.map(p => ({ ...p, k: p.k * .85, fig: true })),
       ...TOTALITY, lightPoint: [L.sun[0], L.hz], rim: .9, ...(L.real ? { plateKeep: .7, keepDim: 1, exposure: 1.2 } : {}) },
   }));
 });
@@ -293,7 +296,7 @@ scene('S04', async f => {
     sun: { beads: e.off < .16, moonVis: sstep(.25, .08, e.off), limb: e.off < .2 ? [1.2 * sstep(.2, .07, e.off), 1.5, .5, -Math.PI * .66] : null },
     sky: { night: TOTALITY_SKY.night * e.night, ring: TOTALITY_SKY.ring * e.ring, zenith: lerp(.16, TOTALITY_SKY.zenith, e.night) },
     // (the land is P01's day plate run backwards: it keeps the eclipse's dark here; only the drain is eased, so the band stays warm)
-    extra: { swirl: rewindSwirl(f.k, sx, sy, W, { amount: 3.4 }), corona: e.off < .3 ? { k: sstep(.3, .06, e.off), iris: .2, scale: .7 } : null, metalK: .3 },
+    extra: { swirl: rewindSwirl(f.k, sx, sy, W, { amount: 3.4 }), corona: e.off < .3 ? { k: sstep(.3, .06, e.off), photo: true, scale: .8, tilt: -.42 } : null, metalK: .3 },
   }));
 });
 
@@ -728,12 +731,12 @@ scene('S29', async f => {
     f.type.pupil = rc.pupil;
     return;
   }
-  // the sky itself reads as an eye: the thin crescent around the dark disk, the glow an iris, the umber dome its socket
+  // the sky over them: the thin crescent among Altdorfer clouds (an eclipse sky, never an eye shape)
   const hz = .95, sun = { x: .5, y: .45, r: .1 };
   const src = await canvasSource(f, 'sky-s29', PR.horizonCanvas({ horizonY: hz, river: false }), { sky: PR.horizonSkyMask({ horizonY: hz }), cache: true });
   await bronze(f, src, {
     lightDir: [0, -1], pool: [], poolMatte: 0,
-    sky: SKY(t, { horizonY: hz, glowR: .26, drama: .55, vortex: .4, twist: 2.2, arms: 5, cover: .52, vert: 1.0 }),
+    sky: SKY(t, { horizonY: hz, glowR: .34, glow: 1.6, drama: .45, vortex: .18, twist: 1.1, arms: 3, cover: .5, zenith: .26 }),
     sun: SUN(t, { x: sun.x, y: sun.y, r: sun.r }), accents: 0,
   });
   f.type.pupil = { x: sun.x * f.W, y: sun.y * f.H, r: sun.r * f.W * eclipse.K };
@@ -769,7 +772,7 @@ scene('S30', async f => {
   f.type.front = { p: front };
 });
 
-// ---------------------------------------------------------------- S31: the black sun with Baily's beads, over the armies; the unison look-up at 102.21
+// ---------------------------------------------------------------- S31: the black sun with Baily's beads over the ranks (to 101.61)
 scene('S31', async f => {
   const t = f.t, real = hasPlate('P20');
   const src = await rp(f, 'P20', { id: 'c_armies', cam: { cx: .5, cy: .32, zoom: 1.4 } }, { cx: .5, cy: .5, zoom: 1.0 });
@@ -777,7 +780,7 @@ scene('S31', async f => {
   const sun = real ? { x: .5, y: .34, r: .042 } : { x: .515, y: .14, r: .036 };
   const skyO = SKY(t, { maxDepth: real ? .02 : .012, soft: .02, below: real ? .74 : .3, horizonY: real ? .72 : .285, ...TOTALITY_SKY, glow: .25, cover: .35 });
   const sunO = SUN(t, { x: sun.x, y: sun.y, r: sun.r, moonVis: 1, beads: true, limb: [1.1 + .8 * up, 1.6, .9, -Math.PI * .66], ppd: real ? 22 : 16 });
-  const coronaO = { k: lerp(.35, .85, seg(t, 100.24, 103.6)), iris: .3, scale: .9 };
+  const coronaO = { k: lerp(.35, .85, seg(t, 100.24, 103.6)), photo: true, scale: .9, tilt: -.42 };
   if (real) {
     // P20: the two ranks in profile, the 360-degree sunset between them; the front men's faces lit by it, more so as
     // they look up in unison on the boom
@@ -794,11 +797,28 @@ scene('S31', async f => {
     matteFromDepth: real ? [.22, .4] : null, lightPoint: real ? [.5, .74] : null, rim: 1.0, liftDark: real ? .3 + .2 * up : 0,
     sky: SKY(t, { maxDepth: real ? .02 : .012, soft: .02, below: real ? .74 : .3, horizonY: real ? .72 : .285, night: .9, ring: 1, glow: .25, drama: .3 }),
     sun: SUN(t, { x: sun.x, y: sun.y, r: sun.r, moonVis: 1, beads: true, limb: [1.1 + .8 * up, 1.6, .9, -Math.PI * .66], ppd: real ? 22 : 16 }),
-    corona: { k: lerp(.35, .85, seg(t, 100.24, 103.6)), iris: .3, scale: .9 },
+    corona: { k: lerp(.35, .85, seg(t, 100.24, 103.6)), photo: true, scale: .9, tilt: -.42 },
   });
 });
 
 // ---------------------------------------------------------------- S32 the duelists lower their weapons · S33 hands opening
+// ---------------------------------------------------------------- S31b: the arm-pull (101.61-103.64)
+// In the shallows the Lydian stands over the fallen Mede, sword raised; on the 102.21 boom his comrade grabs the raised
+// forearm from behind and pulls; the Lydian turns, the comrade points up, all three look at the sky, and behind them both
+// armies turn their faces up. P47 (song window 100.24-105.0, the grab ~2 s in); until it lands, P13 (one fallen in the
+// water, one standing over him) at the same rhythm. Totality light: the band behind, silhouettes rim-lit, the darks
+// structured, the faces catching the pale light as they turn up.
+scene('S31b', async f => {
+  const t = f.t, real = hasPlate('P47'), up = sstep(102.15, 102.6, t);
+  const pc = k => ({ cx: .5, cy: .5, zoom: 1.04 + .04 * k });
+  const src = real ? await rp(f, 'P47', null, pc, { keys: KEYS.S31b.P47 })
+    : await rp(f, 'P13', { id: 'a_duel', cam: pc }, pc, { keys: KEYS.S31b.P13 });
+  await bronze(f, src, plateLook(src, { lightDir: [0, -1], lightPoint: [.5, .4], keep: .58, keepDim: .92, fromLight: .55, rim: .95, poolMatte: .45 + .2 * up, body: .3,
+    pool: [{ x: .5, y: .4, rx: .34, ry: .4, feather: .75, k: .75 + .2 * up, fig: true }],
+    extra: { lightColor: '#dcd6ca', ...TOTALITY, groundFlow: { y0: .55, k: .75 },
+      sky: SKY(t, { ...TOTALITY_SKY, horizonY: real ? .36 : .3, below: real ? .4 : .34, maxDepth: .04, soft: .03, cover: .3, ring: 1.4 }) } }));
+});
+
 scene('S32', async f => {
   const src = await rp(f, 'P21', { id: 'a_duel', cam: k => ({ cx: .5, cy: .45, zoom: 1.15 + .03 * k }) }, k => ({ cx: .5, cy: .5, zoom: 1.02 + .03 * k }));
   if (hasPlate('P21')) {
@@ -838,7 +858,7 @@ async function SCENE_S34(f) {
     eclipse: .97, lightDir: [0, -1], pool: [{ x: .5, y: .95, rx: .5, ry: .1, feather: .8, k: .35 }], poolMatte: 0,
     sky: SKY(t, { horizonY: hz, ...TOTALITY_SKY, glow: .15 + .3 * ring, cover: .35 }), ...TOTALITY,
     sun: { x: sx, y: sy, r: rS * z, alt: 9, off, moonVis: 1, beads: t < 109.9, ring: ring * (1 + 3 * push), ringAng: ang, limb: [1 + ring, 1.8 * z, 1, ang], jupiter: { x: .2 - push, y: .14 } },
-    corona: { k: .25 + .35 * sstep(109.3, 110.0, t), iris: .2, scale: .9 },
+    corona: { k: .25 + .35 * sstep(109.3, 110.0, t), photo: true, scale: .9, tilt: -.42 },
     accents: 0, white,
   });
   // the hand-off: out of the white a black pupil opens where S35's sun rests (drop1.js MASTER_TRACE.sun) and dilates to
@@ -866,4 +886,4 @@ scene('S34p', async f => {
 // which plate each shot reads (for the report); hasPlate() decides at render time
 export const ACT1_PLATES = { S01: 'P02', S02: 'P02', S03: 'P23', S04: 'P01', S05: 'P01', S06: 'P01', S07: 'P03', S08: 'P04', S09: 'P05+P06', S10: 'P07', S11: 'P08',
   S12: 'proc', S13: 'P09', S14: 'P10', S15: 'P11', S16: 'P01', S17: 'P12', S18: 'proc+P12', S19: 'P12', S20: 'P01', S21: 'P13', S22: 'P05+P06', S23: 'P14', S24: 'P01',
-  S25: 'P15', S26: 'P16', S27: 'P12+P17', S28: 'P18', S29: 'P19', S30: 'P01', S31: 'P20', S32: 'P21', S33: 'P22a+P22b', S34: 'proc' };
+  S25: 'P15', S26: 'P16', S27: 'P12+P17', S28: 'P18', S29: 'P19', S30: 'P01', S31: 'P20', S31b: 'P47 (stand-in P13)', S32: 'P21', S33: 'P22a+P22b', S34: 'proc' };
