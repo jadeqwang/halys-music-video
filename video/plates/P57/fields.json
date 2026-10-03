@@ -1,0 +1,49 @@
+{
+ "w": 480,
+ "h": 270,
+ "n": 97,
+ "gain": 1.211,
+ "edge_norm": 2.3283,
+ "palette": [
+  {
+   "hex": "#232339",
+   "share": 0.449
+  },
+  {
+   "hex": "#3c3c50",
+   "share": 0.28
+  },
+  {
+   "hex": "#5c5c6f",
+   "share": 0.124
+  },
+  {
+   "hex": "#8c8d9d",
+   "share": 0.087
+  },
+  {
+   "hex": "#e3dde3",
+   "share": 0.035
+  },
+  {
+   "hex": "#afb4c7",
+   "share": 0.024
+  }
+ ],
+ "encoding": {
+  "g": "R=ink (relative DoG line art, 255=line), G=tone (bilateral luminance x gain), B=edge strength",
+  "o": "R,G=128+127*(cos2t, sin2t) edge-tangent direction t, B=coherence",
+  "v": "R,G=128+4*(dx,dy) map px/frame (f->f+1), B=min(255, 8*|flow|)"
+ },
+ "depth": {
+  "step": 2,
+  "w": 480,
+  "h": 270,
+  "model": "depth_anything_v2_vits (518x518)",
+  "range": [
+   0.9536,
+   5.6055
+  ],
+  "encoding": "grey 0..255 = relative inverse depth, 255 = nearest (per-plate 2..98 percentile)"
+ }
+}

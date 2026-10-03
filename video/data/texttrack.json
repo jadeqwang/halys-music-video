@@ -1782,25 +1782,6 @@
    ]
   },
   {
-   "id": "S53.card",
-   "fx": "forecast",
-   "shot": "S53",
-   "t0": 186.4,
-   "t1": 187.65,
-   "question": "Will the sun go dark over the Halys before sunset?",
-   "yes": [
-    3,
-    99
-   ],
-   "jump": 186.55,
-   "world": "marble",
-   "worlds": [
-    "marble",
-    "bronze"
-   ],
-   "items": []
-  },
-  {
    "id": "S55.behold",
    "fx": "carved",
    "shot": "S55",

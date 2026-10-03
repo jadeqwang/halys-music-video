@@ -1012,6 +1012,273 @@ for _k, _v in RETAKES3.items():
     PLATES[_k]["prompt_v2"] = PLATES[_k]["prompt"]
     PLATES[_k].update(_v)
 
+# ---------------------------------------------------------------- v2 revision, ACT1 (production/REVISION_V2.md decisions 2-3)
+# S17/S18: a battle, not a duel (the director: "background characters should also be fighting"); S28: pairs caught
+# mid-fight look up one after another ("mid action, not standing in a row"). No SHALLOWS board (it turned P12/P13 into
+# contre-jour): the river is described in words. Audio windows put each asked-for action on its musical hit
+# (P48: 2.0 s = the 46.06 beat; P50: 1.5 / 2.0 / 2.5 s = "halo" 89.78, "in" 90.23, "sky" 90.87; 3.0 s = the 91.31 boom).
+ACT1_SUN = ("Hard, low golden sun raking in from frame right (the sun itself just beyond the right edge of the frame), long "
+            "shadows, warm rim light; the far bank behind the melee in deep shadow, darker than the men. Clear air: no fog, no "
+            "haze, no smoke.")
+PLATES.update({
+    "P48": dict(
+        duration=5, takes=2, refs=["LYD", "MED"], avatar=True, audio=a(44.06), t_song=[44.06, 49.06], shots="S17",
+        sync=[[46.057, "beat: the Mede's thrust turned by the lion shield (plate 2.0)"], [48.217, "downbeat: the Lydian's counter (plate 4.16)"]],
+        prompt=("Medium-wide side-on shot, waist height, in the knee-deep red-brown shallows of a river ford. Foreground centre: "
+                f"two duelists, full figures, mirrored, equal in size: on the left {LYD_S.format(n=1)} with a spear, facing right; on the "
+                f"right {MED_S.format(n=2)} with a spear, facing left. Behind them, smaller and further back, the two battle lines fight "
+                "across the whole width of the frame in the water: Lydians (crested bronze helmets, crimson tunics, lion shields) against "
+                "Medes (red felt caps, ochre tunics, wicker shields), pair against pair, spears thrusting, shields slamming, swords swung, "
+                "men shoving and splashing; nobody in the background stands still or watches the duel. Open water separates the duel from "
+                "the melee. The duel: 0-1.8 s they circle, shields up, spears levelled; at exactly 2.0 s, on a beat of the reference "
+                "audio, the Mede lunges and thrusts his spear at the Lydian's chest and the Lydian swings his lion shield across and turns "
+                "the point aside: a sharp stop, a burst of spray; 2.3-3.8 s they recover and circle; at 4.0 s the Lydian thrusts back and "
+                "the Mede catches it on his wicker shield. Every strike ends in a sharp stop. Camera static, slightly low. "
+                f"{ACT1_SUN} {REAL} No blood. {SHEET_ONLY} {PERIOD} {NOTXT}"),
+        notes="S17 v2: P12's first exchange in front of the two battle lines fighting in the shallows (decision 2)."),
+    "P49": dict(
+        duration=6, takes=2, refs=["LYD", "MED"], avatar=True, audio=a(46.49), t_song=[46.49, 52.49], shots="S18",
+        sync=[[46.49, "first contact: S18 cut in (plate 0)"], [51.72, "S18 cut out (plate 5.23)"]],
+        prompt=("Extreme long-lens telephoto shot from far away at ground level, camera completely static. A flat, straight horizon (the "
+                "crest of a low riverbank) crosses the frame in its lower fifth; above it a huge low golden sun sits just above the "
+                "horizon in the centre of the frame, the sky around it bright orange and gold. Along the whole horizon, from the left edge "
+                "of the frame to the right edge, a long line of small warriors fights in pure black silhouette against the bright sky: "
+                "Lydians like reference image 1 (crested Corinthian helmets, round shields, spears) coming from the left and Medes like "
+                "reference image 2 (soft rounded felt caps, round wicker shields, spears) from the right, locked in combat in pairs and "
+                "small groups all along the line: spears thrusting, shields clashing, a sword raised and swung down, two men grappling, "
+                "one shoving another back, a man stumbling and getting up again. Every figure keeps fighting the whole time; nobody "
+                "looks up and nobody stops. Each figure is a crisp, separate silhouette standing on the horizon line, legs, arms, crests "
+                "and weapons readable, bright sky visible between the figures; all of them the same small size, about one sixth of the "
+                "frame height. No dust, no fog, no haze, no heat shimmer, no birds. Photoreal live-action cinema, crisp, high shutter "
+                f"speed, no motion blur. {SHEET_ONLY} {PERIOD} {NOTXT}"),
+        notes="S18 v2: the fighting line along the horizon under the low sun (mattes -> silhouettes; the renderer paints the sun and its bite)."),
+    "P50": dict(
+        duration=5, takes=2, refs=["LYD", "MED"], avatar=True, audio=a(88.28), t_song=[88.28, 93.28], shots="S28",
+        sync=[[89.78, "'halo': the left pair looks up (plate 1.5)"], [90.225, "'in': the centre pair (plate 1.95)"],
+              [90.87, "'sky': the right pair (plate 2.59)"], [91.31, "boom 'warriors': all faces up, cut (plate 3.03)"]],
+        prompt=("Low-angle medium-wide shot, camera at waist height, in the knee-deep red-brown shallows of a river during a deep partial "
+                "solar eclipse: the light is strangely dim and metallic, a cold silvery-gold light from a low sun beyond the top right "
+                "corner of the frame (the sun is not in the frame), crisp hard shadows, colours drained; the empty sky, deep steel-blue, "
+                "fills the upper third of the frame; faces and costumes stay clearly readable. Three pairs of warriors fight side by side "
+                "across the frame, knees up, each pair one Lydian like reference image 1 (crested bronze helmet pushed up so the face "
+                "shows, crimson tunic, bronze scale corselet, crimson lion shield) against one Mede like reference image 2 (red felt cap, "
+                "black curly beard, ochre tunic, iron scale corselet, wicker shield): on the left a Mede's spear thrust caught on the "
+                "Lydian's lion shield, both straining against it; in the centre a Lydian with his short sword raised high over his head "
+                "to strike, the Mede bracing under his wicker shield; on the right a Lydian and a Mede grappling, gripping each other's "
+                "wrists and shoulders, shoving. 0-1.4 s: all three pairs fight hard, pushing and straining, feet churning the water. Then "
+                "one pair after another stops mid-action and both men turn their faces up to the sky at the top right, in wonder, their "
+                "bodies still locked in the same pose: at 1.5 s the left pair (spear still on the shield), at 2.0 s the centre pair "
+                "(sword still raised), at 2.5 s the right pair (still gripping). From 3.0 s all six stare up, frozen mid-fight, breathing "
+                f"hard. Big, clear head movements. Camera static. {REAL} {NOSING} {SHEET_ONLY} {PERIOD} {NOTXT}"),
+        notes="S28 v2 (replaces P18's row of six): pairs locked mid-combat look up one after another (decision 3)."),
+})
+
+# ---------------------------------------------------------------- v2 revision, GOLD (production/REVISION_V2.md decision 5)
+# "Bronze was precious: nobody throws it away." Caught mid-action, shocked, they let go: weapons FALL from opening hands,
+# never thrown; no shrug, no posing, serious faces. S61 the wide drop (P51), S61b one hand opens over the held "blade"
+# (P52), S62 the dropped sword stands point-down in the mud while its owner walks home (P53: the upright blade is the
+# vertical that match-cuts to the rocket at 215.29), S75-S76 a battle line caught mid-fight drops every blade on BLADE,
+# one late on the 261.05 hit (P54). No set board (boards act like first frames): the river is described in words.
+GOLD_SUN = ("Hard, low golden sun raking in from frame right (the sun itself just beyond the right edge of the frame), long "
+            "shadows, warm rim light; the far bank and background in deep shadow, darker than the men. Clear air: no fog, no "
+            "haze, no smoke.")
+DROP = "Nobody throws anything: the weapons simply fall straight down out of the opening hands."
+PLATES.update({
+    "P51": dict(
+        duration=5, takes=2, refs=["LYD", "MED"], avatar=True, audio=a(208.70), t_song=[208.70, 213.70], shots="S61",
+        sync=[[208.70, "'Throw': S61 cut in, mid-fight (plate 0)"], [209.945, "'blade': the weapons land (plate 1.25)"],
+              [210.177, "low end out: cut to S61b (plate 1.48)"]],
+        prompt=("Medium-wide shot at waist height at the edge of a red-brown clay river in warm golden evening light: the warriors "
+                "stand in shin-deep water and on the muddy bank. Lydians dressed like reference image 1 (crested bronze helmets "
+                "pushed up so the faces show, crimson tunics, bronze scale corselets, round crimson lion shields) come from the left "
+                "facing right; Medes dressed like reference image 2 (red felt caps, black beards, long-sleeved ochre tunics, iron "
+                "scale corselets, round wicker shields) come from the right facing left; short straight swords and spears. Mirrored "
+                "composition: in the exact centre of the frame one Lydian and one Mede fight face to face, full figures; more pairs "
+                "fight on both sides of them and behind them. 0-0.8 s: everyone fights hard, mid-action: the centre Lydian swings his "
+                "sword down onto the Mede's shield, spears thrust, shields slam, water splashes. At 0.9 s every man stops dead in the "
+                "middle of his movement, shocked, eyes wide, staring at the man in front of him. At 1.2 s all their fingers open at "
+                f"once and the weapons drop: spears clatter onto the mud of the bank, swords splash into the shallows. {DROP} Then "
+                "they stand still, empty-handed, arms hanging, stunned and serious, breathing hard, to the end. High-frame-rate slow "
+                f"motion. Camera static. {GOLD_SUN} {REAL} {SHEET_ONLY} {PERIOD} {NOTXT}"),
+        notes="S61 v2: shocked mid-fight, both lines let go; weapons fall onto the bank and into the shallows (never thrown)."),
+    "P52": dict(
+        duration=4, takes=2, refs=["LYD"], avatar=True, audio=a(210.18), t_song=[210.18, 214.18], shots="S61b",
+        sync=[[210.18, "the held 'blade': S61b cut in (plate 0)"], [210.55, "the fingers open (plate ~0.4)"],
+              [211.0, "the point enters the water (plate ~0.8)"], [211.44, "'Home': cut out (plate 1.26)"]],
+        prompt=("Close-up at water level in a shin-deep red-brown river, in warm, low golden light. The right hand of the Lydian "
+                "from reference image 1 (bare forearm, the edge of his crimson tunic sleeve and bronze scales at the top edge of the "
+                "frame) holds a short straight sword by its dark wrapped grip, point down, the blade hanging straight down just above "
+                "the water, the bronze cross-guard under his fist. At 0.3 s his fingers slowly open; the sword slips out of his hand "
+                "and drops straight down, point first; at 0.8 s the point pierces the water with a small bright splash and sinks into "
+                "the soft mud of the riverbed, and the sword stays standing upright in the water, the hilt and most of the blade above "
+                "the surface, swaying slightly as it comes to rest. Rings spread across the water, lit gold. The empty hand stays open "
+                "above it, fingers spread, still, to the end. The sword is centred in the frame; behind it the far bank is dark. An "
+                "anatomically correct hand with five fingers. High-frame-rate slow motion. Camera static, just above the water "
+                f"surface. {GOLD_SUN} {REAL} {NOSING} {SHEET_ONLY} {NOTXT}"),
+        notes="S61b v2: one hand opens and its sword drops point-first into the shallows, standing in the mud (sets up S62)."),
+    "P53": dict(
+        duration=5, takes=2, refs=["LYD"], avatar=True, audio=a(211.44), t_song=[211.44, 216.44], shots="S62 (-> S63 match cut)",
+        sync=[[211.44, "'Home': he turns away (plate 0)"], [211.877, "beat returns (plate 0.44)"],
+              [215.287, "Drop 2 kick: match cut to the rocket (plate 3.85)"]],
+        prompt=("Low-angle shot from just above the mud at the edge of a red-brown river in warm golden evening light, the camera "
+                "completely static. In the foreground, in the exact centre of the frame, a short straight sword stands upright, point "
+                "down, its blade stuck in the wet mud where ankle-deep water laps the bank: the bronze cross-guard, the dark wrapped "
+                "grip and the round pommel at the top, the blade going straight down into the mud. The sword fills about one fifth "
+                "of the frame height, its pommel a little above the centre of the frame; it stands perfectly vertical and never "
+                "moves. Just behind it stands its owner, the Lydian from reference image 1 (crested bronze helmet pushed up, long "
+                "braids, crimson tunic, bronze scale corselet, crimson lion shield on his arm), seen from the knees down at first, "
+                "looking down at the sword. At 0.4 s he turns and walks away from the camera, unhurried, with slow, clear steps, up "
+                "the bank and away into the distance toward the right, never looking back, leaving the sword where it stands; his "
+                "long shadow stretches back toward it. By 3.5 s he is a small full figure in the right half of the frame. Further "
+                "away, small figures of other Lydians and Medes walk off empty-handed in both directions. Above the bank a golden "
+                f"sky with tall glowing clouds. {GOLD_SUN} Deep focus: the sword and the walking man both sharp. {REAL} "
+                f"{SHEET_ONLY} {PERIOD} {NOTXT}"),
+        notes="S62 v2: the upright sword (a vertical at the frame centre) stays; its owner walks home. Match cut to P34/S63."),
+    "P54": dict(
+        duration=5, takes=2, refs=["LYD", "MED"], avatar=True, audio=a(259.355), t_song=[259.355, 264.355], shots="S75, S76",
+        sync=[[259.355, "the hit: S75 cut in, mid-fight (plate 0)"], [259.775, "THROW DOWN chop (plate 0.42)"],
+              [260.625, "BLADE: every blade drops at once (plate 1.27)"], [261.045, "hit: the late blade lands (plate 1.69)"],
+              [262.724, "boom: S77 pull-back (plate 3.37)"]],
+        prompt=("Shot at head height looking straight along a battle line on a sandy riverbank in warm golden evening light, the "
+                "red-brown river behind. Two armies fight face to face along a line that runs from the foreground straight away from "
+                "the camera into the distance: on the left Lydians like reference image 1 (crested bronze helmets pushed up, crimson "
+                "tunics, bronze scale corselets, crimson lion shields) facing right; on the right Medes like reference image 2 (red "
+                "felt caps, black beards, ochre tunics, iron scale corselets, wicker shields) facing left; each man holds a short "
+                "straight sword or a spear. Mirror-symmetric: the nearest pair stands in the centre foreground, full figures about "
+                "two thirds of the frame height; pair after pair recedes behind them. 0-1.2 s: everyone fights hard, mid-action: "
+                "swords swing against shields, spears thrust, shields slam, sand flies. At 1.3 s every man along the whole line stops "
+                "dead and opens his hand at the same instant: every sword and spear drops straight down to the sand at once. "
+                f"{DROP} One man is late: the Mede of the nearest pair keeps his grip a moment longer; at 1.7 s his fingers open and "
+                "his sword drops alone. Then all stand still, empty-handed, facing the enemy, serious and stunned, breathing hard, to "
+                f"the end. No smiles, no shrugs, no posing. Camera static. {GOLD_SUN} {REAL} {SHEET_ONLY} {PERIOD} {NOTXT}"),
+        notes="S75-S76 v2 (replaces P38's formation and shrug): a battle line mid-fight; every blade drops on BLADE, one late."),
+})
+
+# ---------------------------------------------------------------- v2 revision, TREATY (production/REVISION_V2.md decision 7)
+# S79 (270.04-273.40) goes back in-universe: Alyattes and Cyaxares swear the peace (Herodotus 1.74: sworn compacts as the
+# Greeks make them, plus cut arms). The gesture is the right-hand clasp (dexiosis), the pledge of Greek and Near Eastern
+# reliefs, with one thin fresh cut on each bare forearm; no licking, no gore. Reference image 1 is the keyframe still
+# media/plates/P55/key_t4.jpg (Nano Banana Pro from the two kings' sheets plus a composite of the mediators' sheets,
+# media/plates/P55/ref_mediators.jpg): a board in the references acts like a first frame, which is what we want here. The
+# audio is the sound-design master from 269.54 (the final chord 270.04 = plate 0.50; the freeze 271.6 = plate 2.06).
+PLATES.update({
+    "P55": dict(
+        duration=5, takes=2, avatar=True,
+        refs=["media/plates/P55/key_t4.jpg", "ALYATTES", "CYAXARES", "media/plates/P55/ref_mediators.jpg"],
+        audio=a(269.54, 5.0, src="media/stems/halys_sd_master.wav"), t_song=[269.54, 274.54], shots="S79",
+        sync=[[270.04, "the final chord: one firm shake seals the clasp (plate 0.50)"], [271.6, "the chord freezes (plate 2.06)"],
+              [273.40, "cut to S80 (plate 3.86)"]],
+        prompt=("The video opens exactly on reference image 1: the same two kings, costumes, gesture, mediators, riverbank, light "
+                "and framing. Medium-close two-shot at chest height on a gravel riverbank at dusk, just after a solar eclipse. On "
+                "the left Alyattes, king of Lydia, the man of reference image 2 (gold fillet, long grey-streaked crimped tresses, "
+                "full grey beard, white linen chiton, deep purple mantle with a gold meander border, gold lion-head bracelet), "
+                "facing right; on the right Cyaxares, king of the Medes, the man of reference image 3 (madder-red felt cap with a "
+                "gold diadem band, grey roll of curls at the nape, long curled grey beard, saffron tunic embroidered with winged "
+                "lions, ochre cape, gold lion torque), facing left. They clasp right hands in a level handshake between them; each "
+                "bare forearm shows one thin fresh red cut. Behind them, near the left and right edges and half in shadow, the two "
+                "mediators of reference image 4 stand still and watch. Action: 0-0.4 s they stand still, hands clasped. At 0.5 s, "
+                "on the loud chord of the reference audio, they give the clasped hands one firm, slow downward shake, sealing the "
+                "oath, and Alyattes presses his left hand to his chest. Then they hold completely still to the end, hands clasped, "
+                "eyes locked, grave and calm; only breathing and the faint ripple of the river. Nobody speaks; nobody brings an arm "
+                "to the mouth; no licking, no gore. Camera: a very slow, steady push-in toward the clasped hands; no cuts, no "
+                "shake. One warm, low golden key light from behind the camera, a little above, on the clasp and both faces "
+                "equally; the river and the far bank behind them darker than the figures. Clear air, no fog. Photoreal live-action "
+                f"cinema, crisp, high shutter speed, no motion blur. Reference images 2-4 are identity and costume references only. "
+                f"{PERIOD} {NOTXT}"),
+        notes="S79 v2: the kings' oath; the clasp seals on the final chord, then a held, solemn two-shot through the frozen chord."),
+})
+
+# ---------------------------------------------------------------- v2 revision, ROOM (production/REVISION_V2.md decisions 6 and 8)
+# She is anime. Each plate starts from an anime keyframe made with nano-banana-pro (media/plates/<id>/K*.jpg, prompt and refs in
+# the .json beside it): P39 f40 / P41 f22 redrawn so she matches the character sheet. K78d: her hair ends at the top of the
+# circle, the light-blue circle and RARE EARTH are fully visible, the 1420 MHz patch is on her LEFT sleeve (K78b + a paint-over
+# guide -> K78d). K80b: the closed-lip, one-corner-up smirk of the director's reference photo; the photo was shown to the image
+# model only, as an expression reference, and is never sent to Seedance. The renderer draws the wink itself (eye.js), so P58
+# keeps both eyes open.
+ANIME_FF = ("Anime style with clean cel shading and crisp tapered line art exactly like the first frame: flat cel colours, one "
+            "shadow tone, painted flat backgrounds, no depth-of-field blur, no yellow cast.")
+PLATES.update({
+    "P57": dict(
+        duration=4, takes=2, first_frame="media/plates/P57/K78d_ff.jpg", audio=a(266.12), t_song=[266.12, 270.12], shots="S78",
+        sync=[[266.12, "ticking build: she types, one terminal line per tick"],
+              [268.081, "dt.shift: she leans toward the vertical monitor (plate 1.96)"],
+              [269.288, "the commit burst: fast typing (plate 3.17)"]],
+        prompt=(f"{ANIME_FF} The first frame is the start of the shot: a small dark apartment room at night seen from behind her "
+                "desk chair. The young woman of the first frame sits with her back to the camera and types steadily on the "
+                "mechanical keyboard with both hands, her head moving slightly as she reads the scrolling screen. Her shoulders "
+                "and arms move with the typing, so the folds and creases of her white jacket shift, and the light-blue circle and "
+                "the RARE EARTH lettering printed on her back move and bend with the fabric; the round 1420 MHz patch stays "
+                "stitched on her left sleeve (the arm on the left side of the picture) and moves with that arm. At 2.0 s she leans "
+                "in a little toward the vertical monitor on the right, then settles back; from 3.1 s she types fast. Her hair "
+                "keeps exactly its length, ending at the top of the circle. Camera static, locked off. The screens show no "
+                "readable text. No captions, no watermark."),
+        notes="From the K78d keyframe (first frame). Only she is used: the room stays P39's painted background (registered)."),
+    "P58": dict(
+        duration=5, takes=2, first_frame="media/plates/P58/K80b_ff.jpg", audio=a(273.4, src="media/stems/halys_sd_master.wav"),
+        t_song=[273.4, 278.4], shots="S80, S81",
+        sync=[[273.45, "key 1 (plate 0.05)"], [274.05, "key 2 (plate 0.65)"], [274.95, "key 3, enter (plate 1.55)"],
+              [276.95, "the ting: the drawn wink shuts (plate 3.55)"]],
+        prompt=(f"{ANIME_FF} Close-up, head and shoulders, of the young woman of the first frame, facing the camera with her head "
+                "tilted slightly, the dark room with the glowing monitor and the warm desk lamp behind her. The whole time she "
+                "wears the same knowing, mischievous closed-lip smirk (one corner of her mouth curled up), her eyes slightly "
+                "narrowed and locked on the lens. Without looking away she reaches back with her right hand (the shoulder on the "
+                "left side of the picture) to the keyboard behind her and taps three keys blind, at 0.05 s, 0.65 s and 1.55 s: "
+                "on each tap that shoulder dips a little; only her shoulder and arm move. Then she holds still, smirking at the "
+                "camera, to the end; at 3.0 s the smirk deepens very slightly. She does not blink, does not wink and does not "
+                "open her mouth. Light: cool pearl monitor glow from behind as a rim on her hair, warm orange desk lamp on her "
+                "face. Camera static. No text, no captions, no watermark."),
+        notes="From the K80b keyframe (first frame). Both eyes stay open: the renderer draws the eclipse wink on 276.95."),
+})
+
+# GOLD retakes (review 2026-10-03): the first prompt is kept in `prompt_v1`, the reason in `retake_note`.
+GOLD_RETAKES = {
+    "P54": dict(
+        retake_note="takes 1-2: take 2 drops every blade at once (the corridor of swords on the sand) but has no late one; "
+                    "take 1 has a late Mede but the nearest pair turns to pose for the camera; v2 names the late one (the "
+                    "nearest Mede, sword hand on the camera side) and forbids turning to the camera",
+        prompt=("Head-height shot looking straight along a battle line on a sandy riverbank in warm golden evening light, the "
+                "red-brown river behind. Two armies face each other along a line running from the foreground straight away into "
+                "the distance: on the left Lydians like reference image 1 (crested bronze helmets pushed up, crimson tunics, "
+                "bronze scale corselets, crimson lion shields) facing right; on the right Medes like reference image 2 (red felt "
+                "caps, black beards, ochre tunics, iron scale corselets, wicker shields) facing left; each holds a short straight "
+                "sword or a spear. Mirror-symmetric: the nearest pair in the centre foreground, full figures, pair after pair "
+                "receding behind. Every man faces his opponent the whole time; nobody turns toward the camera. 0-1.2 s: all "
+                "fight hard, mid-action: swords against shields, spear thrusts, sand flying. At 1.3 s every man except one stops "
+                "dead and opens his hand at the same instant: swords and spears drop straight down to the sand at once. Nobody "
+                "throws anything. The exception is the Mede of the nearest pair, right foreground, his sword in his right hand "
+                "on the camera side: he alone keeps his grip a moment longer, staring at the blades on the sand; at 1.9 s his "
+                "fingers open and his sword falls alone into the sand at his feet. Then all stand still, empty-handed, facing "
+                "each other, serious and stunned, breathing hard. No smiles, no shrugs, no posing. Camera static. "
+                f"{GOLD_SUN} {REAL} {SHEET_ONLY} {PERIOD} {NOTXT}")),
+}
+for _k, _v in GOLD_RETAKES.items():
+    PLATES[_k]["prompt_v1"] = PLATES[_k]["prompt"]
+    PLATES[_k].update(_v)
+
+GOLD_RETAKES2 = {
+    "P54": dict(
+        retake_note="take 4 (v2) again dropped every blade at once with no late one (the near Mede's sword fell with the rest; "
+                    "blades stuck upright in the sand); v3 makes two separate drops and names the late one as the nearest "
+                    "Lydian, whose held-out sword stays visible in take 2's framing",
+        prompt=("Head-height shot looking straight along a battle line on a sandy riverbank in warm golden evening light, the "
+                "red-brown river behind. Two armies face each other along a line running from the foreground straight away into "
+                "the distance: on the left Lydians like reference image 1 (crested bronze helmets pushed up, crimson tunics, "
+                "bronze scale corselets, crimson lion shields) facing right; on the right Medes like reference image 2 (red felt "
+                "caps, black beards, ochre tunics, iron scale corselets, wicker shields) facing left; each holds a short straight "
+                "sword. Mirror-symmetric: the nearest pair in the foreground, full figures, pair after pair receding behind. Every "
+                "man faces his opponent; nobody turns toward the camera. 0-1.2 s: all fight hard, mid-action, swords clashing on "
+                "shields. Then two separate drops. FIRST, at 1.3 s: every man but one stops dead and opens his hand at the same "
+                "instant, and their swords fall straight down to the sand together. Nobody throws anything. The one who does not "
+                "let go is the nearest Lydian, in the left foreground: he stays frozen with his sword still held out toward his "
+                "enemy while all the other swords already lie on the sand. SECOND, at 2.0 s: his fingers open and his sword falls "
+                "alone, the last one, landing at his feet. Then all stand still, empty-handed, facing each other, serious and "
+                "stunned, breathing hard. No smiles, no shrugs, no posing. Camera static. "
+                f"{GOLD_SUN} {REAL} {SHEET_ONLY} {PERIOD} {NOTXT}")),
+}
+for _k, _v in GOLD_RETAKES2.items():
+    PLATES[_k]["prompt_v2"] = PLATES[_k]["prompt"]
+    PLATES[_k].update(_v)
+
 # Every photoreal identity sheet trips Seedance's real-person filter (InputImageSensitiveContentDetected.PrivacyInformation,
 # measured on the 2026-10-03 pilot: P01, P03, P12 all rejected at input, free); the virtual-avatar route then accepts them and
 # keeps identity and costume. Go straight to it for plates that attach a photoreal sheet.

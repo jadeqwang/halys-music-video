@@ -482,11 +482,12 @@ scene('S74', async f => {
 });
 
 // ================================================================ S77: the pull-back (paint -> light -> ink)
-// On the boom (262.72): S76's last painted frame (P38's last frame) evaporates into its lines as the camera booms up;
-// the valley drops away (ground camera, level -> nadir), the map of Anatolia recedes, up through the cloud deck, the
-// globe (blue again) with the Moon's shadow over Anatolia, the Moon swings past, the Earth settles at the size it has
-// on her monitor, and the image shrinks into the monitor's sim panel as the bezel enters; the last frames dissolve into
-// S78's first frame (her room), so the cut at 266.12 is invisible. The end framing is room.js's roomHandoff().
+// On the boom (262.72): S76's last painted frame (P54's battle line, gold_outro.js s76End) evaporates into its lines as
+// the camera booms up; the valley drops away (ground camera, level -> nadir), the map of Anatolia recedes, up through
+// the cloud deck, the globe (blue again) with the Moon's shadow over Anatolia, the Moon swings past, the Earth settles
+// at the size it has on her monitor, and the image shrinks into the monitor's sim panel as the bezel enters; the last
+// frames dissolve into S78's first frame (her room), so the cut at 266.12 is invisible. The end framing is room.js's
+// roomHandoff().
 export const S77_T0 = 262.724, S77_T1 = 266.124;
 shotOverride('S77', { cadence: 60 });
 const S77P = { globe: [1.3, 2.72], moon: [1.85, 2.72], bezel: [2.62, 3.3], room: [3.14, 3.37] };
@@ -514,7 +515,9 @@ scene('S77', async f => {
   const target = bz > 0 ? f.layer(2) : null, fw = target ? { ...f, g: target.g } : f;
   const layers = [], plates = {};
   let V = null, occ = null;
-  if (plateK > .01) Object.assign(plates, { src: P38_SRC_END, freeze: 5.0, trace: P38_TRACE, corona: false, plateU: { uBright: 1.3 * plateK }, cam: { pitch: -16 * easeIn(clamp(tau / .5)), zoom: 1 - .1 * clamp(tau / .5), pan: [0, 60 * s * clamp(tau / .5)] } });
+  // (v2, GOLD: S76 is now P54's battle line; its lines come from the plate, plate time and framing of S76's last drawing)
+  const E76 = (await import('./gold_outro.js')).s76End(W, H);
+  if (plateK > .01) Object.assign(plates, { src: { plate: E76.plate, standin: 'armies', win: E76.cam }, freeze: E76.tp, trace: { ...P38_TRACE, ...E76.trace }, corona: false, plateU: { uBright: 1.3 * plateK }, cam: { pitch: -16 * easeIn(clamp(tau / .5)), zoom: 1 - .1 * clamp(tau / .5), pan: [0, 60 * s * clamp(tau / .5)] } });
   if (mapK > .01) { const w = lodW(S); for (const [k, key] of [['A', 'dive-A'], ['B', 'dive-B'], ['C', 'dive-C']]) if (w[k] > .01) layers.push({ mesh: staticMesh(f, key, () => L[k]), u: { ...mapU(S, rot, cx, cy), uBright: w[k] * mapK, uPulse: 0 } }); }
   // up through the low deck (mist streaks inward, a deck shrinking below) and the high deck over the switch
   const mist = sstep(.36, .46, tau) * (1 - sstep(.56, .7, tau));

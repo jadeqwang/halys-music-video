@@ -8,15 +8,15 @@
 //   INK.drawCel(g, cel, view, u)                        // fills (GPU) + lines (Canvas2D) into g
 //   const bg = await INK.background(setup, W, H, view)  // the painted background (cached per setup and size)
 // Files: source.js (plates/dev/stand-ins, mattes, hybrids) · cel.js (analysis) · render.js (fills, lines) · bg.js
-// (painted background) · props.js (screens, Earth, ΔT map, Sutro) · eye.js (eyes, the eclipse wink) · xsheet.js /
-// sheets.js (timing) · palette.js (colour) · prep/mattes.py (offline mattes for the wide room plates).
+// (painted background) · props.js (screens, Earth, ΔT map, Sutro) · decals.js (the print and the patch, measured on the
+// plate) · eye.js (eyes, the eclipse wink) · expr.js (drawn acting) · xsheet.js / sheets.js (timing) · palette.js (colour)
+// · prep/ (offline: mattes.py, decals.py, register.py).
 
 import { LRU, makeCanvas } from '../../assets.js';
 import { initSources, plateRef, standinRef, drawingInput } from './source.js';
 import { analyzeCel, calibrate } from './cel.js';
-import { smearCel } from './smear.js';
 import { drawFills, drawChains } from './render.js';
-import { LABEL_HEX, NLAB, LINE, LINE_SKIN, BROW_LINE } from './palette.js';
+import { LABEL_HEX, NLAB, LINE, LINE_SKIN, BROW_LINE, MAT } from './palette.js';
 import { drawingKey } from './xsheet.js';
 
 export { expose, exposeIndex, frameAt } from './xsheet.js';
@@ -54,8 +54,7 @@ export async function cel(S, e) {
   }
   const inp = await drawingInput(S, e);
   if (!inp) return null;
-  let res = analyzeCel(inp, { ...S.cel, ...(S.celFor ? S.celFor(e) : {}), shadeT: S.thresholds[e.src] });
-  if (e.smear) res = smearCel(res, e.smear);           // a smear drawing of the spin (smear.js)
+  const res = analyzeCel(inp, { ...S.cel, ...(S.celFor ? S.celFor(e) : {}), shadeT: S.thresholds[e.src] });
   res.e = e; res.key = `${S.id}|${key}`;
   // keep only what drawing needs (memory: workers hold several drawings per setup)
   res.inp = { faces: inp.faces, W: inp.W, H: inp.H, ...(DEBUG ? { rgba: inp.rgba, matte: inp.matte } : {}) };
@@ -66,9 +65,14 @@ export async function cel(S, e) {
 
 export const LABEL_ALPHA = Array.from({ length: NLAB }, (_, k) => k ? 1 : 0);
 
-// draw a cel: fills then lines (then opts.after(g) for decals), into a layer canvas cached per drawing and view, so a
-// held drawing costs one drawImage per frame. pal overrides the label colours; view maps analysis px to output px.
+// draw a cel: fills, then opts.beforeLines(g, maskOf) (decals printed on the fabric, under the creases), then lines, then
+// opts.after(g), into a layer canvas cached per drawing and view, so a held drawing costs one drawImage per frame. pal
+// overrides the label colours; view maps analysis px to output px. maskOf(['jacket', 'jacket:shadow', ...]) renders a
+// full-size alpha mask of those labels with the fills' own antialiased edges.
 const _layers = new LRU(4);
+export function labelIds(names) {
+  return names.map(n => { const [m, t] = n.split(':'), M = MAT[m]; return M && M.id ? M.id * 2 - 1 + (t === 'shadow' ? 1 : 0) : -1; });
+}
 export function drawCel(g, res, view, u, opts = {}) {
   if (!res) return;
   const W = g.canvas.width, H = g.canvas.height;
@@ -79,6 +83,15 @@ export function drawCel(g, res, view, u, opts = {}) {
     const cg = c.getContext('2d');
     const pal = opts.pal || LABEL_HEX;
     res.packed = drawFills(cg, res.lab, res.W, res.H, pal, LABEL_ALPHA, view, { packed: res.packed });
+    if (opts.beforeLines) {
+      const white = LABEL_HEX.map(() => '#ffffff');
+      const maskOf = names => {
+        const ids = labelIds(names), mc = makeCanvas(W, H);
+        drawFills(mc.getContext('2d'), res.lab, res.W, res.H, white, LABEL_ALPHA.map((_, k) => ids.includes(k) ? 1 : 0), view, { packed: res.packed });
+        return mc;
+      };
+      opts.beforeLines(cg, maskOf);
+    }
     if (opts.lines !== false) drawChains(cg, res.chains, view, u, { ink: opts.ink || LINE, skin: opts.skin || LINE_SKIN, strand: opts.strand || '#30343e', brow: BROW_LINE }, { wScale: opts.wScale || 1 });
     if (opts.after) opts.after(cg);
     _layers.set(key, c);

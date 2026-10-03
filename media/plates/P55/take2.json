@@ -1,0 +1,76 @@
+{
+ "plate": "P55",
+ "take": 2,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 174.7,
+ "est_cost_usd": 1.156,
+ "duration_s": 5.041667,
+ "audio_refs": [
+  {
+   "src": "media/stems/halys_sd_master.wav",
+   "t0": 269.54,
+   "dur": 5.0,
+   "file": "media/plates/P55/audio_halys_sd_master_0269.54_5.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 5,
+  "takes": 2,
+  "avatar": true,
+  "refs": [
+   "media/plates/P55/key_t4.jpg",
+   "ALYATTES",
+   "CYAXARES",
+   "media/plates/P55/ref_mediators.jpg"
+  ],
+  "audio": {
+   "t0": 269.54,
+   "src": "media/stems/halys_sd_master.wav",
+   "dur": 5.0
+  },
+  "t_song": [
+   269.54,
+   274.54
+  ],
+  "shots": "S79",
+  "sync": [
+   [
+    270.04,
+    "the final chord: one firm shake seals the clasp (plate 0.50)"
+   ],
+   [
+    271.6,
+    "the chord freezes (plate 2.06)"
+   ],
+   [
+    273.4,
+    "cut to S80 (plate 3.86)"
+   ]
+  ],
+  "prompt": "The video opens exactly on reference image 1: the same two kings, costumes, gesture, mediators, riverbank, light and framing. Medium-close two-shot at chest height on a gravel riverbank at dusk, just after a solar eclipse. On the left Alyattes, king of Lydia, the man of reference image 2 (gold fillet, long grey-streaked crimped tresses, full grey beard, white linen chiton, deep purple mantle with a gold meander border, gold lion-head bracelet), facing right; on the right Cyaxares, king of the Medes, the man of reference image 3 (madder-red felt cap with a gold diadem band, grey roll of curls at the nape, long curled grey beard, saffron tunic embroidered with winged lions, ochre cape, gold lion torque), facing left. They clasp right hands in a level handshake between them; each bare forearm shows one thin fresh red cut. Behind them, near the left and right edges and half in shadow, the two mediators of reference image 4 stand still and watch. Action: 0-0.4 s they stand still, hands clasped. At 0.5 s, on the loud chord of the reference audio, they give the clasped hands one firm, slow downward shake, sealing the oath, and Alyattes presses his left hand to his chest. Then they hold completely still to the end, hands clasped, eyes locked, grave and calm; only breathing and the faint ripple of the river. Nobody speaks; nobody brings an arm to the mouth; no licking, no gore. Camera: a very slow, steady push-in toward the clasped hands; no cuts, no shake. One warm, low golden key light from behind the camera, a little above, on the clasp and both faces equally; the river and the far bank behind them darker than the figures. Clear air, no fog. Photoreal live-action cinema, crisp, high shutter speed, no motion blur. Reference images 2-4 are identity and costume references only. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "notes": "S79 v2: the kings' oath; the clasp seals on the final chord, then a held, solemn two-shot through the frozen chord."
+ },
+ "request": {
+  "prompt": "The video opens exactly on reference image 1: the same two kings, costumes, gesture, mediators, riverbank, light and framing. Medium-close two-shot at chest height on a gravel riverbank at dusk, just after a solar eclipse. On the left Alyattes, king of Lydia, the man of reference image 2 (gold fillet, long grey-streaked crimped tresses, full grey beard, white linen chiton, deep purple mantle with a gold meander border, gold lion-head bracelet), facing right; on the right Cyaxares, king of the Medes, the man of reference image 3 (madder-red felt cap with a gold diadem band, grey roll of curls at the nape, long curled grey beard, saffron tunic embroidered with winged lions, ochre cape, gold lion torque), facing left. They clasp right hands in a level handshake between them; each bare forearm shows one thin fresh red cut. Behind them, near the left and right edges and half in shadow, the two mediators of reference image 4 stand still and watch. Action: 0-0.4 s they stand still, hands clasped. At 0.5 s, on the loud chord of the reference audio, they give the clasped hands one firm, slow downward shake, sealing the oath, and Alyattes presses his left hand to his chest. Then they hold completely still to the end, hands clasped, eyes locked, grave and calm; only breathing and the faint ripple of the river. Nobody speaks; nobody brings an arm to the mouth; no licking, no gore. Camera: a very slow, steady push-in toward the clasped hands; no cuts, no shake. One warm, low golden key light from behind the camera, a little above, on the clasp and both faces equally; the river and the far bank behind them darker than the figures. Clear air, no fog. Photoreal live-action cinema, crisp, high shutter speed, no motion blur. Reference images 2-4 are identity and costume references only. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(600 KB)",
+   "data:image/jpeg;base64...(652 KB)",
+   "data:image/jpeg;base64...(655 KB)",
+   "data:image/jpeg;base64...(406 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(158 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T22:32:30"
+}

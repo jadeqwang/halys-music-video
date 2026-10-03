@@ -1,0 +1,73 @@
+{
+ "plate": "P52",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 152.0,
+ "est_cost_usd": 0.9248,
+ "duration_s": 4.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 210.18,
+   "dur": 4.0,
+   "file": "media/plates/P52/audio_song_0210.18_4.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 4,
+  "takes": 2,
+  "refs": [
+   "LYD"
+  ],
+  "avatar": true,
+  "audio": {
+   "t0": 210.18,
+   "src": "song"
+  },
+  "t_song": [
+   210.18,
+   214.18
+  ],
+  "shots": "S61b",
+  "sync": [
+   [
+    210.18,
+    "the held 'blade': S61b cut in (plate 0)"
+   ],
+   [
+    210.55,
+    "the fingers open (plate ~0.4)"
+   ],
+   [
+    211.0,
+    "the point enters the water (plate ~0.8)"
+   ],
+   [
+    211.44,
+    "'Home': cut out (plate 1.26)"
+   ]
+  ],
+  "prompt": "Close-up at water level in a shin-deep red-brown river, in warm, low golden light. The right hand of the Lydian from reference image 1 (bare forearm, the edge of his crimson tunic sleeve and bronze scales at the top edge of the frame) holds a short straight sword by its dark wrapped grip, point down, the blade hanging straight down just above the water, the bronze cross-guard under his fist. At 0.3 s his fingers slowly open; the sword slips out of his hand and drops straight down, point first; at 0.8 s the point pierces the water with a small bright splash and sinks into the soft mud of the riverbed, and the sword stays standing upright in the water, the hilt and most of the blade above the surface, swaying slightly as it comes to rest. Rings spread across the water, lit gold. The empty hand stays open above it, fingers spread, still, to the end. The sword is centred in the frame; behind it the far bank is dark. An anatomically correct hand with five fingers. High-frame-rate slow motion. Camera static, just above the water surface. Hard, low golden sun raking in from frame right (the sun itself just beyond the right edge of the frame), long shadows, warm rim light; the far bank and background in deep shadow, darker than the men. Clear air: no fog, no haze, no smoke. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "notes": "S61b v2: one hand opens and its sword drops point-first into the shallows, standing in the mud (sets up S62)."
+ },
+ "request": {
+  "prompt": "Close-up at water level in a shin-deep red-brown river, in warm, low golden light. The right hand of the Lydian from reference image 1 (bare forearm, the edge of his crimson tunic sleeve and bronze scales at the top edge of the frame) holds a short straight sword by its dark wrapped grip, point down, the blade hanging straight down just above the water, the bronze cross-guard under his fist. At 0.3 s his fingers slowly open; the sword slips out of his hand and drops straight down, point first; at 0.8 s the point pierces the water with a small bright splash and sinks into the soft mud of the riverbed, and the sword stays standing upright in the water, the hilt and most of the blade above the surface, swaying slightly as it comes to rest. Rings spread across the water, lit gold. The empty hand stays open above it, fingers spread, still, to the end. The sword is centred in the frame; behind it the far bank is dark. An anatomically correct hand with five fingers. High-frame-rate slow motion. Camera static, just above the water surface. Hard, low golden sun raking in from frame right (the sun itself just beyond the right edge of the frame), long shadows, warm rim light; the far bank and background in deep shadow, darker than the men. Clear air: no fog, no haze, no smoke. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "duration": 4,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(582 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(130 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T22:28:15"
+}

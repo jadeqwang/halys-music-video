@@ -61,7 +61,7 @@ void main() {
 const SUN_FS = `#version 300 es
 precision highp float;
 in vec2 vUv;
-uniform vec2 uRes; uniform vec4 uSun; uniform vec4 uMoon; uniform float uBoil, uMetal, uWarm, uBlaze, uSunVis;
+uniform vec2 uRes; uniform vec4 uSun; uniform vec4 uMoon; uniform float uBoil, uMetal, uWarm, uBlaze, uSunVis, uPaint, uRough;
 uniform sampler2D uSky, uNoise;
 uniform vec3 uLead, uNaples, uGold, uDark, uPink;
 uniform vec4 uBead[12]; uniform int uNBead;
@@ -82,7 +82,12 @@ void main() {
   float disc = 0.0; vec3 sunC = vec3(0.0); float sunH = 0.0;
   if (d < r + 3.0 && uSunVis > 0.0) {
     float wob = (texture(uNoise, vec2(ang * 0.35 + uBoil * 0.13, 0.5)).a - 0.5) * 1.2 * smoothstep(20.0, 60.0, r);
-    disc = 1.0 - smoothstep(r - 0.8 + wob, r + 0.8 + wob, d);
+    // painted (uPaint > 0, how far the limb breaks): an underpaint just inside the limb, its crisp edge wandering by the
+    // limb's own irregularity (uRough px), so a gap between limb strokes shows paint, never a compass circle or a blur;
+    // as the limb calms (a thin crescent) it reaches the true limb, so the crescent keeps an actual eclipse's outline
+    float pw = (texture(uNoise, vec2(cos(ang), sin(ang)) * 0.08 + 0.31).a - 0.5) * 2.0 * uRough;
+    float rD = r * (1.0 - 0.035 * uPaint) + pw * uPaint;
+    disc = 1.0 - smoothstep(rD - 0.8 + wob, rD + 0.8 + wob, d);
     vec2 un = q / r;
     float marks = texture(uNoise, un * vec2(0.22, 0.07) + vec2(0.31, uBoil * 0.017)).r * 0.65 + texture(uNoise, un * 0.12 + 0.7).g * 0.35;
     // a flat blazing disk: one warm colour (golden-orange when low), only a thin deeper band at the very limb
@@ -126,6 +131,58 @@ void main() {
   }
   oCol = vec4(col * alpha + glow, alpha);
   oHgt = vec4(hgt * alpha, 0.0, 0.0, alpha);
+}`;
+
+// the Sun's own strokes (index.js sunPaintStrokes): the stroke shader, masked like the sun pass. Land and figures stay in
+// front (the sky mask); the moon's disk turns sun paint into its dark paint with the same 1.6 px edge as the sun pass, so
+// the bite is a clean curve cut through the brushwork; the mode rides in the seed's integer part (0 sun paint, 1 sun
+// paint the moon removes, 2 sky paint that stops at the black disk at totality)
+const SUNSTROKE_VS = `#version 300 es
+in vec2 aPos; in vec2 aUV; in vec4 aCol; in vec4 aPar;
+uniform vec2 uRes;
+out vec2 vUV; out vec4 vCol; out vec4 vPar; out vec2 vPos;
+void main() { vUV = aUV; vCol = aCol; vPar = aPar; vPos = aPos; gl_Position = vec4(aPos / uRes * 2.0 - 1.0, 0.0, 1.0); }`;
+const SUNSTROKE_FS = `#version 300 es
+precision highp float;
+in vec2 vUV; in vec4 vCol; in vec4 vPar; in vec2 vPos;
+uniform sampler2D uNoise, uSky;
+uniform float uBristle, uE, uBoil;
+uniform vec2 uRes; uniform vec4 uSun; uniform vec4 uMoon; uniform vec3 uDark;
+layout(location = 0) out vec4 oCol;
+layout(location = 1) out vec4 oHgt;
+void main() {
+  float s = vUV.x, v = vUV.y, Lp = vPar.x, hw = vPar.y, seed = fract(vPar.z), mode = vPar.z - seed, thick = vPar.w;
+  float u = clamp(s / max(Lp, 1.0), 0.0, 1.0);
+  float ds = s < 0.0 ? -s : (s > Lp ? (s - Lp) * 1.5 : 0.0);
+  float r = length(vec2(ds / hw, v));
+  float sp = max(1.4, hw * 0.13);
+  vec4 nz = texture(uNoise, vec2(v * hw / sp * 0.0098 + seed * 7.13, s / sp * 0.00045 + seed * 3.7));
+  float br = nz.r * 0.65 + nz.g * 0.35;
+  float rag = (texture(uNoise, vec2(s / max(hw, 1.0) * 0.022 + seed * 5.1, v > 0.0 ? 0.31 : 0.77)).a - 0.5) * 0.16;
+  float cover = 1.0 - smoothstep(1.0 - 1.3 / hw + rag, 1.0 + rag, r);
+  float dry = smoothstep(mix(0.42, 0.8, fract(seed * 13.7)), 1.2, u) * smoothstep(2.5, 7.0, hw);
+  cover *= 1.0 - dry * smoothstep(0.3, 0.6, 1.0 - br);
+  float bk = 1.0 - 0.09 * uBristle + 0.18 * uBristle * br;
+  vec3 col = vCol.rgb * bk;
+  // sun paint: one thick body of paint (thick = its height) whose bristle tracks and edges stand only a little proud, so
+  // the hot core is lit like impasto without each stroke outlined in shadow; sky paint: the ordinary stroke profile
+  float h = mode < 1.5 ? thick + 0.12 * (br - 0.5) + 0.035 * smoothstep(0.6, 0.95, r) - 0.03 * u
+                       : thick * (mix(1.0, 0.6, u) * (0.8 + 0.4 * (br - 0.5)) + 0.12 * smoothstep(0.6, 0.95, r));
+  // the masks
+  float sky = smoothstep(0.35, 0.65, texture(uSky, vPos / uRes).r);
+  float m = length(vPos - uMoon.xy), disk = 1.0 - smoothstep(uMoon.z - 0.8, uMoon.z + 0.8, m);
+  float bite = uE > 0.0005 ? disk : 0.0, black = disk * uMoon.w;
+  float a = cover * vCol.a * sky;
+  if (mode < 0.5) {
+    vec2 q = vPos - uSun.xy;
+    float mb = texture(uNoise, vec2(m * 0.01 + uBoil * 0.05, atan(q.y, q.x) * 0.2)).g;
+    float k = max(bite, black);
+    col = mix(col, uDark * (0.9 + 0.2 * mb) * bk, k);
+    h = mix(h, 0.3, k);
+  } else if (mode < 1.5) a *= 1.0 - max(bite, black);
+  else a *= 1.0 - black;
+  oCol = vec4(col * a, a);
+  oHgt = vec4(h * a, 0.0, 0.0, a);
 }`;
 
 // the canvas itself (weave, cracks, varnish mottling, grain) and the weave's gradient: baked once per output size
@@ -308,13 +365,25 @@ export function rasterize(Pn, list, cfg, sun = null, over = null) {
     const umb = tube('rawUmber'), blk = tube('boneBlack'), nap = tube('naples'), ver = tube('vermilion'), lead = tube('leadWhite'), mad = tube('madder');
     const beads = new Float32Array(48); const nb = Math.min(12, (sun.beads || []).length);
     for (let i = 0; i < nb; i++) { const b = sun.beads[i]; beads.set([b.x, b.y, b.size, b.k], i * 4); }
-    glw.pass(SUN_FS, {
+    const dark = sun.dark || [umb[0] * .35 + blk[0] * .65, umb[1] * .35 + blk[1] * .65, umb[2] * .35 + blk[2] * .65];
+    const U = {
       uSun: [sun.cx, sun.cy, sun.r, sun.e], uMoon: [sun.mx, sun.my, sun.mr, sun.moonVis ?? 0], uBoil: sun.boil, uMetal: cfg.metal ?? 0, uSky: Pn.skyTex, uNoise: Pn.noise,
-      uLead: lead, uNaples: nap, uDark: sun.dark || [umb[0] * .35 + blk[0] * .65, umb[1] * .35 + blk[1] * .65, umb[2] * .35 + blk[2] * .65],
+      uLead: lead, uNaples: nap, uDark: dark,
       uGold: [0, 1, 2].map(k => lerp(nap[k], ver[k], .3)), uPink: [0, 1, 2].map(k => lerp(mad[k], lead[k], .45)),
-      uWarm: sun.warm ?? 0, uBlaze: sun.blaze ?? 1.45, uSunVis: sun.sunVis ?? 1,
+      uWarm: sun.warm ?? 0, uBlaze: sun.blaze ?? 1.45, uSunVis: sun.sunVis ?? 1, uPaint: sun.strokes && sun.strokes.length ? clamp(sun.paintK ?? sun.paint ?? 1) : 0, uRough: sun.rough || 0,
       uBead: beads, uNBead: nb, uRing: sun.ring || [0, 0, 1, 0], uJup: sun.jup || [0, 0, 1, 0], uLimb: sun.limb || [0, 1, 0, 0],
-    }, tgt, 'premult', sunBox(sun, glw.w, glw.h));
+    };
+    const box = sunBox(sun, glw.w, glw.h), lights = nb > 0 || (sun.ring && sun.ring[3] > 0) || (sun.jup && sun.jup[3] > 0) || (sun.limb && sun.limb[0] > 0);
+    if (!sun.strokes || !sun.strokes.length) glw.pass(SUN_FS, U, tgt, 'premult', box);
+    else {
+      // the disk's underpaint and the moon, then the sun's strokes, then the lights that must stay on top (the limb at
+      // totality, Baily's beads, the diamond ring, Jupiter)
+      glw.pass(SUN_FS, { ...U, uNBead: 0, uRing: [0, 0, 1, 0], uJup: [0, 0, 1, 0], uLimb: [0, 1, 0, 0] }, tgt, 'premult', box);
+      const sp = glw.program(SUNSTROKE_VS, SUNSTROKE_FS), m = strokeMesh(sun.strokes);
+      glw.meshDraw(sp, m.attrs, m.idx, m.ni, { uNoise: Pn.noise, uBristle: cfg.bristle ?? 1, uSky: Pn.skyTex, uSun: U.uSun, uMoon: U.uMoon, uE: sun.e, uBoil: sun.boil, uDark: dark }, tgt, 'premult');
+      ntri += m.ntri;
+      if (lights) glw.pass(SUN_FS, { ...U, uSunVis: 0, uMoon: [sun.mx, sun.my, sun.mr, 0] }, tgt, 'premult', box);
+    }
   }
   if (over && over.length) {                 // strokes in front of the sun (an arrow across the disk, a foreground)
     for (let i = 0; i < over.length; i += CH) {

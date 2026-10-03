@@ -1,0 +1,11 @@
+{
+ "model": "google/nano-banana-pro",
+ "prompt": "Edit image 1, an anime close-up of a young woman. Keep the framing, the camera, the dark room behind her with the glowing monitor and the desk lamp, the lighting, her long straight black hair, the orange headphones around her neck, the black top and the white jacket with the orange stripe exactly as they are, and keep exactly the same anime drawing style. Change only her expression and the angle of her head: she now has a mischievous, knowing grin with her lips closed: the corner of her mouth on the right side of the picture curls up into a sly smirk while the other corner stays almost level, and a small crease shows in that cheek; her eyes are engaged, looking straight into the camera, slightly narrowed, the upper eyelids relaxed and a little lowered and the lower eyelids lifted, as if she knows a secret; her head is tilted a little toward the right side of the picture. Image 3 is a photograph used ONLY as the reference for this expression (the closed-lip one-corner smirk, the narrowed knowing eyes, the slight head tilt): copy the expression only, never the photo's realism, hat, scarf, lighting or background. Her face stays the anime character of image 1 and of the character sheet (image 2): the same large brown anime eyes, small nose, face shape and centre-parted hair. Japanese anime cel animation style exactly matching the character sheet: clean, crisp, tapered black line art, flat cel colours with exactly one shadow tone, no painterly texture, no soft airbrush gradients, no depth-of-field blur, no yellow cast. No text.",
+ "refs": [
+  "/tmp/claude-0/-home-user-halys-music-video/b8664d69-2871-5fba-a7df-659b9d78ccf5/scratchpad/ref/P41_f22.png",
+  "/tmp/claude-0/-home-user-halys-music-video/b8664d69-2871-5fba-a7df-659b9d78ccf5/scratchpad/ref/sheet_tq_face.jpg",
+  "/tmp/claude-0/-home-user-halys-music-video/b8664d69-2871-5fba-a7df-659b9d78ccf5/scratchpad/ref/expr_face.jpg"
+ ],
+ "out": "media/plates/P58/K80a.jpg",
+ "est_cost_usd": null
+}

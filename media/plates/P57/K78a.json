@@ -1,0 +1,11 @@
+{
+ "model": "google/nano-banana-pro",
+ "prompt": "Edit image 1. Keep the room exactly as it is: the same camera position and angle, the same framing, the window with the fog and the tower, the desk lamp, the two monitors, the desk, the keyboard, the mug, the desk chair and the night lighting. Redraw only the young woman sitting in the chair, seen from behind, so that she is exactly the anime character of the character sheet (images 2 and 3) in its BACK view: long, straight, glossy black hair parted in the centre, falling down her back and ending just at the top edge of the circle on her jacket, drawn with fine strand lines, a soft sheen band and a few pointed locks at the ends; a white, oversized, cropped bomber jacket with a ribbed hem and cuffs and one orange stripe around each upper sleeve; on the back of the jacket a large, flat, light-blue circle, clearly visible and not covered by the hair, with the words RARE EARTH printed in small dark capital letters centred beneath it. The print lies on the fabric: the circle and the letters bend with the folds and creases of the jacket and are crossed by its grey fold shadows, like a real print on cloth. A round white patch with a black ring reading 1420 MHz is stitched on the outer side of her LEFT upper sleeve (her left arm is the arm on the left side of the picture), on the orange stripe; that arm is visible beside her back with the elbow slightly out as she types, so the patch is seen at an angle. Orange over-ear headphones around her neck. She types on the keyboard with both hands. Japanese anime cel animation style exactly matching the character sheet: clean, crisp, tapered black line art, flat cel colours with exactly one shadow tone, no painterly texture, no soft airbrush gradients, no depth-of-field blur, no yellow cast. No other text anywhere.",
+ "refs": [
+  "/tmp/claude-0/-home-user-halys-music-video/b8664d69-2871-5fba-a7df-659b9d78ccf5/scratchpad/ref/P39_f40.png",
+  "/tmp/claude-0/-home-user-halys-music-video/b8664d69-2871-5fba-a7df-659b9d78ccf5/scratchpad/ref/sheet_back.jpg",
+  "/tmp/claude-0/-home-user-halys-music-video/b8664d69-2871-5fba-a7df-659b9d78ccf5/scratchpad/ref/sheet_full.jpg"
+ ],
+ "out": "media/plates/P57/K78a.jpg",
+ "est_cost_usd": null
+}

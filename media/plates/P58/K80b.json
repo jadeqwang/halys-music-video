@@ -1,0 +1,11 @@
+{
+ "model": "google/nano-banana-pro",
+ "prompt": "Edit image 1, an anime close-up of a young woman. Keep the framing, the camera, the dark room behind her with the glowing monitor and the desk lamp, the lighting, her long straight black hair, the orange headphones, the black top, the white jacket with the orange stripe and her raised right shoulder exactly as they are, in exactly the same anime drawing style. Change only her expression and the tilt of her head, to the expression of the woman in image 3: a playful, mischievous, knowing smirk with her LIPS CLOSED (no teeth visible): the corner of her mouth on the right side of the picture curls up while the other corner stays level, and a small crease shows in that cheek; her eyes are engaged and look straight into the camera, slightly narrowed: the upper eyelids a little lowered over the top of the irises and the lower eyelids lifted; her eyebrows relaxed, NOT frowning, the eyebrow on the smirking side raised just slightly; her head tilted a little (about eight degrees) toward the right side of the picture. Playful and teasing, never smug or villainous. Image 3 is a photograph used ONLY as the reference for this expression: copy the expression only, never the photo's realism, hat, scarf, lighting or background. Her face stays the anime character of image 1 and the character sheet (image 2): the same large brown anime eyes, small nose, face shape and centre-parted hair. Japanese anime cel animation style exactly matching the character sheet: clean, crisp, tapered black line art, flat cel colours with exactly one shadow tone, no painterly texture, no soft airbrush gradients, no depth-of-field blur, no yellow cast. No text.",
+ "refs": [
+  "/tmp/claude-0/-home-user-halys-music-video/b8664d69-2871-5fba-a7df-659b9d78ccf5/scratchpad/ref/P41_f22.png",
+  "/tmp/claude-0/-home-user-halys-music-video/b8664d69-2871-5fba-a7df-659b9d78ccf5/scratchpad/ref/sheet_tq_face.jpg",
+  "/tmp/claude-0/-home-user-halys-music-video/b8664d69-2871-5fba-a7df-659b9d78ccf5/scratchpad/ref/expr_face.jpg"
+ ],
+ "out": "media/plates/P58/K80b.jpg",
+ "est_cost_usd": null
+}

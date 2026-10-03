@@ -43,8 +43,8 @@ with field lines · **INSCR** = Cormorant Garamond italic, small · **MONO** = J
 | S14 | 35.98–39.48 | BRONZE | P10 | Median archers loose a volley; arrows cross the sky. Disciplined, dignified, never a horde. | — | |
 | S15 | 39.48–41.24 | BRONZE | P11 | Across the melee the Lydian and the Mede see each other (mirrored singles, cut on beat 3). | — | |
 | S16 | 41.24–44.73 | BRONZE | P01 | Altdorfer wide: massed armies along the river, the huge low Sun. | PLAQUE `THE SKY DATES THIS BATTLE TO THE DAY` | Choir swell 41.5–42.9 |
-| S17 | 44.73–46.49 | BRONZE | P12 | First exchange: the Mede's spear thrust is turned by the Lydian's lion shield. | — | Strike on a beat |
-| S18 | 46.49–51.72 | BRONZE | proc.+P01 | **First contact.** Tight on the low Sun: a black bite appears on its leading limb. Below, silhouettes keep fighting; nobody notices. | PLAQUE `17:25 · FIRST CONTACT`; small engraved counter starts `TOTALITY IN 55:28` and runs (compressed) to `00:00` at 110.58 | Bass out B27–29: the bite is the only event |
+| S17 | 44.73–46.49 | BRONZE | P48 | First exchange: the Mede's spear thrust is turned by the Lydian's lion shield, **in the middle of the battle**: behind them the two lines fight in the shallows. The low Sun at frame right. | — | Strike on the 46.06 beat |
+| S18 | 46.49–51.72 | BRONZE | proc.+P49 | **First contact.** Tight on the low Sun: a black bite appears on its leading limb. Below, the whole battle line keeps fighting along the horizon in silhouette; nobody notices. | PLAQUE `17:25 · FIRST CONTACT`; small engraved counter starts `TOTALITY IN 55:28` and runs (compressed) to `00:00` at 110.58 | Bass out B27–29: the bite is the only event |
 | S19 | 51.72–55.22 | BRONZE | P12 | Full orchestra: the duel, strikes landing on beats. | counter | |
 | S20 | 55.22–58.72 | BRONZE | P01 | Wide; the Sun now visibly bitten; light still golden. | counter | |
 | S21 | 58.72–62.20 | BRONZE | P13 | The Lydian is knocked into the water; the Mede's spear comes down; he rolls clear. | counter | |
@@ -64,7 +64,7 @@ with field lines · **INSCR** = Cormorant Garamond italic, small · **MONO** = J
 
 | Shot | Time | World | Plate | Picture | Text | Sync / FX |
 |---|---|---|---|---|---|---|
-| S28 | 89.22–93.00 | BRONZE | P18 | Faces turn upward one after another; cut on the 91.31 boom. Jupiter appears beside the thin crescent. | CARVED set **on a circle around the Sun**: `A HALO IN THE SKY` · then `WARRIORS AWED` | Eclipse 0.9→0.95 |
+| S28 | 89.22–93.00 | BRONZE | P50 | Caught mid-fight: pairs locked in combat (a spear thrust caught on a shield, a raised sword, grappling) stop mid-action and turn their faces up one after another, on "halo", "in", "the", "sky"; cut on the 91.31 boom to the sky. Jupiter appears beside the thin crescent. | CARVED set **on a circle around the Sun**: `A HALO IN THE SKY` · then `WARRIORS AWED` | Eclipse 0.9→0.95 |
 | S29 | 93.00–96.89 | BRONZE | P19 | XCU of the Lydian's eye, the crescent reflected. **Intrusion**: at 93.95 ("eye"), for 10 frames, a vector-flat orange disc slides over the painted Sun (the simulation leaking). Then the sky itself reads as an eye. | CARVED small inside the pupil: `BY THE VACANT EYE OF A GOD` | |
 
 ## 6 · Chorus 1, 96.89–110.58 (B56–63), full orchestra and choir; riser from 108.0
@@ -120,7 +120,7 @@ with field lines · **INSCR** = Cormorant Garamond italic, small · **MONO** = J
 | Shot | Time | World | Plate | Picture | Text | Sync / FX |
 |---|---|---|---|---|---|---|
 | S52 | 181.23–183.34 | MARBLE + BRONZE figure | P27 | **Thales** (about 40) walks between the statues, the only living thing, painted in colour. Shadow-stick in hand. | CARVED `THALES` + Greek echo `ΘΑΛΗΣ`; PLAQUE `THALES OF MILETUS` | Name on 182.49 |
-| S53 | 183.34–187.65 | same | P28 | Gold construction lines bloom around him: his theorem (a triangle in a circle), `SAROS · 18 Y 11 D 8 H`, an Antikythera-style gear that resolves into lines of code. At 186.4 the **forecast card** (≤ 1.3 s, generic UI): `Will the sun go dark over the Halys before sunset?` YES 3¢ → 99¢. | CARVED `FORETOLD THE SUN WOULD GO DARK` | "dark" 186.38 |
+| S53 | 183.34–187.65 | same | P28 | **Thales's geometry** blooms around him: gold incised compass-and-straightedge lines, points lettered in the Greek manner (Α to Ξ), behind him and under the lyric. **Payoff, upper right:** about Α the compass draws the Sun's circle and the Moon's nearer circle, each ruled into 720 parts. On "sun" the Sun lights, exactly one part ΒΓ of its circle; the view pushes in on ΒΓ. The Moon, one part ΔΕ of its own circle, closes into the same two lines from Α; its image slides over the Sun and covers it exactly on "dark" (D.L. 1.24: each is 1/720 of its circle). Each arc is labelled `1⁄720`, and nothing else. **Also:** his theorem, the triangle in a semicircle ΖΗΘ (upper left; Pamphila in D.L. 1.24–25); the shadow stick, pyramid ΚΛΜ and stick ΜΝΞ as similar triangles (lower right; Plutarch 147A, D.L. 1.27). 4:5 shows the payoff alone. No card, no saros, no code: nothing may claim more than Herodotus 1.74 (he foretold the year). | CARVED `FORETOLD THE SUN WOULD GO DARK` | Sun lights on "sun" 184.51; totality on "dark" 186.38 |
 | S54 | 187.65–188.51 | same | P28 | In the breath, he glances at camera. He knows. | — | |
 | S55 | 188.51–193.16 | MARBLE | P20 | Every statue gazes up; the corona's western limb begins to bead. | CARVED `WARRIORS BEHOLD …` | |
 | S56 | 193.16–194.86 | MARBLE | proc. | Tight on the limb: Baily's beads. | `A SUDDEN` | |
@@ -133,8 +133,8 @@ with field lines · **INSCR** = Cormorant Garamond italic, small · **MONO** = J
 | S58 | 199.98–203.39 | GOLD | P29 | The light sweeps back across the land as the umbra races away ESE. Colour returns, and both armies **roar**. | CARVED `SHADOW TURNED TO DAY`: letters rise out of shadow into gold | Boom 203.60 |
 | S59 | 203.39–207.40 | GOLD | P30 | Baroque glory (Tiepolo/Rubens, not lens flare). Golden faces; laughter. | CARVED `SUNLIGHT FROM ABOVE` | |
 | S60 | 207.40–208.70 | GOLD | P31 | Drop-out breath: the Lydian and the Mede face to face, weapons still in hand. | — | 207.4–208.5 hold |
-| S61 | 208.70–211.44 | GOLD | P32 | Both armies throw their weapons into the red river, a slow-motion rain of bronze in gold light; hold on one sword sinking during the held "blade". | CARVED `THROW DOWN YOUR BLADE` | Low end out 210.18 |
-| S62 | 211.44–215.29 | GOLD | P33 | On "Home" a soldier swings his arm back and, as the beat returns (211.88), tosses his sword high; it spins up into the golden sky and slows at the apex. | CARVED `HOME TO THE ONES YOU LOVE` | Riser 212.3 |
+| S61 | 208.70–211.44 | GOLD | P51, P52 | **Bronze was precious: nobody throws it away** (v2). Caught mid-fight at the water's edge, both lines stop dead, shocked, and let go: swords and spears fall from opening hands onto the bank and into the red shallows, landing on "blade". Insert on the held "blade" (210.18): one hand opens and its sword slides point-first into the shallows. | CARVED `THROW DOWN YOUR BLADE` | Low end out 210.18 |
+| S62 | 211.44–215.29 | GOLD | P53 | On "Home" a dropped sword stands upright, point down in the mud at the water's edge, while its owner walks away up the bank toward home, never looking back. The camera eases in until the blade is the vertical where the starship stands on its pad (match cut at 215.29). | CARVED `HOME TO THE ONES YOU LOVE` | Riser 212.3 |
 
 ## 13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.
 
@@ -157,11 +157,11 @@ with field lines · **INSCR** = Cormorant Garamond italic, small · **MONO** = J
 | Shot | Time | World | Plate | Picture | Text | Sync / FX |
 |---|---|---|---|---|---|---|
 | S74 | 257.68–259.36 | ORBIT→GOLD | proc.→P38 | **The dive**: through cloud to Anatolia to the Halys valley; lines condense into paint as we land. | — | Hit 257.67 |
-| S75 | 259.36–260.62 | GOLD | P38 | Both armies raise their blades high in unison (formation pose). | CHOP `THROW DOWN` 259.77 | Hit 259.35 |
-| S76 | 260.62–262.72 | GOLD | P38 | **BLADE**: every blade slams down at once. One straggler's lands late, on the 261.05 hit, and he shrugs. | CHOP `BLADE` 260.62 | Hits 260.62, 261.05 |
+| S75 | 259.36–260.62 | GOLD | P54 | A battle line of both armies seen along its length (Lydians left facing right, Medes right facing left), caught mid-fight. | CHOP `THROW DOWN` 259.77 | Hit 259.35 |
+| S76 | 260.62–262.72 | GOLD | P54 | **BLADE**: every blade falls at once from opening hands; a late one, the nearest Lydian's, lands on the 261.05 hit. They stand empty-handed facing each other, faces serious: no shrug, no posing. | CHOP `BLADE` 260.62 | Hits 260.62, 261.05 |
 | S77 | 262.72–266.12 | GOLD→ORBIT→INK | proc. | **Pull-back** on the boom: up out of the valley, through sky, Earth (blue) with the umbra dot over Anatolia, past the Moon, into a monitor bezel. | — | Boom 262.72; held "throw down" |
 | S78 | 266.12–270.04 | INK | P39 | **The room**, from behind her chair: the blue RARE EARTH circle on her back rhymes with the planet we just left. The ticking build is the terminal scrolling, one line per tick; on the side monitor the ΔT map's totality band slides north onto the Halys. | MONO terminal (ROOM.md) | Ticks 266.1–269.8 |
-| S79 | 270.04–273.40 | INK | P40 | **On the final stark chord she spins the chair to camera**: her face is the stinger. Deadpan eye contact while the frozen chord rings. | — | Chord 270.04, freeze from 271.6 |
+| S79 | 270.04–273.40 | BRONZE | P55 | **Back in-universe: the kings make peace** (v2). On the final stark chord Alyattes of Lydia (left) and Cyaxares of Media (right) seal the oath with the right-hand clasp and one firm shake; each bare forearm carries one thin fresh cut. Herodotus 1.74: these nations "make sworn compacts as do the Greeks; and besides, when they cut the skin of their arms, they lick each other's blood" (no licking, no gore). The mediators, Syennesis of Cilicia and Labynetus of Babylon, watch from the edges in shadow. Dusk by the river after the eclipse; one Caravaggio pool on the clasp; held through the frozen chord, then a hard cut to her grin. A small plaque, `THE OATH · HERODOTUS 1.74`, sits lower left from 270.45 (drawn by the scene with the plaque renderer, so it is not a track cue). | — | Chord 270.04 (the shake lands), freeze from 271.6; cut 273.40 |
 | S80 | 273.40–276.95 | INK | P41 | Still holding our gaze, she types blind (keys 273.45, 274.05, 274.95); behind her the terminal prints `[main 585ec1a] fix(halys): schedule eclipse to end war (#585)`. | MONO | Key clicks from the sound design |
 | S81 | 276.95–281.0 | INK | P41 | **The wink**, on the ting: her eyelid crosses her iris with the Moon's curved edge. Hold 0.6 s, cut to black, end card (video runs ~1.4 s past the audio in silence). | CARVED `HALYS` · `JADE WANG`; PLAQUE `NEXT TOTALITY · 2027-08-02 · NEAR LUXOR · 6M23S` | Ting 276.95; audio ends 279.60 |
 

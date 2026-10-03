@@ -20,12 +20,17 @@ DEFAULT = {
     'P39': [12, 22, 30, 40, 46, 52, 60, 62, 64, 66, 68, 75, 88, 1, 97],
     'P40': [40, 49, 57, 67, 79, 84, 90, 96, 100, 104, 1, 20, 44, 53, 61, 72, 112, 121],
     'P41': [22, 31, 34, 37, 39, 41, 43, 45, 48, 51, 53, 55, 57, 59, 62, 65, 67, 70, 73, 75, 77, 79, 81, 84, 95, 10, 140],
+    # v2 (REVISION_V2 decisions 6, 8): the anime plates; the frames the x-sheets use are passed with --frames
+    'P57': [1, 40, 97],
+    'P58': [1, 60, 121],
 }
 # per plate (its own 960x540 coordinates): keep zone, and zones where the anime model's extra objects are ignored
 ZONES = {
     'P39': {'keep': (95, 70, 600, 540), 'drop': [(170, 100, 246, 345), (760, 300, 860, 430)], 'models': ('g', 'h', 'a')},
     'P40': {'keep': (80, 60, 590, 540), 'drop': [(180, 100, 262, 335), (750, 290, 850, 420)], 'models': ('g', 'h', 'a')},
     'P41': {'keep': (0, 0, 960, 540), 'drop': [], 'models': ('a',)},
+    'P57': {'keep': (95, 70, 600, 540), 'drop': [(170, 100, 246, 345), (760, 300, 860, 430)], 'models': ('g', 'h', 'a')},   # = P39's camera
+    'P58': {'keep': (0, 0, 960, 540), 'drop': [], 'models': ('a',)},
 }
 MODEL = {'g': 'isnet-general-use', 'h': 'u2net_human_seg', 'a': 'isnet-anime'}
 _ses = {}
@@ -41,7 +46,7 @@ def infer(img, m):
 def combine(pid, ms):
     import cv2
     Z = ZONES[pid]
-    if pid == 'P41':
+    if Z['models'] == ('a',):          # close-ups: isnet-anime alone
         return ms['a']
     a = ms['a'].copy()
     for (x0, y0, x1, y1) in Z['drop']:

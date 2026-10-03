@@ -1,0 +1,64 @@
+{
+ "plate": "P57",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 175.4,
+ "est_cost_usd": 0.9248,
+ "duration_s": 4.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 266.12,
+   "dur": 4.0,
+   "file": "media/plates/P57/audio_song_0266.12_4.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 4,
+  "takes": 2,
+  "first_frame": "media/plates/P57/K78d_ff.jpg",
+  "audio": {
+   "t0": 266.12,
+   "src": "song"
+  },
+  "t_song": [
+   266.12,
+   270.12
+  ],
+  "shots": "S78",
+  "sync": [
+   [
+    266.12,
+    "ticking build: she types, one terminal line per tick"
+   ],
+   [
+    268.081,
+    "dt.shift: she leans toward the vertical monitor (plate 1.96)"
+   ],
+   [
+    269.288,
+    "the commit burst: fast typing (plate 3.17)"
+   ]
+  ],
+  "prompt": "Anime style with clean cel shading and crisp tapered line art exactly like the first frame: flat cel colours, one shadow tone, painted flat backgrounds, no depth-of-field blur, no yellow cast. The first frame is the start of the shot: a small dark apartment room at night seen from behind her desk chair. The young woman of the first frame sits with her back to the camera and types steadily on the mechanical keyboard with both hands, her head moving slightly as she reads the scrolling screen. Her shoulders and arms move with the typing, so the folds and creases of her white jacket shift, and the light-blue circle and the RARE EARTH lettering printed on her back move and bend with the fabric; the round 1420 MHz patch stays stitched on her left sleeve (the arm on the left side of the picture) and moves with that arm. At 2.0 s she leans in a little toward the vertical monitor on the right, then settles back; from 3.1 s she types fast. Her hair keeps exactly its length, ending at the top of the circle. Camera static, locked off. The screens show no readable text. No captions, no watermark.",
+  "notes": "From the K78d keyframe (first frame). Only she is used: the room stays P39's painted background (registered)."
+ },
+ "request": {
+  "prompt": "Anime style with clean cel shading and crisp tapered line art exactly like the first frame: flat cel colours, one shadow tone, painted flat backgrounds, no depth-of-field blur, no yellow cast. The first frame is the start of the shot: a small dark apartment room at night seen from behind her desk chair. The young woman of the first frame sits with her back to the camera and types steadily on the mechanical keyboard with both hands, her head moving slightly as she reads the scrolling screen. Her shoulders and arms move with the typing, so the folds and creases of her white jacket shift, and the light-blue circle and the RARE EARTH lettering printed on her back move and bend with the fabric; the round 1420 MHz patch stays stitched on her left sleeve (the arm on the left side of the picture) and moves with that arm. At 2.0 s she leans in a little toward the vertical monitor on the right, then settles back; from 3.1 s she types fast. Her hair keeps exactly its length, ending at the top of the circle. Camera static, locked off. The screens show no readable text. No captions, no watermark.",
+  "duration": 4,
+  "resolution": "720p",
+  "aspect_ratio": "adaptive",
+  "generate_audio": false,
+  "use_virtual_avatar": false,
+  "image": "data:image/jpeg;base64...(547 KB)",
+  "reference_audios": [
+   "data:audio/mpeg;base64...(130 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T22:33:51"
+}

@@ -1,0 +1,71 @@
+{
+ "plate": "P51",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 175.1,
+ "est_cost_usd": 1.156,
+ "duration_s": 5.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 208.7,
+   "dur": 5.0,
+   "file": "media/plates/P51/audio_song_0208.70_5.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 5,
+  "takes": 2,
+  "refs": [
+   "LYD",
+   "MED"
+  ],
+  "avatar": true,
+  "audio": {
+   "t0": 208.7,
+   "src": "song"
+  },
+  "t_song": [
+   208.7,
+   213.7
+  ],
+  "shots": "S61",
+  "sync": [
+   [
+    208.7,
+    "'Throw': S61 cut in, mid-fight (plate 0)"
+   ],
+   [
+    209.945,
+    "'blade': the weapons land (plate 1.25)"
+   ],
+   [
+    210.177,
+    "low end out: cut to S61b (plate 1.48)"
+   ]
+  ],
+  "prompt": "Medium-wide shot at waist height at the edge of a red-brown clay river in warm golden evening light: the warriors stand in shin-deep water and on the muddy bank. Lydians dressed like reference image 1 (crested bronze helmets pushed up so the faces show, crimson tunics, bronze scale corselets, round crimson lion shields) come from the left facing right; Medes dressed like reference image 2 (red felt caps, black beards, long-sleeved ochre tunics, iron scale corselets, round wicker shields) come from the right facing left; short straight swords and spears. Mirrored composition: in the exact centre of the frame one Lydian and one Mede fight face to face, full figures; more pairs fight on both sides of them and behind them. 0-0.8 s: everyone fights hard, mid-action: the centre Lydian swings his sword down onto the Mede's shield, spears thrust, shields slam, water splashes. At 0.9 s every man stops dead in the middle of his movement, shocked, eyes wide, staring at the man in front of him. At 1.2 s all their fingers open at once and the weapons drop: spears clatter onto the mud of the bank, swords splash into the shallows. Nobody throws anything: the weapons simply fall straight down out of the opening hands. Then they stand still, empty-handed, arms hanging, stunned and serious, breathing hard, to the end. High-frame-rate slow motion. Camera static. Hard, low golden sun raking in from frame right (the sun itself just beyond the right edge of the frame), long shadows, warm rim light; the far bank and background in deep shadow, darker than the men. Clear air: no fog, no haze, no smoke. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "notes": "S61 v2: shocked mid-fight, both lines let go; weapons fall onto the bank and into the shallows (never thrown)."
+ },
+ "request": {
+  "prompt": "Medium-wide shot at waist height at the edge of a red-brown clay river in warm golden evening light: the warriors stand in shin-deep water and on the muddy bank. Lydians dressed like reference image 1 (crested bronze helmets pushed up so the faces show, crimson tunics, bronze scale corselets, round crimson lion shields) come from the left facing right; Medes dressed like reference image 2 (red felt caps, black beards, long-sleeved ochre tunics, iron scale corselets, round wicker shields) come from the right facing left; short straight swords and spears. Mirrored composition: in the exact centre of the frame one Lydian and one Mede fight face to face, full figures; more pairs fight on both sides of them and behind them. 0-0.8 s: everyone fights hard, mid-action: the centre Lydian swings his sword down onto the Mede's shield, spears thrust, shields slam, water splashes. At 0.9 s every man stops dead in the middle of his movement, shocked, eyes wide, staring at the man in front of him. At 1.2 s all their fingers open at once and the weapons drop: spears clatter onto the mud of the bank, swords splash into the shallows. Nobody throws anything: the weapons simply fall straight down out of the opening hands. Then they stand still, empty-handed, arms hanging, stunned and serious, breathing hard, to the end. High-frame-rate slow motion. Camera static. Hard, low golden sun raking in from frame right (the sun itself just beyond the right edge of the frame), long shadows, warm rim light; the far bank and background in deep shadow, darker than the men. Clear air: no fog, no haze, no smoke. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(582 KB)",
+   "data:image/jpeg;base64...(557 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(161 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T22:28:38"
+}

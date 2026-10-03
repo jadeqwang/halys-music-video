@@ -1,102 +1,157 @@
-// decals.js: costume graphics drawn, never traced (the plate's letters would come out as garbled squiggles): the
-// light-blue circle on her back as a perfect disk with RARE EARTH set beneath it (the graphic match with the Earth on her
-// monitor), the hair's ends above it, and the round 1420 MHz patch on her left sleeve (back view, then the front view
-// from the landing on, placed per drawing). Each decal has a clear zone the cel analysis paints flat first (cel.js
-// `clear`), so nothing of the plate's marks shows under it.
-// Positions are in setup px for drawings whose body is a held cel (S78 typing: ref f40; S79 deadpan: f104).
+// decals.js: costume graphics redrawn crisp but kept ON the fabric. The plate's letters would trace as garbled squiggles,
+// so the lettering and the patch are drawn by us; WHERE they are comes from the plate, measured on every drawing
+// (prep/decals.py -> decals/<plate>_<take>.json): the light-blue circle's ellipse, the RARE EARTH line's cap line and
+// baseline, the 1420 MHz patch's ring. So the print moves, turns and bends with the jacket exactly as the fabric does in
+// the plate, and the patch rides on her LEFT sleeve, turning (foreshortened) with the arm.
+//   circle   stays the plate's own shape: the cel classifies it as the blue material inside the measured ellipse (cel.js
+//            allowBlue), with its own fold shadow (one shadow tone)
+//   text     RARE EARTH set in Archivo along the measured band (a mesh warp: every column follows the band's cap line and
+//            baseline), drawn between the fills and the line art: clipped to her visible jacket (hair, arms and the chair
+//            occlude it) and toned by the jacket's fold shadows; the fold creases draw over it
+//   patch    a white disc, ink ring and 1420 / MHz mapped onto the measured ellipse (its axes give the turn of the arm),
+//            clipped to the visible sleeve and toned by its shadow
+// Under each decal the cel paints the plate's marks out (cel.js `clear` zones with keepShade: the material becomes jacket,
+// the fold shading carries on underneath, no interior lines).
 
-import { P } from './props.js';
+import { loadJSON, makeCanvas } from '../../assets.js';
 import { setFont } from '../../fonts.js';
 import { MAT, LINE } from './palette.js';
+import { takeStem } from './source.js';
 
 const TAU = Math.PI * 2;
-// P39 frame (wide setup space). The back: the light-blue circle is a perfect disk (it rhymes with the Earth on the monitor,
-// same blue, same circle), RARE EARTH set beneath it, as on her model sheet. On the sheet her hair ends at the top of the
-// circle; the plate's hair hangs over it, so the hair is cut there (cel `clear` zone: hair and the plate's blue become
-// jacket) and finished with drawn tips that stop just above the disk.
-const DISK = { x: 290.5, y: 358, r: 30 };      // the radius of the Earth disk on the side monitor (S78 framing): the same circle
-// the hair's new ends: locks of different lengths (longest in the middle), each a pointed shape with curved sides.
-// [notch-left, tip, ...] from her left (frame left) to right; the first and last points sit on the hair's outer edges
-const LOCKS = { start: [248, 306], tips: [[255, 316], [278, 325], [295, 325], [317, 322], [336, 316], [349, 310]],
-  notches: [[265, 310], [286, 313], [305, 312], [326, 311], [343, 307]], end: [351, 302], top: [[346, 290], [251, 290]] };
-const BACK = { text: { x: 290.5, y: 406, size: 13.6, rot: .07, w: 76 }, patch: { x: 435, y: 358.5, r: 18.2, rot: -.42 }, disk: DISK, locks: LOCKS,
-  cut: [[238, 304], [364, 304], [364, 394], [238, 394]] };
-// the locks' outline as one path (output px): curved sides into each tip
-function locksPath(view, L) {
-  const p = new Path2D(), Q = ([x, y]) => P(view, x, y);
-  let a = L.start; p.moveTo(...Q(a));
-  L.tips.forEach((t, k) => {
-    const b = k < L.notches.length ? L.notches[k] : L.end;
-    // left side: straight down first, then into the point; right side: out of the point, curving up to the notch
-    p.quadraticCurveTo(...Q([a[0] + (t[0] - a[0]) * .15, a[1] + (t[1] - a[1]) * .75]), ...Q(t));
-    p.quadraticCurveTo(...Q([b[0] - (b[0] - t[0]) * .2, b[1] + (t[1] - b[1]) * .7]), ...Q(b));
-    a = b;
-  });
-  return p;
-}
-// P40 registered into P39 space (front view, her left sleeve): measured on the landing and settle drawings, then f100+
-const FRONT = { patch: { x: 482, y: 361, r: 16.5, rot: -.12 } };
-const FRONT40 = { 79: { x: 465.2, y: 359.1, r: 13.7, rot: -.2 }, 84: { x: 477.8, y: 357, r: 15.8, rot: -.15 }, 90: { x: 484.1, y: 360.2, r: 16.8, rot: -.12 },
-  96: { x: 484.1, y: 362.8, r: 16.8, rot: -.12 } };
-
-function decalsFor(e) {
-  if (!e) return null;
-  if (e.src === 'P39' && e.ref === 40) return BACK;
-  if (e.src === 'P39') return BACK;
-  if (e.src === 'P40' && !e.smear && FRONT40[e.pf]) return { patch: FRONT40[e.pf] };
-  if (e.src === 'P40' && e.pf >= 100) return FRONT;
-  return null;
+const DEC = {};
+export async function initDecals(takes) {
+  for (const [id, take] of Object.entries(takes)) DEC[id] = (await loadJSON(`src/worlds/ink/decals/${id}_${takeStem(take)}.json`, { optional: true })) || {};
 }
 
-// zones for the cel: plate-normalised ellipses, painted flat with a material, interior lines removed
-export function clearZones(e) {
-  const D = decalsFor(e); if (!D) return [];
-  const z = [];
-  if (D.cut) z.push({ poly: D.cut.map(([x, y]) => [x / 960, y / 540]), mat: 'jacket', from: ['black', 'blue'], flat: true });
-  if (D.text) z.push({ cx: D.text.x / 960, cy: (D.text.y - 6) / 540, rx: (D.text.w * .62) / 960, ry: 13 / 540, mat: 'jacket', rot: D.text.rot });
-  if (D.patch) z.push({ cx: D.patch.x / 960, cy: D.patch.y / 540, rx: (D.patch.r + 2.5) / 960, ry: (D.patch.r + 2.5) / 540, mat: 'white' });
-  return z;
+// the region weight of an exposure's redrawn region at a point (setup px), 0 = the held body cel
+function regionW(e, x, y, W, H) {
+  const r = e.region; if (!r || !e.ref) return 0;
+  const d = Math.hypot((x / W - r.cx) / r.rx, (y / H - r.cy) / r.ry), f = Math.max(.01, r.feather ?? .3);
+  return Math.min(1, Math.max(0, (1 - d) / f));
 }
+const mapE = (q, xf) => q && { cx: xf.s * q.cx + xf.tx, cy: xf.s * q.cy + xf.ty, rx: q.rx * xf.s, ry: q.ry * xf.s, rot: q.rot };
 
-export function drawDecals(g, view, e, u) {
-  const D = decalsFor(e); if (!D) return;
-  const s = view.s;
-  if (D.disk) {   // the circle: flat light blue, no outline (a print on the fabric)
-    const [x, y] = P(view, D.disk.x, D.disk.y);
-    g.fillStyle = MAT.blue.base; g.beginPath(); g.arc(x, y, D.disk.r * s, 0, TAU); g.fill();
+// the decals of exposure e in SETUP px: { circle, text: {pts: [[x, top, base] ...]}, patch } (null when not measured)
+export function decalGeom(S, e) {
+  const D = e && DEC[e.src]; if (!D) return null;
+  e._dg ??= {};
+  if (S.id in e._dg) return e._dg[S.id];
+  const xf = (S.reg && S.reg[e.src]) || { s: 1, tx: 0, ty: 0 };
+  const body = D[String(e.ref || e.pf)] || null, own = D[String(e.pf)] || null;
+  let out = null;
+  if (body) {
+    out = { circle: mapE(body.circle, xf), patch: mapE(body.patch, xf),
+      text: body.text && { pts: body.text.pts.map(([x, a, b]) => [xf.s * x + xf.tx, xf.s * a + xf.ty, xf.s * b + xf.ty]) } };
+    // a redrawn region carries its own patch when the patch lies inside it
+    if (own && own.patch && out.patch && regionW(e, out.patch.cx, out.patch.cy, S.w, S.h) > .5) out.patch = mapE(own.patch, xf);
   }
-  if (D.locks) {   // the hair's new ends over the cut: black locks, outlined along the tips (the top edge is inside the hair)
-    const L = D.locks, edge = locksPath(view, L), fill = new Path2D(edge);
-    for (const q of [L.end, ...L.top]) fill.lineTo(...P(view, ...q));
-    fill.closePath();
-    g.fillStyle = MAT.black.base; g.fill(fill);
-    g.strokeStyle = LINE; g.lineWidth = 2.2 * u; g.lineJoin = 'round'; g.lineCap = 'round'; g.stroke(edge);
-    // strand lines in the sheen tone running down into the longer locks
-    g.strokeStyle = '#30343e'; g.lineWidth = 1.1 * u;
-    for (const [a, b] of [[[281, 286], [278, 320]], [[297, 285], [295, 320]], [[315, 287], [317, 317]], [[262, 288], [256, 311]]]) {
-      g.beginPath(); g.moveTo(...P(view, ...a)); g.quadraticCurveTo(...P(view, (a[0] + b[0]) / 2 + 1.2, (a[1] + b[1]) / 2), ...P(view, ...b)); g.stroke();
+  e._dg[S.id] = out;
+  return out;
+}
+
+// the band polygon of the lettering (setup px), grown by g px
+function bandPoly(T, g = 0) {
+  const P = T.pts, top = P.map(([x, a]) => [x, a - g]), bot = P.map(([x, , b]) => [x, b + g]).reverse();
+  return [[P[0][0] - g, P[0][1] - g], ...top, [P[P.length - 1][0] + g, P[P.length - 1][1] - g], [P[P.length - 1][0] + g, P[P.length - 1][2] + g], ...bot, [P[0][0] - g, P[0][2] + g]];
+}
+
+// cel zones for exposure e: the clear zones under the decals and the circle's blue zone (setup-normalised)
+export function decalZones(S, e) {
+  const G = decalGeom(S, e); if (!G) return { clear: [] };
+  const W = S.w, H = S.h, clear = [];
+  if (G.text) clear.push({ poly: bandPoly(G.text, 2.2).map(([x, y]) => [x / W, y / H]), mat: 'jacket', from: ['black', 'brow', 'navy'], keepShade: true });
+  if (G.patch) clear.push({ cx: G.patch.cx / W, cy: G.patch.cy / H, rx: (G.patch.rx + .8) / W, ry: (G.patch.ry + .8) / H, rot: G.patch.rot, mat: 'jacket', keepShade: true, solid: true });
+  const c = G.circle, allowBlue = c && { cx: c.cx / W, cy: c.cy / H, rx: c.rx * 1.12 / W, ry: c.ry * 1.12 / H, rot: c.rot };
+  return { clear, allowBlue };
+}
+
+// ---------------------------------------------------------------- drawing
+// image src (its rectangle [0, w] x [0, h]) into a mesh: cols x 2 quads given as top[] / bot[] point rows (output px)
+function meshWarp(g, src, top, bot) {
+  const n = top.length - 1, sw = src.width, sh = src.height;
+  const tri = (s0, s1, s2, d0, d1, d2) => {
+    const den = s0[0] * (s2[1] - s1[1]) - s1[0] * s2[1] + s2[0] * s1[1] + (s1[0] - s2[0]) * s0[1];
+    if (Math.abs(den) < 1e-9) return;
+    g.save();
+    // grow the clip triangle by ~0.6 px so neighbouring triangles leave no seam
+    const cx = (d0[0] + d1[0] + d2[0]) / 3, cy = (d0[1] + d1[1] + d2[1]) / 3;
+    const gr = p => { const dx = p[0] - cx, dy = p[1] - cy, l = Math.hypot(dx, dy) || 1; return [p[0] + dx / l * .6, p[1] + dy / l * .6]; };
+    const [e0, e1, e2] = [gr(d0), gr(d1), gr(d2)];
+    g.beginPath(); g.moveTo(e0[0], e0[1]); g.lineTo(e1[0], e1[1]); g.lineTo(e2[0], e2[1]); g.closePath(); g.clip();
+    const a = -(s0[1] * (d2[0] - d1[0]) - s1[1] * d2[0] + s2[1] * d1[0] + (s1[1] - s2[1]) * d0[0]) / den;
+    const b = (s1[1] * d2[1] + s0[1] * (d1[1] - d2[1]) - s2[1] * d1[1] + (s2[1] - s1[1]) * d0[1]) / den;
+    const c = (s0[0] * (d2[0] - d1[0]) - s1[0] * d2[0] + s2[0] * d1[0] + (s1[0] - s2[0]) * d0[0]) / den;
+    const d = -(s1[0] * d2[1] + s0[0] * (d1[1] - d2[1]) - s2[0] * d1[1] + (s2[0] - s1[0]) * d0[1]) / den;
+    const e = (s0[0] * (s2[1] * d1[0] - s1[1] * d2[0]) + s0[1] * (s1[0] * d2[0] - s2[0] * d1[0]) + (s2[0] * s1[1] - s1[0] * s2[1]) * d0[0]) / den;
+    const f = (s0[0] * (s2[1] * d1[1] - s1[1] * d2[1]) + s0[1] * (s1[0] * d2[1] - s2[0] * d1[1]) + (s2[0] * s1[1] - s1[0] * s2[1]) * d0[1]) / den;
+    g.transform(a, b, c, d, e, f);
+    g.drawImage(src, 0, 0);
+    g.restore();
+  };
+  for (let k = 0; k < n; k++) {
+    const u0 = k / n * sw, u1 = (k + 1) / n * sw;
+    tri([u0, 0], [u1, 0], [u1, sh], top[k], top[k + 1], bot[k + 1]);
+    tri([u0, 0], [u1, sh], [u0, sh], top[k], bot[k + 1], bot[k]);
+  }
+}
+
+// RARE EARTH set flat: cap height = the canvas height (the letters fill it exactly from cap line to baseline)
+const _txt = new Map();
+function letters(col, capPx) {
+  const k = `${col}|${capPx}`; if (_txt.has(k)) return _txt.get(k);
+  const c0 = makeCanvas(8, 8), g0 = c0.getContext('2d');
+  const fs = capPx / .7;                                     // Archivo cap height ~0.7 em
+  setFont(g0, 'chop', fs, { weight: 600 }); g0.fontStretch = 'normal'; g0.letterSpacing = `${(.08 * fs).toFixed(2)}px`;
+  const m = g0.measureText('RARE EARTH'), asc = m.actualBoundingBoxAscent, w = Math.ceil(m.actualBoundingBoxRight + m.actualBoundingBoxLeft) + 2;
+  const c = makeCanvas(w, Math.ceil(asc) + 1), g = c.getContext('2d');
+  setFont(g, 'chop', fs, { weight: 600 }); g.fontStretch = 'normal'; g.letterSpacing = `${(.08 * fs).toFixed(2)}px`;
+  g.fillStyle = col; g.textBaseline = 'alphabetic'; g.fillText('RARE EARTH', m.actualBoundingBoxLeft + 1, asc);
+  _txt.set(k, c);
+  return c;
+}
+
+function patchDesign(g, col = MAT.white.base) {   // the design at radius 100, in the patch's own frame (x right, y down)
+  g.fillStyle = col; g.beginPath(); g.arc(0, 0, 100, 0, TAU); g.fill();
+  g.strokeStyle = LINE; g.lineWidth = 17; g.beginPath(); g.arc(0, 0, 91, 0, TAU); g.stroke();
+  g.fillStyle = LINE; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+  setFont(g, 'chop', 50, { weight: 800 }); g.fontStretch = 'normal'; g.letterSpacing = '0px'; g.fillText('1420', 0, 2);
+  setFont(g, 'chop', 40, { weight: 800 }); g.fontStretch = 'normal'; g.letterSpacing = '0px'; g.fillText('MHz', 0, 44);
+}
+// the ellipse's axes as (right, up) so the patch reads upright, tilted with the arm
+function patchFrame(P) {
+  const a1 = [Math.cos(P.rot), Math.sin(P.rot)], a2 = [-Math.sin(P.rot), Math.cos(P.rot)];
+  let [up, ru, right, rr] = Math.abs(a1[1]) > Math.abs(a2[1]) ? [a1, P.rx, a2, P.ry] : [a2, P.ry, a1, P.rx];
+  if (up[1] > 0) up = [-up[0], -up[1]];
+  if (right[0] < 0) right = [-right[0], -right[1]];
+  return { right, rr, down: [-up[0], -up[1]], ru };
+}
+
+// draw the decals of exposure e into the cel layer cg (between the fills and the line art). maskOf(labelNames) renders
+// a full-size alpha mask of those cel labels ('jacket', 'jacket:shadow', ...).
+export function drawDecals(cg, view, S, e, u, maskOf) {
+  const G = decalGeom(S, e); if (!G || (!G.text && !G.patch)) return;
+  const W = cg.canvas.width, H = cg.canvas.height, X = (x, y) => [view.ox + x * view.s, view.oy + y * view.s];
+  const lay = makeCanvas(W, H), lg = lay.getContext('2d');                       // base tones
+  const sh = makeCanvas(W, H), sg = sh.getContext('2d');                         // shadow tones
+  if (G.text) {
+    const P = G.text.pts, top = P.map(([x, a]) => X(x, a)), bot = P.map(([x, , b]) => X(x, b));
+    const cap = Math.max(8, Math.round(Math.hypot(top[4][0] - bot[4][0], top[4][1] - bot[4][1]) * 3));   // 3x supersampled
+    for (const [gg, col] of [[lg, '#1d1f2a'], [sg, '#15161e']]) meshWarp(gg, letters(col, cap), top, bot);
+  }
+  if (G.patch) {
+    const F = patchFrame(G.patch), [cx, cy] = X(G.patch.cx, G.patch.cy), s = view.s;
+    for (const [gg, col] of [[lg, MAT.white.base], [sg, MAT.white.shadow]]) {
+      gg.save();
+      const k = s / 100;
+      gg.transform(F.right[0] * F.rr * k, F.right[1] * F.rr * k, F.down[0] * F.ru * k, F.down[1] * F.ru * k, cx, cy);
+      patchDesign(gg, col);
+      gg.restore();
     }
   }
-  if (D.text) {
-    const T = D.text, [x, y] = P(view, T.x, T.y);
-    g.save(); g.translate(x, y); g.rotate(T.rot);
-    setFont(g, 'chop', T.size * s, { weight: 600 }); g.fontStretch = 'normal'; g.letterSpacing = `${(.06 * T.size * s).toFixed(2)}px`;
-    g.textAlign = 'center'; g.textBaseline = 'alphabetic'; g.fillStyle = '#20222c';
-    // fit the plate's width
-    const w = g.measureText('RARE EARTH').width, k = (T.w * s) / Math.max(1, w);
-    g.scale(k, 1); g.fillText('RARE EARTH', 0, 0);
-    g.restore();
-  }
-  if (D.patch) {
-    const Pt = D.patch, [x, y] = P(view, Pt.x, Pt.y), r = Pt.r * s;
-    g.save(); g.translate(x, y); g.rotate(Pt.rot);
-    g.fillStyle = MAT.white.base; g.beginPath(); g.arc(0, 0, r, 0, TAU); g.fill();
-    g.strokeStyle = LINE; g.lineWidth = Math.max(1.5, r * .16); g.beginPath(); g.arc(0, 0, r * .9, 0, TAU); g.stroke();
-    g.fillStyle = LINE; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
-    setFont(g, 'chop', r * .62, { weight: 800 }); g.fontStretch = 'normal'; g.letterSpacing = '0px';
-    g.fillText('1420', 0, r * .02);
-    setFont(g, 'chop', r * .5, { weight: 800 }); g.fontStretch = 'normal';
-    g.fillText('MHz', 0, r * .52);
-    g.restore();
-  }
+  // occlusion and fold shading: the base tones where her jacket is visible, the shadow tones where it is in shadow
+  const vis = maskOf(['jacket', 'jacket:shadow']), shad = maskOf(['jacket:shadow']);
+  lg.globalCompositeOperation = 'destination-in'; lg.drawImage(vis, 0, 0);
+  sg.globalCompositeOperation = 'destination-in'; sg.drawImage(shad, 0, 0);
+  cg.drawImage(lay, 0, 0); cg.drawImage(sh, 0, 0);
 }

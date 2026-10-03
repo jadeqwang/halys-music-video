@@ -1,0 +1,75 @@
+{
+ "plate": "P50",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 174.9,
+ "est_cost_usd": 1.156,
+ "duration_s": 5.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 88.28,
+   "dur": 5.0,
+   "file": "media/plates/P50/audio_song_0088.28_5.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 5,
+  "takes": 2,
+  "refs": [
+   "LYD",
+   "MED"
+  ],
+  "avatar": true,
+  "audio": {
+   "t0": 88.28,
+   "src": "song"
+  },
+  "t_song": [
+   88.28,
+   93.28
+  ],
+  "shots": "S28",
+  "sync": [
+   [
+    89.78,
+    "'halo': the left pair looks up (plate 1.5)"
+   ],
+   [
+    90.225,
+    "'in': the centre pair (plate 1.95)"
+   ],
+   [
+    90.87,
+    "'sky': the right pair (plate 2.59)"
+   ],
+   [
+    91.31,
+    "boom 'warriors': all faces up, cut (plate 3.03)"
+   ]
+  ],
+  "prompt": "Low-angle medium-wide shot, camera at waist height, in the knee-deep red-brown shallows of a river during a deep partial solar eclipse: the light is strangely dim and metallic, a cold silvery-gold light from a low sun beyond the top right corner of the frame (the sun is not in the frame), crisp hard shadows, colours drained; the empty sky, deep steel-blue, fills the upper third of the frame; faces and costumes stay clearly readable. Three pairs of warriors fight side by side across the frame, knees up, each pair one Lydian like reference image 1 (crested bronze helmet pushed up so the face shows, crimson tunic, bronze scale corselet, crimson lion shield) against one Mede like reference image 2 (red felt cap, black curly beard, ochre tunic, iron scale corselet, wicker shield): on the left a Mede's spear thrust caught on the Lydian's lion shield, both straining against it; in the centre a Lydian with his short sword raised high over his head to strike, the Mede bracing under his wicker shield; on the right a Lydian and a Mede grappling, gripping each other's wrists and shoulders, shoving. 0-1.4 s: all three pairs fight hard, pushing and straining, feet churning the water. Then one pair after another stops mid-action and both men turn their faces up to the sky at the top right, in wonder, their bodies still locked in the same pose: at 1.5 s the left pair (spear still on the shield), at 2.0 s the centre pair (sword still raised), at 2.5 s the right pair (still gripping). From 3.0 s all six stare up, frozen mid-fight, breathing hard. Big, clear head movements. Camera static. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "notes": "S28 v2 (replaces P18's row of six): pairs locked mid-combat look up one after another (decision 3)."
+ },
+ "request": {
+  "prompt": "Low-angle medium-wide shot, camera at waist height, in the knee-deep red-brown shallows of a river during a deep partial solar eclipse: the light is strangely dim and metallic, a cold silvery-gold light from a low sun beyond the top right corner of the frame (the sun is not in the frame), crisp hard shadows, colours drained; the empty sky, deep steel-blue, fills the upper third of the frame; faces and costumes stay clearly readable. Three pairs of warriors fight side by side across the frame, knees up, each pair one Lydian like reference image 1 (crested bronze helmet pushed up so the face shows, crimson tunic, bronze scale corselet, crimson lion shield) against one Mede like reference image 2 (red felt cap, black curly beard, ochre tunic, iron scale corselet, wicker shield): on the left a Mede's spear thrust caught on the Lydian's lion shield, both straining against it; in the centre a Lydian with his short sword raised high over his head to strike, the Mede bracing under his wicker shield; on the right a Lydian and a Mede grappling, gripping each other's wrists and shoulders, shoving. 0-1.4 s: all three pairs fight hard, pushing and straining, feet churning the water. Then one pair after another stops mid-action and both men turn their faces up to the sky at the top right, in wonder, their bodies still locked in the same pose: at 1.5 s the left pair (spear still on the shield), at 2.0 s the centre pair (sword still raised), at 2.5 s the right pair (still gripping). From 3.0 s all six stare up, frozen mid-fight, breathing hard. Big, clear head movements. Camera static. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(582 KB)",
+   "data:image/jpeg;base64...(557 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(161 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T22:22:59"
+}

@@ -1,0 +1,11 @@
+{
+ "model": "google/nano-banana-pro",
+ "prompt": "Edit image 1 with exactly these changes and nothing else: (1) SHORTEN the woman's hair: her black hair now ends at the height of her shoulder blades, just above the circle on her jacket, finished with a few pointed locks, exactly like the BACK view of the character sheet (image 2); (2) the light-blue circle on the back of her jacket is now fully visible, flat and clearly light blue, a large circle in the middle of her upper back, with the words RARE EARTH printed beneath it; the circle and the letters bend with the folds of the jacket and are crossed by its grey fold shadows; (3) REMOVE the round 1420 MHz patch from her right sleeve (the arm on the right side of the picture, reaching to the keyboard): that sleeve keeps only its orange stripe; (4) ADD the round white 1420 MHz patch with a black ring on her LEFT sleeve, which is the arm on the LEFT side of the picture, on its orange stripe at the outer side of the upper arm, seen at an angle. Keep the room, the camera, the framing, her pose, the chair, the lamp, the monitors and the lighting exactly as in image 1. Japanese anime cel animation style exactly matching the character sheet: clean, crisp, tapered black line art, flat cel colours with exactly one shadow tone, no painterly texture, no soft airbrush gradients, no depth-of-field blur, no yellow cast.",
+ "refs": [
+  "/tmp/claude-0/-home-user-halys-music-video/b8664d69-2871-5fba-a7df-659b9d78ccf5/scratchpad/ref/P39_f40.png",
+  "/tmp/claude-0/-home-user-halys-music-video/b8664d69-2871-5fba-a7df-659b9d78ccf5/scratchpad/ref/sheet_back.jpg",
+  "/tmp/claude-0/-home-user-halys-music-video/b8664d69-2871-5fba-a7df-659b9d78ccf5/scratchpad/ref/sheet_full.jpg"
+ ],
+ "out": "media/plates/P57/K78b.jpg",
+ "est_cost_usd": null
+}

@@ -9,8 +9,14 @@
 4. **The side monitor** (vertical) shows four persistent panes, `lydians`, `medes`, `sun`, `moon`, all reading *going home* / *on schedule*.
 5. She leans in, **drags the eclipse path** on a small ΔT map so the band of totality sits squarely over the Halys. This settles the "was it really total at the
    battlefield?" debate by hand. Then `git commit`.
-6. **She spins the chair to camera**: mischievous half-smile, headphones around her neck.
-7. **The wink lands on the final stark chord.** Her eyelid closes across her iris with the curved edge of the Moon crossing the Sun. Hold two beats. Black.
+6. **Back in-universe: the kings make peace** (S79, 270.04–273.40, BRONZE, `video/src/scenes/treaty.js`). On the final stark chord we cut from the
+   room to the Halys at dusk. Alyattes and Cyaxares seal the peace with the right-hand clasp and one firm shake, and each bare forearm carries one
+   thin fresh cut: Lydians and Medes "make sworn compacts as do the Greeks; and besides, when they cut the skin of their arms, they lick each other's
+   blood" (Herodotus 1.74, tr. Godley; no licking, no gore). The mediators Syennesis and Labynetus watch from the edges. One light pool falls on the
+   clasp, the shot holds through the frozen chord, and a small plaque reads `THE OATH · HERODOTUS 1.74`. Her terminal never draws over this shot.
+7. **Cut back to her grin, then the wink on the ting** (S80–S81). At 273.40 we are back in the room, in an anime close-up: the closed-lip,
+   one-corner-up, mischievous smirk. She types blind (keys 273.45, 274.05, enter 274.95) and the commit prints behind her. Then the wink lands
+   on the ting at 276.95: her eyelid crosses her eye like the Moon crossing the Sun. Hold, then black.
 8. End card: **HALYS** / Jade Wang / NEXT TOTALITY · 2027-08-02 · LUXOR · 6m23s.
 
 The plate supplies the chair spin and head turn. The renderer **retimes the plate** so the wink frame lands exactly on the chord, and redraws the

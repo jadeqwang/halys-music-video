@@ -1,0 +1,11 @@
+{
+ "model": "google/nano-banana-pro",
+ "prompt": "Image 1 is a rough paint-over of a frame from an anime: the crude flat shapes painted on the woman show the changes. Redraw image 1 as a clean, finished anime frame that keeps exactly its composition, its camera, the whole room, her pose and every painted change, so that the woman is exactly the anime character of the character sheet (images 2 and 3) seen from behind as in its BACK view: long, straight, glossy black hair, centre-parted, that ends at the top edge of the light-blue circle on her back with a few pointed locks, drawn with fine strand lines and one soft sheen band; a white, oversized, cropped bomber jacket with a ribbed hem and cuffs and one orange stripe around each upper sleeve; a large flat light-blue circle printed in the middle of the back, fully visible, with RARE EARTH printed in small dark capital letters centred beneath it. The circle and the lettering are printed on the fabric: they bend with the folds and creases of the jacket and are crossed by its grey fold shadows. Her hair ends where the paint-over ends it. The round white 1420 MHz patch with a black ring is on her LEFT sleeve (the arm on the left side of the picture), on the orange stripe at the outer side of the upper arm, seen at an angle; her right sleeve (right side of the picture, the hand on the keyboard) has only its orange stripe and NO patch. Orange headphones around her neck. Japanese anime cel animation style exactly matching the character sheet: clean, crisp, tapered black line art, flat cel colours with exactly one shadow tone, no painterly texture, no soft airbrush gradients, no depth-of-field blur, no yellow cast. Keep the room exactly as in image 1. No other text.",
+ "refs": [
+  "/tmp/claude-0/-home-user-halys-music-video/b8664d69-2871-5fba-a7df-659b9d78ccf5/scratchpad/ref/P39_paintover.png",
+  "/tmp/claude-0/-home-user-halys-music-video/b8664d69-2871-5fba-a7df-659b9d78ccf5/scratchpad/ref/sheet_back.jpg",
+  "/tmp/claude-0/-home-user-halys-music-video/b8664d69-2871-5fba-a7df-659b9d78ccf5/scratchpad/ref/sheet_full.jpg"
+ ],
+ "out": "media/plates/P57/K78c.jpg",
+ "est_cost_usd": null
+}

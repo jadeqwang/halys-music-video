@@ -1,31 +1,29 @@
-// expr.js: acting drawn over the cels, in output space, on twos.
-//
-// Close-up (S80/S81), from the face landmarks of each drawing and the cel's eye measurements (eye.js):
-//   warmth   a light flat blush on both cheeks with three hatch strokes (her sheet's softness), always on
-//   smirk    from EXPR.smirk (276.20), over three drawings: the corner of her mouth on the winking side (her right,
-//            frame left) lifts with a small cheek crease, the rest of the mouth stays flat: mischief, not a grin
-//   narrow   both eyes narrow a touch with it (upper lids down, lower lids up); during the wink the open eye narrows
-//            further, as the plate's does. The winking eye's narrowing is handed to drawWink so the eclipse lid starts
-//            from it.
-// Wide (S79): one lock of hair, flung out by the spin, swings back and settles on the side of her head.
+// expr.js: acting drawn over the close-up's cels (S80/S81), in output space, from the face landmarks of each drawing and
+// the cel's eye measurements (eye.js). The expression is the plate's (P58, from the keyframe K80b: the director's
+// reference, a closed-lip, one-corner-up, knowing smirk, eyes narrowed, head tilted); tracing thins its two carrying
+// lines, so they are drawn here, as an animator would on the key drawing:
+//   smirk    the closed mouth as one confident ink line along the landmarks' inner lip line: level on her right (frame
+//            left), curling up into the lifted corner on her left (frame right), with the cheek crease beside it and a light
+//            lower-lip stroke; the traced mouth under it is painted out
+//   narrow   both eyes heavy-lidded (upper lids a little down over the irises, lower lids lifted), the knowing look; as
+//            one eye winks the other narrows a touch more. The winking eye's narrowing is handed to drawWink so the
+//            eclipse lid starts from it
+//   warmth   a light flat blush on both cheeks with three hatch strokes (her sheet's softness)
 
 import { MAT, LINE, LINE_SKIN } from './palette.js';
 import { eyeGeom, narrowed } from './eye.js';
-import { EXPR, lidAt } from './sheets.js';
+import { lidAt, WINK } from './sheets.js';
 
 const clamp = (x, a = 0, b = 1) => x < a ? a : x > b ? b : x;
 const TAU = Math.PI * 2;
 const tw = t => Math.floor(t * 12 + 1e-6) / 12;                  // on twos (a drawing every 1/12 s)
 
-export function smirkAt(t) {
-  if (t < EXPR.smirk - 1e-6) return 0;
-  const k = Math.floor((t - EXPR.smirk) * 12 + 1e-6);
-  return [.45, .8, 1][Math.min(2, k)];
-}
-// eye narrowing per side at time t: {t, b} fractions of the opening
+// eye narrowing per side at time t: {t, b} fractions of the opening. The knowing look is constant; the open eye narrows a
+// little more while the other one winks.
+export const NARROW = { t: .13, b: .12 };
 export function narrowAt(t, side) {
-  const s = smirkAt(t), w = side === 'R' ? 0 : lidAt(tw(t));
-  return { t: .09 * s + .06 * w, b: .15 * s + .09 * w };
+  const w = side === WINK.side ? 0 : lidAt(tw(t));
+  return { t: NARROW.t + .06 * w, b: NARROW.b + .08 * w };
 }
 
 // a tapered ribbon through points (output px), widths w0 -> w1 with pointed ends
@@ -39,8 +37,21 @@ function ribbon(g, P, w0, w1, col) {
   }
   g.fillStyle = col; g.beginPath(); g.moveTo(Lp[0][0], Lp[0][1]); for (const p of Lp) g.lineTo(p[0], p[1]); for (let j = n - 1; j >= 0; j--) g.lineTo(Rp[j][0], Rp[j][1]); g.closePath(); g.fill();
 }
-const bez3 = (a, b, c, d, n = 20) => Array.from({ length: n + 1 }, (_, i) => { const t = i / n, u = 1 - t; return [u * u * u * a[0] + 3 * u * u * t * b[0] + 3 * u * t * t * c[0] + t * t * t * d[0], u * u * u * a[1] + 3 * u * u * t * b[1] + 3 * u * t * t * c[1] + t * t * t * d[1]]; });
+
 const bez2 = (a, c, b, n = 16) => Array.from({ length: n + 1 }, (_, i) => { const t = i / n, u = 1 - t; return [u * u * a[0] + 2 * u * t * c[0] + t * t * b[0], u * u * a[1] + 2 * u * t * c[1] + t * t * b[1]]; });
+// Catmull-Rom through points (analysis px), n samples per span
+function spline(P, n = 6) {
+  const out = [];
+  for (let k = 0; k < P.length - 1; k++) {
+    const p0 = P[Math.max(0, k - 1)], p1 = P[k], p2 = P[k + 1], p3 = P[Math.min(P.length - 1, k + 2)];
+    for (let j = 0; j < n; j++) {
+      const t = j / n, t2 = t * t, t3 = t2 * t;
+      out.push([0, 1].map(c => .5 * (2 * p1[c] + (-p0[c] + p2[c]) * t + (2 * p0[c] - 5 * p1[c] + 4 * p2[c] - p3[c]) * t2 + (-p0[c] + 3 * p1[c] - 3 * p2[c] + p3[c]) * t3)));
+    }
+  }
+  out.push(P[P.length - 1]);
+  return out;
+}
 
 function faceOf(res) {
   const fc = res && !res.noFace && res.inp && res.inp.faces && res.inp.faces[0];
@@ -82,13 +93,46 @@ function narrowEye(g, view, res, side, nar, u, upper = true) {
   g.fillStyle = LINE; g.beginPath(); g.moveTo(Lp[0][0], Lp[0][1]); for (const p of Lp) g.lineTo(p[0], p[1]); for (let j = N; j >= 0; j--) g.lineTo(Rp[j][0], Rp[j][1]); g.closePath(); g.fill();
 }
 
+// the smirk: the closed mouth along the landmarks' inner lip line, the lifted corner curling up, the cheek crease
+function drawSmirk(g, view, res, fc, u) {
+  const L = fc.lines; if (!L.lipI_up || !L.lipI_lo || !L.lipO_up) return;
+  const W = res.W, H = res.H, s = view.s, O = p => [view.ox + p[0] * s, view.oy + p[1] * s];
+  const n = L.lipI_up.length / 2, mid = [];
+  for (let k = 0; k < n; k++) mid.push([(L.lipI_up[2 * k] + L.lipI_lo[2 * k]) / 2 * W, (L.lipI_up[2 * k + 1] + L.lipI_lo[2 * k + 1]) / 2 * H]);
+  const A = mid[0], B = mid[n - 1], lw = Math.hypot(B[0] - A[0], B[1] - A[1]);
+  if (lw < 8) return;
+  // which corner is lifted: the higher one, relative to the line through the corners' mean slope (the head's tilt)
+  const ex = [(L.irisL ? L.irisL[0] : 1) * W - (L.irisR ? L.irisR[0] : 0) * W, (L.irisL ? L.irisL[1] : 0) * H - (L.irisR ? L.irisR[1] : 0) * H];
+  const tilt = Math.atan2(ex[1], ex[0]), up = [Math.sin(tilt), -Math.cos(tilt)];          // the face's "up" (perpendicular to the eye line)
+  const hgt = p => (p[0] - A[0]) * up[0] + (p[1] - A[1]) * up[1];
+  const liftR = hgt(B) >= 0;                                                              // the frame-right corner is the lifted one
+  const lifted = liftR ? B : A, level = liftR ? A : B, dir = liftR ? 1 : -1;
+  // paint the traced mouth out: skin along the line, a little wider than it
+  g.save(); g.fillStyle = MAT.skin.base; g.lineJoin = 'round'; g.lineCap = 'round';
+  g.strokeStyle = MAT.skin.base; g.lineWidth = lw * .2 * s;
+  g.beginPath(); mid.forEach((p, k) => { const q = O(p); k ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1]); }); g.stroke();
+  g.restore();
+  // the line: level half nearly straight, the lifted half curling up (exaggerated a touch, as an animator would), the corner
+  // tucked in with a small hook
+  const P = mid.map((p, k) => { const v = k / (n - 1), w = liftR ? v : 1 - v; return [p[0] + up[0] * lw * .05 * w * w, p[1] + up[1] * lw * .05 * w * w]; });
+  const tip = [lifted[0] + dir * lw * .06 + up[0] * lw * .1, lifted[1] + up[1] * lw * .1];
+  const C = spline(liftR ? [...P, tip] : [tip, ...P], 6).map(O);
+  ribbon(g, C, (liftR ? 2.2 : 3.6) * u, (liftR ? 3.6 : 2.2) * u, '#4a2a26');
+  // the cheek crease beside the lifted corner: a short curve from above the corner, bowing outward, down past it
+  const c0 = [tip[0] + dir * lw * .05 + up[0] * lw * .1, tip[1] + up[1] * lw * .1];
+  const c2 = [tip[0] + dir * lw * .07 - up[0] * lw * .1, tip[1] - up[1] * lw * .1];
+  const c1 = [tip[0] + dir * lw * .16, tip[1]];
+  ribbon(g, bez2(c0, c1, c2, 12).map(O), 1.9 * u, 1.3 * u, LINE_SKIN);
+  // the lower lip: a short light stroke under the middle of the mouth
+  const m = mid[Math.floor(n / 2)], d = lw * .22;
+  ribbon(g, [[m[0] - lw * .14 - up[0] * d, m[1] - up[1] * d], [m[0] + lw * .1 - up[0] * d * .95, m[1] - up[1] * d * .95]].map(O), 2.2 * u, 1.6 * u, '#cf9282');
+}
+
 // the close-up's acting. Returns the winking eye's narrowing for drawWink.
 export function drawExpression(g, view, res, t, u) {
   const fc = faceOf(res); if (!fc) return null;
   const W = res.W, H = res.H, s = view.s, L = fc.lines;
   const O = (x, y) => [view.ox + x * s, view.oy + y * s];
-  const pt = (arr, k) => [arr[k * 2] * W, arr[k * 2 + 1] * H];
-  const sm = smirkAt(t);
   // 1. warmth: a light flat blush under each eye, three hatch strokes
   for (const side of ['R', 'L']) {
     const ir = L[`iris${side}`], lo = L[`eye${side}_lo`]; if (!ir || !lo) continue;
@@ -99,48 +143,10 @@ export function drawExpression(g, view, res, t, u) {
     g.strokeStyle = 'rgba(214, 104, 88, .42)'; g.lineWidth = 1.5 * u; g.lineCap = 'round';
     for (let j = -1; j <= 1; j++) { const x = bx + j * r * .55 * s; g.beginPath(); g.moveTo(x - r * .12 * s, by + r * .2 * s); g.lineTo(x + r * .14 * s, by - r * .2 * s); g.stroke(); }
   }
-  // 2. the mouth: the plate's line replaced by ours (flat when sm = 0, the right-side smirk as sm rises)
-  if (L.lipO_up && L.lipI_up && L.lipI_lo) {
-    const n = L.lipO_up.length / 2, A = pt(L.lipO_up, 0), B = pt(L.lipO_up, n - 1);
-    const ni = L.lipI_up.length / 2;
-    let my = 0; for (let k = 0; k < ni; k++) my += (L.lipI_up[k * 2 + 1] + L.lipI_lo[k * 2 + 1]) * H / 2; my /= ni;
-    const lw = Math.hypot(B[0] - A[0], B[1] - A[1]), mx = (A[0] + B[0]) / 2, hw = lw * .3;
-    if (sm > 0) {   // only the smirk replaces the plate's mouth (the deadpan keeps the drawn one)
-      const [ex, ey] = O(mx - lw * .03, my + lw * .04);
-      g.fillStyle = MAT.skin.base; g.beginPath(); g.ellipse(ex, ey, lw * .45 * s, lw * .21 * s, 0, 0, TAU); g.fill();
-      // her right corner (frame left) lifts; the other half stays a flat deadpan line
-      const Lc = [mx - hw * (1.02 + .1 * sm), my - sm * .7 * hw], Rc = [mx + hw * .8, my + sm * .04 * hw];
-      const P = bez3(Rc, [mx + hw * .1, my + sm * .04 * hw], [mx - hw * .62, my + hw * .02], Lc).map(p => O(...p));
-      ribbon(g, P, 2.3 * u, 3.0 * u, LINE_SKIN);
-      if (sm >= .75) {   // the cheek crease beside the lifted corner
-        const C = bez2([Lc[0] - hw * .1, Lc[1] - hw * .2], [Lc[0] - hw * .26, Lc[1] + hw * .02], [Lc[0] - hw * .14, Lc[1] + hw * .26]).map(p => O(...p));
-        ribbon(g, C, 1.7 * u, 1.2 * u, LINE_SKIN);
-      }
-      // the lower lip: a short light stroke under the middle
-      const lp = [[mx - hw * .32, my + hw * .62], [mx + hw * .2, my + hw * .58]].map(p => O(...p));
-      ribbon(g, lp, 2.0 * u, 1.6 * u, '#cf9282');
-    }
-  }
-  // 3. the eyes narrow with the smirk (the winking eye's upper lid is drawWink's once the eclipse starts)
-  const nL = narrowAt(t, 'L'), nR = narrowAt(t, 'R'), winking = lidAt(t) > 0;
-  narrowEye(g, view, res, 'L', nL, u, true);
-  narrowEye(g, view, res, 'R', nR, u, !winking);
-  return nR;
-}
-
-// ---------------------------------------------------------------- S79: the lock of hair settling after the spin
-// Placed on the face box of each drawing (it follows her head through the settle drawings): rooted on the crown's outer
-// contour on the frame-left side, at rest a loose lock just outside the hair; flung out to the left on the landing and
-// swinging back with a damped oscillation, on twos.
-export function drawSettleStrand(g, view, res, i, Fland, u) {
-  const fc = res && !res.noFace && res.inp && res.inp.faces && res.inp.faces[0];
-  if (!fc || !fc.box || i < Fland) return;
-  const W = res.W, H = res.H, s = view.s;
-  const [bx0, by0, bx1, by1] = fc.box, fw = (bx1 - bx0) * W, fh = (by1 - by0) * H, x0 = bx0 * W, y0 = by0 * H;
-  const tau = Math.floor((i - Fland) / 5) * 5 / 60;
-  const a = Math.exp(-tau / .3) * Math.cos(TAU * tau / .55);
-  // at rest a loose flyaway lock just outside the hair's outer contour (it bulges a few px off it against the room)
-  const root = [x0 - .3 * fw, y0 - .2 * fh], ctrl = [x0 - .95 * fw - 18 * a, y0 + .55 * fh - 4 * Math.abs(a)], tip = [x0 - .98 * fw - 40 * a, y0 + 1.5 * fh - 12 * Math.abs(a)];
-  const P = bez2(root, ctrl, tip, 28).map(([x, y]) => [view.ox + x * s, view.oy + y * s]);
-  ribbon(g, P, 2.6 * u * s, .3 * u * s, MAT.black.base);
+  // 2. the smirk
+  drawSmirk(g, view, res, fc, u);
+  // 3. both eyes heavy-lidded; the winking eye's upper lid is drawWink's once the eclipse starts
+  const winking = lidAt(t) > 0;
+  for (const side of ['R', 'L']) narrowEye(g, view, res, side, narrowAt(t, side), u, !(winking && side === WINK.side));
+  return narrowAt(t, WINK.side);
 }

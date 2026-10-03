@@ -16,6 +16,7 @@ import { placeStrokes, accents, eyeGeometry, eyeMaskOf, eyeStrokes } from './str
 import { getPainter, rasterize } from './raster.js';
 import * as eclipse from './eclipse.js';
 import { LRU } from './util.js';
+const K = eclipse.K;
 
 export * from './sources.js';
 export { eclipse, getPalette };
@@ -71,6 +72,109 @@ function sunGlowStrokes(sd, mask, aw, ah, S, pal, cfg, drawIdx, warm) {
       const t = (rr - r) / len;
       if (pts.length >= 2) add(pts, Math.max(1.8, r * (.07 - .03 * t)), metal(mix3(inner, gold, t), e * .8).map(v => v * dim), metal(mix3(gold, outer, t + .3), e * .8).map(v => v * dim), (.7 - .3 * t) * fade, .5 * (1 - t), hash4(j, 16 + q, seed, 0));
       rr += segL * (1.25 + .4 * hash4(j, 20 + q, seed, 0));
+    }
+  }
+  return out;
+}
+
+// THE SUN, PAINTED. The sun pass (raster.js SUN_FS) lays the disk in as a flat hot underpaint a little inside the limb;
+// these strokes build it and finish its edge in the engine's own brushwork (bristles, impasto, varnish): broad strokes
+// of the hottest paint in the core, close in value so it still blazes; loaded strokes that follow the limb and make the
+// silhouette, each a little off the circle, deeper gold, varied in length and value; flicks of limb paint lifting off
+// along the edge; and sky-coloured strokes cutting back in over it. Laid out in sun-local polar coordinates, every
+// stroke indexed and seeded for good (it rides with the sun as it moves and scales); only a small jitter changes per
+// drawing, so the limb boils at 12 drawings a second and never strobes. A stroke's seed carries its mode in its integer
+// part (raster.js SUNSTROKE_FS): 0 sun paint (the moon's disk turns it dark, so the bite stays a clean curve), 1 limb
+// paint lifted into the sky (the moon removes it), 2 sky paint (it stops at the black disk at totality).
+// sun.paint (default 1) scales how far the limb breaks; 0 (or false) is the exact flat disk.
+function sunPaintStrokes(sun, o) {
+  const out = [], k = sun.paint ?? 1, r = sun.r;
+  if (!(k > 0) || !(r >= 2.5) || (sun.sunVis ?? 1) <= 0) return out;
+  const { pal, cfg, drawIdx, mask, canvas, aw, ah, S } = o, u = o.u || 1;
+  const cx = sun.cx, cy = sun.cy, e = sun.e || 0;
+  const seed = ((cfg.seed | 0) * 131 + 977) | 0, bs = seed + drawIdx * 7919;
+  const H = (j, q) => hash4(j, q, seed, 41), B = (j, q) => hash4(j, q, bs, 43) - .5;
+  // the disk's colours, exactly as the sun pass mixes them (golden-orange when low, a pale hot core)
+  const T = n => pal.tube(n) || [1, 1, 1];
+  const lead = T('leadWhite'), nap = T('naples'), ver = T('vermilion'), ochre = T('yellowOchre');
+  const warm = sun.warm ?? 0, blaze = sun.blaze ?? 1.3, metal = (cfg.metal ?? 0) * .5;
+  const gold = mix3(nap, ver, .3), core = mix3(lead, nap, .2 + .6 * warm), limbC = mix3(nap, gold, .35 + .55 * warm);
+  const met = c => { if (!metal) return c; const l = .2126 * c[0] + .7152 * c[1] + .0722 * c[2]; return [lerp(c[0], l * .98, metal), lerp(c[1], l, metal), lerp(c[2], l * 1.02, metal)]; };
+  const sunAt = rho => mix3(core, limbC, .25 + .75 * sstep(.78, 1.02, rho / r));
+  const paint = (c, mul) => met([c[0] * mul * blaze, c[1] * mul * blaze, c[2] * mul * blaze]);
+  // the limb's irregularity (px): a few % of the radius, never under ~1.5 px. It calms as the crescent thins (its
+  // thickness, in radii, is the moon's offset less K - 1), so a thin crescent keeps a clean outer limb and the eclipse's
+  // true geometry: the crescent of an actual eclipse
+  const off = Math.hypot(sun.mx - cx, sun.my - cy) / r, thin = e > .0005 ? clamp((off - (K - 1)) / .4) : 1;
+  if (e > .0005 && off < K - 1 - .002) return out;               // totality: the moon covers it all (the black disk stays exact)
+  const rough = k * Math.pow(thin, .85), A = rough * Math.max(.03 * r, 1.6 * u);
+  sun.rough = A * .6; sun.paintK = rough;                      // (the underpaint reaches the true limb as the limb calms: raster.js SUN_FS)
+  const hwL = clamp(r * .08, 1.3 * u, 14 * u);
+  const P = (th, rr) => [cx + Math.cos(th) * rr, cy + Math.sin(th) * rr];
+  const arc = (th0, span, rho0, rho1, n) => { const p = []; for (let q = 0; q <= n; q++) { const s = q / n; p.push(P(th0 + span * (s - .5), lerp(rho0, rho1, s))); } return p; };
+  const add = (pts, hw, c0, c1, a, thick, mode, sd, taper = .72) => out.push({ pts, r: Math.max(.8, hw), c0, c1, a: a * (sun.sunVis ?? 1), thick, seed: mode + sd * .999, key: 0, layer: 11, taper, maxSeg: 14 });
+  const segs = span => clamp(Math.round(Math.abs(span) * 6), 3, 8);
+  const dir = (id, span) => H(id, 0) < .8 ? span : -span;          // most strokes go round the same way, as one hand would
+  // 1. the core: broad strokes laid round the disk at random places, the hottest paint, close in value (it must blaze)
+  const hwC = Math.max(hwL * 2.2, r * .22);
+  if (r > 8 * u) {
+    const n = Math.round(clamp(.9 * (r / hwC) * (r / hwC), 3, 28));
+    for (let j = 0; j < n; j++) {
+      const id = 100 + j, rr = r * .7 * Math.sqrt((j + H(id, 1)) / n), th = H(id, 2) * TAU + .04 * B(id, 3), len = hwC * (2.4 + 1.6 * H(id, 4));
+      const span = Math.min(2.2, len / Math.max(rr, hwC)), dr = hwC * .6 * (H(id, 5) - .5), c = mix3(sunAt(rr), H(id, 6) < .5 ? lead : nap, .12 * H(id, 7));
+      add(arc(th, dir(id, span), rr - dr, rr + dr, segs(span)), hwC * (.85 + .3 * H(id, 8)), paint(c, .99 + .04 * H(id, 9)), paint(c, .98 + .03 * H(id, 10)), .95, 1.02, 0, H(id, 11));
+    }
+  }
+  // 2. the limb: loaded strokes that follow the edge and make the silhouette, each a little off the circle (bulging in
+  //    its middle, tapering at its ends) and at its own depth, so no ring of stroke edges lines up; their colour is the
+  //    disk's own limb gradient, broken in value; a narrow, broken edge of deeper gold rides the outermost paint
+  const nL = Math.round(clamp(TAU * r / (hwL * 3.4), 9, 60));
+  if (r > 5 * u) for (let j = 0; j < Math.round(nL * .8); j++) {
+    const id = 400 + j, rr = r - hwL * (1.3 + 2.4 * H(id, 1)), th = H(id, 2) * TAU + .05 * B(id, 3), span = (hwL * (2.6 + 2 * H(id, 4))) / rr;
+    const c = sunAt(rr - hwL * .3), dr = A * (H(id, 6) - .5);
+    add(arc(th, dir(id, span), rr - dr, rr + dr, segs(span)), hwL * (.8 + .5 * H(id, 7)), paint(c, .98 + .05 * H(id, 8)), paint(c, .97 + .04 * H(id, 9)), .95, 1.0, 0, H(id, 10));
+  }
+  const outerAt = [];
+  for (let j = 0; j < nL; j++) {
+    const id = 700 + j, th = (j + .75 * H(id, 1) + .2 * B(id, 2)) / nL * TAU, span = TAU / nL * (1.45 + .9 * H(id, 3)) * (1 + .05 * B(id, 4));
+    const hw = hwL * (.7 + .5 * H(id, 5)), outer = r + A * (1.1 * H(id, 6) - .45) + .2 * A * B(id, 7), rr = outer - hw * .9, dr = A * 1.2 * (H(id, 8) - .5);
+    const tint = H(id, 9), v = .96 + .07 * H(id, 10) + .015 * B(id, 11), c0 = sunAt(rr - hw * .4);
+    const c = tint < .15 ? mix3(c0, ochre, .12 + .06 * warm) : tint > .85 ? mix3(c0, core, .3) : c0;
+    outerAt.push([th, span, outer]);
+    add(arc(th, dir(id, span), rr - dr, rr + dr, segs(span)), hw, paint(c, v), paint(c, v * .96), .97, .97, 0, H(id, 12));
+  }
+  for (let j = 0; j < nL; j++) {
+    if (H(800 + j, 1) < .3) continue;                          // broken: a third of the edge has none
+    const id = 800 + j, [th, span, outer] = outerAt[j], hw = Math.max(.9 * u, hwL * (.32 + .22 * H(id, 2))), sp2 = span * (.45 + .4 * H(id, 3));
+    const c = mix3(sunAt(r), ochre, .12 * H(id, 4) * (.5 + warm)), v = .93 + .07 * H(id, 5) + .015 * B(id, 6), rr = outer - hw * (.9 + .5 * rough * H(id, 7));
+    add(arc(th + span * .25 * (H(id, 8) - .5), dir(id, sp2), rr, rr + A * .3 * (H(id, 9) - .5), segs(sp2)), hw, paint(c, v), paint(c, v * .95), .9, .95, 0, H(id, 10), .85);
+  }
+  // 3. flicks: a stroke running along the edge that lifts off outward as the brush leaves (short, few: never rays).
+  //    Flicks and cut-ins sit in fixed slots round the limb and fade by their own threshold as the limb calms, so as
+  //    the eclipse deepens they go one by one and none of the others moves
+  const fade = (h, dens) => clamp((dens - h) / .12);
+  for (let j = 0; j < nL; j++) {
+    const id = 1000 + j, keep = fade(H(id, 20), .3 * rough); if (keep <= 0) continue;
+    const th0 = (j + H(id, 1) + .12 * B(id, 2)) / nL * TAU, hw = hwL * (.45 + .3 * H(id, 3)), span = (hwL * (2.5 + 2.5 * H(id, 4))) / r;
+    const r0 = r - hw * 1.3, r1 = r + A * (.5 + .9 * H(id, 5)) * (1 + .1 * B(id, 6)) - hw * .4, sg = H(id, 7) < .75 ? 1 : -1;
+    const pts = []; for (let q = 0; q <= 4; q++) { const s = q / 4; pts.push(P(th0 + sg * span * s, lerp(r0, r1, s * s))); }
+    const c = sunAt(r), v = .93 + .07 * H(id, 8);
+    add(pts, hw, paint(c, v), paint(mix3(c, ochre, .2), v * .92), (.55 + .3 * H(id, 9)) * keep, .75, 1, H(id, 10), .55);
+  }
+  // 4. the sky cutting back in: strokes in the colour the sky was painted with just outside the limb (the virtual
+  //    canvas), overlapping the edge from outside
+  if (canvas) {
+    const sky = [0, 0, 0], dens = .5 * Math.min(1, rough * 1.5);
+    const skyAt = (th, rr) => { const x = Math.round((cx + Math.cos(th) * rr) / S), y = Math.round((cy + Math.sin(th) * rr) / S); if (x < 0 || y < 0 || x >= aw || y >= ah) return -1; const i = y * aw + x; return mask && mask[i] < .6 ? -1 : i; };
+    for (let j = 0; j < nL; j++) {
+      const id = 1300 + j, keep = fade(H(id, 20), dens); if (keep <= 0) continue;
+      const th = (j + .5 + .6 * H(id, 1) + .12 * B(id, 2)) / nL * TAU, span = TAU / nL * (.8 + .8 * H(id, 3)), hw = hwL * (.45 + .25 * H(id, 4));
+      const inner = r - A * (.3 + 1.0 * H(id, 5)) + .2 * A * B(id, 6), rr = inner + hw * .9, dr = A * .5 * (H(id, 7) - .5);
+      let n = 0; sky[0] = sky[1] = sky[2] = 0;
+      for (let q = -1; q <= 1; q++) for (const f of [1.3, 2.2]) { const i = skyAt(th + span * .4 * q, r + hw * f + A); if (i < 0) continue; sky[0] += canvas.cR[i]; sky[1] += canvas.cG[i]; sky[2] += canvas.cB[i]; n++; }
+      if (n < 3) continue;
+      const c = met([sky[0] / n, sky[1] / n, sky[2] / n]);
+      add(arc(th, dir(id, span), rr - dr, rr + dr, segs(span)), hw, c, c, .96 * keep, .3, 2, H(id, 8), .6);
     }
   }
   return out;
@@ -213,7 +317,9 @@ export async function paint(f, src, opts = {}) {
     const jup = s.jupiter ? (() => { const [jx, jy] = s.jupiter.x != null ? [s.jupiter.x * W, s.jupiter.y * H] : eclipse.jupiterAt(sd, s.jupiter.ppd); return [jx, jy, Math.max(2, 2.6 * u * (s.jupiter.size ?? 1)), s.jupiter.k ?? 1]; })() : null;
     sunSpec = { cx: sd.cx, cy: sd.cy, r: sd.r, mx: sd.mx, my: sd.my, mr: sd.mr, e: sd.off >= 1 + eclipse.K ? 0 : sd.e, moonVis: s.moonVis ?? sstep(.975, .995, sd.e),
       beads: s.beads ? eclipse.beads(sd, s.beadSeed ?? 5, s.beads === true ? 1 : s.beads) : [], ring: s.ring ? eclipse.diamondRing(sd, s.ring, s.ringAng) : null,
-      jup, limb: s.limb || null, warm: sunWarmth(s.alt ?? 9), blaze: s.blaze ?? 1.3, sunVis: s.vis ?? 1, mask, aw, ah, boil: (drawIdx % 97) * cfg.boil, dark: s.dark };
+      jup, limb: s.limb || null, warm: sunWarmth(s.alt ?? 9), blaze: s.blaze ?? 1.3, sunVis: s.vis ?? 1, mask, aw, ah, boil: (drawIdx % 97) * cfg.boil, dark: s.dark,
+      paint: s.paint === false ? 0 : s.paint ?? 1 };
+    sunSpec.strokes = sunPaintStrokes(sunSpec, { pal, cfg, drawIdx, mask, canvas: list.canvas, aw, ah, S, u });
   }
   // the lay-in under the strokes: the reference blurred at the first brush's scale
   if (cfg.underAlpha !== 0) {

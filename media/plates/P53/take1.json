@@ -1,0 +1,69 @@
+{
+ "plate": "P53",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 202.8,
+ "est_cost_usd": 1.156,
+ "duration_s": 5.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 211.44,
+   "dur": 5.0,
+   "file": "media/plates/P53/audio_song_0211.44_5.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 5,
+  "takes": 2,
+  "refs": [
+   "LYD"
+  ],
+  "avatar": true,
+  "audio": {
+   "t0": 211.44,
+   "src": "song"
+  },
+  "t_song": [
+   211.44,
+   216.44
+  ],
+  "shots": "S62 (-> S63 match cut)",
+  "sync": [
+   [
+    211.44,
+    "'Home': he turns away (plate 0)"
+   ],
+   [
+    211.877,
+    "beat returns (plate 0.44)"
+   ],
+   [
+    215.287,
+    "Drop 2 kick: match cut to the rocket (plate 3.85)"
+   ]
+  ],
+  "prompt": "Low-angle shot from just above the mud at the edge of a red-brown river in warm golden evening light, the camera completely static. In the foreground, in the exact centre of the frame, a short straight sword stands upright, point down, its blade stuck in the wet mud where ankle-deep water laps the bank: the bronze cross-guard, the dark wrapped grip and the round pommel at the top, the blade going straight down into the mud. The sword fills about one fifth of the frame height, its pommel a little above the centre of the frame; it stands perfectly vertical and never moves. Just behind it stands its owner, the Lydian from reference image 1 (crested bronze helmet pushed up, long braids, crimson tunic, bronze scale corselet, crimson lion shield on his arm), seen from the knees down at first, looking down at the sword. At 0.4 s he turns and walks away from the camera, unhurried, with slow, clear steps, up the bank and away into the distance toward the right, never looking back, leaving the sword where it stands; his long shadow stretches back toward it. By 3.5 s he is a small full figure in the right half of the frame. Further away, small figures of other Lydians and Medes walk off empty-handed in both directions. Above the bank a golden sky with tall glowing clouds. Hard, low golden sun raking in from frame right (the sun itself just beyond the right edge of the frame), long shadows, warm rim light; the far bank and background in deep shadow, darker than the men. Clear air: no fog, no haze, no smoke. Deep focus: the sword and the walking man both sharp. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "notes": "S62 v2: the upright sword (a vertical at the frame centre) stays; its owner walks home. Match cut to P34/S63."
+ },
+ "request": {
+  "prompt": "Low-angle shot from just above the mud at the edge of a red-brown river in warm golden evening light, the camera completely static. In the foreground, in the exact centre of the frame, a short straight sword stands upright, point down, its blade stuck in the wet mud where ankle-deep water laps the bank: the bronze cross-guard, the dark wrapped grip and the round pommel at the top, the blade going straight down into the mud. The sword fills about one fifth of the frame height, its pommel a little above the centre of the frame; it stands perfectly vertical and never moves. Just behind it stands its owner, the Lydian from reference image 1 (crested bronze helmet pushed up, long braids, crimson tunic, bronze scale corselet, crimson lion shield on his arm), seen from the knees down at first, looking down at the sword. At 0.4 s he turns and walks away from the camera, unhurried, with slow, clear steps, up the bank and away into the distance toward the right, never looking back, leaving the sword where it stands; his long shadow stretches back toward it. By 3.5 s he is a small full figure in the right half of the frame. Further away, small figures of other Lydians and Medes walk off empty-handed in both directions. Above the bank a golden sky with tall glowing clouds. Hard, low golden sun raking in from frame right (the sun itself just beyond the right edge of the frame), long shadows, warm rim light; the far bank and background in deep shadow, darker than the men. Clear air: no fog, no haze, no smoke. Deep focus: the sword and the walking man both sharp. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(582 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(161 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T22:29:06"
+}

@@ -1,5 +1,5 @@
 {
- "about": "S62's last drawing (the spinning sword at rest, point up, at the apex) for the S63 match cut to the starship. Written by the marble/gold agent from video/src/scenes/chorus2.js (S62: swordAngle, s62cam, swordGeom, swordStrokes).",
+ "about": "S62's last drawing (v2: a dropped sword standing upright, point down in the shallows at the water's edge, its owner walked away) for the S63 match cut to the starship on its pad. Written by the GOLD agent from video/src/scenes/chorus2.js (S62.sword, S62.final, s62cam) over P53 take 2.",
  "t_cut": 215.29,
  "t_last_drawing": 215.283,
  "shot": "S62",
@@ -11,43 +11,46 @@
  },
  "center": {
   "x": 0.5,
-  "y": 0.47,
+  "y": 0.511,
   "px": [
    960.0,
-   507.6
+   551.9
   ]
  },
  "angle_deg": -90.0,
- "angle_note": "direction hilt -> tip in screen coordinates (0 = pointing right, -90 = pointing straight up); the sword has just stopped spinning (clockwise, 2 turns since the release at 212.07)",
- "length_h": 0.2635,
- "length_px": 284.6,
- "tip": {
+ "angle_note": "the blade's axis in screen coordinates (-90 = vertical). The sword stands point DOWN (hilt up, the point in the mud); S63 reads only the axis, so the ship starts upright at the same place and size and settles onto its pad by the next kick",
+ "length_h": 0.812,
+ "length_px": 877.0,
+ "top": {
+  "what": "pommel top",
   "x": 0.5,
-  "y": 0.3382,
+  "y": 0.105,
   "px": [
    960.0,
-   365.3
+   113.4
   ]
  },
  "guard": {
   "x": 0.5,
-  "y": 0.5253,
-  "half_width_h": 0.0198,
+  "y": 0.3115,
+  "half_width_h": 0.0478,
   "px": [
    960.0,
-   567.4
+   336.4
   ]
  },
- "pommel": {
+ "waterline": {
+  "what": "where the blade enters the water and mud",
   "x": 0.5,
-  "y": 0.5833,
+  "y": 0.917,
   "px": [
    960.0,
-   630.0
+   990.4
   ]
  },
- "blade_width_h": 0.0264,
- "look": "a dark bronze leaf-bladed xiphos silhouette (umber-bronze body, a burning gold sunward edge on its left) against bright golden-hour cloud; the sky around it brightens to a warm opening (#ffdb99-ish) behind it",
- "motion_into_cut": "angular velocity decays as (1 - s)^2 to exactly 0 at 215.29; the camera has settled (zoom 1.55, centred on the sword); no translation in the last ~0.4 s",
- "portrait_note": "4:5 / 9:16 use the same frame-centre composition (the camera centres the sword at x = .5, y = .47 of the frame in every aspect)"
+ "blade_width_h": 0.0574,
+ "spin_deg_s": 0,
+ "look": "a broad straight blade, steel-grey with a dark central fuller, a bronze guard, a dark wrapped grip and a round bronze pommel, standing in red shallow water with its reflection below; low golden backlight from frame right, golden clouds behind",
+ "motion_into_cut": "static: the sword never moves; the camera eases in (zoom 1.0 -> 1.075) and settles by 214.85, so the last ~0.45 s hold still",
+ "portrait_note": "4:5 / 9:16 use the same frame-centre composition (the camera centres the sword at x = .5 with the same vertical placement and length in every aspect)"
 }

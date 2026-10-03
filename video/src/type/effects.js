@@ -743,42 +743,8 @@ function thales(g, f, e, t) {
   if (t >= pq.t) drawLabel(g, f, pq.text, { x: P ? L.cx : x + .02 * px, y: y + .72 * px + 1.25 * ppx + .4 * gpx, align: P ? 'center' : 'left', px: ppx, t0: pq.t, t, rule: false, alpha: out });
 }
 
-// ---------------------------------------------------------------- S53: the forecast card (generic, no market's look)
-function forecast(g, f, e, t) {
-  const L = f.L, P = L.portrait, k = clamp((t - e.t0) / .1);
-  const cw = (P ? .86 : .37) * L.W, x = P ? L.cx - cw / 2 : L.safe.x + L.safe.w - cw, y = P ? L.safe.y + .1 * L.H : L.safe.y + .02 * L.H;
-  const face = FACE.mono, qpx = (P ? 31 : 29) * u(L), pad = 24 * u(L);
-  const lines = breakLines(e.question.split(' '), face, qpx, cw - 2 * pad, 3);
-  const ch = pad * 2 + lines.length * qpx * 1.35 + 132 * u(L);
-  const jk = clamp((t - e.jump) / .42), steps = [3, 3, 6, 14, 31, 58, 79, 92, 97, 99];
-  const yes = jk <= 0 ? e.yes[0] : steps[Math.min(steps.length - 1, Math.floor(jk * (steps.length - 1) + 1e-6))];
-  g.save();
-  g.globalAlpha = k;
-  g.translate(0, (1 - ease.out(k)) * 12 * u(L));
-  g.fillStyle = 'rgba(8,10,16,.93)'; g.fillRect(x, y, cw, ch);
-  g.strokeStyle = 'rgba(243,239,230,.85)'; g.lineWidth = Math.max(1, u(L)); g.strokeRect(x + .5, y + .5, cw - 1, ch - 1);
-  applyFont(g, face, qpx); g.fillStyle = C.pearl;
-  lines.forEach((ws, i) => g.fillText(ws.join(' '), x + pad, y + pad + qpx * .8 + i * qpx * 1.35));
-  const yb = y + pad + lines.length * qpx * 1.35 + 18 * u(L);
-  // prices
-  const bpx = 54 * u(L);
-  applyFont(g, FACE.monoBold, bpx * .5); g.fillStyle = C.orange; g.fillText('YES', x + pad, yb + bpx * .55);
-  applyFont(g, FACE.monoBold, bpx); g.fillStyle = C.pearl; g.fillText(`${yes}¢`, x + pad + 72 * u(L), yb + bpx * .78);
-  applyFont(g, face, bpx * .42); g.fillStyle = 'rgba(243,239,230,.6)'; g.fillText(`NO ${100 - yes}¢`, x + pad, yb + bpx * 1.75);
-  // the price line: flat at 3, then straight up
-  const gx0 = x + cw * .52, gx1 = x + cw - pad, gy0 = yb + bpx * 1.7, gy1 = yb;
-  g.strokeStyle = 'rgba(243,239,230,.25)'; g.lineWidth = Math.max(1, u(L));
-  g.beginPath(); g.moveTo(gx0, gy0); g.lineTo(gx1, gy0); g.stroke();
-  g.strokeStyle = C.orange; g.lineWidth = Math.max(1.5, 2.2 * u(L)); g.beginPath();
-  const N = 40;
-  for (let i = 0; i <= N; i++) {
-    const s = i / N, tt = e.t0 + s * (t - e.t0 + .001), jj = clamp((tt - e.jump) / .42), v = tt < e.jump ? 3 + 1.2 * hash(i) : 3 + 96 * ease.out(jj);
-    const xx = lerp(gx0, gx1, s), yy = lerp(gy0, gy1, (v - 0) / 100);
-    i ? g.lineTo(xx, yy) : g.moveTo(xx, yy);
-  }
-  g.stroke();
-  g.restore();
-}
+// (S53: v2 removed the forecast card. The shot's payoff, Thales's 1/720 construction with its Greek letters and its
+// 1⁄720 label, is part of the picture: video/src/scenes/marble.js draws it under the lyric and behind Thales.)
 
 // ---------------------------------------------------------------- S57: SPARK bursts and fades
 function spark(g, f, e, t) {
@@ -893,5 +859,5 @@ function cartouche(g, f, e, t) { return drawCartouche(g, f, e, t, ctxOf(f, e, t)
 function terminal(g, f, e, t) { return drawTerminal(g, f, e, t); }
 
 export const FX = { carved, plaque, inscr, incised, counter, hud, chop, quote, map, diptych, mirrored, bronze, crescents, ring, pupil, shadow,
-  thales, forecast, spark, era, home, endcard, cartouche, terminal };
+  thales, spark, era, home, endcard, cartouche, terminal };
 export { gildOpts, sweepP, ctxOf, carvedRuns, carvedLayout };

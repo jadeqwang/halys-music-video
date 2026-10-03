@@ -1,0 +1,11 @@
+{
+ "model": "google/nano-banana-pro",
+ "prompt": "Image 1 is a frame from an anime with two rough paint-over corrections on the woman's sleeves. Redraw image 1 as a clean, finished anime frame that keeps EVERYTHING else exactly as it is: the composition, the camera, the whole room, her pose, her hair exactly as long as it is now (it ends at the top of the circle; do not lengthen it), the large light-blue circle and the RARE EARTH lettering on her back. The two corrections: (1) the round white 1420 MHz patch with a black ring is stitched on her LEFT sleeve (the arm on the left side of the picture), on the orange stripe at the outer side of the upper arm, seen at an angle as in the paint-over: draw it cleanly with a crisp black ring and the text 1420 MHz; (2) her right sleeve (the arm on the right side of the picture, hand on the keyboard) has NO patch at all, only its orange stripe wrapping around the upper arm, drawn cleanly with its fold shadows. Make the circle and the letters on her back lie on the fabric, following the folds of the jacket and crossed by its grey fold shadows. She is the anime character of the character sheet (images 2 and 3) seen from behind. Japanese anime cel animation style exactly matching the character sheet: clean, crisp, tapered black line art, flat cel colours with exactly one shadow tone, no painterly texture, no soft airbrush gradients, no depth-of-field blur, no yellow cast. No other text.",
+ "refs": [
+  "/tmp/claude-0/-home-user-halys-music-video/b8664d69-2871-5fba-a7df-659b9d78ccf5/scratchpad/ref/K78b_paintover.png",
+  "/tmp/claude-0/-home-user-halys-music-video/b8664d69-2871-5fba-a7df-659b9d78ccf5/scratchpad/ref/sheet_back.jpg",
+  "/tmp/claude-0/-home-user-halys-music-video/b8664d69-2871-5fba-a7df-659b9d78ccf5/scratchpad/ref/sheet_full.jpg"
+ ],
+ "out": "media/plates/P57/K78d.jpg",
+ "est_cost_usd": null
+}

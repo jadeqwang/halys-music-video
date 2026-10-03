@@ -29,7 +29,8 @@ const VARS = { timing: { timing: 1 }, canvas: { debugCanvas: 1 }, nomat: { _noma
 
 // plate time 0 = the start of the song window each plate was generated against (tools/plate_specs.py t_song)
 const T0 = { P01: 7.18, P02: 0, P03: 14.19, P04: 17.66, P05: 21.15, P06: 21.15, P07: 25.5, P08: 26.0, P09: 32.47, P10: 35.98, P11: 39.48, P12: 44.73,
-  P13: 58.72, P14: 65.67, P15: 74.41, P16: 81.36, P17: 85.91, P18: 89.22, P19: 93.0, P20: 100.24, P21: 103.64, P22a: 105.85, P22b: 105.85, P23: 3.65 };
+  P13: 58.72, P14: 65.67, P15: 74.41, P16: 81.36, P17: 85.91, P18: 89.22, P19: 93.0, P20: 100.24, P21: 103.64, P22a: 105.85, P22b: 105.85, P23: 3.65,
+  P48: 44.06, P49: 46.49, P50: 88.28 };
 // shots that reuse a plate at another song time map song -> plate time explicitly (keys [[songT, plateT], ...])
 const KEYS = {
   S04: { P01: [[5.40, 1.78], [7.18, 0]] },              // the rewind runs the plate backwards
@@ -41,14 +42,20 @@ const KEYS = {
   S21: { P13: [[58.72, .12], [59.60, 1.0], [62.20, 3.5]] },
   S23: { P14: [[65.67, 1.4], [67.42, 3.15]] },            // the face is dark in the plate's first 1.6 s
   S25: { P15: [[74.41, 0], [77.88, 3.38], [81.36, 6.86]] },
-  S28: { P18: [[89.22, 1.44], [89.78, 2.0], [91.31, 3.5], [91.325, 3.52]] },   // the wave of upturned faces runs ~1.4 s late
+  // S28 (v2): P50 (take 2) is fighting until ~1.7 s; the faces turn up left to right (the left Lydian ~1.9, the sword-bearer
+  // ~2.25, the right Lydian ~2.6, the right Mede and the left Mede ~2.9; all up by ~3.2), poses still locked: the first
+  // lands on "halo" (89.78), the last before the 91.31 boom. (P18 = the v1 row of six, kept as the fallback.)
+  S28: { P50: [[89.22, 1.3], [89.78, 1.9], [90.2, 2.25], [90.6, 2.6], [90.87, 2.9], [91.31, 3.3]],
+    P18: [[89.22, 1.44], [89.78, 2.0], [91.31, 3.5], [91.325, 3.52]] },   // the wave of upturned faces runs ~1.4 s late
   S32: { P21: [[103.64, 1.14], [104.96, 2.46], [105.85, 3.35]] },           // the weapons drop lands on 104.96
   // S31b: P47 (t0 100.24, the grab ~2 s in) lands its grab on the 102.21 boom; the stand-in P13 is timed so its
   // standing figure's raised weapon is at its height on the boom
   S31b: { P47: [[101.61, 1.37], [102.21, 1.97], [103.64, 3.40]], P13: [[101.61, 2.4], [102.21, 3.0], [103.64, 4.43]] },
   // P12 (the duel, 8 s) serves four shots: its strikes (plate 2.12, 3.30, 3.88, 5.20, 6.05, 6.90) land on beats
-  S17: { P12: [[44.73, .79], [46.06, 2.12], [46.49, 2.55]] },
-  S18: { P12: [[46.49, 2.55], [47.56, 3.30], [48.91, 3.88], [49.53, 5.20], [50.63, 6.05], [51.48, 6.90], [51.72, 7.1]] },
+  // S17 / S18 (v2): P48 (take 1) turns the Mede's thrust with the lion shield at plate 2.00 (= the 46.06 beat, 1:1 from
+  // its window); P49 (take 2) is the fighting line on the horizon, 1:1 from 0.7 s in (the line fills up in its first second)
+  S17: { P48: [[44.73, .67], [46.057, 2.0], [46.49, 2.43]], P12: [[44.73, .79], [46.06, 2.12], [46.49, 2.55]] },
+  S18: { P49: [[46.49, .7], [51.72, 5.93]], P12: [[46.49, 2.55], [47.56, 3.30], [48.91, 3.88], [49.53, 5.20], [50.63, 6.05], [51.48, 6.90], [51.72, 7.1]] },
   S26: { P16: [[81.36, .1], [84.38, 2.5], [84.83, 2.95]] },   // the flare on the cheek guard lands on "bronze" (84.38)
   S19: { P12: [[51.72, 2.9], [52.17, 3.30], [52.60, 3.88], [53.47, 5.20], [54.35, 6.05], [54.78, 6.90], [55.22, 7.35]] },
   S22: { P05: [[62.2, 2.5], [65.67, 5.97]], P06: [[62.2, 2.5], [65.67, 5.97]] },
@@ -492,7 +499,23 @@ async function duelLook(f, src, pcam, o = {}) {
     sun: SUN(f.t, { x: sun[0], y: sun[1], r: o.r ?? .022 }),
   };
 }
+// S17 v2 (REVISION_V2 decision 2: a battle, not a duel): P48 (take 1). The Mede's thrust is turned by the Lydian's lion
+// shield on the 46.06 beat (plate 2.00), in front of the two lines fighting in the shallows. Act I light: the low sun rakes
+// in from frame right; we paint it where v1 had it, high in the battle's dust at the top right (the haze over the melee
+// becomes sky). Until P48 is analysed: v1 (P12, the duel alone).
+const S17_SUN = { '16:9': [.86, .13], portrait: [.8, .1] };
 scene('S17', async f => {
+  if (hasPlate('P48')) {
+    // (portrait holds the Lydian and his lion shield turning the spear; the Mede's lunge reaches in from the right)
+    const wide = f.W / f.H > 1.2, cx = wide ? .5 : .33, pcam = k => ({ cx, cy: .5, zoom: 1.02 + .04 * k });
+    const src = await rp(f, 'P48', null, pcam), sun = S17_SUN[wide ? '16:9' : 'portrait'];
+    await bronze(f, src, plateLook(src, { lightDir: [.8, -.55], lightPoint: sun, keep: .5, keepDim: .82, fromLight: .75, bg: .3, rim: .85, poolMatte: .5, body: .45,
+      pool: [{ x: wide ? .38 : .52, y: .42, rx: wide ? .2 : .4, ry: .3, feather: .75, k: .75, fig: true }],     // the exchange: shield meets spear
+      extra: { glint: 1.1, groundFlow: { y0: .6, k: .8 },
+        sky: SKY(f.t, { maxDepth: .03, soft: .03, below: .32, horizonY: .27, drama: .45, glow: 1.05, glowR: .26 }),
+        sun: SUN(f.t, { x: sun[0], y: sun[1], r: .022 }) } }));
+    return;
+  }
   const pcam = k => ({ cx: .5, cy: .5, zoom: 1.02 + .04 * k });
   const src = await rp(f, 'P12', { id: 'a_duel', cam: k => ({ cx: .5, cy: .48, zoom: 1.05 + .06 * k }) }, pcam);
   await bronze(f, src, hasPlate('P12') ? await duelLook(f, src, pcam) : { ...DUEL_LIGHT, sky: SKY(f.t, { maxDepth: .006, soft: .01, below: .16, horizonY: .11 }), sun: SUN(f.t, { x: .12, y: .05, r: .03 }) });
@@ -509,16 +532,38 @@ scene('S21', async f => {
 });
 
 // ---------------------------------------------------------------- S18: first contact (tight on the low sun; nobody notices)
+// v2 (REVISION_V2 decision 2): under the sun the whole battle line keeps fighting along the horizon. P49 (take 2) is that
+// line in silhouette against a low sun; the silhouettes are keyed out of the plate (dark against its bright sky, above its
+// horizon at v .868) and stood on our horizon at the plate's own scale, so spears, crests and shields survive. The sun, the
+// sky and the land stay procedural (v1), and the bite at 5 o'clock stays clear above the fighters' heads.
+const S18_HZ = .8, P49_HZ = .868;
+function silhouettesP49(fig, hz) {
+  const aw = fig.aw, ah = fig.ah, out = new Float32Array(aw * ah), dy = Math.round((P49_HZ - hz) * ah), feet = Math.floor(P49_HZ * ah) - 1;
+  for (let y = 0; y < ah; y++) {
+    const py = y + dy; if (py < 0 || py >= feet) continue;                          // at and below the plate's horizon: our land
+    for (let x = 0; x < aw; x++) {
+      const j = py * aw + x;
+      out[y * aw + x] = 1 - sstep(.12, .3, .2126 * fig.R[j] + .7152 * fig.G[j] + .0722 * fig.B[j]);
+    }
+  }
+  return out;
+}
 scene('S18', async f => {
-  const t = f.t;
-  // the land strip and, on it, the duel's silhouettes (the plate's matte, small, dark against the sky)
-  const fig = await rp(f, 'P12', { id: 'a_duel', cam: { cx: .5, cy: .5, zoom: .95 } }, { cx: .5, cy: .5, zoom: 1 });
-  const aw = fig.aw, ah = fig.ah, hz = .8;
-  const silh = new Float32Array(aw * ah);
-  if (fig.matte) for (let y = 0; y < ah; y++) for (let x = 0; x < aw; x++) {
-    const sx = ((x / aw) - .5) / .42 + .5, sy = (y / ah - hz) / .3 + .62;             // the figures shrunk onto the horizon
-    if (sx < 0 || sx > 1 || sy < 0 || sy > 1) continue;
-    silh[y * aw + x] = fig.matte[Math.min(ah - 1, Math.floor(sy * ah)) * aw + Math.min(aw - 1, Math.floor(sx * aw))];
+  const t = f.t, hz = S18_HZ;
+  let fig, silh;
+  if (hasPlate('P49')) {
+    fig = await rp(f, 'P49', null, { cx: .5, cy: .5, zoom: 1 });
+    silh = silhouettesP49(fig, hz);
+  } else {
+    // v1: the duel's two silhouettes (P12's matte), small, dark against the sky
+    fig = await rp(f, 'P12', { id: 'a_duel', cam: { cx: .5, cy: .5, zoom: .95 } }, { cx: .5, cy: .5, zoom: 1 });
+    const aw = fig.aw, ah = fig.ah;
+    silh = new Float32Array(aw * ah);
+    if (fig.matte) for (let y = 0; y < ah; y++) for (let x = 0; x < aw; x++) {
+      const sx = ((x / aw) - .5) / .42 + .5, sy = (y / ah - hz) / .3 + .62;             // the figures shrunk onto the horizon
+      if (sx < 0 || sx > 1 || sy < 0 || sy > 1) continue;
+      silh[y * aw + x] = fig.matte[Math.min(ah - 1, Math.floor(sy * ah)) * aw + Math.min(aw - 1, Math.floor(sx * aw))];
+    }
   }
   const horizonDraw = PR.horizonCanvas({ horizonY: hz, vanishX: .5 });
   const src = await canvasSource(f, `s18|${fig.key}`, async (g, w, h) => {
@@ -675,11 +720,31 @@ scene('S27', async f => {
 });
 const hashS = j => { let n = (j * 2654435761) >>> 0; n ^= n >>> 15; n = Math.imul(n, 2246822519) >>> 0; n ^= n >>> 13; return (n >>> 0) / 4294967296; };
 
-// ---------------------------------------------------------------- S28: faces turn upward; cut on the 91.31 boom to the sky
+// ---------------------------------------------------------------- S28: caught mid-fight, faces turn up; cut on the 91.31 boom to the sky
+// v2 (REVISION_V2 decision 3: "mid action, not standing in a row"): P50 (take 2). Three pairs locked in combat in the
+// shallows (a Mede's spear thrust caught on a lion shield, a raised sword over a braced wicker shield, two men grappling)
+// stop mid-action and turn their faces up one after another while their poses hold (KEYS.S28). Cold metallic light from
+// the sun beyond the top right corner. The cut to the sky lands exactly on the boom (S28b, 91.31; v1 cut on the next
+// drawing, 91.40). The type's ring sits where S28b's sun is in both parts, so the halo of words holds still across the cut
+// and the thin crescent appears inside it.
+const S28_SUN = { x: .6, y: .52, r: .055 };
+shotOverride('S28', { t1: 91.31 });
+shot({ id: 'S28b', t0: 91.31, t1: 93.0, world: 'bronze', cadence: 12, scene: 'S28', parent: 'S28', params: { label: 'S28 the sky (cut on the 91.31 boom)', sky: 1 } });
 scene('S28', async f => {
-  const t = f.t;
-  if (t < 91.325) {
-    const k = seg(t, 89.22, 91.325);
+  const t = f.t, ringSun = () => ({ x: S28_SUN.x * f.W, y: S28_SUN.y * f.H, r: S28_SUN.r * f.W });
+  if (!f.params.sky) {
+    const k = seg(t, 89.22, 91.31);
+    (f.type || (f.type = {})).sun = ringSun();
+    if (hasPlate('P50')) {
+      // (portrait keeps the sword-bearer and the lion shield)
+      const cx = f.W / f.H > 1.2 ? .5 : .5, pcam = kk => ({ cx, cy: .5, zoom: 1.03 + .04 * kk });
+      const src = await rp(f, 'P50', null, pcam);
+      await bronze(f, src, plateLook(src, { lightDir: [.55, -.83], lightPoint: [1.02, -.05], keep: .55, keepDim: .9, fromLight: .6, bg: .3, rim: .85, poolMatte: .35, body: .4,
+        extra: { lightColor: '#dcd6ca', eclipseLift: .15, eclipseCrush: .3, groundFlow: { y0: .84, k: .7 },
+          sky: SKY(t, { maxDepth: .05, soft: .03, below: .45, horizonY: .4, drama: .35, glow: .8, cover: .45 }),
+          sun: SUN(t, { x: 1.03, y: -.05, r: .03 }) } }));
+      return;
+    }
     const src = await rp(f, 'P18', { id: 'b_face', cam: { cx: .52, cy: .5, zoom: 1.0 + .05 * k } }, { cx: .5, cy: .5, zoom: 1.03 + .03 * k });
     await bronze(f, src, hasPlate('P18') ? plateLook(src, { lightDir: [-.4, -.9], keep: .55, keepDim: .9, poolMatte: .3, rim: .8, body: 0,
       pool: [{ x: .5, y: .3, rx: .5, ry: .2, feather: .7, k: .9, fig: true }, { x: .5, y: .62, rx: .5, ry: .25, feather: .8, k: .6 }],
@@ -687,15 +752,15 @@ scene('S28', async f => {
       : { lightDir: [-.5, -.85], pool: [{ x: .5, y: .35, rx: .3, ry: .4, feather: .8, k: .8 }], poolMatte: .5, faceMin: .4, crushFloor: .085, envDim: .6 });
     return;
   }
-  // the sky: the thin crescent, Jupiter beside it (11 deg above, 5.5 deg left), the land a dark strip at the foot
-  const hz = .93, sun = { x: .6, y: .52, r: .055 };
+  // S28b, the sky: the thin crescent, Jupiter beside it (11 deg above, 5.5 deg left), the land a dark strip at the foot
+  const hz = .93, sun = S28_SUN;
   const src = await canvasSource(f, 'sky-s28', PR.horizonCanvas({ horizonY: hz, river: false, hill: 1.6 }), { sky: PR.horizonSkyMask({ horizonY: hz, hill: 1.6 }), cache: true });
   await bronze(f, src, {
     lightDir: [.2, -1], pool: [{ x: .5, y: .97, rx: .5, ry: .05, feather: .8, k: .4 }], poolMatte: 0,
     sky: SKY(t, { horizonY: hz, glowR: .42, glow: 2.4, drama: .3, cover: .45, vortex: .3, zenith: .3, ring: .6 }),   // the thin crescent still lights a halo of sky
     sun: SUN(t, { x: sun.x, y: sun.y, r: sun.r, ppd: 34 }), accents: 0,
   });
-  f.type.sun = { x: sun.x * f.W, y: sun.y * f.H, r: sun.r * f.W };
+  f.type.sun = ringSun();
 });
 
 // ---------------------------------------------------------------- S29: the eye, the crescent reflected · the intrusion · the sky as an eye
@@ -892,5 +957,5 @@ scene('S34p', async f => {
 
 // which plate each shot reads (for the report); hasPlate() decides at render time
 export const ACT1_PLATES = { S01: 'P02', S02: 'P02', S03: 'P23', S04: 'P01', S05: 'P01', S06: 'P01', S07: 'P03', S08: 'P04', S09: 'P05+P06', S10: 'P07', S11: 'P08',
-  S12: 'proc', S13: 'P09', S14: 'P10', S15: 'P11', S16: 'P01', S17: 'P12', S18: 'proc+P12', S19: 'P12', S20: 'P01', S21: 'P13', S22: 'P05+P06', S23: 'P14', S24: 'P01',
-  S25: 'P15', S26: 'P16', S27: 'P12+P17', S28: 'P18', S29: 'P19', S30: 'P01', S31: 'P20', S31b: 'P47 (stand-in P13)', S32: 'P21', S33: 'P22a+P22b', S34: 'proc' };
+  S12: 'proc', S13: 'P09', S14: 'P10', S15: 'P11', S16: 'P01', S17: 'P48 (v1 P12)', S18: 'proc+P49 (v1 P12)', S19: 'P12', S20: 'P01', S21: 'P13', S22: 'P05+P06', S23: 'P14', S24: 'P01',
+  S25: 'P15', S26: 'P16', S27: 'P12+P17', S28: 'P50+proc (v1 P18)', S29: 'P19', S30: 'P01', S31: 'P20', S31b: 'P47 (stand-in P13)', S32: 'P21', S33: 'P22a+P22b', S34: 'proc' };

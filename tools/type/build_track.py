@@ -203,9 +203,9 @@ ev("S52.thales", "thales", "S52", [("THALES", {"key": "name", "reveal": "words"}
                                    ("ΘΑΛΗΣ", {"key": "greek", "reveal": "line", "t": 182.70}),
                                    ("THALES OF MILETUS", {"key": "plaque", "reveal": "line", "t": 182.86})],
    t1=184.60, fadeout=.35)
+# S53's line is the only type event in the shot: the payoff (the 1/720 construction, its Greek letters and its 1⁄720
+# label) is drawn by the scene (video/src/scenes/marble.js) as part of the figure, under this line and behind Thales
 ev("S53.foretold", "carved", "S53", [("FORETOLD THE SUN WOULD GO DARK", {"key": "l", "reveal": "words"})], anchor="leftLow", light="marble", size="reference")
-ev("S53.card", "forecast", "S53", [], t0=186.40, t1=187.65,
-   question="Will the sun go dark over the Halys before sunset?", yes=[3, 99], jump=186.55)
 ev("S55.behold", "carved", "S55", [("WARRIORS BEHOLD …", {"key": "l", "reveal": "words"})], anchor="left", light="marble", ellipsis=[190.55, 192.45])
 ev("S56.sudden", "carved", "S56", [("A SUDDEN", {"key": "l", "reveal": "words"})], anchor="left", light="beads")
 ev("S57.spark", "spark", "S57", [("SPARK", {"key": "l", "reveal": "none", "t": 194.86})])
@@ -371,9 +371,6 @@ def reading_report(events):
         if e["fx"] in ("quote", "era"):
             n = sum(len(i["text"]) for i in e["items"]); t_in = min(i["t"] for i in e["items"]); dt = e["t1"] - t_in
             rows.append((e["id"], "together", n, round(t_in, 2), round(e["t1"], 2), round(dt, 2), round(n / dt, 1), " / ".join(i["text"] for i in e["items"])))
-        if e["fx"] == "forecast":
-            n = len(e["question"]); dt = e["t1"] - e["t0"]
-            rows.append((e["id"], "question", n, e["t0"], e["t1"], round(dt, 2), round(n / dt, 1), e["question"]))
     return rows
 
 

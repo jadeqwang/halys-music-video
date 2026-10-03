@@ -7,3 +7,4 @@ import './chorus2.js';
 import './gold_outro.js';
 import './drop2.js';
 import './room.js';
+import './treaty.js';

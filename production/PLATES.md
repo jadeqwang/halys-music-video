@@ -796,3 +796,17 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 * **Notes for the renderer:** Grab 102.21 -> plate 1.90 (-0.07 s).
 * **Review sheet:** `media/plates/P47/take2.review.jpg` (motion curve + frames at the hits); 8-frame contact `media/plates/P47/take2.sheet.jpg`.
 * Take 1: pass 3: Grab ~0.4 s early; background ranks static.
+
+### P55 · The oath: the kings clasp hands (v2, TREATY; REVISION_V2 decision 7)
+
+* **Shots:** S79 (v2, replaces P40's chair spin). **Window:** song [269.54, 274.54], audio reference cut at t0 = 269.54 s from the sound-design master (`media/stems/halys_sd_master.wav`; the final chord 270.04 = plate 0.50), 5 s, 2 takes reviewed. **Spend:** $2.31 for the two takes, plus $0.93 for five keyframe stills = **$3.24**.
+* **Refs:** (1) the keyframe `media/plates/P55/key_t4.jpg`, which acts as the first frame, as boards do; (2) `ALYATTES`; (3) `CYAXARES`; (4) `media/plates/P55/ref_mediators.jpg`, a local composite of the Syennesis and Labynetus sheets (Nano Banana Pro takes only three references). `use_virtual_avatar` on. Keyframes were made with Nano Banana Pro from refs 2–4, five candidates: t1 had the kings an arm's length apart (lost in 4:5), a thumb-hook grip, Cyaxares gripping his sword, and capless mediators (Labynetus read as a Jesus figure); t2 and t3 had the upright "arm-wrestle" grip; t5 lost both kings' headgear. **t4** was chosen: a level right-hand clasp, a cut on each forearm, calm faces, Alyattes' left hand on his heart, both mediators capped.
+* **Chosen:** take 1 → `media/plates/P55/take1.mp4`; analysis in `video/plates/P55/` (frames 121, fields 121, mattes 61 with `isnet-general-use`, depth 61, gain 1.322), run per chosen take like the other photoreal plates. On the chord the clasped hands give one firm pump (plate 0.42–0.67; subject motion peaks at 0.62, +0.12 s), then hold still and solemn while the camera slowly pushes in (~27 % over 3.4 s at 1:1).
+* **Delivers:** a medium two-shot on a gravel bank of the red-brown river at dusk. On the left Alyattes, facing right: gold fillet, crimped grey tresses, white chiton, purple mantle with a gold meander, lion bracelet, left hand on his heart. On the right Cyaxares, facing left: madder cap with a gold diadem band, roll of curls, curled grey beard, saffron tunic with winged lions, ochre cape, lion torque. They clasp right hands, with a thin cut on each bare forearm. Syennesis (left edge) and Labynetus (right edge) watch.
+* **Sync keys** (song s → plate s):
+  * 270.040 → 0.42 · the pump plays on S79's first three drawings and is settled by 270.30 → 0.68
+  * 273.400 → 2.58 · the hold runs at 0.61x: the kings are still, so this halves the push-in and keeps both heads in frame
+* **Checks:** Costumes match the sheets. Cyaxares' akinakes hangs at his left hip, on the camera side (it is in shadow in the painting). No licking, no gore.
+* **Notes for the renderer:** MediaPipe finds only Syennesis' frontal face, so `video/src/scenes/treaty.js` tracks the kings' faces, the mediators' faces, the clasp and both cuts by hand (`TRACK`, measured on plate frames 11, 17, 33, 49 and 63). It also re-paints the cuts as thin madder lines once the pump settles.
+* **Review sheet:** `media/plates/P55/take1.review.jpg` (motion curve + frames at the hits); 8-frame contact `media/plates/P55/take1.sheet.jpg`.
+* Take 2: no shake on the chord (the clasp is static to 1.2 s), a late bump at ~4 s, and its push drops the clasp out of frame by 3.3 s.

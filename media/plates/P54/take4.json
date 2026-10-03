@@ -1,0 +1,81 @@
+{
+ "plate": "P54",
+ "take": 4,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 378.9,
+ "est_cost_usd": 1.156,
+ "duration_s": 5.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 259.355,
+   "dur": 5.0,
+   "file": "media/plates/P54/audio_song_0259.36_5.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 5,
+  "takes": 2,
+  "refs": [
+   "LYD",
+   "MED"
+  ],
+  "avatar": true,
+  "audio": {
+   "t0": 259.355,
+   "src": "song"
+  },
+  "t_song": [
+   259.355,
+   264.355
+  ],
+  "shots": "S75, S76",
+  "sync": [
+   [
+    259.355,
+    "the hit: S75 cut in, mid-fight (plate 0)"
+   ],
+   [
+    259.775,
+    "THROW DOWN chop (plate 0.42)"
+   ],
+   [
+    260.625,
+    "BLADE: every blade drops at once (plate 1.27)"
+   ],
+   [
+    261.045,
+    "hit: the late blade lands (plate 1.69)"
+   ],
+   [
+    262.724,
+    "boom: S77 pull-back (plate 3.37)"
+   ]
+  ],
+  "prompt": "Head-height shot looking straight along a battle line on a sandy riverbank in warm golden evening light, the red-brown river behind. Two armies face each other along a line running from the foreground straight away into the distance: on the left Lydians like reference image 1 (crested bronze helmets pushed up, crimson tunics, bronze scale corselets, crimson lion shields) facing right; on the right Medes like reference image 2 (red felt caps, black beards, ochre tunics, iron scale corselets, wicker shields) facing left; each holds a short straight sword or a spear. Mirror-symmetric: the nearest pair in the centre foreground, full figures, pair after pair receding behind. Every man faces his opponent the whole time; nobody turns toward the camera. 0-1.2 s: all fight hard, mid-action: swords against shields, spear thrusts, sand flying. At 1.3 s every man except one stops dead and opens his hand at the same instant: swords and spears drop straight down to the sand at once. Nobody throws anything. The exception is the Mede of the nearest pair, right foreground, his sword in his right hand on the camera side: he alone keeps his grip a moment longer, staring at the blades on the sand; at 1.9 s his fingers open and his sword falls alone into the sand at his feet. Then all stand still, empty-handed, facing each other, serious and stunned, breathing hard. No smiles, no shrugs, no posing. Camera static. Hard, low golden sun raking in from frame right (the sun itself just beyond the right edge of the frame), long shadows, warm rim light; the far bank and background in deep shadow, darker than the men. Clear air: no fog, no haze, no smoke. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "notes": "S75-S76 v2 (replaces P38's formation and shrug): a battle line mid-fight; every blade drops on BLADE, one late.",
+  "prompt_v1": "Shot at head height looking straight along a battle line on a sandy riverbank in warm golden evening light, the red-brown river behind. Two armies fight face to face along a line that runs from the foreground straight away from the camera into the distance: on the left Lydians like reference image 1 (crested bronze helmets pushed up, crimson tunics, bronze scale corselets, crimson lion shields) facing right; on the right Medes like reference image 2 (red felt caps, black beards, ochre tunics, iron scale corselets, wicker shields) facing left; each man holds a short straight sword or a spear. Mirror-symmetric: the nearest pair stands in the centre foreground, full figures about two thirds of the frame height; pair after pair recedes behind them. 0-1.2 s: everyone fights hard, mid-action: swords swing against shields, spears thrust, shields slam, sand flies. At 1.3 s every man along the whole line stops dead and opens his hand at the same instant: every sword and spear drops straight down to the sand at once. Nobody throws anything: the weapons simply fall straight down out of the opening hands. One man is late: the Mede of the nearest pair keeps his grip a moment longer; at 1.7 s his fingers open and his sword drops alone. Then all stand still, empty-handed, facing the enemy, serious and stunned, breathing hard, to the end. No smiles, no shrugs, no posing. Camera static. Hard, low golden sun raking in from frame right (the sun itself just beyond the right edge of the frame), long shadows, warm rim light; the far bank and background in deep shadow, darker than the men. Clear air: no fog, no haze, no smoke. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "retake_note": "takes 1-2: take 2 drops every blade at once (the corridor of swords on the sand) but has no late one; take 1 has a late Mede but the nearest pair turns to pose for the camera; v2 names the late one (the nearest Mede, sword hand on the camera side) and forbids turning to the camera"
+ },
+ "request": {
+  "prompt": "Head-height shot looking straight along a battle line on a sandy riverbank in warm golden evening light, the red-brown river behind. Two armies face each other along a line running from the foreground straight away into the distance: on the left Lydians like reference image 1 (crested bronze helmets pushed up, crimson tunics, bronze scale corselets, crimson lion shields) facing right; on the right Medes like reference image 2 (red felt caps, black beards, ochre tunics, iron scale corselets, wicker shields) facing left; each holds a short straight sword or a spear. Mirror-symmetric: the nearest pair in the centre foreground, full figures, pair after pair receding behind. Every man faces his opponent the whole time; nobody turns toward the camera. 0-1.2 s: all fight hard, mid-action: swords against shields, spear thrusts, sand flying. At 1.3 s every man except one stops dead and opens his hand at the same instant: swords and spears drop straight down to the sand at once. Nobody throws anything. The exception is the Mede of the nearest pair, right foreground, his sword in his right hand on the camera side: he alone keeps his grip a moment longer, staring at the blades on the sand; at 1.9 s his fingers open and his sword falls alone into the sand at his feet. Then all stand still, empty-handed, facing each other, serious and stunned, breathing hard. No smiles, no shrugs, no posing. Camera static. Hard, low golden sun raking in from frame right (the sun itself just beyond the right edge of the frame), long shadows, warm rim light; the far bank and background in deep shadow, darker than the men. Clear air: no fog, no haze, no smoke. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(582 KB)",
+   "data:image/jpeg;base64...(557 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(161 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T22:41:30"
+}

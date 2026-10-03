@@ -69,6 +69,8 @@ const inZone = (z, u, v) => z.poly ? inPolyN(z.poly, u, v) : inEllipse(z, u, v);
 function zoneBox(z, W, H) {
   if (z.poly) { let x0 = 1, x1 = 0, y0 = 1, y1 = 0; for (const [u, v] of z.poly) { x0 = Math.min(x0, u); x1 = Math.max(x1, u); y0 = Math.min(y0, v); y1 = Math.max(y1, v); }
     return [Math.max(0, Math.floor(x0 * W)), Math.min(W - 1, Math.ceil(x1 * W)), Math.max(0, Math.floor(y0 * H)), Math.min(H - 1, Math.ceil(y1 * H))]; }
+  if (z.rot) { const R = 1.05 * Math.max(z.rx * W, z.ry * H), x = z.cx * W, y = z.cy * H;           // a rotated ellipse: its circumcircle
+    return [Math.max(0, Math.floor(x - R)), Math.min(W - 1, Math.ceil(x + R)), Math.max(0, Math.floor(y - R)), Math.min(H - 1, Math.ceil(y + R))]; }
   return [Math.max(0, Math.floor((z.cx - z.rx * 1.5) * W)), Math.min(W - 1, Math.ceil((z.cx + z.rx * 1.5) * W)), Math.max(0, Math.floor((z.cy - z.ry * 1.5) * H)), Math.min(H - 1, Math.ceil((z.cy + z.ry * 1.5) * H))];
 }
 // split chains where they enter a polygon zone (keeps the parts outside, drops runs shorter than minLen)
@@ -182,15 +184,17 @@ function classify(L, A, B, line, alpha, W, H, cfg, eyes, faces) {
   return mat;
 }
 
-// a bright region (jacket) that is small and almost entirely walled in by black is a sheen on the hair
+// a bright region (jacket) that is small and almost entirely walled in by black is a sheen on the hair. A region larger
+// than maxArea is still flooded to the end (only not collected): stopping early would leave its remainder to be found
+// later as small pockets "walled in" by the pixels already seen, and a fold crease in the jacket would turn into hair.
 function sheenRegions(mat, W, H, maxArea) {
   const N = W * H, seen = new Uint8Array(N), stack = new Int32Array(N);
   for (let s0 = 0; s0 < N; s0++) {
     if (seen[s0] || mat[s0] !== ID.jacket) continue;
-    let sp = 0; stack[sp++] = s0; seen[s0] = 1;
+    let sp = 0, n = 0; stack[sp++] = s0; seen[s0] = 1;
     const px = []; let border = 0, blk = 0;
     while (sp) {
-      const i = stack[--sp]; px.push(i);
+      const i = stack[--sp]; n++; if (n <= maxArea) px.push(i);
       const x = i % W, y = (i / W) | 0;
       for (const j of [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, y > 0 ? i - W : -1, y < H - 1 ? i + W : -1]) {
         if (j < 0) continue;
@@ -198,9 +202,8 @@ function sheenRegions(mat, W, H, maxArea) {
         if (m === ID.jacket) { if (!seen[j]) { seen[j] = 1; stack[sp++] = j; } }
         else if (m !== 255) { border++; if (m === ID.black) blk++; }
       }
-      if (px.length > maxArea) break;
     }
-    if (px.length <= maxArea && border > 0 && blk / border > .66) for (const i of px) mat[i] = 250;   // marked: sheen
+    if (n <= maxArea && border > 0 && blk / border > .66) for (const i of px) mat[i] = 250;   // marked: sheen
   }
 }
 
@@ -235,8 +238,15 @@ export function analyzeCel(inp, cfg0 = {}) {
   let alpha;
   if (inp.matte) alpha = guided(L, inp.matte, W, H, cfg.matteRefine[0], cfg.matteRefine[1]);
   else alpha = new Float32Array(N).fill(1);
+  // solid zones are her whatever the matte says (decals.js: the patch at the sleeve's edge, whose dark ring the matte
+  // models half drop), so the silhouette goes round them
+  for (const z of cfg.clear || []) if (z.solid) {
+    const [x0, x1, y0, y1] = zoneBox(z, W, H);
+    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (inZone(z, x / W, y / H)) alpha[y * W + x] = 1;
+  }
   const inside = new Uint8Array(N); for (let i = 0; i < N; i++) inside[i] = alpha[i] > .5 ? 1 : 0;
   // smooth colour inside her only
+  const L0 = cfg.darkStrands ? L : null;           // the unsmoothed lightness: the hair's faint strand lines live in it
   [L, A, B] = bilateral3(L, A, B, W, H, cfg.bil[0], cfg.bil[1], cfg.bil[2], alpha);
   // the plate's own drawn lines: dark ridges (difference of gaussians on lightness)
   const g1 = gauss(L, W, H, .8), g2 = gauss(L, W, H, 2.2), R = new Float32Array(N);
@@ -259,12 +269,15 @@ export function analyzeCel(inp, cfg0 = {}) {
   sheenRegions(mat, W, H, cfg.sheenMax);
   // decal zones: painted flat (the lettering is drawn as type on top: decals.js). A zone with `from` converts only those
   // materials (the hair cut above the back circle: hair and the plate's blue become jacket, the jacket keeps its shading)
-  const forced = new Uint8Array(N);
+  // keepShade zones (decals.js: the lettering, the patch) convert the same way but keep the fold shading: their pixels'
+  // lightness does not vote in the shading (the plate's dark letters would read as shadow), they take it from around them
+  const forced = new Uint8Array(N), keepSh = new Uint8Array(N);
   for (const z of cfg.clear || []) {
     const id = ID[z.mat] || ID.jacket, from = z.from ? z.from.map(n => ID[n]) : null;
     const [x0, x1, y0, y1] = zoneBox(z, W, H);
     for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
       const i = y * W + x; if (!inside[i] || !inZone(z, x / W, y / H)) continue;
+      if (z.keepShade) keepSh[i] = 1;
       if (from && !(from.includes(mat[i]) || (mat[i] === 250 && from.includes(ID.black)))) continue;
       mat[i] = id; forced[i] = 1;
     }
@@ -274,11 +287,11 @@ export function analyzeCel(inp, cfg0 = {}) {
   const Ls = new Float32Array(N);
   const thr = cfg.shadeT || {};
   for (const m of MATS) {
-    const msk = new Float32Array(N); let any = 0;
-    for (let i = 0; i < N; i++) if (mat[i] === m.id) { msk[i] = 1; any++; }
+    const msk = new Float32Array(N); let any = 0, ks = 0;
+    for (let i = 0; i < N; i++) if (mat[i] === m.id) { if (keepSh[i]) ks++; else { msk[i] = 1; any++; } }
     if (!any) continue;
-    const s = gaussMasked(L, msk, W, H, cfg.shadeSigma);
-    for (let i = 0; i < N; i++) if (msk[i]) Ls[i] = s[i];
+    const s = gaussMasked(L, msk, W, H, ks ? Math.max(cfg.shadeSigma, 3.2) : cfg.shadeSigma);
+    for (let i = 0; i < N; i++) if (mat[i] === m.id) Ls[i] = s[i];
   }
   const lab = new Uint8Array(N);
   for (let i = 0; i < N; i++) {
@@ -287,11 +300,12 @@ export function analyzeCel(inp, cfg0 = {}) {
     lab[i] = m === ID.black ? label(m, sheen[i] || (t != null && Ls[i] > t)) : label(m, t != null && Ls[i] < t);
   }
   for (const z of cfg.clear || []) {
+    if (z.keepShade) continue;
     const id = ID[z.mat] || ID.jacket;
     const [x0, x1, y0, y1] = zoneBox(z, W, H);
     for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) { const i = y * W + x; if (mat[i] === id && (z.from && !z.flat ? forced[i] : inZone(z, x / W, y / H))) lab[i] = label(id, false); }
   }
-  // the small face (face.js draws its features): flat skin inside the face oval, the eye zones cleared to skin
+  // a small face drawn over the cel (cfg.flatFace): flat skin inside the face oval, the eye zones cleared to skin
   if (cfg.flatFace && eyes.length && cfg.faces !== false) {
     const fz = skinZones(inp.faces, { faces: true });
     const face = fz.length ? fz[fz.length - 2] : null;
@@ -307,6 +321,11 @@ export function analyzeCel(inp, cfg0 = {}) {
   for (let i = 0; i < N; i++) if (!inside[i]) labS[i] = 0;
   const t1 = performance.now();
   // 6. line art
+  // hair strands (cfg.darkStrands): dark ridges of the unsmoothed lightness inside the hair replace the smoothed ridges there
+  if (L0) {
+    const h1 = gauss(L0, W, H, .7), h2 = gauss(L0, W, H, 1.9);
+    for (let i = 0; i < N; i++) if (mat[i] === ID.black && inside[i]) R[i] = Math.max(0, h2[i] - h1[i]);
+  }
   const chains = clipChains(lineArt(inp, cfg, { L, R, alpha, inside, mat, labS, eyes, W, H, g1, g2, brows: browZones(inp.faces, cfg) }), cfg.clear || [], W, H);
   return { W, H, lab: labS, mat, alpha, chains, eyes, Ls, R, stats: { ms: Math.round(performance.now() - t0), msFill: Math.round(t1 - t0), chains: chains.length } };
 }
@@ -358,7 +377,13 @@ function lineArt(inp, cfg, F) {
   }
   // interior: hysteresis on the ridge map, thinned
   const strong = new Uint8Array(N), weak = new Uint8Array(N);
-  for (let i = 0; i < N; i++) { if (!inside[i] || near[i]) continue; if (R[i] > cfg.ridgeHi) strong[i] = 1; else if (R[i] > cfg.ridgeLo) weak[i] = 1; }
+  // inside the hair (cfg.darkStrands) the plate's strand lines are faint dark ridges on dark grey: a lower threshold there
+  const [hHi, hLo] = cfg.darkStrands ? cfg.hairRidge || [.032, .018] : [cfg.ridgeHi, cfg.ridgeLo];
+  for (let i = 0; i < N; i++) {
+    if (!inside[i] || near[i]) continue;
+    const hair = cfg.darkStrands && F.mat[i] === ID.black, hi = hair ? hHi : cfg.ridgeHi, lo = hair ? hLo : cfg.ridgeLo;
+    if (R[i] > hi) strong[i] = 1; else if (R[i] > lo) weak[i] = 1;
+  }
   const keep = new Uint8Array(N), stack = [];
   for (let i = 0; i < N; i++) if (strong[i]) { keep[i] = 1; stack.push(i); }
   while (stack.length) {
@@ -388,6 +413,12 @@ function lineArt(inp, cfg, F) {
     // colour trace: a line with skin on both sides (nose, cheek) is a darker skin, not black; the brows are soft brown
     const lb = labS[mi], skinBoth = sideIs(labS, W, H, pts, ID.skin);
     const brow = browMid;
+    // a dark line with hair on both sides is a strand: drawn in the sheen tone, the way the sheet draws black hair (an ink
+    // line would vanish in the black)
+    if (cfg.darkStrands && !eye && !brow && sideIs(labS, W, H, pts, ID.black)) {
+      if (len >= (cfg.strandMin ?? 14)) chains.push({ pts, kind: 'strand', w: (cfg.strandW ?? 1.1) * (1 + .5 * kk), col: 'strand', len });
+      continue;
+    }
     chains.push({ pts, kind: eye ? 'eye' : 'int', w: brow ? w * .85 : w, s, col: brow ? 'brow' : skinBoth && !eye ? 'skin' : 'ink', len });
   }
   // hair strands: bright ridges inside the hair (the plate's highlight strokes), drawn as thin sheen-tone lines so the

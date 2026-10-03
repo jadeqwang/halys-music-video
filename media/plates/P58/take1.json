@@ -1,0 +1,68 @@
+{
+ "plate": "P58",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 331.1,
+ "est_cost_usd": 1.156,
+ "duration_s": 5.041667,
+ "audio_refs": [
+  {
+   "src": "media/stems/halys_sd_master.wav",
+   "t0": 273.4,
+   "dur": 5.0,
+   "file": "media/plates/P58/audio_halys_sd_master_0273.40_5.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 5,
+  "takes": 2,
+  "first_frame": "media/plates/P58/K80b_ff.jpg",
+  "audio": {
+   "t0": 273.4,
+   "src": "media/stems/halys_sd_master.wav"
+  },
+  "t_song": [
+   273.4,
+   278.4
+  ],
+  "shots": "S80, S81",
+  "sync": [
+   [
+    273.45,
+    "key 1 (plate 0.05)"
+   ],
+   [
+    274.05,
+    "key 2 (plate 0.65)"
+   ],
+   [
+    274.95,
+    "key 3, enter (plate 1.55)"
+   ],
+   [
+    276.95,
+    "the ting: the drawn wink shuts (plate 3.55)"
+   ]
+  ],
+  "prompt": "Anime style with clean cel shading and crisp tapered line art exactly like the first frame: flat cel colours, one shadow tone, painted flat backgrounds, no depth-of-field blur, no yellow cast. Close-up, head and shoulders, of the young woman of the first frame, facing the camera with her head tilted slightly, the dark room with the glowing monitor and the warm desk lamp behind her. The whole time she wears the same knowing, mischievous closed-lip smirk (one corner of her mouth curled up), her eyes slightly narrowed and locked on the lens. Without looking away she reaches back with her right hand (the shoulder on the left side of the picture) to the keyboard behind her and taps three keys blind, at 0.05 s, 0.65 s and 1.55 s: on each tap that shoulder dips a little; only her shoulder and arm move. Then she holds still, smirking at the camera, to the end; at 3.0 s the smirk deepens very slightly. She does not blink, does not wink and does not open her mouth. Light: cool pearl monitor glow from behind as a rim on her hair, warm orange desk lamp on her face. Camera static. No text, no captions, no watermark.",
+  "notes": "From the K80b keyframe (first frame). Both eyes stay open: the renderer draws the eclipse wink on 276.95."
+ },
+ "request": {
+  "prompt": "Anime style with clean cel shading and crisp tapered line art exactly like the first frame: flat cel colours, one shadow tone, painted flat backgrounds, no depth-of-field blur, no yellow cast. Close-up, head and shoulders, of the young woman of the first frame, facing the camera with her head tilted slightly, the dark room with the glowing monitor and the warm desk lamp behind her. The whole time she wears the same knowing, mischievous closed-lip smirk (one corner of her mouth curled up), her eyes slightly narrowed and locked on the lens. Without looking away she reaches back with her right hand (the shoulder on the left side of the picture) to the keyboard behind her and taps three keys blind, at 0.05 s, 0.65 s and 1.55 s: on each tap that shoulder dips a little; only her shoulder and arm move. Then she holds still, smirking at the camera, to the end; at 3.0 s the smirk deepens very slightly. She does not blink, does not wink and does not open her mouth. Light: cool pearl monitor glow from behind as a rim on her hair, warm orange desk lamp on her face. Camera static. No text, no captions, no watermark.",
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "adaptive",
+  "generate_audio": false,
+  "use_virtual_avatar": false,
+  "image": "data:image/jpeg;base64...(416 KB)",
+  "reference_audios": [
+   "data:audio/mpeg;base64...(158 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T22:36:27"
+}
