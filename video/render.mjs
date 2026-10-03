@@ -98,10 +98,11 @@ if (args.encode) {
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.jpg': 'image/jpeg', '.png': 'image/png',
   '.webp': 'image/webp', '.ttf': 'font/ttf', '.otf': 'font/otf', '.woff2': 'font/woff2', '.mp3': 'audio/mpeg', '.wav': 'audio/wav', '.m4a': 'audio/mp4', '.bin': 'application/octet-stream', '.txt': 'text/plain' };
 const MISSING = new Set();   // 404s (optional files such as data/timing.json); reported once at the end
+const LOOKDEV = resolve(HERE, '../media/lookdev');   // read-only: the designated stand-in plates (brush engine, until video/plates/P## land)
 const server = createServer((req, res) => {
   const url = decodeURIComponent(req.url.split('?')[0]);
-  const p = url === '/audio/song.mp3' ? STUDIO_SONG : join(HERE, url);
-  if ((!p.startsWith(HERE + '/') && p !== STUDIO_SONG) || !existsSync(p) || statSync(p).isDirectory()) {
+  const p = url === '/audio/song.mp3' ? STUDIO_SONG : url.startsWith('/media/lookdev/') ? join(HERE, '..', url) : join(HERE, url);
+  if ((!p.startsWith(HERE + '/') && !p.startsWith(LOOKDEV + '/') && p !== STUDIO_SONG) || !existsSync(p) || statSync(p).isDirectory()) {
     if (args.verbose) console.log('404 ' + req.url);
     MISSING.add(url);
     res.writeHead(404); res.end(); return;

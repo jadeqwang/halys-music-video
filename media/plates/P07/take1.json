@@ -1,0 +1,64 @@
+{
+ "plate": "P07",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 175.1,
+ "est_cost_usd": 1.156,
+ "duration_s": 5.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 25.5,
+   "dur": 5.0,
+   "file": "media/plates/P07/audio_song_0025.50_5.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 5,
+  "refs": [
+   "LYD",
+   "MED",
+   "SHALLOWS"
+  ],
+  "audio": {
+   "t0": 25.5,
+   "src": "song"
+  },
+  "t_song": [
+   25.5,
+   30.5
+  ],
+  "shots": "S10",
+  "sync": [
+   [
+    27.24,
+    "boom = cut to the clash (plate 1.74)"
+   ]
+  ],
+  "prompt": "Slow-motion, very low-angle shot at the waterline in the middle of a wide shallow ford of the red-brown clay river of reference image 3. From the left bank the Lydian front line, dressed like reference image 1 (crested bronze helmets, crimson tunics, round crimson shields with a black lion, spears levelled), charges into the knee-deep water toward frame right; from the right bank the Median front line, dressed like reference image 2 (red felt caps, ochre tunics, round wicker shields, spears), charges into the water toward frame left. They run toward each other, legs churning the water, spray thrown up and lit gold, spears lowered; the gap between them closes steadily but they do not meet. Mirror-symmetric composition, the gap centred. Camera very low, just above the water, static with a slight push forward. Hard, low golden sun raking in from frame right (the sun itself is outside the frame, beyond the right edge), long shadows, deep black shadows, warm rim light, background much darker than the figures. Clear air: no fog, no haze, no smoke. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. High-frame-rate slow motion. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "notes": "Crescendo into the 27.24 boom; the lines must not collide here (that is P08).",
+  "avatar": true
+ },
+ "request": {
+  "prompt": "Slow-motion, very low-angle shot at the waterline in the middle of a wide shallow ford of the red-brown clay river of reference image 3. From the left bank the Lydian front line, dressed like reference image 1 (crested bronze helmets, crimson tunics, round crimson shields with a black lion, spears levelled), charges into the knee-deep water toward frame right; from the right bank the Median front line, dressed like reference image 2 (red felt caps, ochre tunics, round wicker shields, spears), charges into the water toward frame left. They run toward each other, legs churning the water, spray thrown up and lit gold, spears lowered; the gap between them closes steadily but they do not meet. Mirror-symmetric composition, the gap centred. Camera very low, just above the water, static with a slight push forward. Hard, low golden sun raking in from frame right (the sun itself is outside the frame, beyond the right edge), long shadows, deep black shadows, warm rim light, background much darker than the figures. Clear air: no fog, no haze, no smoke. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. High-frame-rate slow motion. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(582 KB)",
+   "data:image/jpeg;base64...(557 KB)",
+   "data:image/jpeg;base64...(1111 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(161 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T01:55:22"
+}

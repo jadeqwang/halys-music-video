@@ -662,7 +662,7 @@ def collect(job, out=None, timeout=0):
 
 
 def pending():
-    return sorted(json.loads(p.read_text()) for p in JOBS.glob("*.json")) if JOBS.exists() else []
+    return sorted((json.loads(p.read_text()) for p in JOBS.glob("*.json")), key=lambda j: j.get("t_submit", 0)) if JOBS.exists() else []
 
 
 def spend(since=None):

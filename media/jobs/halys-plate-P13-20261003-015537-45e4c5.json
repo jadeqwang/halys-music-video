@@ -1,0 +1,40 @@
+{
+ "job": "halys-plate-P13-20261003-015537-45e4c5",
+ "model": "bytedance/seedance-2.5",
+ "tag": "plate:P13",
+ "out": "/home/user/halys-music-video/media/plates/P13/take1.mp4",
+ "t_submit": 1790992538.0394645,
+ "submitted": "2026-10-03T01:55:38",
+ "run": {
+  "runId": "e1cee5b76567fc4194aa6c8bf6939297033ec1b315e78e848aaa9380ab4ee76d",
+  "state": "Running",
+  "httpStatus": 202
+ },
+ "input": {
+  "prompt": "Medium-wide, side-on shot in the knee-deep red-brown shallows of the river side channel of reference image 3. The Lydian from reference image 1 (crested bronze helmet pushed up, braids, short beard, crimson tunic, bronze scale corselet, crimson lion shield) fights the Mede from reference image 2 (red felt cap, black curly beard, long-sleeved ochre tunic, iron scale corselet, wicker shield, short sword on his RIGHT thigh). At 0.9 s the Mede slams his wicker shield into the Lydian, who falls backward into the water with a big splash; at 2.0 s the Mede drives his spear down at him; the Lydian rolls sideways, clear, and the spear stabs into the water where he was, throwing up spray; by 3.5 s the Lydian is up on one knee, shield raised, water streaming off him, facing the Mede again. Clear, readable action with sharp stops, no blood. Camera static, slightly low. Hard, low golden sun raking in from frame right (the sun itself is outside the frame, beyond the right edge), long shadows, deep black shadows, warm rim light, background much darker than the figures. Clear air: no fog, no haze, no smoke. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(582 KB)",
+   "data:image/jpeg;base64...(557 KB)",
+   "data:image/jpeg;base64...(1111 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(161 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "est_cost_usd": 1.156,
+ "meta": {
+  "extra": {
+   "plate": "P13",
+   "take": 1
+  }
+ }
+}

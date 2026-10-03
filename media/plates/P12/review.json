@@ -1,0 +1,77 @@
+{
+ "plate": "P12",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "S17/S19 duel delivered: full figures, mirrored, six readable exchanges with sharp stops.",
+   "costume": "Lydian helmet/crest/crimson tunic/scales and lion shield (lion barely visible, backlit); Mede red cap, ochre tunic, iron scales, wicker shield, sword on the right thigh.",
+   "identity": "Consistent with the sheets; faces small and backlit.",
+   "artefacts": "None serious; spears cross in the air at 4.5-4.9 s (plausible). Light is CONTRE-JOUR: the sun sits in frame at the centre (copied from the SHALLOWS ref), not raking from frame right; faces mostly in shadow.",
+   "notes": "Exchanges at plate 2.12, 3.30, 3.88, 5.20, 6.05, 6.90.",
+   "sync": [
+    {
+     "song_t": 46.06,
+     "event": "beat: first thrust turned by the lion shield (plate 1.33)",
+     "expected_plate_t": 1.33,
+     "measured_plate_t": 2.12,
+     "offset_s": 0.79,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 47.563,
+     "event": "stab (plate 2.83)",
+     "expected_plate_t": 2.833,
+     "measured_plate_t": 3.3,
+     "offset_s": 0.467,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 48.912,
+     "event": "stab (plate 4.18)",
+     "expected_plate_t": 4.182,
+     "measured_plate_t": 3.88,
+     "offset_s": -0.302,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 49.533,
+     "event": "stab (plate 4.80)",
+     "expected_plate_t": 4.803,
+     "measured_plate_t": 5.2,
+     "offset_s": 0.397,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 50.633,
+     "event": "stab + timpani (plate 5.90)",
+     "expected_plate_t": 5.903,
+     "measured_plate_t": 6.05,
+     "offset_s": 0.147,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 51.484,
+     "event": "stab (plate 6.75)",
+     "expected_plate_t": 6.754,
+     "measured_plate_t": 6.9,
+     "offset_s": 0.146,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P12/take1.review.jpg",
+   "contact": "media/plates/P12/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.8496,
+   "job": null,
+   "reviewed": "2026-10-03T01:53:33"
+  }
+ },
+ "shots": "S17, S19, S27, S36, S37",
+ "t_song": [
+  44.73,
+  52.73
+ ],
+ "audio_t0": 44.73
+}

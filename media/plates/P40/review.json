@@ -1,0 +1,45 @@
+{
+ "plate": "P40",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S79 delivered: typing from behind the chair (0-2.2 s), one clean half-turn spin (2.2-3.15 s), squarely facing camera with a perfect deadpan stare from 3.15 s to the end (1.9 s of hold).",
+   "costume": "Matches Pasted image.png and ROOM.md: white cropped bomber, orange stripes, 1420 MHz sleeve patch, blue circle + RARE EARTH on the back, orange headphones, black crop top, navy cargo trousers; room = room_a (lamp, side monitor, saros dial, eclipse glasses, Yagi, foggy window with the tower).",
+   "identity": "Face matches the sheet (brown eyes, straight black hair).",
+   "artefacts": "None; screen pseudo-text (renderer replaces screens).",
+   "notes": "Spin is late: 270.04 chord = plate 3.15 (+1.41 s); spin starts at plate 2.2. The deadpan hold after the spin is 1.9 s (S79 needs 3.36 s: hold the last drawing or slow the tail).",
+   "sync": [
+    {
+     "song_t": 270.04,
+     "event": "final stark chord: the spin ends facing camera (plate 1.74)",
+     "expected_plate_t": 1.74,
+     "measured_plate_t": 3.15,
+     "offset_s": 1.41,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 271.6,
+     "event": "freeze (plate 3.3)",
+     "expected_plate_t": 3.3,
+     "measured_plate_t": 2.917,
+     "offset_s": -0.383,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P40/take1.review.jpg",
+   "contact": "media/plates/P40/take1.sheet.jpg",
+   "virtual_avatar": false,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T01:53:33"
+  }
+ },
+ "shots": "S79",
+ "t_song": [
+  268.3,
+  273.3
+ ],
+ "audio_t0": 268.3
+}

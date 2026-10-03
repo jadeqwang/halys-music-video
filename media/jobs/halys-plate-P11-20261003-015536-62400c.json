@@ -1,0 +1,39 @@
+{
+ "job": "halys-plate-P11-20261003-015536-62400c",
+ "model": "bytedance/seedance-2.5",
+ "tag": "plate:P11",
+ "out": "/home/user/halys-music-video/media/plates/P11/take1.mp4",
+ "t_submit": 1790992536.6066456,
+ "submitted": "2026-10-03T01:55:36",
+ "run": {
+  "runId": "bca3b86e7b72dbe58ca6cd79c5ea7a7b05c7a825e2c7a4d38a43f96a5e5b6482",
+  "state": "Running",
+  "httpStatus": 202
+ },
+ "input": {
+  "prompt": "Two shots joined by one hard cut at 2.5 seconds, mirrored like a matching pair. Shot 1 (0-2.5 s): medium close-up of the Lydian from reference image 1 (crested bronze helmet pushed up, braids, short beard, crimson tunic, bronze scale corselet, crimson lion shield) in the middle of a river melee, shoulders turned three-quarters toward frame right; fighting soldiers move behind him as dark shapes. He breathes hard, then turns his head and freezes, staring across at someone toward frame right. Shot 2 (2.5-5 s): the mirror image: medium close-up of the Mede from reference image 2 (red felt cap with ear flaps, full black curly beard, ochre tunic, iron scale corselet, wicker shield) in the same melee, turned three-quarters toward frame left; he turns his head and freezes, staring back toward frame left, recognition in his eyes. In both shots the hard, low golden sun from frame right lights the face, deep shadows, a much darker background, the face sharp. Camera static. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Clear air, no fog. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(582 KB)",
+   "data:image/jpeg;base64...(557 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(161 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "est_cost_usd": 1.156,
+ "meta": {
+  "extra": {
+   "plate": "P11",
+   "take": 1
+  }
+ }
+}

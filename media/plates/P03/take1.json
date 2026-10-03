@@ -1,0 +1,63 @@
+{
+ "plate": "P03",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 188.5,
+ "est_cost_usd": 1.156,
+ "duration_s": 5.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 14.19,
+   "dur": 5.0,
+   "file": "media/plates/P03/audio_song_0014.19_5.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 5,
+  "refs": [
+   "LYD"
+  ],
+  "audio": {
+   "t0": 14.19,
+   "src": "song"
+  },
+  "t_song": [
+   14.19,
+   19.19
+  ],
+  "shots": "S07",
+  "sync": [
+   [
+    14.19,
+    "cut in"
+   ],
+   [
+    17.66,
+    "cut out (plate 3.47)"
+   ]
+  ],
+  "prompt": "Medium close-up of the Lydian infantryman from reference image 1 on a riverbank before battle, his body turned three-quarters toward frame right. The hard, low golden sun from frame right falls straight on his face in a tight pool of light; behind him a dark, shadowed riverbank with the shapes of soldiers far away, much darker than him. Action: 0-3 s he lifts his crested bronze Corinthian helmet with both hands, settles it on his head pushed back so his face stays visible, and presses the bronze cheek-pieces into place with his fingertips; the small ivory knucklebone charm on its leather cord swings at his chest and glints in the sun. At 3.5 s he lowers his hands, takes one breath and looks off toward frame right, steady and resolute. Long dark braids, short beard, crimson tunic, bronze scale corselet. Camera static, very slight push-in. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Clear air, no haze. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "notes": "Faces right; light pool on his face; the knucklebone must read."
+ },
+ "request": {
+  "prompt": "Medium close-up of the Lydian infantryman from reference image 1 on a riverbank before battle, his body turned three-quarters toward frame right. The hard, low golden sun from frame right falls straight on his face in a tight pool of light; behind him a dark, shadowed riverbank with the shapes of soldiers far away, much darker than him. Action: 0-3 s he lifts his crested bronze Corinthian helmet with both hands, settles it on his head pushed back so his face stays visible, and presses the bronze cheek-pieces into place with his fingertips; the small ivory knucklebone charm on its leather cord swings at his chest and glints in the sun. At 3.5 s he lowers his hands, takes one breath and looks off toward frame right, steady and resolute. Long dark braids, short beard, crimson tunic, bronze scale corselet. Camera static, very slight push-in. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Clear air, no haze. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(582 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(161 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T01:48:43"
+}

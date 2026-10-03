@@ -1,0 +1,66 @@
+{
+ "plate": "P06",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 163.4,
+ "est_cost_usd": 1.3872,
+ "duration_s": 6.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 21.15,
+   "dur": 6.0,
+   "file": "media/plates/P06/audio_song_0021.15_6.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 6,
+  "refs": [
+   "CYAXARES",
+   "MED_CAV_H"
+  ],
+  "audio": {
+   "t0": 21.15,
+   "src": "song"
+  },
+  "t_song": [
+   21.15,
+   27.15
+  ],
+  "shots": "S09, S22, S43",
+  "sync": [
+   [
+    23.3,
+    "ostinato stops, rubato swell (plate 2.15)"
+   ],
+   [
+    24.49,
+    "stab (plate 3.34)"
+   ]
+  ],
+  "prompt": "Medium-wide, low-angle shot of Cyaxares, king of the Medes, the man from reference image 1 (about 60, grey curled beard, madder-red felt cap with a gold diadem band, long-sleeved saffron tunic embroidered with winged creatures, ochre coat worn as a cape, gold lion torque, a composite bow, short sword on his RIGHT thigh), mounted on a big bay horse like the one in reference image 2 (forelock tied in a topknot, cropped upright mane, patterned saddlecloth, bronze bit, no saddle, no stirrups). He faces three-quarters toward frame left: the mirror of a matching shot of the Lydian king. Behind him, darker and further away, ranks of Median spearmen and archers in red felt caps and ochre tunics with wicker shields and a bronze horse standard on a pole. Action: 0-2 s he sits still, gazing ahead; at 2.2 s he slowly raises his left hand high, palm open, commanding; at 3.5 s he turns his head toward his men and shouts a command, mouth wide, arm still raised, to the end; the horse shifts and tosses its head. The king and horse stay centred in the middle half of the frame (the sides will be cropped). Camera static. Hard, low golden sun raking in from frame right (the sun itself is outside the frame, beyond the right edge), long shadows, deep black shadows, warm rim light, background much darker than the figures. Clear air: no fog, no haze, no smoke. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "notes": "Right panel of the kings' diptych; mirror of P05 (same audio, same beats).",
+  "avatar": true
+ },
+ "request": {
+  "prompt": "Medium-wide, low-angle shot of Cyaxares, king of the Medes, the man from reference image 1 (about 60, grey curled beard, madder-red felt cap with a gold diadem band, long-sleeved saffron tunic embroidered with winged creatures, ochre coat worn as a cape, gold lion torque, a composite bow, short sword on his RIGHT thigh), mounted on a big bay horse like the one in reference image 2 (forelock tied in a topknot, cropped upright mane, patterned saddlecloth, bronze bit, no saddle, no stirrups). He faces three-quarters toward frame left: the mirror of a matching shot of the Lydian king. Behind him, darker and further away, ranks of Median spearmen and archers in red felt caps and ochre tunics with wicker shields and a bronze horse standard on a pole. Action: 0-2 s he sits still, gazing ahead; at 2.2 s he slowly raises his left hand high, palm open, commanding; at 3.5 s he turns his head toward his men and shouts a command, mouth wide, arm still raised, to the end; the horse shifts and tosses its head. The king and horse stay centred in the middle half of the frame (the sides will be cropped). Camera static. Hard, low golden sun raking in from frame right (the sun itself is outside the frame, beyond the right edge), long shadows, deep black shadows, warm rim light, background much darker than the figures. Clear air: no fog, no haze, no smoke. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "duration": 6,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(655 KB)",
+   "data:image/jpeg;base64...(329 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(192 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T01:55:10"
+}

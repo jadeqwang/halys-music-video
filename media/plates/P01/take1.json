@@ -1,0 +1,72 @@
+{
+ "plate": "P01",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 239.3,
+ "est_cost_usd": 3.468,
+ "duration_s": 15.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 7.18,
+   "dur": 15.0,
+   "file": "media/plates/P01/audio_song_0007.18_15.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 15,
+  "takes": 2,
+  "refs": [
+   "WIDE",
+   "LYD",
+   "MED"
+  ],
+  "audio": {
+   "t0": 7.18,
+   "src": "song"
+  },
+  "t_song": [
+   7.18,
+   22.18
+  ],
+  "shots": "S04-06, S16, S20, S24, S30, S35, S44",
+  "sync": [
+   [
+    7.18,
+    "strings enter (plate 0)"
+   ],
+   [
+    10.69,
+    "S06 descent begins"
+   ],
+   [
+    14.19,
+    "cut to S07"
+   ]
+  ],
+  "prompt": "Aerial establishing shot from about 40 m above the middle of the broad red-brown clay river of reference image 1, looking straight downstream to the west-north-west. The river runs from the bottom of the frame straight to the low golden sun, which sits just above the horizon at the river's vanishing point. Left bank: the Lydian army, dressed like the man in reference image 2 (crested bronze helmets, crimson tunics, round crimson shields with a black lion, long spears, horsemen, a gold lion standard on a pole). Right bank: the Median army, dressed like the man in reference image 3 (red felt caps, ochre tunics, dark trousers, round wicker shields, archers, horsemen, a bronze horse standard on a pole). Mirror-symmetric composition with equal weight on both banks. In the middle distance the two front lines meet in a wide shallow ford: a dense, churning battle in the water, spears and shields moving, spray flashing gold. Behind the fighting, the rest of each army stands in ranks along its bank. Backlit golden hour: long shadows stretch toward the camera, rim-lit helmets and spear tips, darker foreground banks. Camera: one continuous, steady, slow forward drift and gentle descent toward the ford for the whole 15 seconds, like a crane move; no cuts, no shake. Clear air: no fog, no haze, no smoke. Photoreal live-action cinema, crisp. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "notes": "Master composition by day. River = perspective line to the sun at the vanishing point; Lydians left, Medes right."
+ },
+ "request": {
+  "prompt": "Aerial establishing shot from about 40 m above the middle of the broad red-brown clay river of reference image 1, looking straight downstream to the west-north-west. The river runs from the bottom of the frame straight to the low golden sun, which sits just above the horizon at the river's vanishing point. Left bank: the Lydian army, dressed like the man in reference image 2 (crested bronze helmets, crimson tunics, round crimson shields with a black lion, long spears, horsemen, a gold lion standard on a pole). Right bank: the Median army, dressed like the man in reference image 3 (red felt caps, ochre tunics, dark trousers, round wicker shields, archers, horsemen, a bronze horse standard on a pole). Mirror-symmetric composition with equal weight on both banks. In the middle distance the two front lines meet in a wide shallow ford: a dense, churning battle in the water, spears and shields moving, spray flashing gold. Behind the fighting, the rest of each army stands in ranks along its bank. Backlit golden hour: long shadows stretch toward the camera, rim-lit helmets and spear tips, darker foreground banks. Camera: one continuous, steady, slow forward drift and gentle descent toward the ford for the whole 15 seconds, like a crane move; no cuts, no shake. Clear air: no fog, no haze, no smoke. Photoreal live-action cinema, crisp. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "duration": 15,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(801 KB)",
+   "data:image/jpeg;base64...(582 KB)",
+   "data:image/jpeg;base64...(557 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(473 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T01:49:34"
+}

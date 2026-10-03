@@ -1,0 +1,45 @@
+{
+ "plate": "P03",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S07 delivered: seats the crested helmet (0-0.4 s), presses the cheek-pieces (1.0-3.0 s), hands down and looks off frame right (3.6-4.0 s); faces right in a warm light pool; dark riverbank with soldier ranks behind, clean separation.",
+   "costume": "Matches the sheet: Corinthian helmet pushed up, red/black crest, braids, short beard, bronze scales, crimson tunic, baldric. Knucklebone on its cord reads as a small DARK pendant, not ivory.",
+   "identity": "Same face as media/chars/lydian.jpg (virtual-avatar route kept identity).",
+   "artefacts": "None seen (hands on the helmet clean).",
+   "notes": "Use 1:1 from t0 (cut-in 14.19 = plate 0.0; S07 cut-out 17.66 = plate 3.47, hands come down at ~3.7). Renderer: paint the knucklebone ivory.",
+   "sync": [
+    {
+     "song_t": 14.19,
+     "event": "cut in",
+     "expected_plate_t": 0.0,
+     "measured_plate_t": 0.083,
+     "offset_s": 0.083,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 17.66,
+     "event": "cut out (plate 3.47)",
+     "expected_plate_t": 3.47,
+     "measured_plate_t": 3.75,
+     "offset_s": 0.28,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P03/take1.review.jpg",
+   "contact": "media/plates/P03/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T01:53:33"
+  }
+ },
+ "shots": "S07",
+ "t_song": [
+  14.19,
+  19.19
+ ],
+ "audio_t0": 14.19
+}

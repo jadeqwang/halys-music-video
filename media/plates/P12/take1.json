@@ -1,0 +1,84 @@
+{
+ "plate": "P12",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 207.0,
+ "est_cost_usd": 1.8496,
+ "duration_s": 8.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 44.73,
+   "dur": 8.0,
+   "file": "media/plates/P12/audio_song_0044.73_8.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 8,
+  "takes": 2,
+  "refs": [
+   "LYD",
+   "MED",
+   "SHALLOWS"
+  ],
+  "audio": {
+   "t0": 44.73,
+   "src": "song"
+  },
+  "t_song": [
+   44.73,
+   52.73
+  ],
+  "shots": "S17, S19, S27, S36, S37",
+  "sync": [
+   [
+    46.06,
+    "beat: first thrust turned by the lion shield (plate 1.33)"
+   ],
+   [
+    47.563,
+    "stab (plate 2.83)"
+   ],
+   [
+    48.912,
+    "stab (plate 4.18)"
+   ],
+   [
+    49.533,
+    "stab (plate 4.80)"
+   ],
+   [
+    50.633,
+    "stab + timpani (plate 5.90)"
+   ],
+   [
+    51.484,
+    "stab (plate 6.75)"
+   ]
+  ],
+  "prompt": "Medium-wide, side-on shot of a duel in the knee-deep red-brown shallows of the river side channel of reference image 3 (gravel bar, reeds, red clay bank). On the left, the Lydian from reference image 1 (crested bronze Corinthian helmet pushed up so his face shows, long dark braids, short beard, crimson tunic, bronze scale corselet, round crimson shield with a black lion, spear), faces right; on the right, the Mede from reference image 2 (soft red felt cap with ear flaps, full black curly beard, long-sleeved ochre tunic with a red rosette border, iron scale corselet, dark brown trousers, round wicker shield, spear, short sword in a scabbard on his RIGHT thigh), faces left. Both full figures visible, centred, mirrored and equal in size. Choreography with clear, readable strikes landing on the accents of the reference audio: 0-1 s they circle, shields raised; at 1.3 s the Mede thrusts his spear and the Lydian turns it aside with his lion shield; at 2.8 s the Lydian thrusts back and the Mede catches it on his wicker shield; at 4.2 s and 4.8 s two fast exchanges, spear shafts clacking; at 5.9 s the Lydian smashes his shield into the Mede's shield and the water bursts up in a gold spray; at 6.8 s they spring apart and circle again. Every strike ends in a sharp stop, never a blur. Camera steady, a very slow arc around the fighters. Hard, low golden sun raking in from frame right, long shadows, deep black shadows, warm rim light, background much darker than the figures. Clear air: no fog, no haze, no smoke. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. No blood. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "notes": "The duel; also the 3D orbit plate (S37), so keep both men whole and readable with clean depth."
+ },
+ "request": {
+  "prompt": "Medium-wide, side-on shot of a duel in the knee-deep red-brown shallows of the river side channel of reference image 3 (gravel bar, reeds, red clay bank). On the left, the Lydian from reference image 1 (crested bronze Corinthian helmet pushed up so his face shows, long dark braids, short beard, crimson tunic, bronze scale corselet, round crimson shield with a black lion, spear), faces right; on the right, the Mede from reference image 2 (soft red felt cap with ear flaps, full black curly beard, long-sleeved ochre tunic with a red rosette border, iron scale corselet, dark brown trousers, round wicker shield, spear, short sword in a scabbard on his RIGHT thigh), faces left. Both full figures visible, centred, mirrored and equal in size. Choreography with clear, readable strikes landing on the accents of the reference audio: 0-1 s they circle, shields raised; at 1.3 s the Mede thrusts his spear and the Lydian turns it aside with his lion shield; at 2.8 s the Lydian thrusts back and the Mede catches it on his wicker shield; at 4.2 s and 4.8 s two fast exchanges, spear shafts clacking; at 5.9 s the Lydian smashes his shield into the Mede's shield and the water bursts up in a gold spray; at 6.8 s they spring apart and circle again. Every strike ends in a sharp stop, never a blur. Camera steady, a very slow arc around the fighters. Hard, low golden sun raking in from frame right, long shadows, deep black shadows, warm rim light, background much darker than the figures. Clear air: no fog, no haze, no smoke. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. No blood. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "duration": 8,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(582 KB)",
+   "data:image/jpeg;base64...(557 KB)",
+   "data:image/jpeg;base64...(1111 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(255 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T01:49:02"
+}

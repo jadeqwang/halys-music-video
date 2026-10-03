@@ -1,0 +1,53 @@
+{
+ "plate": "P01",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "Opens exactly on the canonical master composition (halys_wide3): river straight to the sun at the vanishing point, Lydians left, Medes right, mirrored, armies in parade ranks (plate 0-4.5 s). Then the camera descends (4.5-8.5 s) as both armies surge into the river, ending in a ground-level melee in the ford (8.5-15 s).",
+   "costume": "Lydians crested helmets, crimson tunics, crimson lion shields; Medes red caps, ochre tunics, wicker shields; standards on poles (lion, horse), no flags.",
+   "identity": "Army-level; the close melee figures at 12-15 s read as the two sides.",
+   "artefacts": "None seen at sheet scale; dense melee in the last 3 s should not be used for figure work.",
+   "notes": "1:1 from t0 fits S05 (title, plate 0-3.5) and S06 (descent, plate 3.5-7.0) exactly. For later wides (S16, S20, S24, S30, S35, S44) use plate 0-4.5 (static master). No battle at the ford in the high part (armies in ranks).",
+   "sync": [
+    {
+     "song_t": 7.18,
+     "event": "strings enter (plate 0)",
+     "expected_plate_t": 0.0,
+     "measured_plate_t": 0.083,
+     "offset_s": 0.083,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 10.69,
+     "event": "S06 descent begins",
+     "expected_plate_t": 3.51,
+     "measured_plate_t": 4.5,
+     "offset_s": 0.99,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 14.19,
+     "event": "cut to S07",
+     "expected_plate_t": 7.01,
+     "measured_plate_t": 7.583,
+     "offset_s": 0.573,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P01/take1.review.jpg",
+   "contact": "media/plates/P01/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 3.468,
+   "job": null,
+   "reviewed": "2026-10-03T01:53:33"
+  }
+ },
+ "shots": "S04-06, S16, S20, S24, S30, S35, S44",
+ "t_song": [
+  7.18,
+  22.18
+ ],
+ "audio_t0": 7.18
+}

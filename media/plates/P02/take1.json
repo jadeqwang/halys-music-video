@@ -1,0 +1,65 @@
+{
+ "plate": "P02",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 175.9,
+ "est_cost_usd": 1.8496,
+ "duration_s": 8.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 0.0,
+   "dur": 8.0,
+   "file": "media/plates/P02/audio_song_0000.00_8.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 8,
+  "refs": [
+   "TOTALITY",
+   "WIDE"
+  ],
+  "audio": {
+   "t0": 0.0,
+   "src": "song"
+  },
+  "t_song": [
+   0.0,
+   8.0
+  ],
+  "shots": "S01-02",
+  "sync": [
+   [
+    1.45,
+    "diamond-ring flash (renderer)"
+   ],
+   [
+    1.89,
+    "S02 text"
+   ]
+  ],
+  "prompt": "The same aerial view as reference image 1, matched to the daylight view of reference image 2: high above the middle of a broad red-brown river, looking straight downstream to the west-north-west horizon; the Lydian army (crested bronze helmets, crimson tunics, crimson lion shields) on the left bank and the Median army (red felt caps, ochre tunics, wicker shields) on the right bank, mirrored. It is the middle of a total solar eclipse. Readable dusk light: the sky a dark umber dome, an orange sunset glow all around the horizon, and the land in a dim, even twilight in which the soldiers, shields, banks and river stay clearly visible and readable. Both armies stand completely frozen: every soldier is motionless, his face turned up toward the sky above the river's vanishing point. Nothing moves except a faint ripple on the water. The sky above the horizon is empty: no sun, no moon. Camera: an almost imperceptible slow push forward, perfectly steady, no cuts. Clear air: no fog, no smoke. Photoreal live-action cinema. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "notes": "Same view as P01 at totality; never too dark to analyse. The renderer paints the black sun and the corona."
+ },
+ "request": {
+  "prompt": "The same aerial view as reference image 1, matched to the daylight view of reference image 2: high above the middle of a broad red-brown river, looking straight downstream to the west-north-west horizon; the Lydian army (crested bronze helmets, crimson tunics, crimson lion shields) on the left bank and the Median army (red felt caps, ochre tunics, wicker shields) on the right bank, mirrored. It is the middle of a total solar eclipse. Readable dusk light: the sky a dark umber dome, an orange sunset glow all around the horizon, and the land in a dim, even twilight in which the soldiers, shields, banks and river stay clearly visible and readable. Both armies stand completely frozen: every soldier is motionless, his face turned up toward the sky above the river's vanishing point. Nothing moves except a faint ripple on the water. The sky above the horizon is empty: no sun, no moon. Camera: an almost imperceptible slow push forward, perfectly steady, no cuts. Clear air: no fog, no smoke. Photoreal live-action cinema. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "duration": 8,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": false,
+  "reference_images": [
+   "data:image/jpeg;base64...(424 KB)",
+   "data:image/jpeg;base64...(801 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(255 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T01:55:23"
+}
