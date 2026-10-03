@@ -26,8 +26,8 @@ export const DEFAULTS = {
   aw: 960,
   bilR: 3, bilS: 2.2, bilC: .07, bilIt: 3, bgIt: 3, bgR: 4,
   shadowCut: -.075, hiCut: .1, wL: 3, bandAA: 1,
-  line: '#121216', lineBg: '#1b2030', lineW: [.55, 2.3], silW: 2.6, lineHi: .2, lineLo: .09, lineMin: 9, bgLineHi: .34, bgLineMin: 16,
-  bgMode: 0, bgLevels: 6, bgK: 11, bgChroma: .95, bgLift: 1.0, glowI: .55, glowR: 10, emissiveT: .55, priorK: .1,
+  line: '#121216', lineBg: '#1b2030', lineW: [.5, 1.15], silW: 2.4, lineHi: .2, lineLo: .09, lineMin: 9, bgLineHi: .34, bgLineMin: 16,
+  bgMode: 1, bgLevels: 6, bgK: 12, bgChroma: .95, bgLift: 1.0, glowI: .55, glowR: 10, emissiveT: .42, priorK: .1, flatFill: 1, bgModeR: 3,
   regions: {},   // per-shot material priors: { skin: [ellipses], navy: [...], jacket: [...], orange: [...] }
   vignette: .25, seed: 9,
 };
@@ -98,7 +98,24 @@ function prepFields(F, cfg) {
     for (const i of samples) { let b = 0, bd = 1e9; for (let k = 0; k < K; k++) { const d = (L[i] - cen[k][0]) ** 2 * 2 + (A[i] - cen[k][1]) ** 2 + (B[i] - cen[k][2]) ** 2; if (d < bd) { bd = d; b = k; } } const a = acc[b]; a[0] += L[i]; a[1] += A[i]; a[2] += B[i]; a[3]++; }
     for (let k = 0; k < K; k++) if (acc[k][3]) cen[k] = [acc[k][0] / acc[k][3], acc[k][1] / acc[k][3], acc[k][2] / acc[k][3]];
   }
-  return { L, A, B, M, glow, chC, chB, chS, pri, cen };
+  // flat painted background: label every background pixel with its nearest palette colour, clean the label map with a
+  // mode filter (no speckle: shapes, like a painted anime background), and store the flat colour per pixel
+  const lab = new Uint8Array(N);
+  for (let i = 0; i < N; i++) { let b = 0, bd = 1e9; for (let k = 0; k < K; k++) { const d = (L[i] - cen[k][0]) ** 2 * 2 + (A[i] - cen[k][1]) ** 2 + (B[i] - cen[k][2]) ** 2; if (d < bd) { bd = d; b = k; } } lab[i] = b; }
+  const mr = cfg.bgModeR, cnt = new Uint16Array(K);
+  for (let pass = 0; pass < 2; pass++) {
+    const src = lab.slice();
+    for (let y = 0; y < ah; y++) for (let x = 0; x < aw; x++) {
+      cnt.fill(0);
+      for (let j = -mr; j <= mr; j++) { const yy = Math.min(ah - 1, Math.max(0, y + j)); for (let k = -mr; k <= mr; k++) { const xx = Math.min(aw - 1, Math.max(0, x + k)); cnt[src[yy * aw + xx]]++; } }
+      let b = src[y * aw + x], bc = 0; for (let k = 0; k < K; k++) if (cnt[k] > bc) { bc = cnt[k]; b = k; }
+      lab[y * aw + x] = b;
+    }
+  }
+  const fL = new Float32Array(N), fA = new Float32Array(N), fB = new Float32Array(N);
+  for (let i = 0; i < N; i++) { const c = cen[lab[i]]; fL[i] = c[0]; fA[i] = c[1]; fB[i] = c[2]; }
+  const emS = blur(em, aw, ah, 1.2);
+  return { L, A, B, M, glow, chC, chB, chS, pri, cen, fL, fA, fB, emS };
 }
 
 // ---------------------------------------------------------------- GPU
@@ -117,13 +134,13 @@ void main() { float hw = vA.y, d = abs(vA.x) * (hw + 1.0); float cov = clamp(hw 
 const COMP_FS = `#version 300 es
 precision highp float;
 in vec2 vUv;
-uniform sampler2D uC, uX, uLines, uP;
+uniform sampler2D uC, uX, uLines, uP, uFlat;
 uniform vec2 uRes;
 uniform vec3 uBase[5], uShadow[5], uHi[5], uLineC, uLineBg, uBgPal[12];
 uniform vec4 uRange[5];
 uniform vec2 uCuts[5];
 uniform int uK;
-uniform float uShadowCut, uHiCut, uWL, uPriorK, uBgChroma, uBgLift, uGlowI, uVig, uFlip, uBgMode, uBgLevels;
+uniform float uShadowCut, uHiCut, uWL, uPriorK, uBgChroma, uBgLift, uGlowI, uVig, uFlip, uBgMode, uBgLevels, uFlatFill;
 out vec4 o;
 ${GLSL_COMMON}
 vec3 oklab2lin(vec3 c) {
@@ -135,7 +152,7 @@ vec3 celOf(int i, float L) {
   vec4 R = uRange[i];
   float t = L - mix(R.x, R.y, 0.62), aa = max(fwidth(L), 1e-4) * 0.75;
   vec2 cu = uCuts[i];
-  float sh = 1.0 - smoothstep(cu.x - aa, cu.x + aa, t), hi = smoothstep(cu.y - aa, cu.y + aa, t);
+  float sh = 1.0 - smoothstep(cu.x - aa, cu.x + aa, t), hi = smoothstep(cu.y - aa, cu.y + aa, t) * (1.0 - uFlatFill);
   return mix(mix(uBase[i], uShadow[i], sh), uHi[i], hi * (1.0 - sh));
 }
 void main() {
@@ -160,7 +177,8 @@ void main() {
   for (int k = 0; k < 12; k++) { if (k >= uK) break; vec3 q = uBgPal[k]; vec3 dd = c.xyz - q; float d = dd.x * dd.x * 2.0 + dd.y * dd.y + dd.z * dd.z;
     if (d < e1) { e2 = e1; k2 = k1; e1 = d; k1 = k; } else if (d < e2) { e2 = d; k2 = k; } }
   float gk = e2 - e1, wk = 0.5 * (1.0 - smoothstep(0.0, max(fwidth(gk), 1e-5) * 1.2, gk));
-  vec3 q = mix(uBgPal[k1], uBgPal[k2], wk);
+  vec4 fl = texture(uFlat, uv);
+  vec3 q = uBgMode > 0.5 ? mix(fl.rgb, c.xyz, smoothstep(0.15, 0.6, fl.a)) : mix(uBgPal[k1], uBgPal[k2], wk);   // screens keep their content
   if (uBgMode < 0.5) {   // soft: the edge-preserving smooth with gentle value steps (anime depth of field behind a crisp character)
     float lq = c.x * uBgLevels, st = floor(lq) + smoothstep(0.3, 0.7, fract(lq));
     q = vec3(mix(c.x, st / uBgLevels, 0.6), c.y, c.z);
@@ -213,8 +231,9 @@ export async function render(glw, F, cfg, ctx) {
   LT ??= glw.target(W, H, 'rgba16f');
   const out = { v: [], i: [], n: 0 };
   const depthW = ch => { if (!F.D) return 1; const p = ch.pts[ch.pts.length >> 1]; return lerp(.75, 1.25, F.D[(p[1] | 0) * F.aw + (p[0] | 0)]); };
-  chainRibbons(F, f.chC, ch => lerp(cfg.lineW[0], cfg.lineW[1], clamp(ch.s * 2.2)) * depthW(ch), 0, out);
-  chainRibbons(F, f.chS, ch => cfg.silW * depthW(ch), 0, out);
+  void depthW;
+  chainRibbons(F, f.chC, ch => lerp(cfg.lineW[0], cfg.lineW[1], clamp(ch.s * 2.2)), 0, out);
+  chainRibbons(F, f.chS, () => cfg.silW, 0, out);
   chainRibbons(F, f.chB, ch => lerp(cfg.lineW[0] * .8, cfg.lineW[1] * .55, clamp(ch.s * 1.6)), 1, out);
   const V = new Float32Array(out.v), nv = out.n, pos = new Float32Array(nv * 2), A = new Float32Array(nv * 3);
   for (let k = 0; k < nv; k++) { pos[k * 2] = V[k * 5]; pos[k * 2 + 1] = V[k * 5 + 1]; A[k * 3] = V[k * 5 + 2]; A[k * 3 + 1] = V[k * 5 + 3]; A[k * 3 + 2] = V[k * 5 + 4]; }
@@ -226,6 +245,7 @@ export async function render(glw, F, cfg, ctx) {
   gl.blendEquation(gl.FUNC_ADD);
   Mh.dispose();
   const TC = glw.fieldTexture(F.aw, F.ah, [f.L, f.A, f.B, f.M]), TX = glw.fieldTexture(F.aw, F.ah, [f.glow, null, null, null]), TP = glw.fieldTexture(F.aw, F.ah, f.pri);
+  const TF = glw.fieldTexture(F.aw, F.ah, [f.fL, f.fA, f.fB, f.emS]);
   const pal = new Float32Array(36); f.cen.slice(0, 12).forEach((cc, k) => { pal[k * 3] = cc[0]; pal[k * 3 + 1] = cc[1]; pal[k * 3 + 2] = cc[2]; });
   const lin = h => hexRgb(h).map(s2l), flat = a => new Float32Array(a.flat());
   glw.pass(COMP_FS, {
@@ -234,10 +254,10 @@ export async function render(glw, F, cfg, ctx) {
     uRange: flat(MATERIALS.map(m => [m.L[0], m.L[1], m.ab[0], m.ab[1]])), uLineC: lin(cfg.line), uLineBg: lin(cfg.lineBg),
     uCuts: flat(MATERIALS.map(m => m.cuts || [cfg.shadowCut, cfg.hiCut])),
     uShadowCut: cfg.shadowCut, uHiCut: cfg.hiCut, uWL: cfg.wL, uPriorK: cfg.priorK, uBgChroma: cfg.bgChroma, uBgLift: cfg.bgLift, uGlowI: cfg.glowI, uVig: cfg.vignette, uFlip: 1,
-    uP: TP, uBgPal: pal, uK: Math.min(12, f.cen.length), uBgMode: cfg.bgMode, uBgLevels: cfg.bgLevels
+    uP: TP, uBgPal: pal, uK: Math.min(12, f.cen.length), uBgMode: cfg.bgMode, uBgLevels: cfg.bgLevels, uFlat: TF, uFlatFill: cfg.flatFill
   }, null);
   glw.finish();
-  glw.deleteTexture(TC); glw.deleteTexture(TX); glw.deleteTexture(TP);
+  glw.deleteTexture(TC); glw.deleteTexture(TX); glw.deleteTexture(TP); glw.deleteTexture(TF);
   ms.gpu = Math.round(performance.now() - t0);
   return { ms, nLines: f.chC.length + f.chB.length + f.chS.length, fieldsMs: c.ms };
 }

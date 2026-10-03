@@ -427,12 +427,12 @@
  "f6_gold_gpt_t1": {
   "subject": "F6 GOLD",
   "verdict": "alt",
-  "issues": "Rich Rubens-like paint, a Lydian and a Mede embracing, blades raining into a molten river; darker and busier, swords read as falling from the sky."
+  "issues": "Rich Rubens-like paint and a Lydian and a Mede embracing in the foreground (the only take with a cross-army embrace), blades raining into a molten river; darker and busier, the blades read as falling from the sky."
  },
  "f6_gold_sdr_t1": {
   "subject": "F6 GOLD",
-  "verdict": "canonical",
-  "issues": "Tiepolo sky of rose, apricot and cream; warm low sun breaking out as a crescent at the end of the river; swords and spears thrown in arcs into the red water; a Lydian and a Mede embracing at the centre-left; joy on both banks; painted glow with no flare or god rays. Minor: the returning crescent's horns point the wrong way (should open up-left); slight cool tint at the top of the sky."
+  "verdict": "alt",
+  "issues": "Tiepolo sky and composition chosen for F6, but the returning crescent sat at 3:30 o'clock with horns pointing left. Source of the corrected f6_gold_sdr_c."
  },
  "f7_orbit_nbp_t1": {
   "subject": "F7 ORBIT",
@@ -471,7 +471,32 @@
  },
  "f5_marble_nbp_e2p_t1": {
   "subject": "F5 MARBLE",
+  "verdict": "alt",
+  "issues": "v1 pick, superseded by f5_marble2_gpt_j: composite of f5_marble_nbp_e2 with the marble Mede's face restored. All elements present (rearing horse, Lydian and Mede statues, hanging arrows, stopped flock, frozen spray, black sun, one Jupiter, orange glow, umber sky, canonical Thales) but a flat digital-illustration finish, statues lit evenly, Thales standing still."
+ },
+ "f6_gold_sdr_c_t1": {
+  "subject": "F6 GOLD",
   "verdict": "canonical",
-  "issues": "Local composite: f5_marble_nbp_e2 with the marble Mede's face pasted back from e1. The battle frozen as marble on the red riverbank at night: rearing horse, crested Lydian in a carved scale corselet, Mede in a cap with a wicker shield, arrows hanging in the air, a flock stopped mid-flight, spray frozen like glass, blank stone eyes; black sun with a pearl corona, one Jupiter, orange 360-degree horizon glow, umber sky with no blue; canonical Thales (about 40, knotted hair, fillet, chin beard) in living colour looking up with a knowing half-smile. Minor: statues are lit flat rather than raking from the corona and horizon; Thales stands rather than walks; Jupiter is left more than above (style frame, not astronomy); the illustration is digital-painting rather than painterly."
+  "issues": "Local composite of f6_gold_sdr (no generation): the returning crescent rotated 46 deg about the disc centre so it sits at 5 o'clock with horns up-left (RESEARCH 5 #1, after C3); clouds untouched (crescent separated from a fitted sky). Tiepolo sky of rose, apricot and cream; swords and spears arcing into the red river from both banks; two Lydians embrace at the centre-left while the Medes cheer and throw on the right; joy on both sides; painted radiance, no flare or god-ray shafts. Minor: the top of the sky is a pale warm grey that reads slightly cool beside the pink clouds (measured: no pixel has B > G); no cross-army embrace (f6_gold_gpt has one)."
+ },
+ "f5_marble2_nbp_t1": {
+  "subject": "F5 MARBLE",
+  "verdict": "alt",
+  "issues": "v2 brief: strong depth (foreground crested Lydian statue, rearing horse, Mede with an oval wicker shield, marble doves, hanging arrows), canonical Thales mid-stride, strong orange glow; but bluish water reflections and an illustration finish."
+ },
+ "f5_marble2_gpt_t1": {
+  "subject": "F5 MARBLE",
+  "verdict": "alt",
+  "issues": "Chosen F5 composition; Jupiter drawn nearly straight above the sun (10.6 deg left of vertical). Source of f5_marble2_gpt_j."
+ },
+ "f5_marble2_gpt_j_t1": {
+  "subject": "F5 MARBLE",
+  "verdict": "canonical",
+  "issues": "Local composite of f5_marble2_gpt (Jupiter turned to the computed 26.6 deg bearing, no generation). The museum-at-night drift: a low camera between deeply carved marble figures at several depths (crested Lydian in a scale corselet in the foreground, a bearded Mede with a basket-weave wicker shield and a marble rider on the right), a flock of marble doves and volleys of arrows hanging in the air, river spray frozen into glass beads, feather grass turned to stone; the only living thing, the canonical Thales (knotted hair, fillet, chin beard, terracotta mantle, gnomon staff), walks mid-stride in full colour and looks up at the black sun; umber-black sky, small warm corona, orange horizon glow, no blue, blank stone eyes. Minor: marble reads grey-white and evenly lit (the renderer should push corona rim light and orange underlight); the sun hangs higher than 8 deg; the Lydian helmet is a later Attic type with ornament; the Mede's cap is textured like knitwear."
+ },
+ "f5_marble2_sdr_t1": {
+  "subject": "F5 MARBLE",
+  "verdict": "alt",
+  "issues": "Whitest veined marble, red river, Jupiter correctly above-left of the sun, Thales walking through the shallows; but he grins broadly (brief: dry half-smile), the horizon glow is weak and the veining reads blue-grey."
  }
 }

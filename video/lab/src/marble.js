@@ -30,7 +30,7 @@ export const DEFAULTS = {
   // veins: a few thin irregular veins running through the block (warped by the flow field), gated into zones
   veinAmt: .6, veinPeriod: 300, veinWarp: 2.4, veinFlow: .9, veinZoneLo: .45, veinW: 1.0, cloud: .03, mottle: .05,
   veinScale: 7, veinAngle: .5, veinLen: 45,
-  landAlbedo: .2, landSpec: .1, fogLo: .05, fogHi: .6, fogI: .06, depthRim: .4, matteSharp: 1.5,
+  landAlbedo: .22, landSpec: .1, fogLo: .02, fogHi: .22, fogI: .015, depthRim: .4, matteSharp: 1.5,
   glassT: .1, glassI: 2.0, glassReach: 10, glassY: .55, water: 0, waterY: .6,
   sky: null, horizonBand: .03, horizonWide: .15, horizonI: 1.15, planets: [], stars: 140, exposure: 1.0, vignette: .4,
   eyeFlat: 1, faceMin: .7, eyes: [], seed: 5,
@@ -231,8 +231,8 @@ void main() {
   float awayM = 1.0 - smoothstep(0.02, 0.15, texture(uF2, uv).g);                       // never along the subject's edge
   col += uOrange * uDepthRim * dE * land * (1.0 - sky) * awayM;
   // aerial perspective: the far land is veiled by night air lit faintly by the horizon glow, near forms stay dark stone
-  vec3 fogC = uNavy * 2.6 + uOrange * uFogI;
-  col = mix(col, fogC, land * (1.0 - sky) * (1.0 - near) * 0.85);
+  vec3 fogC = uNavy * 2.4 + uOrange * uFogI;
+  col = mix(col, fogC, land * (1.0 - sky) * (1.0 - near) * 0.9);
   // ---- composite: crisp matte silhouettes over the sky; land everywhere else
   col += uOrange * uHorizonI * 0.05 * smoothstep(0.0, 1.0, band) * land * (1.0 - sky);
   // water: a dark mirror, the orange horizon band reflected as a soft streak near the far bank, ripples break it

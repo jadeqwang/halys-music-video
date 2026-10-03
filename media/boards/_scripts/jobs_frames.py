@@ -187,3 +187,29 @@ job("f5_marble_nbp_e2", NBP, "frames",
     "exactly the same: the marble statues, their blank stone eyes, the black sun and corona, Jupiter, the frozen birds, "
     "arrows and spray, the umber night sky with no blue, the orange horizon glow, the composition and the painting style. "
     "No text.", refs=["frames/f5_marble_nbp_e1_t1.jpg", "chars/thales2_e1_t1.jpg"])
+
+# ---------------------------------------------------------------- F5 MARBLE v2 (stronger brief; canonical Thales)
+F5B = (
+    "F5 MARBLE, a frame from an art film: time has stopped during a total solar eclipse at the height of a battle on the "
+    "bank of the red river Halys, and every warrior, horse, arrow and splash has turned to white marble. A low camera at "
+    "chest height drifts among the statues like a night walk through a sculpture museum, with statues at several depths. "
+    "Foreground left: the marble torso and raised round shield of a Lydian warrior in a crested Corinthian helmet and a "
+    "carved scale corselet over a knee-length tunic. Middle ground: a marble Mede in a soft rounded cap, with a curly "
+    "beard and a round wicker shield carved in a basket-weave pattern, his spear stopped mid-thrust; a marble horse "
+    "rearing; marble arrows hanging motionless in the air; a flock of marble birds stopped mid-flight; spray from the "
+    "river frozen into glass beads; feather grass stopped mid-wave. Both warriors equally noble. The marble is white and "
+    "fine-grained with faint grey veining, deeply undercut like the Pergamon Altar frieze, with polished highlights like "
+    "Canova's marble; every carved face has blank stone eyes. "
+    "Light: no sunlight. The only light comes from the pearly corona of the black sun hanging low over the far end of "
+    "the river, which rims the statues with cool pearl-white edge light, and from the orange twilight glow burning all "
+    "around the horizon, which warms their lower planes; deep velvety shadows in the undercuts. Sky: a near-black "
+    "umber-violet dome; the black sun with a soft, small pearly corona low over the far end of the river; Jupiter as ONE "
+    "brilliant white point above and slightly to the left of it; a few faint stars. "
+    "Walking between the statues in the middle ground is the only living, moving thing: THALES of Miletus exactly as on "
+    "the first reference sheet (about 40, lean, dark hair knotted at the nape under a braided fillet, a short pointed "
+    "dark beard with a shaved upper lip, off-white crinkled linen chiton, terracotta-red mantle, wooden gnomon staff), "
+    "mid-stride, in full natural living colour with warm skin, head tilted up toward the black sun with a dry, knowing "
+    "half-smile. Painterly cinematic realism, like an oil painting made from a film still. No glow on the statues, no "
+    "glowing eyes, no blue anywhere, no fog, no lens flare. The second attached image shows marble finish references (an "
+    "archaic kouros of c. 590 BC and Canova's polished marble), for the surface only. " + NOTXT)
+frame("f5_marble2", [NBP, GPT, SDR], F5B, refs=["chars/thales2_e1_t1.jpg", "board:marble"])

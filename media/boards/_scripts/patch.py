@@ -115,3 +115,50 @@ def tilt_up(src_raw, dst_raw, shift):
     out[shift - 6:shift + 6] = (out[shift - 6:shift + 6] * seam + cv2.medianBlur(out[shift - 6:shift + 6].copy(), 5) * (1 - seam)).astype(np.uint8)
     Image.fromarray(out).save(dst_raw)
     return dst_raw
+
+
+def rotate_crescent(src_raw, name, folder, centre, radius, comp_box, angle_deg, note=""):
+    """Rotate a painted sun crescent about the disc centre without touching the clouds: fit a smooth quadratic sky
+    around the disc (crescent excluded), take the crescent (+ its halo) as an additive layer above that sky, remove it
+    and add it back rotated by angle_deg (positive = clockwise on screen)."""
+    a = np.asarray(Image.open(src_raw).convert("RGB")).astype(np.float32)
+    H, W = a.shape[:2]
+    cx, cy = centre
+    R = int(radius * 2.2)
+    x0, y0, x1, y1 = int(cx - R), int(cy - R), int(cx + R), int(cy + R)
+    reg = a[y0:y1, x0:x1]
+    g = reg.mean(axis=2)
+    yy, xx = np.mgrid[y0:y1, x0:x1].astype(np.float32)
+    rr = np.hypot(xx - cx, yy - cy)
+    # crescent mask: bright vs a heavy blur, within the disc radius + 3 px
+    d = g - cv2.GaussianBlur(g, (0, 0), 18)
+    m = ((d > 12) & (rr < radius + 3)).astype(np.uint8)
+    m = cv2.dilate(m, np.ones((3, 3), np.uint8), iterations=2)
+    soft = cv2.GaussianBlur(cv2.dilate(m, np.ones((3, 3), np.uint8), iterations=4).astype(np.float32), (0, 0), 3)
+    soft = np.clip(soft * 1.4, 0, 1)
+    # quadratic sky fit per channel on pixels outside the dilated crescent and inside the patch
+    fitmask = (soft < 0.02) & (rr < R)
+    X = np.stack([np.ones_like(xx), xx - cx, yy - cy, (xx - cx) ** 2, (xx - cx) * (yy - cy), (yy - cy) ** 2], -1)
+    B = np.zeros_like(reg)
+    for c in range(3):
+        coef, *_ = np.linalg.lstsq(X[fitmask], reg[..., c][fitmask], rcond=None)
+        B[..., c] = X @ coef
+    L = np.clip(reg - B, 0, None) * soft[..., None]
+    M = cv2.getRotationMatrix2D((cx - x0, cy - y0), -angle_deg, 1.0)
+    Lr = cv2.warpAffine(L, M, (x1 - x0, y1 - y0), flags=cv2.INTER_CUBIC, borderValue=0)
+    out = a.copy()
+    out[y0:y1, x0:x1] = np.clip(reg - L + Lr, 0, 255)
+    im = Image.fromarray(out.astype(np.uint8))
+    raw = boards.RAW / f"{name}.png"
+    im.save(raw)
+    dst = boards.BOARDS / folder / f"{name}.jpg"
+    size, kb, q = boards.finish_jpg(raw, dst)
+    m_ = {"job": name.rsplit("_t", 1)[0], "take": 1, "name": name, "file": str(dst.relative_to(boards.ROOT)), "folder": folder,
+          "model": "composite", "prompt": f"Local composite (no generation) of {pathlib.Path(src_raw).name}: sun crescent "
+          f"rotated {angle_deg} deg clockwise about the disc centre {tuple(round(v) for v in centre)}. {note}",
+          "refs": [], "ref_files": [str(src_raw)], "raw": str(raw), "raw_size": list(im.size), "size": list(size),
+          "kb": kb, "secs": 0, "est_cost_usd": 0.0, "t": time.strftime("%Y-%m-%dT%H:%M:%S"), "cf_job": None, "params": {}}
+    with open(boards.MANIFEST, "a") as f:
+        f.write(json.dumps(m_) + "\n")
+    print("rotated crescent ->", dst, size, kb, "KB")
+    return raw
