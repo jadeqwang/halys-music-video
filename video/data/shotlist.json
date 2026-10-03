@@ -1777,7 +1777,7 @@
     "P38"
    ],
    "cues": [],
-   "section": "14 · Outro, 257.68–273.60 (+ sound-design tail; B150–159)",
+   "section": "14 · Outro, 257.68–281.0 (B150–159 + the sound-design tail: frozen chord, room tone, keys, ting; audio ends 279.60)",
    "picture": "**The dive**: through cloud to Anatolia to the Halys valley; lines condense into paint as we land.",
    "text": "—",
    "sync": "Hit 257.67"
@@ -1800,7 +1800,7 @@
      "text": "THROW DOWN"
     }
    ],
-   "section": "14 · Outro, 257.68–273.60 (+ sound-design tail; B150–159)",
+   "section": "14 · Outro, 257.68–281.0 (B150–159 + the sound-design tail: frozen chord, room tone, keys, ting; audio ends 279.60)",
    "picture": "Both armies raise their blades high in unison (formation pose).",
    "text": "CHOP `THROW DOWN` 259.77",
    "sync": "Hit 259.35"
@@ -1823,7 +1823,7 @@
      "text": "BLADE"
     }
    ],
-   "section": "14 · Outro, 257.68–273.60 (+ sound-design tail; B150–159)",
+   "section": "14 · Outro, 257.68–281.0 (B150–159 + the sound-design tail: frozen chord, room tone, keys, ting; audio ends 279.60)",
    "picture": "**BLADE**: every blade slams down at once. One straggler's lands late, on the 261.05 hit, and he shrugs.",
    "text": "CHOP `BLADE` 260.62",
    "sync": "Hits 260.62, 261.05"
@@ -1842,7 +1842,7 @@
     "proc."
    ],
    "cues": [],
-   "section": "14 · Outro, 257.68–273.60 (+ sound-design tail; B150–159)",
+   "section": "14 · Outro, 257.68–281.0 (B150–159 + the sound-design tail: frozen chord, room tone, keys, ting; audio ends 279.60)",
    "picture": "**Pull-back** on the boom: up out of the valley, through sky, Earth (blue) with the umbra dot over Anatolia, past the Moon, into a monitor bezel.",
    "text": "—",
    "sync": "Boom 262.72; held \"throw down\""
@@ -1850,25 +1850,58 @@
   {
    "id": "S78",
    "t0": 266.12,
-   "t1": 270.01,
+   "t1": 270.04,
    "world": "room",
    "worlds": [
     "room"
    ],
    "plates": [
-    "P39",
-    "P40"
+    "P39"
    ],
    "cues": [],
-   "section": "14 · Outro, 257.68–273.60 (+ sound-design tail; B150–159)",
-   "picture": "**The room.** The blue RARE EARTH circle on her back rhymes with the planet. The ticking build is her keystrokes: `git commit -am \"fix(halys): schedule eclipse to end war (#585)\"`. On the final hits (266.99–269.8) she spins the chair.",
+   "section": "14 · Outro, 257.68–281.0 (B150–159 + the sound-design tail: frozen chord, room tone, keys, ting; audio ends 279.60)",
+   "picture": "**The room**, from behind her chair: the blue RARE EARTH circle on her back rhymes with the planet we just left. The ticking build is the terminal scrolling, one line per tick; on the side monitor the ΔT map's totality band slides north onto the Halys.",
    "text": "MONO terminal (ROOM.md)",
-   "sync": ""
+   "sync": "Ticks 266.1–269.8"
   },
   {
    "id": "S79",
-   "t0": 270.01,
-   "t1": null,
+   "t0": 270.04,
+   "t1": 273.4,
+   "world": "room",
+   "worlds": [
+    "room"
+   ],
+   "plates": [
+    "P40"
+   ],
+   "cues": [],
+   "section": "14 · Outro, 257.68–281.0 (B150–159 + the sound-design tail: frozen chord, room tone, keys, ting; audio ends 279.60)",
+   "picture": "**On the final stark chord she spins the chair to camera**: her face is the stinger. Deadpan eye contact while the frozen chord rings.",
+   "text": "—",
+   "sync": "Chord 270.04, freeze from 271.6"
+  },
+  {
+   "id": "S80",
+   "t0": 273.4,
+   "t1": 276.95,
+   "world": "room",
+   "worlds": [
+    "room"
+   ],
+   "plates": [
+    "P41"
+   ],
+   "cues": [],
+   "section": "14 · Outro, 257.68–281.0 (B150–159 + the sound-design tail: frozen chord, room tone, keys, ting; audio ends 279.60)",
+   "picture": "Still holding our gaze, she types blind (keys 273.45, 274.05, 274.95); behind her the terminal prints `[main 585ec1a] fix(halys): schedule eclipse to end war (#585)`.",
+   "text": "MONO",
+   "sync": "Key clicks from the sound design"
+  },
+  {
+   "id": "S81",
+   "t0": 276.95,
+   "t1": 281.0,
    "world": "room",
    "worlds": [
     "room"
@@ -1890,13 +1923,13 @@
     {
      "role": "plaque",
      "t": null,
-     "text": "NEXT TOTALITY · 2027-08-02 · LUXOR · 6M23S"
+     "text": "NEXT TOTALITY · …"
     }
    ],
-   "section": "14 · Outro, 257.68–273.60 (+ sound-design tail; B150–159)",
-   "picture": "**The wink** on the final stark chord: her eyelid crosses her iris with the Moon's curved edge. Hold, decay, freeze. End card.",
-   "text": "CARVED `HALYS` · `JADE WANG`; PLAQUE `NEXT TOTALITY · 2027-08-02 · LUXOR · 6M23S`",
-   "sync": "Chord 270.04"
+   "section": "14 · Outro, 257.68–281.0 (B150–159 + the sound-design tail: frozen chord, room tone, keys, ting; audio ends 279.60)",
+   "picture": "**The wink**, on the ting: her eyelid crosses her iris with the Moon's curved edge. Hold 0.6 s, cut to black, end card (video runs ~1.4 s past the audio in silence).",
+   "text": "CARVED `HALYS` · `JADE WANG`; PLAQUE `NEXT TOTALITY · …` (per FACTCHECK.md)",
+   "sync": "Ting 276.95; audio ends 279.60"
   }
  ]
 }

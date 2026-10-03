@@ -232,8 +232,12 @@ function contourLines(F, f, cfg) {
       const [x, y] = pts[k]; xy[k * 2] = x; xy[k * 2 + 1] = y;
       if (k) acc += Math.hypot(x - pts[k - 1][0], y - pts[k - 1][1]) * S;
       s[k] = (x * .7 + y * .7) * S;                                     // spatial phase: travelling bands across the subject
-      d[k] = f.Db ? samp(F, f.Db, x, y) : .5;
+      // depth: a contour sits on the depth discontinuity, so sample a few px inside the subject (not across the edge)
+      let sx = x, sy = y;
+      if (kind === 0 && f.M) { const gx = samp(F, f.M, x + 1, y) - samp(F, f.M, x - 1, y), gy = samp(F, f.M, x, y + 1) - samp(F, f.M, x, y - 1), gm = Math.hypot(gx, gy) || 1; sx = x + gx / gm * 4; sy = y + gy / gm * 4; }
+      d[k] = f.Db ? samp(F, f.Db, sx, sy) : .5;
     }
+    if (n > 2) { const r = 6, tmp = d.slice(); for (let k = 0; k < n; k++) { let a = 0, ws = 0; for (let j = Math.max(0, k - r); j <= Math.min(n - 1, k + r); j++) { const q = 1 - Math.abs(j - k) / (r + 1); a += tmp[j] * q; ws += q; } d[k] = a / ws; } }
     for (let k = 0; k < n; k++) {
       const [x, y] = pts[k], u = Math.min(acc ? (k / (n - 1)) : 0, 1), taper = Math.pow(Math.min(1, Math.min(u, 1 - u) * 5), .6);
       const k0 = Math.max(0, k - 2), k1 = Math.min(n - 1, k + 2), tx = pts[k1][0] - pts[k0][0], ty = pts[k1][1] - pts[k0][1], tm = Math.hypot(tx, ty) || 1;

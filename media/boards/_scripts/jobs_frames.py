@@ -177,3 +177,13 @@ job("f4_corona_gpt_e1", GPT, "frames",
     "felt caps with small cheek flaps (no helmets, no crests), round wicker shields drawn as fine basket-weave line "
     "patterns, long-sleeved knee-length tunics, upright spears, and in the front rank archers holding short double-curved "
     "bows; keep the bronze horse standard and the riders on the right. No text.", refs=["frames/f4_corona_gpt_t1.jpg"])
+
+job("f5_marble_nbp_e2", NBP, "frames",
+    "Edit this painted frame. Replace only the living man in colour (Thales, standing between the statues with a "
+    "staff) with the man from the second attached image: same lean build and age (about 40), his dark hair knotted at "
+    "the nape under a braided fillet, a short pointed dark beard on the chin with a SHAVED upper lip, the off-white "
+    "crinkled linen chiton with pinned sleeves and the terracotta-red mantle; he holds his wooden gnomon staff and looks "
+    "up at the black sun with a dry, knowing half-smile. Keep him in full living painted colour and keep everything else "
+    "exactly the same: the marble statues, their blank stone eyes, the black sun and corona, Jupiter, the frozen birds, "
+    "arrows and spray, the umber night sky with no blue, the orange horizon glow, the composition and the painting style. "
+    "No text.", refs=["frames/f5_marble_nbp_e1_t1.jpg", "chars/thales2_e1_t1.jpg"])
