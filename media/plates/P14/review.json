@@ -1,0 +1,83 @@
+{
+ "plate": "P14",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S23 close-up: hard warm light pool on his face, breathing with sweat (0-1.6 s), still (1.6-2.8 s), looks up in awe from 3.0 s (fully up 4.1 s).",
+   "costume": "Corinthian helmet low on the head (face visible through the opening), braids, scales, crimson.",
+   "identity": "Matches the sheet.",
+   "artefacts": "None.",
+   "notes": "Alternate: best-lit first half; upward gaze only 1.5 s.",
+   "sync": [
+    {
+     "song_t": 66.96,
+     "event": "timpani (plate 1.29)",
+     "expected_plate_t": 1.29,
+     "measured_plate_t": 1.542,
+     "offset_s": 0.252,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 67.73,
+     "event": "first sung word: the frame is still (plate 2.06)",
+     "expected_plate_t": 2.06,
+     "measured_plate_t": 2.4,
+     "offset_s": 0.34,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P14/take1.review.jpg",
+   "contact": "media/plates/P14/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T02:01:24"
+  },
+  "2": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S23/S36/S41/S47: breathing in the dark melee (0-1.6 s), eyes rise from 2.0 s, a long upward gaze in awe with wet eyes from 2.8 s to the end; the light grows on his face as he looks up.",
+   "costume": "Corinthian helmet, braids, scale corselet, crimson tunic.",
+   "identity": "Matches the sheet.",
+   "artefacts": "None; the face is darker in the first 1.6 s.",
+   "notes": "Chosen candidate: the look-up lasts ~2.8 s (S41/S47 need ~3.4 s: slow or hold the end).",
+   "sync": [
+    {
+     "song_t": 66.96,
+     "event": "timpani (plate 1.29)",
+     "expected_plate_t": 1.29,
+     "measured_plate_t": 0.667,
+     "offset_s": -0.623,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 67.73,
+     "event": "first sung word: the frame is still (plate 2.06)",
+     "expected_plate_t": 2.06,
+     "measured_plate_t": 2.0,
+     "offset_s": -0.06,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P14/take2.review.jpg",
+   "contact": "media/plates/P14/take2.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T02:01:24",
+   "short": "Face dark for the first 1.6 s; upward gaze ~2.8 s (S41/S47 want ~3.4 s)."
+  }
+ },
+ "shots": "S23, S36, S41, S47",
+ "t_song": [
+  65.67,
+  70.67
+ ],
+ "audio_t0": 65.67,
+ "chosen": 2,
+ "chosen_why": "Longer upward gaze in awe (from 2.0 s; S41/S47 need it) and the light grows on his face; take 1 is the alternate with a better-lit opening.",
+ "t_chosen": "2026-10-03T02:23:03"
+}

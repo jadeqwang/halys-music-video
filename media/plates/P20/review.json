@@ -1,0 +1,49 @@
+{
+ "plate": "P20",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 5,
+   "purpose": "S31/S55 delivered: mirrored converging ranks (Lydians left, Medes right) in profile against an orange horizon glow under a dark umber sky (readable dusk); everyone still, then every face lifts in unison peaking at plate 2.04 (the 102.21 boom, +0.07 s) and holds; empty sky in the V for the black sun.",
+   "costume": "Correct on both sides (crests, scales, crimson; red caps, beards, ochre, wicker shields).",
+   "identity": "Army-level.",
+   "artefacts": "None.",
+   "notes": "Use 1:1 from t0.",
+   "sync": [
+    {
+     "song_t": 100.27,
+     "event": "boom (plate 0.03)",
+     "expected_plate_t": 0.03,
+     "measured_plate_t": 0.083,
+     "offset_s": 0.053,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 102.21,
+     "event": "BIGGEST BOOM: every face up in unison (plate 1.97)",
+     "expected_plate_t": 1.97,
+     "measured_plate_t": 2.04,
+     "offset_s": 0.07,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P20/take1.review.jpg",
+   "contact": "media/plates/P20/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T02:06:13",
+   "short": "-"
+  }
+ },
+ "shots": "S31, S55",
+ "t_song": [
+  100.24,
+  104.24
+ ],
+ "audio_t0": 100.24,
+ "chosen": 1,
+ "chosen_why": "Only take; faces-up in unison on the 102.21 boom.",
+ "t_chosen": "2026-10-03T02:23:03"
+}

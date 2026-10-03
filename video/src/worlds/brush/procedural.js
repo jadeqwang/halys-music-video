@@ -1,0 +1,176 @@
+// procedural.js: painted elements that no plate provides (reusable by every brush world).
+//
+//   arrowStrokes(o)          an arrow in flight as a few dark brush strokes (shaft, fletching, head), with motion smear
+//   crescentField(aw, ah, o) the pinhole crescents a wicker shield throws (RESEARCH §5 #4): a light field (0..1) of
+//                            crescent suns stretched along the shadow direction + matching impasto dabs
+//   umbraField(aw, ah, o)    the moon's shadow arriving out of the sunset: darkness beyond a front that runs from the
+//                            horizon toward the camera (by depth when the source has it, else by screen row)
+//   mirrorFigure(o)          a tiny figure (orange headphones, a Yagi antenna) painted as if reflected in a convex
+//                            bronze shield (S26's easter egg)
+//   horizonCanvas(o)         a draw(g, aw, ah) for canvasSource: low hills, haze and a distant river under a sky
+//                            region the engine replaces (S12, S18, S34)
+
+import { clamp, lerp, sstep, hash3, hash4, TAU, fbm, mix3 } from './util.js';
+
+const T = (pal, n) => pal.tube(n) || [.5, .5, .5];
+
+// ---------------------------------------------------------------- the arrow (S12)
+// o: {x, y (screen px of the arrowhead tip), ang (flight direction, rad), len (px), pal, k (opacity), smear (px), seed}
+export function arrowStrokes(o) {
+  const { x, y, ang, len, pal } = o, k = o.k ?? 1, seed = o.seed ?? 3;
+  const dx = Math.cos(ang), dy = Math.sin(ang), nx = -dy, ny = dx;
+  const dark = mix3(T(pal, 'boneBlack'), T(pal, 'rawUmber'), .3), wood = mix3(T(pal, 'burntUmber'), T(pal, 'boneBlack'), .55);
+  const out = [];
+  const add = (pts, r, c0, c1, thick, a, sd, taper = .4) => out.push({ pts, r, c0, c1: c1 || c0, a: a * k, thick, seed: sd, key: sd, layer: 11, taper, maxSeg: 12 });
+  const w = Math.max(1.6, len * .011);
+  // shaft (tail -> head), with a faint motion smear trailing behind
+  const tail = [x - dx * len, y - dy * len];
+  add([tail, [x - dx * len * .5, y - dy * len * .5], [x - dx * len * .08, y - dy * len * .08]], w, wood, dark, .35, .97, hash3(1, 1, seed), .05);
+  if (o.smear) add([[tail[0] - dx * o.smear, tail[1] - dy * o.smear], tail], w * .8, wood, wood, .1, .28, hash3(1, 2, seed), .9);
+  // the head: a narrow leaf of dark iron
+  const hx = x - dx * len * .1, hy = y - dy * len * .1;
+  add([[hx, hy], [x - dx * len * .02, y - dy * len * .02]], w * 2.1, dark, dark, .5, 1, hash3(1, 3, seed), .95);
+  // fletching: three short strokes splayed back from the tail
+  for (let j = -1; j <= 1; j++) {
+    const sp = j * .35, fx = tail[0] + dx * len * .1, fy = tail[1] + dy * len * .1;
+    const ex = fx - (dx * Math.cos(sp) - dy * Math.sin(sp)) * len * .12 + nx * j * w * 2.2, ey = fy - (dy * Math.cos(sp) + dx * Math.sin(sp)) * len * .12 + ny * j * w * 2.2;
+    add([[fx, fy], [ex, ey]], w * 1.4, dark, wood, .25, .9, hash3(2, j + 2, seed), .8);
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------- pinhole crescents (S27)
+// A field of crescent suns thrown through a wicker shield's weave. Before totality the projected bright edge sits at
+// about 7 o'clock (flipped); on ground they stretch 4-6x along the shadow direction; on a surface facing the sun they
+// are round-bodied. Returns {light: Float32Array (0..1), dabs: [{x, y, rx, ry, ang, k}]} in analysis px.
+// o: {region: Float32Array|null (where the crescents can land), mag (eclipse magnitude), stretch (1 round .. 6),
+//     ang (stretch axis, rad), size (px), density (0..1), seed, t (for a slow drift as the shield moves), offset [x, y]}
+export function crescentField(aw, ah, o) {
+  const light = new Float32Array(aw * ah), dabs = [];
+  const mag = clamp(o.mag ?? .8, 0, .98), st = o.stretch ?? 4, ang = o.ang ?? -.35, size = o.size ?? 6, seed = o.seed ?? 9;
+  const ca = Math.cos(ang), sa = Math.sin(ang);
+  const cellX = size * (o.spacing ?? 2.6) * Math.sqrt(st), cellY = size * (o.spacing ?? 2.6);
+  // the moon's offset for this magnitude, in units of the crescent's radius, toward 1 o'clock (the projection flips 7 <-> 1)
+  const off = (1 + 1.066 - 2 * mag), ma = -Math.PI / 2 + Math.PI / 6 * 1;        // the dark disk's direction in the image
+  const mdx = Math.cos(ma) * off, mdy = Math.sin(ma) * off;
+  const ox = (o.offset || [0, 0])[0], oy = (o.offset || [0, 0])[1];
+  for (let cy = -2; cy * cellY < ah + cellY * 2; cy++) for (let cx = -2; cx * cellX < aw + cellX * 2; cx++) {
+    if (hash3(cx, cy, seed) > (o.density ?? .75)) continue;
+    const jx = (hash3(cx, cy, seed + 1) - .5) * cellX * .8, jy = (hash3(cx, cy, seed + 2) - .5) * cellY * .8;
+    const x0 = cx * cellX + jx + ox, y0 = cy * cellY + jy + oy;
+    const s = size * (.7 + .6 * hash3(cx, cy, seed + 3)), k = .55 + .45 * hash3(cx, cy, seed + 4);
+    const ix = Math.round(x0), iy = Math.round(y0);
+    if (ix < 0 || iy < 0 || ix >= aw || iy >= ah) continue;
+    if (o.region && o.region[iy * aw + ix] < .3) continue;
+    dabs.push({ x: x0, y: y0, rx: s * st, ry: s, ang, k });
+    const R = Math.ceil(s * st + 2);
+    for (let y = Math.max(0, iy - R); y <= Math.min(ah - 1, iy + R); y++) for (let x = Math.max(0, ix - R); x <= Math.min(aw - 1, ix + R); x++) {
+      const px = x - x0, py = y - y0, u = (px * ca + py * sa) / st, v = -px * sa + py * ca;   // unstretched disc coords
+      const d = Math.hypot(u, v) / s, dm = Math.hypot(u / s - mdx, v / s - mdy) / 1.066;
+      const sun = 1 - sstep(.86, 1.06, d), moon = 1 - sstep(.9, 1.1, dm);
+      const c = sun * (1 - moon) * k;
+      if (c > 0) { const i = y * aw + x; light[i] = Math.max(light[i], c * (o.region ? o.region[i] : 1)); }
+    }
+  }
+  return { light, dabs };
+}
+// the crescents as loaded strokes (Naples/lead white, thin impasto), in screen px (S = screen px per analysis px)
+export function crescentStrokes(dabs, S, pal, o = {}) {
+  const lead = T(pal, 'leadWhite'), nap = T(pal, 'naples'), out = [], metal = o.metal ?? .5;
+  const col = mix3(mix3(nap, lead, .5), [.82, .83, .84], metal);
+  dabs.forEach((d, j) => {
+    const ca = Math.cos(d.ang), sa = Math.sin(d.ang), L = d.rx * S * .55;
+    const x = d.x * S, y = d.y * S;
+    out.push({ pts: [[x - ca * L, y - sa * L], [x + ca * L, y + sa * L]], r: Math.max(1, d.ry * S * .32), c0: col, c1: col, a: .5 * d.k * (o.k ?? 1), thick: .55, seed: hash3(j, 5, 77), key: hash3(j, 6, 77), layer: 9, taper: .6 });
+  });
+  return out;
+}
+
+// ---------------------------------------------------------------- the umbra (S30)
+// front: 0 (still at the horizon) .. 1 (past the camera). depth: Float32Array (1 = near) or null; horizonY: row fraction.
+// Returns a shadow field (0..1): 1 = inside the umbra. The wall is not a hard cut: a soft penumbral gradient of `soft`.
+export function umbraField(aw, ah, o) {
+  const out = new Float32Array(aw * ah), f = clamp(o.front ?? 0), soft = o.soft ?? .12, D = o.depth, hz = (o.horizonY ?? .4) * ah;
+  for (let y = 0; y < ah; y++) for (let x = 0; x < aw; x++) {
+    const i = y * aw + x;
+    let dist;                                      // 0 at the horizon .. 1 at the camera
+    if (D) dist = clamp(D[i]);
+    else dist = y < hz ? 0 : clamp((y - hz) / (ah - hz));
+    const wob = (fbm(x / aw * 6, y / ah * 3, o.seed ?? 4, 2) - .5) * .08;
+    out[i] = 1 - sstep(f - soft, f + soft * .3, dist + wob);
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------- S26's easter egg
+// A tiny figure seen in a convex mirror: head with orange headphones (#f08a2a), white jacket, holding a Yagi antenna
+// (a boom with crossbars). Drawn as a handful of small strokes, compressed by the mirror's barrel distortion toward its
+// rim. o: {cx, cy (mirror centre, px), R (mirror radius px), u, v (figure position in the mirror, -1..1), h (figure height
+// as a fraction of R), pal, k}
+export function mirrorFigure(o) {
+  const { cx, cy, R, pal } = o, k = o.k ?? 1, h = (o.h ?? .22) * R, out = [];
+  const warp = (u, v) => { const r = Math.hypot(u, v), s = r > 0 ? Math.tanh(r * 1.3) / (r * 1.3) : 1; return [cx + u * s * R, cy + v * s * R]; };
+  const P = (du, dv) => warp((o.u ?? .15) + du * h / R, (o.v ?? -.1) + dv * h / R);
+  const orange = [240 / 255, 138 / 255, 42 / 255], jacket = [.93, .92, .88], hair = [.06, .065, .08], navy = [.12, .14, .2], metal = [.78, .78, .74];
+  const add = (pts, r, c, thick = .3, a = 1) => out.push({ pts, r: Math.max(.6, r), c0: c, c1: c, a: a * k, thick, seed: hash3(out.length, 1, 51), key: 2 + out.length * 1e-3, layer: 12, taper: .2 });
+  add([P(0, -.42), P(0, -.30)], h * .09, hair);                         // head / hair
+  add([P(-.07, -.36), P(-.06, -.33)], h * .045, orange, .5);            // headphones
+  add([P(.07, -.36), P(.06, -.33)], h * .045, orange, .5);
+  add([P(-.06, -.41), P(0, -.45), P(.06, -.41)], h * .018, orange, .4);
+  add([P(0, -.27), P(0, .05)], h * .13, jacket, .4);                    // torso (white jacket)
+  add([P(-.03, .05), P(-.04, .42)], h * .05, navy);                     // legs
+  add([P(.03, .05), P(.04, .42)], h * .05, navy);
+  add([P(.05, -.18), P(.2, -.32)], h * .035, jacket);                   // arm up to the antenna
+  // the Yagi: a boom held up and out, with crossbars
+  const b0 = [.12, -.36], b1 = [.5, -.62];
+  add([P(b0[0], b0[1]), P(b1[0], b1[1])], h * .014, metal, .5);
+  for (let j = 0; j < 6; j++) {
+    const t = j / 5, bx = lerp(b0[0], b1[0], t), by = lerp(b0[1], b1[1], t), L = .1 * (1 - .4 * t);
+    add([P(bx - L * .55, by - L * .85), P(bx + L * .55, by + L * .85)], h * .01, metal, .45);
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------- procedural horizon (S12, S18, S34)
+// draw(g, aw, ah): a low land strip (hills, haze, a glint of river) whose top edge is the horizon at horizonY; the sky
+// above is left to the engine (canvasSource's `sky` mask says where). Colours are pre-palette (they get relit).
+export function horizonCanvas(o = {}) {
+  const hz = o.horizonY ?? .78, seed = o.seed ?? 11;
+  return (g, aw, ah) => {
+    const H0 = hz * ah;
+    const sky = g.createLinearGradient(0, 0, 0, H0); sky.addColorStop(0, '#3a2414'); sky.addColorStop(1, '#c8892f');
+    g.fillStyle = sky; g.fillRect(0, 0, aw, H0 + 2);
+    // far hills: two ridges
+    for (let r = 0; r < 2; r++) {
+      g.beginPath(); g.moveTo(0, ah);
+      for (let x = 0; x <= aw; x += 4) {
+        const y = H0 - (r ? 3 : 9) * (o.hill ?? 1) * (aw / 960) * (.5 + fbm(x / aw * (r ? 7 : 3.5), r * 5.3, seed + r, 3)) + r * 4 * (aw / 960);
+        g.lineTo(x, y);
+      }
+      g.lineTo(aw, ah); g.closePath();
+      g.fillStyle = r ? '#5a3a22' : '#8a5a34'; g.fill();
+    }
+    // the plain
+    const pl = g.createLinearGradient(0, H0, 0, ah); pl.addColorStop(0, '#6a4428'); pl.addColorStop(1, '#2a1a10');
+    g.fillStyle = pl; g.fillRect(0, H0 + 6 * (aw / 960), aw, ah);
+    // the river to the vanishing point (a bright path)
+    if (o.river !== false) {
+      const vx = (o.vanishX ?? .5) * aw;
+      g.beginPath(); g.moveTo(vx - 2, H0 + 6); g.lineTo(vx + 2, H0 + 6); g.lineTo(vx + aw * .18, ah); g.lineTo(vx - aw * .18, ah); g.closePath();
+      const rv = g.createLinearGradient(0, H0, 0, ah); rv.addColorStop(0, '#e8c070'); rv.addColorStop(1, '#8a3a22');
+      g.fillStyle = rv; g.fill();
+    }
+  };
+}
+// a sky mask for horizonCanvas (1 above the horizon, soft 1px edge, the hills cut in)
+export function horizonSkyMask(o = {}) {
+  const hz = o.horizonY ?? .78, seed = o.seed ?? 11;
+  return (aw, ah) => {
+    const m = new Float32Array(aw * ah), H0 = hz * ah;
+    for (let x = 0; x < aw; x++) {
+      const y0 = H0 - 9 * (o.hill ?? 1) * (aw / 960) * (.5 + fbm(x / aw * 3.5, 0, seed, 3));
+      for (let y = 0; y < ah; y++) m[y * aw + x] = 1 - sstep(y0 - 1, y0 + 1, y);
+    }
+    return m;
+  };
+}

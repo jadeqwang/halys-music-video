@@ -1,0 +1,71 @@
+{
+ "plate": "P29",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 186.7,
+ "est_cost_usd": 2.0808,
+ "duration_s": 9.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 194.86,
+   "dur": 9.0,
+   "file": "media/plates/P29/audio_song_0194.86_9.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 9,
+  "takes": 2,
+  "refs": [
+   "LYD",
+   "MED"
+  ],
+  "audio": {
+   "t0": 194.86,
+   "src": "song"
+  },
+  "t_song": [
+   194.86,
+   203.86
+  ],
+  "shots": "S57, S58",
+  "sync": [
+   [
+    194.845,
+    "'spark' (plate 0)"
+   ],
+   [
+    200.315,
+    "'Shadow turned to day': the roar (plate 5.46)"
+   ],
+   [
+    203.6,
+    "boom (plate 8.74)"
+   ]
+  ],
+  "prompt": "Medium-wide shot on a riverbank: Lydian and Median warriors dressed like reference images 1 and 2 (crested bronze helmets, crimson tunics, bronze scale corselets, crimson lion shields; red felt caps, ochre tunics, wicker shields) stand mixed together, frozen like statues, faces turned up to the sky, in the dim, cool, readable twilight of a total eclipse. 0-1 s: completely still. 1-4 s: a wave of warm golden sunlight sweeps across the scene from frame right to frame left, and as the light reaches each warrior he comes back to life: he blinks, breathes, lowers his face and looks around in wonder. 4-5.4 s: they turn to each other, amazed. From 5.4 s both armies roar with joy together, raising their arms, spears and shields high to the sky, cheering, laughing, embracing; the motion grows bigger to the end. From 4 s the light is a hard, low golden sun from frame right with long shadows and warm rim light, the background darker. Camera: slow push-in. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Clear air, no fog. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "notes": "Light returns: statues to flesh, then the roar on 'Shadow turned to day' (plate 5.46).",
+  "avatar": true
+ },
+ "request": {
+  "prompt": "Medium-wide shot on a riverbank: Lydian and Median warriors dressed like reference images 1 and 2 (crested bronze helmets, crimson tunics, bronze scale corselets, crimson lion shields; red felt caps, ochre tunics, wicker shields) stand mixed together, frozen like statues, faces turned up to the sky, in the dim, cool, readable twilight of a total eclipse. 0-1 s: completely still. 1-4 s: a wave of warm golden sunlight sweeps across the scene from frame right to frame left, and as the light reaches each warrior he comes back to life: he blinks, breathes, lowers his face and looks around in wonder. 4-5.4 s: they turn to each other, amazed. From 5.4 s both armies roar with joy together, raising their arms, spears and shields high to the sky, cheering, laughing, embracing; the motion grows bigger to the end. From 4 s the light is a hard, low golden sun from frame right with long shadows and warm rim light, the background darker. Camera: slow push-in. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Clear air, no fog. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "duration": 9,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(582 KB)",
+   "data:image/jpeg;base64...(557 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(286 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T02:10:02"
+}

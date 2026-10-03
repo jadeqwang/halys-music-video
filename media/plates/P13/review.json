@@ -1,0 +1,92 @@
+{
+ "plate": "P13",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "S21 delivered: the Mede's shield bash (1.0-1.5 s) knocks the Lydian backward into the water (splash peak 1.9 s); the Mede drives his spear down and it stabs the water beside him (2.9 s); the Lydian comes up on one knee behind his shield (4.0 s).",
+   "costume": "Correct on both.",
+   "identity": "Consistent with the sheets.",
+   "artefacts": "Backlit with the sun in frame (SHALLOWS ref); no gore.",
+   "notes": "About +0.9 s late against the 59.60 timpani.",
+   "sync": [
+    {
+     "song_t": 59.6,
+     "event": "timpani: knocked down (plate 0.88)",
+     "expected_plate_t": 0.88,
+     "measured_plate_t": 1.9,
+     "offset_s": 1.02,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 61.76,
+     "event": "timpani (plate 3.04)",
+     "expected_plate_t": 3.04,
+     "measured_plate_t": 2.9,
+     "offset_s": -0.14,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 62.2,
+     "event": "cut out (plate 3.48)",
+     "expected_plate_t": 3.48,
+     "measured_plate_t": 4.0,
+     "offset_s": 0.52,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P13/take1.review.jpg",
+   "contact": "media/plates/P13/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T02:01:24"
+  },
+  "2": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S21 delivered: side-lit, darker background; the Mede's shield bash knocks the Lydian back into the water with a big splash at ~1.0 s; the spear comes down at ~2.1 s; the Lydian rolls and rises to one knee behind his lion shield by ~3.5 s.",
+   "costume": "Correct.",
+   "identity": "Match.",
+   "artefacts": "None.",
+   "notes": "Knock-down +0.15 s vs the 59.60 timpani.",
+   "sync": [
+    {
+     "song_t": 59.6,
+     "event": "timpani: knocked down (plate 0.88)",
+     "expected_plate_t": 0.88,
+     "measured_plate_t": 1.0,
+     "offset_s": 0.12,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 62.2,
+     "event": "cut out (plate 3.48)",
+     "expected_plate_t": 3.48,
+     "measured_plate_t": 3.5,
+     "offset_s": 0.02,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P13/take2.review.jpg",
+   "contact": "media/plates/P13/take2.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T02:35:39",
+   "short": "-",
+   "timing": "Knock-down splash at plate 1.0 (59.60 timpani, +0.12 s); spear stabs the water at 2.1; up on one knee at 3.5 = S21 cut-out 62.20."
+  }
+ },
+ "shots": "S21",
+ "t_song": [
+  58.72,
+  63.72
+ ],
+ "audio_t0": 58.72,
+ "chosen": 2,
+ "chosen_why": "Side light and darker background with the same action, closer to the beat than take 1.",
+ "t_chosen": "2026-10-03T02:35:39"
+}

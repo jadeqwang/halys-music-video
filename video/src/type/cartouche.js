@@ -14,18 +14,21 @@ import { clamp, lerp, smooth, hash2, hash3, rng, TAU } from '../core.js';
 const _base = new LRU(8);
 let _work = null;
 
-function tabletPath(c, x, y, w, h) {
-  // a slab with a shaped lower edge that falls to a central point (the pendant hangs from it)
-  const b = h * .8, cusp = h;
-  c.beginPath();
-  c.moveTo(x + .015 * w, y); c.lineTo(x + w - .015 * w, y);
-  c.quadraticCurveTo(x + w, y, x + w, y + .03 * h);
-  c.lineTo(x + w, y + b);
-  c.bezierCurveTo(x + .86 * w, y + b, x + .62 * w, y + .84 * h, x + .5 * w, y + cusp);
-  c.bezierCurveTo(x + .38 * w, y + .84 * h, x + .14 * w, y + b, x, y + b);
-  c.lineTo(x, y + .03 * h);
-  c.quadraticCurveTo(x, y, x + .015 * w, y);
-  c.closePath();
+// the tablet's outline: a slab whose lower edge falls to a central point, with a hand-laid irregular edge (static noise)
+function outline(w, h, n = 160) {
+  const b = h * .8, pts = [];
+  const seg = (x0, y0, x1, y1, k) => { for (let i = 0; i < k; i++) { const s = i / k; pts.push([lerp(x0, x1, s), lerp(y0, y1, s)]); } };
+  const bez = (p0, p1, p2, p3, k) => { for (let i = 0; i < k; i++) { const s = i / k, a = 1 - s; pts.push([a * a * a * p0[0] + 3 * a * a * s * p1[0] + 3 * a * s * s * p2[0] + s * s * s * p3[0], a * a * a * p0[1] + 3 * a * a * s * p1[1] + 3 * a * s * s * p2[1] + s * s * s * p3[1]]); } };
+  seg(0, 0, w, 0, 40); seg(w, 0, w, b, 18);
+  bez([w, b], [.86 * w, b], [.62 * w, .84 * h], [.5 * w, h], 22);
+  bez([.5 * w, h], [.38 * w, .84 * h], [.14 * w, b], [0, b], 22); seg(0, b, 0, 0, 18);
+  return pts.map(([x, y], i) => {
+    const nx = (hash2(i, 3) - .5) * .004 * w + (hash2(i >> 2, 9) - .5) * .006 * w, ny = (hash2(i, 5) - .5) * .004 * w + (hash2(i >> 2, 11) - .5) * .006 * w;
+    return [x + nx, y + ny];
+  });
+}
+function tabletPath(c, x, y, w, h, pts = outline(w, h)) {
+  c.beginPath(); pts.forEach(([px, py], i) => i ? c.lineTo(x + px, y + py) : c.moveTo(x + px, y + py)); c.closePath();
 }
 
 // the unlettered painted tablet, cached per size (the brushwork that boils is added per drawing)
@@ -33,45 +36,72 @@ function paintBase(tw, th, u) {
   const key = `${tw}x${th}`;
   const hit = _base.get(key); if (hit) return hit;
   const m = Math.ceil(.08 * tw), W = Math.ceil(tw + 2 * m), H = Math.ceil(th + 2 * m);
-  const cv = makeCanvas(W, H), c = cv.getContext('2d'), r = rng(9173);
-  const d = Math.max(4, .018 * tw);                               // slab thickness, seen bottom-right (light from upper left)
-  c.save(); c.translate(d, d); tabletPath(c, m, m, tw, th); c.fillStyle = '#3b2715'; c.fill(); c.restore();
-  c.save(); c.translate(d * .5, d * .5); tabletPath(c, m, m, tw, th); c.fillStyle = '#5e4326'; c.fill(); c.restore();
-  tabletPath(c, m, m, tw, th);
+  const cv = makeCanvas(W, H), c = cv.getContext('2d', { willReadFrequently: true }), r = rng(9173), pts = outline(tw, th);
+  const d = Math.max(4, .02 * tw);                                // slab thickness, seen bottom-right (light from upper left)
+  c.save(); c.translate(d, d); tabletPath(c, m, m, tw, th, pts); c.fillStyle = '#2e1d0f'; c.fill(); c.restore();
+  c.save(); c.translate(d * .55, d * .55); tabletPath(c, m, m, tw, th, pts); c.fillStyle = '#56391d'; c.fill(); c.restore();
+  tabletPath(c, m, m, tw, th, pts);
   c.save(); c.clip();
-  const gr = c.createLinearGradient(m, m, m + tw, m + th);
-  gr.addColorStop(0, '#eadbb4'); gr.addColorStop(.45, '#d6c194'); gr.addColorStop(1, '#a88c5c');
+  const gr = c.createLinearGradient(m, m, m + tw * .8, m + th * 1.1);
+  gr.addColorStop(0, '#d9c49a'); gr.addColorStop(.5, '#b99d6b'); gr.addColorStop(1, '#7e6440');
   c.fillStyle = gr; c.fillRect(0, 0, W, H);
-  // laid-in brushwork: short loaded strokes, mostly along the slab, in near tones
-  const tones = ['#f1e4c0', '#dcc89c', '#c9b07e', '#b99b68', '#e6d3a6', '#a8895a'];
-  for (let i = 0; i < 1400; i++) {
-    const x = m + r() * tw, y = m + r() * th, len = (.02 + .07 * r()) * tw, ang = (r() - .5) * .5 + (r() < .15 ? Math.PI / 2 : 0);
-    c.strokeStyle = tones[(r() * tones.length) | 0]; c.globalAlpha = .05 + .1 * r(); c.lineWidth = (1.5 + 5 * r()) * u; c.lineCap = 'round';
-    c.beginPath(); c.moveTo(x, y); c.quadraticCurveTo(x + Math.cos(ang) * len * .5 + (r() - .5) * 6 * u, y + Math.sin(ang) * len * .5 + (r() - .5) * 6 * u, x + Math.cos(ang) * len, y + Math.sin(ang) * len); c.stroke();
+  // broad loaded dabs laid along the slab, then scumbled light, in near tones
+  const tones = ['#e6d3a6', '#cdb17e', '#b2945f', '#9a7b4c', '#dcc390', '#8a6b40', '#c6a36a'];
+  for (let i = 0; i < 700; i++) {
+    const x = m + r() * tw, y = m + r() * th, len = (.03 + .1 * r()) * tw, ang = (r() - .5) * .35;
+    c.strokeStyle = tones[(r() * tones.length) | 0]; c.globalAlpha = .045 + .07 * r(); c.lineWidth = (7 + 16 * r()) * u; c.lineCap = 'round';
+    const bend = (r() - .5) * 10 * u;
+    c.beginPath(); c.moveTo(x, y); c.quadraticCurveTo(x + Math.cos(ang) * len * .5, y + Math.sin(ang) * len * .5 + bend, x + Math.cos(ang) * len, y + Math.sin(ang) * len); c.stroke();
   }
-  // age: a few soft stains and a darker worn margin
-  for (let i = 0; i < 9; i++) {
-    const x = m + r() * tw, y = m + r() * th, rr = (.04 + .12 * r()) * tw, rg = c.createRadialGradient(x, y, 0, x, y, rr);
-    rg.addColorStop(0, 'rgba(120,88,48,.13)'); rg.addColorStop(1, 'rgba(120,88,48,0)');
+  for (let i = 0; i < 900; i++) {
+    const x = m + r() * tw, y = m + r() * th, len = (.01 + .04 * r()) * tw, ang = (r() - .5) * .8;
+    c.strokeStyle = r() < .55 ? '#efe2bf' : '#7a5e38'; c.globalAlpha = .03 + .05 * r(); c.lineWidth = (1.2 + 3 * r()) * u;
+    c.beginPath(); c.moveTo(x, y); c.lineTo(x + Math.cos(ang) * len, y + Math.sin(ang) * len); c.stroke();
+  }
+  // the light pooling on the upper left of the face, the lower right falling into umber
+  const lg = c.createRadialGradient(m + .25 * tw, m + .1 * th, 0, m + .3 * tw, m + .2 * th, 1.1 * tw);
+  lg.addColorStop(0, 'rgba(255,236,190,.22)'); lg.addColorStop(.5, 'rgba(255,236,190,0)'); lg.addColorStop(1, 'rgba(40,22,8,.35)');
+  c.globalAlpha = 1; c.fillStyle = lg; c.fillRect(0, 0, W, H);
+  // craquelure: fine dark wandering cracks
+  c.strokeStyle = '#3d2a16'; c.lineWidth = Math.max(.6, .8 * u);
+  for (let i = 0; i < 26; i++) {
+    let x = m + r() * tw, y = m + r() * th, a = r() * TAU;
+    c.globalAlpha = .07 + .08 * r(); c.beginPath(); c.moveTo(x, y);
+    for (let k = 0; k < 9; k++) { a += (r() - .5) * 1.2; x += Math.cos(a) * .02 * tw; y += Math.sin(a) * .02 * tw; c.lineTo(x, y); }
+    c.stroke();
+  }
+  // age stains
+  for (let i = 0; i < 8; i++) {
+    const x = m + r() * tw, y = m + r() * th, rr = (.05 + .12 * r()) * tw, rg = c.createRadialGradient(x, y, 0, x, y, rr);
+    rg.addColorStop(0, 'rgba(92,62,30,.14)'); rg.addColorStop(1, 'rgba(92,62,30,0)');
     c.globalAlpha = 1; c.fillStyle = rg; c.fillRect(x - rr, y - rr, 2 * rr, 2 * rr);
   }
   c.restore();
-  c.save(); tabletPath(c, m, m, tw, th); c.clip();
-  c.globalAlpha = .55; c.strokeStyle = '#5a3f22'; c.lineWidth = .035 * tw; c.filter = `blur(${(.012 * tw).toFixed(1)}px)`;
-  tabletPath(c, m, m, tw, th); c.stroke(); c.filter = 'none';
-  // the fillet: a raised border, lit along the top and left, shadowed bottom-right
-  const ins = .045 * tw;
-  c.globalAlpha = .85; c.lineWidth = Math.max(1.5, .006 * tw);
-  c.strokeStyle = '#fff4d6'; c.save(); c.translate(-.6 * u, -.6 * u); tabletInset(c, m, m, tw, th, ins); c.stroke(); c.restore();
-  c.strokeStyle = '#6d4f2c'; c.save(); c.translate(1.1 * u, 1.1 * u); tabletInset(c, m, m, tw, th, ins); c.stroke(); c.restore();
+  // worn edge: a soft dark rim inside the outline, and a broken highlight where the top and left edges catch the light
+  c.save(); tabletPath(c, m, m, tw, th, pts); c.clip();
+  c.globalAlpha = .6; c.strokeStyle = '#4a321a'; c.lineWidth = .045 * tw; c.filter = `blur(${(.014 * tw).toFixed(1)}px)`;
+  tabletPath(c, m, m, tw, th, pts); c.stroke(); c.filter = 'none';
+  c.restore();
+  c.save(); c.lineCap = 'round';
+  for (let i = 0; i < 70; i++) {
+    const s = r(), top = r() < .7, x = top ? m + s * tw : m + .004 * tw, y = top ? m + .004 * tw : m + s * th * .8;
+    c.strokeStyle = '#fbefcc'; c.globalAlpha = .12 + .2 * r(); c.lineWidth = (1 + 2.2 * r()) * u;
+    c.beginPath(); c.moveTo(x, y); c.lineTo(x + (top ? (.02 + .05 * r()) * tw : 0), y + (top ? 0 : (.02 + .05 * r()) * tw)); c.stroke();
+  }
+  c.restore();
+  // the fillet: a cut line with a lit lip, slightly irregular
+  const ins = .05 * tw;
+  c.save(); c.lineWidth = Math.max(1.4, .005 * tw); c.lineJoin = 'round';
+  c.globalAlpha = .55; c.strokeStyle = '#4f361c'; c.save(); c.translate(-.4 * u, -.4 * u); tabletInset(c, m, m, tw, th, ins); c.stroke(); c.restore();
+  c.globalAlpha = .45; c.strokeStyle = '#f6e6be'; c.save(); c.translate(1.2 * u, 1.2 * u); tabletInset(c, m, m, tw, th, ins); c.stroke(); c.restore();
   c.restore();
   // the iron ring at the top
   c.save(); c.globalAlpha = 1;
-  const rx = m + tw / 2, ry = m - .012 * tw, rr2 = .022 * tw;
+  const rx = m + tw / 2, ry = m - .012 * tw, rr2 = .02 * tw;
   c.strokeStyle = '#1b130c'; c.lineWidth = .009 * tw; c.beginPath(); c.arc(rx, ry, rr2, 0, TAU); c.stroke();
-  c.strokeStyle = 'rgba(255,226,170,.55)'; c.lineWidth = .003 * tw; c.beginPath(); c.arc(rx, ry, rr2, Math.PI * 1.05, Math.PI * 1.6); c.stroke();
+  c.strokeStyle = 'rgba(255,226,170,.5)'; c.lineWidth = .003 * tw; c.beginPath(); c.arc(rx, ry, rr2, Math.PI * 1.05, Math.PI * 1.6); c.stroke();
   c.restore();
-  const out = { cv, m, W, H, d };
+  const out = { cv, m, W, H, d, pts };
   _base.set(key, out);
   return out;
 }
@@ -121,7 +151,7 @@ export function drawCartouche(g, f, e, t, c) {
   const L = f.L, u = L.u, P = L.portrait, title = e.items[0].key === 'title';
   const items = e.items.filter(i => !i.ghost);
   // the lettering decides the tablet's size
-  const tw = (title ? byAspect(L, { '16:9': .36, portrait: .8 }) : byAspect(L, { '16:9': .5, portrait: .9 })) * L.W;
+  const tw = Math.round((title ? byAspect(L, { '16:9': .34, portrait: .8 }) : byAspect(L, { '16:9': .5, portrait: .9 })) * L.W);
   let lines, lay, px, face = FACE.carvedBold;
   const inner = tw * .8;
   if (title) {
@@ -130,20 +160,19 @@ export function drawCartouche(g, f, e, t, c) {
     px = (P ? 58 : 64) * u;
     for (let k = 0; k < 20; k++, px *= .95) { const ok = items.every(it => it.text.split(' ').every(w => textWidth(face, px, w) <= inner)); if (ok) break; }
   }
-  if (title) lines = [{ it: items[0], ws: [items[0].text], px }, { it: items[1], ws: [items[1].text], px: px * .25 }];
+  if (title) lines = [{ it: items[0], ws: [items[0].text], px }, { it: items[1], ws: [items[1].text], px: px * .3 }];
   else { lines = []; for (const it of items) for (const ws of breakLines(it.text.split(' '), face, px, inner)) lines.push({ it, ws, px }); }
-  // vertical metrics inside the tablet
-  const gapT = .16 * px, padTop = title ? .3 * px : .9 * px;
-  let y = padTop, rows = [];
+  // vertical metrics inside the tablet: the lettering sits in the slab above the point where the edge falls to the cusp
+  let y = (title ? .42 : .6) * px;
+  const rows = [];
   lines.forEach((ln, i) => {
-    const cap = face.cap * ln.px;
-    y += cap;
+    y += face.cap * ln.px;
     rows.push({ ...ln, y });
-    y += (title ? (i === 0 ? .55 * ln.px : 0) : .42 * ln.px);
+    if (i < lines.length - 1) y += title ? .5 * px : .46 * px;
   });
-  const th = Math.max(y + (title ? 1.6 : 1.3) * px * (title ? .45 : 1), tw * .3) / .8;   // content sits in the slab above the cusp
+  const th = Math.round((y + (title ? .5 : .62) * px) / .8);
   // where it hangs, how it moves
-  const cxT = (P ? .5 : .5) * L.W, topY = (title ? byAspect(L, { '16:9': .1, portrait: .1 }) : byAspect(L, { '16:9': .07, portrait: .07 })) * L.H;
+  const cxT = (P ? .5 : .5) * L.W, topY = (title ? byAspect(L, { '16:9': .1, portrait: .1 }) : byAspect(L, { '16:9': .07, portrait: .105 })) * L.H;   // portrait S24: clear of the counter
   let drop = 0;
   if (e.enter === 'descend') {
     const k = clamp((t - e.t0) / 1.1), s = 1 - Math.pow(1 - k, 3) * Math.cos(k * 1.4);   // lowered, settling with a little bounce
@@ -152,15 +181,15 @@ export function drawCartouche(g, f, e, t, c) {
   const settle = e.enter === 'descend' ? 1 + 2.5 * Math.exp(-Math.max(0, t - e.t0 - .8) * 1.6) : 1;
   const ang = settle * (.011 * Math.sin(TAU * t / 4.7 + .6) + .005 * Math.sin(TAU * t / 2.3 + 1.9));
   const pivot = [cxT, -.2 * L.H];
-  const base = paintBase(Math.round(tw), Math.round(th), u);
+  const base = paintBase(tw, th, u);
   _work = _work && _work.width === base.W && _work.height === base.H ? _work : makeCanvas(base.W, base.H);
-  const w = _work.getContext('2d');
+  const w = _work.getContext('2d', { willReadFrequently: true });
   w.setTransform(1, 0, 0, 1, 0, 0); w.globalAlpha = 1; w.globalCompositeOperation = 'source-over';
   w.clearRect(0, 0, base.W, base.H); w.drawImage(base.cv, 0, 0);
   // the boil: a handful of strokes re-laid on every drawing (only at painterly cadence)
   if (c.boil) {
     const r = rng(c.seed ^ 0x51ed);
-    w.save(); tabletPath(w, base.m, base.m, tw, th); w.clip();
+    w.save(); tabletPath(w, base.m, base.m, tw, th, base.pts); w.clip();
     for (let i = 0; i < 90; i++) {
       const x = base.m + r() * tw, yy = base.m + r() * th, len = (.02 + .05 * r()) * tw;
       w.strokeStyle = r() < .5 ? '#efe0b8' : '#b89a66'; w.globalAlpha = .05 + .07 * r(); w.lineWidth = (1.5 + 4 * r()) * u; w.lineCap = 'round';

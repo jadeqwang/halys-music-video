@@ -46,7 +46,7 @@ export const LIGHT = {
   orbit: { dir: [-.9, -.4], elev: .5, color: '#fff1d6', intensity: 1.0 },
 };
 
-const MC = new OffscreenCanvas(8, 8).getContext('2d');
+const MC = new OffscreenCanvas(8, 8).getContext('2d', { willReadFrequently: true });
 
 export function fontStr(face, px) {
   return `${face.style || 'normal'} ${face.weight} ${px.toFixed(2)}px "${face.family}", "Cardo"`;

@@ -59,6 +59,9 @@ export async function drawText(t, f, { fromScene = false } = {}) {
 // cue text, which this layer replaces, so the placeholder's copy of the cues is moved aside (params.typeCues).
 scene('type-layer', f => drawText(f.t, f, { fromScene: true }), {
   init: () => {
-    for (const s of SHOTS) if (s.scene === 'placeholder' && s.params && s.params.cues) { s.params.typeCues = s.params.cues; delete s.params.cues; }
+    for (const s of SHOTS) {
+      if (STANDIN) s.scene = 'placeholder';         // type look-dev (typebg): every shot over the stand-in, not the WIP scenes
+      if (s.scene === 'placeholder' && s.params && s.params.cues) { s.params.typeCues = s.params.cues; delete s.params.cues; }
+    }
   },
 });

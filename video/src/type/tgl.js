@@ -12,6 +12,7 @@ export const GLSL_LIB = `
 float h21(vec2 p) { p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
 float vn(vec2 p) { vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f);
   return mix(mix(h21(i), h21(i + vec2(1, 0)), f.x), mix(h21(i + vec2(0, 1)), h21(i + 1.), f.x), f.y); }
+float fbm2(vec2 p) { return (vn(p) * .667 + vn(p * 2.03 + 17.1) * .333); }
 float fbm(vec2 p) { float s = 0., a = .5; for (int i = 0; i < 4; i++) { s += a * vn(p); p = p * 2.03 + 17.1; a *= .5; } return s / .9375; }
 `;
 
@@ -42,6 +43,7 @@ export function tgl() {
     size(w, h) { if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; } gl.viewport(0, 0, w, h); },
     // upload a 2D canvas into texture slot k (re-used every call)
     texture(k, src) {
+      gl.activeTexture(gl.TEXTURE0 + k);              // select the unit first: creating a texture binds it to the active unit
       if (!slots[k]) {
         const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);

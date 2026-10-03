@@ -1,0 +1,73 @@
+{
+ "plate": "P09",
+ "take": 3,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 177.5,
+ "est_cost_usd": 1.156,
+ "duration_s": 5.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 32.47,
+   "dur": 5.0,
+   "file": "media/plates/P09/audio_song_0032.47_5.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 5,
+  "refs": [
+   "LYD_CAV_H",
+   "LYD_CAV"
+  ],
+  "audio": {
+   "t0": 32.47,
+   "src": "song"
+  },
+  "t_song": [
+   32.47,
+   37.47
+  ],
+  "shots": "S13",
+  "sync": [
+   [
+    34.19,
+    "stab (plate 1.72)"
+   ],
+   [
+    35.3,
+    "timpani (plate 2.83)"
+   ]
+  ],
+  "prompt": "Low-angle shot from the water: Lydian cavalry charging through the knee-deep shallows of a red-brown river straight toward the camera. The riders are dressed like the man in reference images 1 and 2: open-faced crested bronze helmets, crimson tunics, bronze scale corselets, ochre cloaks, soft boots; they ride chestnut and bay horses bareback on crimson and ochre saddlecloths with bronze bridle fittings, NO stirrups, no saddles. Every rider levels a long 3-metre ash spear level and horizontal at shoulder height, aimed straight at the camera like a row of lances, the iron points leading; no spear points up at the sky. The lead horse is centred, five or six more follow in a staggered line; hooves explode the water into spray lit gold. The horses grow larger in frame and the lead horse fills a third of the frame by the end, still in frame and sharp (it does not pass the camera). The far bank behind them is in deep shadow, darker than the riders. Camera static, low, just above the water. Hard, low golden sun raking in from frame right (the sun itself is outside the frame, beyond the right edge), long shadows, deep black shadows, warm rim light, background much darker than the figures. Clear air: no fog, no haze, no smoke. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "notes": "Long spears, saddlecloths, no stirrups.",
+  "prompt_v1": "Low-angle shot from the water: Lydian cavalry charging through the shallows of the red-brown river of reference image 3, straight toward the camera. The riders are dressed like the man in reference images 1 and 2: open-faced crested bronze helmets, crimson tunics, bronze scale corselets, ochre cloaks, soft boots; they ride chestnut and bay horses on crimson and ochre saddlecloths with bronze bridle fittings, bareback with NO stirrups and no saddles. Each rider holds a long 3-metre ash spear lowered overhand toward the camera. The lead horse is centred; five or six more follow in a staggered line. Hooves explode the water into spray lit gold; the horses gallop in powerful, slightly slowed motion and grow larger in frame, and the lead horse passes just beside the camera at the end. Camera static, low, just above the water. Hard, low golden sun raking in from frame right (the sun itself is outside the frame, beyond the right edge), long shadows, deep black shadows, warm rim light, background much darker than the figures. Clear air: no fog, no haze, no smoke. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "refs_v1": [
+   "LYD_CAV_H",
+   "LYD_CAV",
+   "SHALLOWS"
+  ],
+  "retake_note": "take 1: spears held up (not lowered), sun in frame with a bright sky (SHALLOWS board), blurred pass-by; take 2 still raised the spears: v3 says level/horizontal and 'no spear points up'",
+  "avatar": true
+ },
+ "request": {
+  "prompt": "Low-angle shot from the water: Lydian cavalry charging through the knee-deep shallows of a red-brown river straight toward the camera. The riders are dressed like the man in reference images 1 and 2: open-faced crested bronze helmets, crimson tunics, bronze scale corselets, ochre cloaks, soft boots; they ride chestnut and bay horses bareback on crimson and ochre saddlecloths with bronze bridle fittings, NO stirrups, no saddles. Every rider levels a long 3-metre ash spear level and horizontal at shoulder height, aimed straight at the camera like a row of lances, the iron points leading; no spear points up at the sky. The lead horse is centred, five or six more follow in a staggered line; hooves explode the water into spray lit gold. The horses grow larger in frame and the lead horse fills a third of the frame by the end, still in frame and sharp (it does not pass the camera). The far bank behind them is in deep shadow, darker than the riders. Camera static, low, just above the water. Hard, low golden sun raking in from frame right (the sun itself is outside the frame, beyond the right edge), long shadows, deep black shadows, warm rim light, background much darker than the figures. Clear air: no fog, no haze, no smoke. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(520 KB)",
+   "data:image/jpeg;base64...(540 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(161 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T02:39:59"
+}

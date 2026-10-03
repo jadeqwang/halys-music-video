@@ -15,6 +15,7 @@ import { loadPlateIndex, PLATES } from './plates.js';
 import { SCENES, SHOTS, finalize, shotAtFrame, shotById, gaps } from './registry.js';
 import { rng, strSeed } from './core.js';
 import { getGL } from './gl.js';
+import { drawText } from './type/index.js';
 
 const Q = new URLSearchParams(location.search);
 export const W = +(Q.get('w') || 1920), H = +(Q.get('h') || 1080);
@@ -66,8 +67,10 @@ export async function renderFrame(i) {
   resetCtx(g);
   Math.random = rng(strSeed(fi.key));       // safety net: even stray Math.random() calls are deterministic per drawing
   if (!fi.shot) { g.fillStyle = '#000'; g.fillRect(0, 0, W, H); return fi; }
-  await SCENES.get(fi.shot.scene).draw(buildContext(fi));
+  const fc = buildContext(fi);
+  await SCENES.get(fi.shot.scene).draw(fc);
   resetCtx(g);
+  await drawText(fc.t, fc); resetCtx(g);     // type layer (src/type/): every word, over the scene; scenes steer it via fc.type
   if (DEBUG) {
     setFont(g, 'monoBold', Math.round(20 * L.u)); g.textBaseline = 'top'; g.fillStyle = '#ff0';
     g.fillText(`f${i} ${(i / FPS).toFixed(3)}s → ${fi.key} @${fi.t.toFixed(3)}s`, 12, 12);

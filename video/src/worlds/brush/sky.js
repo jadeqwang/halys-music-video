@@ -17,12 +17,14 @@ export function skyMask(F, o) {
   if (o.mask) { m.set(o.mask); return m; }
   const yMax = (o.below ?? .5) * ah, md = o.maxDepth ?? .01, soft = o.soft ?? .01;
   const D = F.D && !o.noDepth ? blur(F.D, aw, ah, 1) : null;
+  const Dt = D ? null : blur(F.detail, aw, ah, 2.5);              // without depth: the sky is where the plate is smooth
   const hz = o.horizonLine;   // optional explicit horizon: [[u, v], ...] polyline in uv (sky above it)
   for (let y = 0; y < ah; y++) for (let x = 0; x < aw; x++) {
     const i = y * aw + x;
     let s;
     if (hz) s = 1 - sstep(-1.5, 1.5, y - horizonY(hz, x / aw) * ah);
-    else s = D ? 1 - sstep(md, md + soft, D[i]) : 1 - sstep(.45, .6, y / ah);
+    else if (D) s = 1 - sstep(md, md + soft, D[i]);
+    else s = (1 - sstep((o.horizonY ?? .45) - .02, (o.horizonY ?? .45) + .03, y / ah)) * (1 - sstep(.12, .3, Dt[i]));   // no depth: smooth + high
     if (F.M && !o.ignoreMatte) s *= 1 - sstep(.15, .5, F.M[i]);
     s *= 1 - sstep(yMax - 4, yMax + 4, y);
     m[i] = s;
@@ -96,7 +98,7 @@ export function skyField(F, mask, sk0, sun, P, t = 0) {
     return sstep(sk.cover - .07, sk.cover + .08, d) * sk.clouds;
   };
   // evaluate on a coarse lattice (step q, the sky is low-frequency) and upsample bilinearly
-  const q = sk.step ?? 2, gw = Math.ceil((aw - 1) / q) + 1, gh = Math.ceil((ah - 1) / q) + 1, GN = gw * gh;
+  const q = sk.step ?? 3, gw = Math.ceil((aw - 1) / q) + 1, gh = Math.ceil((ah - 1) / q) + 1, GN = gw * gh;
   const C = [R, G, B, txx, txy, tyy, mx, my];
   const CG = C.map(() => new Float32Array(GN));
   const [qR, qG, qB, qxx, qxy, qyy, qmx, qmy] = CG;
@@ -143,6 +145,15 @@ export function skyField(F, mask, sk0, sun, P, t = 0) {
       const az = .65 + .35 * sstep(.05, .45, Math.abs(x - sx) / aw);
       const k = band * az;
       L = lerp(L, .62, k * .85); a = lerp(a, verm[1] * .8, k); b = lerp(b, (ochre[2] + verm[2]) * .5, k);
+    }
+    // the corona's light on the sky (a base for the painted fibres): pearl, falling off fast from the limb, fibrous
+    if (sk.corona && sk.corona.k > 0) {
+      const C = sk.corona, cdx = x - C.x, cdy = y - C.y, cr = Math.sqrt(cdx * cdx + cdy * cdy);
+      if (cr > C.R * .98) {
+        const ca = Math.atan2(cdy, cdx), fib = .75 + .5 * vnoise(ca * 9 + 3, Math.log(cr / C.R) * 4, seed + 61);
+        const k = C.k * Math.pow(C.R / cr, 2.6) * fib * (1 - .5 * night * 0);
+        L = lerp(L, .9, clamp(k * .85)); a = lerp(a, naples[1] * .4, clamp(k)); b = lerp(b, naples[2] * .5, clamp(k));
+      }
     }
     if (sk.haze > 0) { const hk = sk.haze * Math.pow(hz, 2); L = lerp(L, .55, hk * .5); a = lerp(a, naples[1], hk * .5); b = lerp(b, naples[2], hk * .5); }
     // eclipse drain: chroma falls, a cool steel tint creeps in

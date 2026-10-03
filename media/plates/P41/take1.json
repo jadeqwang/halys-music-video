@@ -1,0 +1,76 @@
+{
+ "plate": "P41",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 177.9,
+ "est_cost_usd": 1.3872,
+ "duration_s": 6.041667,
+ "audio_refs": [
+  {
+   "src": "media/stems/halys_sd_master.wav",
+   "t0": 273.4,
+   "dur": 6.0,
+   "file": "media/plates/P41/audio_halys_sd_master_0273.40_6.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 6,
+  "takes": 2,
+  "refs": [
+   "SHEET",
+   "ROOM_C",
+   "F8"
+  ],
+  "audio": {
+   "t0": 273.4,
+   "src": "media/stems/halys_sd_master.wav"
+  },
+  "t_song": [
+   273.4,
+   279.4
+  ],
+  "shots": "S80, S81",
+  "sync": [
+   [
+    273.45,
+    "key 1 (plate 0.05)"
+   ],
+   [
+    274.05,
+    "key 2 (plate 0.65)"
+   ],
+   [
+    274.95,
+    "key 3 (plate 1.55)"
+   ],
+   [
+    276.95,
+    "the 'ting': THE WINK (plate 3.55)"
+   ]
+  ],
+  "prompt": "Anime style with clean cel shading and crisp tapered line art, exactly matching the character sheet of reference image 1: flat cel colours, one shadow tone, painted flat backgrounds, no depth-of-field blur, no yellow cast. Close-up, head and shoulders, of the young woman from reference image 1 (long straight black hair, brown eyes, white cropped bomber jacket with orange stripes, a round 1420 MHz patch on the left sleeve and a light-blue circle with RARE EARTH on the back, orange headphones around her neck, black crop top, navy wide cargo trousers), facing the camera, her desk and glowing monitors behind her in a dark room; reference image 2 shows her face, lighting and framing, reference image 3 the sly smile and wink she ends on. She stares straight into the lens, completely deadpan. Without looking away she reaches back with one hand to the keyboard behind her and taps three keys blind (at 0.1 s, 0.7 s and 1.6 s), only her shoulder and arm moving, eyes locked on the camera. At 2.6 s the corner of her mouth curls into a small, mischievous half-smile. At 3.5 s she gives one clear, deliberate wink with one eye: the upper eyelid sweeps down over the iris, stays closed for half a second, then opens, while the other eye stays open; she keeps the sly smile to the end. Light: cool pearl monitor glow from behind as a rim on her hair, warm orange desk lamp on her face. Camera static. No readable text, no captions, no watermark.",
+  "notes": "Audio = sound-design master 273.4-279.4 so the wink sits near the 276.95 ting (plate 3.55)."
+ },
+ "request": {
+  "prompt": "Anime style with clean cel shading and crisp tapered line art, exactly matching the character sheet of reference image 1: flat cel colours, one shadow tone, painted flat backgrounds, no depth-of-field blur, no yellow cast. Close-up, head and shoulders, of the young woman from reference image 1 (long straight black hair, brown eyes, white cropped bomber jacket with orange stripes, a round 1420 MHz patch on the left sleeve and a light-blue circle with RARE EARTH on the back, orange headphones around her neck, black crop top, navy wide cargo trousers), facing the camera, her desk and glowing monitors behind her in a dark room; reference image 2 shows her face, lighting and framing, reference image 3 the sly smile and wink she ends on. She stares straight into the lens, completely deadpan. Without looking away she reaches back with one hand to the keyboard behind her and taps three keys blind (at 0.1 s, 0.7 s and 1.6 s), only her shoulder and arm moving, eyes locked on the camera. At 2.6 s the corner of her mouth curls into a small, mischievous half-smile. At 3.5 s she gives one clear, deliberate wink with one eye: the upper eyelid sweeps down over the iris, stays closed for half a second, then opens, while the other eye stays open; she keeps the sly smile to the end. Light: cool pearl monitor glow from behind as a rim on her hair, warm orange desk lamp on her face. Camera static. No readable text, no captions, no watermark.",
+  "duration": 6,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": false,
+  "reference_images": [
+   "data:image/jpeg;base64...(214 KB)",
+   "data:image/jpeg;base64...(348 KB)",
+   "data:image/jpeg;base64...(364 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(189 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T02:15:22"
+}

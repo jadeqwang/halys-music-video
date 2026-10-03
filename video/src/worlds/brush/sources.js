@@ -22,7 +22,7 @@ export const STANDINS = {
   b_face: { img: '/media/lookdev/inputs/b_face.jpg', depth: '/media/lookdev/analysis/b_face/depth.png', matte: '/media/lookdev/analysis/b_face/matte.png', faces: '/media/lookdev/analysis/b_face/faces.json' },
   c_armies: { img: '/media/lookdev/inputs/c_armies.jpg', depth: '/media/lookdev/analysis/c_armies/depth.png', matte: '/media/lookdev/analysis/c_armies/matte.png', faces: '/media/lookdev/analysis/c_armies/faces.json' },
 };
-export const analysisSize = (W, H) => [Math.round(W / 2), Math.round(H / 2)];
+export const analysisSize = (W, H, o = {}) => o.size || [Math.round(W / 2), Math.round(H / 2)];
 
 // ---------------------------------------------------------------- camera
 export function camAt(cam, f) {
@@ -128,22 +128,25 @@ async function loadStill(spec) {
 export async function stillSource(f, id, cam, opts = {}) {
   const spec = typeof id === 'string' ? STANDINS[id] : id;
   if (!spec) throw new Error(`no stand-in ${id}`);
-  const S = await loadStill(spec), [aw, ah] = analysisSize(f.W, f.H);
+  const S = await loadStill(spec), [aw, ah] = analysisSize(f.W, f.H, opts);
   const c = camAt(cam, f), X = camXform(c, S.w, S.h, aw, ah);
   const rgb = cropRGB(S.img, X.T, aw, ah);
   const depth = cropField(S.depth, X, S.w, S.h, aw, ah), matte = opts.noMatte ? null : cropField(S.matte, X, S.w, S.h, aw, ah);
   const faces = mapFaces(S.faces, X, S.w, S.h, aw, ah);
   const c0 = camAt(cam, { ...f, k: 0, t: f.shot ? f.shot.t0 : f.t });
-  const mat = affineMat(X, S.w, S.h, aw, ah, f.W, f.H, c0.zoom);
+  const mat = affineMat(X, S.w, S.h, aw, ah, opts.layoutW || f.W, opts.layoutH || f.H, c0.zoom);
   const key = `still|${spec.img}|${aw}x${ah}|${[c.cx, c.cy, c.zoom, c.rot, c.mirror].map(v => +v).map(v => v.toFixed(5)).join(',')}`;
   return { aw, ah, ...rgb, depth, matte, faces, mat, key, info: { kind: 'still', id: typeof id === 'string' ? id : spec.img, cam: c } };
 }
 
 // ---------------------------------------------------------------- real plates
 // song time -> plate time: shot.plate {id, at, speed, offset, keys: [[songT, plateT], ...]} (keys win)
-export function plateTimeOf(shot, t) {
+export function plateTimeOf(shot, t, o = {}) {
+  if (o.keys && o.keys.length) return kf(t, o.keys, linear);
+  if (o.at != null) return (t - o.at) * (o.speed ?? 1) + (o.offset ?? 0);
   const p = shot.plate || {};
   if (p.keys && p.keys.length) return kf(t, p.keys, linear);
+  if (!shot.plate) return t - shot.t0;
   return plateTime(shot, t);
 }
 const _maps = new LRU(64);
@@ -185,8 +188,6 @@ async function composeMat(id, k0, k) {
       const i = y * w + x, vx = vf ? vf.fx[i] : 0, vy = vf ? vf.fy[i] : 0;
       const sx = x - dir * vx, sy = y - dir * vy;
       nx[i] = sampleField(M.mx, w, h, sx, sy); ny[i] = sampleField(M.my, w, h, sx, sy);
-      // content arriving from outside the frame: extrapolate along the flow
-      if (sx < 0 || sy < 0 || sx > w - 1 || sy > h - 1) { nx[i] -= dir * vx * s * 0; ny[i] -= dir * vy * s * 0; }
     }
     M = { mx: nx, my: ny };
   }
@@ -196,8 +197,8 @@ async function composeMat(id, k0, k) {
 
 export async function plateSource(f, id, cam, opts = {}) {
   const P = PLATES[id]; if (!P) throw new Error(`plate ${id} not in plates/index.json`);
-  const [aw, ah] = analysisSize(f.W, f.H), shot = f.shot;
-  const tp = plateTimeOf(shot, f.t), loop = !!(shot.plate && shot.plate.loop);
+  const [aw, ah] = analysisSize(f.W, f.H, opts), shot = f.shot;
+  const tp = plateTimeOf(shot, f.t, opts), loop = !!(opts.loop || (shot.plate && shot.plate.loop));
   const k = plateFrameIndex(id, tp, { loop });
   const img = await loadImage(`plates/${id}/frames/f${String(k).padStart(4, '0')}.jpg`);
   const sw = img.width, sh = img.height;
@@ -213,13 +214,13 @@ export async function plateSource(f, id, cam, opts = {}) {
   const mf = meta && meta[k - 1] && meta[k - 1].faces;
   if (mf) faces = mapFaces(mf.filter(q => q.eyeL && q.eyeR && q.box).map(q => ({ box: q.box, eyes: [q.eyeL, q.eyeR], score: q.score ?? 1 })), X, sw, sh, aw, ah);
   // material coordinates: flow composed from the shot's first drawing's plate frame, then scaled to layout px
-  const k0 = plateFrameIndex(id, plateTimeOf(shot, shot.t0), { loop });
+  const k0 = plateFrameIndex(id, plateTimeOf(shot, opts.refT ?? shot.t0, opts), { loop });
   let mat = null;
   if (opts.advect !== false) {
     const M = await composeMat(id, k0, k);
     if (M) {
       const c0 = camAt(cam, { ...f, k: 0, t: shot.t0 }), N = aw * ah, mx = new Float32Array(N), my = new Float32Array(N), p = [0, 0];
-      const kx = f.W * c0.zoom / sw, ky = f.H * c0.zoom / sh, gx = M.w / sw, gy = M.h / sh;
+      const kx = (opts.layoutW || f.W) * c0.zoom / sw, ky = (opts.layoutH || f.H) * c0.zoom / sh, gx = M.w / sw, gy = M.h / sh;
       for (let y = 0; y < ah; y++) for (let x = 0; x < aw; x++) {
         X.fwd(x, y, p);
         const u = p[0] * gx - .5, v = p[1] * gy - .5, i = y * aw + x;
@@ -228,7 +229,7 @@ export async function plateSource(f, id, cam, opts = {}) {
       mat = { mx, my };
     }
   }
-  if (!mat) mat = affineMat(X, sw, sh, aw, ah, f.W, f.H, camAt(cam, { ...f, k: 0, t: shot.t0 }).zoom);
+  if (!mat) mat = affineMat(X, sw, sh, aw, ah, opts.layoutW || f.W, opts.layoutH || f.H, camAt(cam, { ...f, k: 0, t: shot.t0 }).zoom);
   const key = `plate|${id}|${k}|${aw}x${ah}|${[c.cx, c.cy, c.zoom, c.rot, c.mirror].map(v => (+v).toFixed(5)).join(',')}`;
   return { aw, ah, ...rgb, depth, matte, faces, mat, key, info: { kind: 'plate', id, frame: k, tp, cam: c } };
 }
@@ -263,3 +264,23 @@ export async function resolvePlate(f, plateId, standin, plateCam = null, opts = 
   return stillSource(f, standin.id, standin.cam, opts);
 }
 export const hasPlate = id => !!(id && PLATES[id]);
+
+// two sources side by side (a diptych): each half rendered at (aw/2, ah); a wall at the seam stops every stroke
+// (wall: 0 left, 1 right). The halves keep their own material coordinates (the right half offset by a frame width).
+export async function diptychSource(f, makeLeft, makeRight, gap = 0) {
+  const [aw, ah] = analysisSize(f.W, f.H), hw = Math.floor(aw / 2);
+  const A = await makeLeft({ size: [hw, ah], layoutW: f.W / 2, layoutH: f.H }), B = await makeRight({ size: [aw - hw, ah], layoutW: f.W / 2, layoutH: f.H });
+  const N = aw * ah, R = new Float32Array(N), G = new Float32Array(N), Bc = new Float32Array(N), wall = new Uint8Array(N);
+  const hasD = A.depth || B.depth, hasM = A.matte || B.matte;
+  const depth = hasD ? new Float32Array(N) : null, matte = hasM ? new Float32Array(N) : null, mx = new Float32Array(N), my = new Float32Array(N);
+  for (let y = 0; y < ah; y++) for (let x = 0; x < aw; x++) {
+    const i = y * aw + x, right = x >= hw, S2 = right ? B : A, sw = right ? aw - hw : hw, j = y * sw + (right ? x - hw : x);
+    R[i] = S2.R[j]; G[i] = S2.G[j]; Bc[i] = S2.B[j]; wall[i] = right ? 1 : 0;
+    if (depth) depth[i] = S2.depth ? S2.depth[j] : .5;
+    if (matte) matte[i] = S2.matte ? S2.matte[j] : 0;
+    mx[i] = S2.mat ? S2.mat.mx[j] + (right ? f.W * 2 : 0) : x * 2; my[i] = S2.mat ? S2.mat.my[j] : y * 2;
+  }
+  const faces = [...A.faces.map(q => ({ ...q, box: [q.box[0] / 2, q.box[1], q.box[2] / 2, q.box[3]], eyes: q.eyes.map(([u, v]) => [u / 2, v]) })),
+    ...B.faces.map(q => ({ ...q, box: [.5 + q.box[0] / 2, q.box[1], .5 + q.box[2] / 2, q.box[3]], eyes: q.eyes.map(([u, v]) => [.5 + u / 2, v]) }))];
+  return { aw, ah, R, G, B: Bc, depth, matte, faces, mat: { mx, my }, wall, key: `dip|${A.key}|${B.key}`, info: { kind: 'diptych', left: A.info, right: B.info } };
+}

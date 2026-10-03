@@ -23,7 +23,8 @@ function emitter(out, visible, scale, base) {
       if (cur.length >= 2) {
         const m = cur.length, xy = new Float32Array(m * 2), b = new Float32Array(m), w = new Float32Array(m), o = new Float32Array(m), d = new Float32Array(m).fill(-1), s = new Float32Array(m);
         cur.forEach((c, k) => { xy[k * 2] = c.x; xy[k * 2 + 1] = c.y; b[k] = c.b; w[k] = c.w; o[k] = c.o; s[k] = c.s; });
-        out.push({ xy, n: m, b, w, o, d, s, len: s[m - 1], dir: 1, phase: hash3(out.length, 3, base) * TAU, spd: .8 + .4 * hash3(out.length, 4, base), flags: FL.CORONA | FL.SKY, id: out.length, ...extra });
+        let smax = 0; for (let k = 0; k < m; k++) smax = Math.max(smax, s[k]);
+        out.push({ xy, n: m, b, w, o, d, s, len: smax, dir: 1, phase: hash3(out.length, 3, base) * TAU, spd: .8 + .4 * hash3(out.length, 4, base), flags: FL.CORONA | FL.SKY, id: out.length, ...extra });
       }
       cur = [];
     };
@@ -103,37 +104,116 @@ export function coronaLines(sun, opt = {}) {
 }
 
 export const SKY_DEFAULTS = {
-  seed: 5, n: 64, Lmin: 1.9, Lmax: 60, tilt: .0, quad: .18, gain: .55, width: .8, falloff: .75, jitter: .25,
-  extent: 4000, step: 3, minB: .035, fadeIn: 1.3, warm: .03, octupole: .05, open: 0,
+  seed: 5, tilt: .12, gain: .5, width: .8, falloff: .8, warm: .03,
+  sep0: .1, sepGamma: .95, sep1: 1.5, dtest: .55, step: .05, maxLen: 120,   // in solar radii
+  locals: 6, localK: .07, quad: .25, uniform: 0, rmax: 40, minLen: .8,
+  bounds: null,            // [x0, y0, x1, y1] in the caller's space (default: +-rmax solar radii)
 };
-// field lines of a tilted dipole (+ quadrupole/octupole wrinkles), r = L sin^2(theta) generalised: lobes on both sides
+// the sky's magnetic field (style frame F4): evenly spaced field lines (Jobard & Lefer) of a tilted dipole + a weak
+// quadrupole + small active-region dipoles just inside the limb (loops near the sun) [+ an optional uniform field that
+// opens the far lines upward]. Spacing grows with distance from the sun, so the field is dense near the corona and
+// sweeps the whole sky with a few long lines; field lines never cross or bundle.
 export function skyField(sun, opt = {}) {
   const o = { ...SKY_DEFAULTS, ...opt }, out = [], R = sun.r, scale = o.scale ?? 1, sd = o.seed * 131 + 7, h = (a, b) => hash3(a, b, sd);
   const emit = emitter(out, o.visible, scale, sd);
-  const tilt = o.tilt;
-  for (const side of [-1, 1]) for (let k = 0; k < o.n; k++) {
-    const u = (k + .5 + o.jitter * (h(k * 2 + (side > 0 ? 1 : 0), 1) - .5)) / o.n;
-    const L = R * o.Lmin * Math.pow(o.Lmax / o.Lmin, Math.pow(u, 1.15));                 // log-spaced lobe sizes
-    const bLine = (.6 + .8 * h(k, side > 0 ? 3 : 4)) * o.gain;
-    const wob = (h(k, side > 0 ? 5 : 6) - .5) * 2;
-    const pts = [];
-    // theta from the dipole axis (up), the full loop from the north footpoint to the south one
-    const th0 = Math.asin(Math.min(1, Math.sqrt(R * 1.02 / L)));
-    const nS = Math.max(40, Math.min(900, Math.round(L * 2.2 / (o.step * R / 10 + 1))));
-    for (let j = 0; j <= nS; j++) {
-      const th = lerp(th0, Math.PI - th0, j / nS);
-      const sn = Math.sin(th), cs = Math.cos(th);
-      // generalised radius: dipole + quadrupole (asymmetric north/south and per side) + a little octupole wrinkle
-      const rr = L * sn * sn * (1 + o.quad * cs * side + o.octupole * Math.sin(3 * th + wob) );
-      if (rr < R * 1.01) continue;
-      const a = th * side + tilt;                          // angle from vertical (screen up), mirrored per side
-      const x = sun.x + Math.sin(a) * rr, y = sun.y - Math.cos(a) * rr;
-      if (Math.abs(x - sun.x) > o.extent || Math.abs(y - sun.y) > o.extent) continue;
-      const fall = Math.pow(R * 2.2 / Math.max(rr, R * 2.2), o.falloff);
-      const b = bLine * fall * sstep(R * 1.0, R * o.fadeIn * 1.6, rr);
-      pts.push({ x, y, b: Math.max(b, o.minB * bLine), w: o.width * (.75 + .5 * fall), o: o.warm, s: Math.min(j, nS - j) / nS * L * scale * 2 });
+  // sources in solar units (y up)
+  const src = [{ x: 0, y: 0, mx: Math.sin(o.tilt), my: Math.cos(o.tilt), k: 1 }];
+  src.push({ x: .25 * Math.cos(o.tilt + 1.2), y: .25 * Math.sin(o.tilt + 1.2), mx: -Math.sin(o.tilt + .9), my: Math.cos(o.tilt + .9), k: o.quad });
+  for (let i = 0; i < o.locals; i++) {
+    const a = h(i, 1) * TAU, rr = .8 + .12 * h(i, 2), k = o.localK * (.4 + h(i, 3));
+    src.push({ x: Math.cos(a) * rr, y: Math.sin(a) * rr, mx: -Math.sin(a) * (h(i, 4) > .5 ? 1 : -1), my: Math.cos(a) * (h(i, 4) > .5 ? 1 : -1), k });
+  }
+  const field = (x, y, v) => {
+    let bx = 0, by = o.uniform;
+    for (const s of src) {
+      const dx = x - s.x, dy = y - s.y, r2 = dx * dx + dy * dy + 1e-6, r = Math.sqrt(r2), r3 = r2 * r, ux = dx / r, uy = dy / r, md = s.mx * ux + s.my * uy;
+      bx += s.k * (3 * md * ux - s.mx) / r3; by += s.k * (3 * md * uy - s.my) / r3;
     }
-    emit(pts);
+    const m = Math.hypot(bx, by); v[0] = bx / (m || 1); v[1] = by / (m || 1); return m;
+  };
+  // bounds in solar units (screen y down -> math y up)
+  const bb = o.bounds ? [(o.bounds[0] - sun.x) / R, -(o.bounds[3] - sun.y) / R, (o.bounds[2] - sun.x) / R, -(o.bounds[1] - sun.y) / R] : [-o.rmax, -o.rmax, o.rmax, o.rmax];
+  const sepAt = (x, y) => Math.min(o.sep1, o.sep0 * Math.pow(Math.max(1, Math.hypot(x, y)), o.sepGamma));
+  const okAt = (x, y) => x > bb[0] && x < bb[2] && y > bb[1] && y < bb[3] && Math.hypot(x, y) > 1.04 && (!o.visible || o.visible(sun.x + x * R, sun.y - y * R));
+  const cell = o.sep0, gx0 = bb[0], gy0 = bb[1], gw = Math.ceil((bb[2] - bb[0]) / cell) + 1, gh = Math.ceil((bb[3] - bb[1]) / cell) + 1;
+  const grid = new Map(), cellOf = (x, y) => Math.floor((y - gy0) / cell) * gw + Math.floor((x - gx0) / cell);
+  const pts = [];  // [x, y, lineId, idx]
+  const tooClose = (x, y, d, lid, idx) => {
+    const r = Math.ceil(d / cell), cx = Math.floor((x - gx0) / cell), cy = Math.floor((y - gy0) / cell), d2 = d * d, near = Math.ceil(2.5 * d / o.step);
+    for (let j = Math.max(0, cy - r); j <= Math.min(gh - 1, cy + r); j++) for (let i = Math.max(0, cx - r); i <= Math.min(gw - 1, cx + r); i++) {
+      const c = grid.get(j * gw + i); if (!c) continue;
+      for (const p of c) { if (p[2] === lid && Math.abs(p[3] - idx) < near) continue; const dx = p[0] - x, dy = p[1] - y; if (dx * dx + dy * dy < d2) return true; }
+    }
+    return false;
+  };
+  const insert = (x, y, lid, idx) => { const k = cellOf(x, y); let c = grid.get(k); if (!c) grid.set(k, c = []); c.push([x, y, lid, idx]); };
+  const lines = [], v = [0, 0], v2 = [0, 0];
+  const grow = (x0, y0) => {
+    if (!okAt(x0, y0)) return null;
+    const lid = lines.length; if (tooClose(x0, y0, sepAt(x0, y0) * .95, lid, 0)) return null;
+    const br = [];
+    const tmp = [];
+    for (const dir of [1, -1]) {
+      const P = []; let x = x0, y = y0, idx = 0;
+      for (let k = 0; k < o.maxLen / o.step; k++) {
+        const m = field(x, y, v); if (m < 1e-7) break;
+        const mx = x + v[0] * o.step * .5 * dir, my = y + v[1] * o.step * .5 * dir;
+        field(mx, my, v2);
+        const st = o.step * Math.min(4, Math.max(1, Math.hypot(x, y) * .25));          // longer steps far out
+        const nx = x + v2[0] * st * dir, ny = y + v2[1] * st * dir;
+        if (!okAt(nx, ny)) break;
+        idx += dir;
+        if (tooClose(nx, ny, sepAt(nx, ny) * o.dtest, lid, idx)) break;
+        x = nx; y = ny; P.push(x, y, idx); tmp.push([x, y, idx]);
+      }
+      br.push(P);
+    }
+    const n = 1 + (br[0].length + br[1].length) / 3;
+    // arc length check
+    let len = 0; const all = [];
+    for (let k = br[1].length - 3; k >= 0; k -= 3) all.push([br[1][k], br[1][k + 1]]);
+    all.push([x0, y0]);
+    for (let k = 0; k < br[0].length; k += 3) all.push([br[0][k], br[0][k + 1]]);
+    for (let k = 1; k < all.length; k++) len += Math.hypot(all[k][0] - all[k - 1][0], all[k][1] - all[k - 1][1]);
+    if (len < o.minLen) return null;
+    insert(x0, y0, lid, 0); for (const [x, y, idx] of tmp) insert(x, y, lid, idx);
+    const L = { pts: all, lid, n };
+    lines.push(L);
+    return L;
+  };
+  // neighbour seeds every ~half a spacing along each new line; a FIFO with a read pointer (no shift(): O(n))
+  const queue = []; let qi = 0;
+  const enqueue = L => {
+    let acc = 0;
+    for (let k = 1; k < L.pts.length; k++) {
+      const [x, y] = L.pts[k], d = sepAt(x, y); acc += Math.hypot(x - L.pts[k - 1][0], y - L.pts[k - 1][1]);
+      if (acc < d * .9) continue; acc = 0;
+      let tx = x - L.pts[k - 1][0], ty = y - L.pts[k - 1][1]; const m = Math.hypot(tx, ty) || 1; tx /= m; ty /= m;
+      queue.push([x - ty * d, y + tx * d], [x + ty * d, y - tx * d]);
+    }
+  };
+  const maxLines = o.maxLines ?? 1400;
+  const drain = () => { while (qi < queue.length && lines.length < maxLines) { const q = queue[qi++]; const L2 = grow(q[0], q[1]); if (L2) enqueue(L2); } };
+  // seeds: a ring just outside the limb, then neighbours, then a coarse scan of the sky for islands
+  for (let i = 0; i < 90 && lines.length < maxLines; i++) { const a = i / 90 * TAU + .013; const L = grow(Math.cos(a) * 1.08, Math.sin(a) * 1.08); if (L) enqueue(L); drain(); }
+  for (let y = bb[1]; y < bb[3] && lines.length < maxLines; y += 1.2) for (let x = bb[0]; x < bb[2]; x += 1.2) { const L = grow(x + .3 * (h(x * 7 | 0, y * 7 | 0) - .5), y); if (L) { enqueue(L); drain(); } }
+  // emit: brightness falls off with distance from the sun; pulses travel outward (s grows away from the sun)
+  for (const L of lines) {
+    const bLine = (.65 + .7 * h(L.lid, 7)) * o.gain;
+    let iMin = 0, rMin = 1e9; L.pts.forEach((p, k) => { const r = Math.hypot(p[0], p[1]); if (r < rMin) { rMin = r; iMin = k; } });
+    const P = L.pts.map(([x, y]) => {
+      const r = Math.hypot(x, y), fall = Math.pow(2.2 / Math.max(r, 2.2), o.falloff);
+      return { x: sun.x + x * R, y: sun.y - y * R, b: bLine * fall * sstep(1.0, 1.5, r), w: o.width * (.7 + .5 * fall), o: o.warm };
+    });
+    let acc = 0; const sArr = new Float32Array(P.length);
+    for (let k = iMin + 1; k < P.length; k++) { acc += Math.hypot(P[k].x - P[k - 1].x, P[k].y - P[k - 1].y) * scale; sArr[k] = acc; }
+    acc = 0; for (let k = iMin - 1; k >= 0; k--) { acc += Math.hypot(P[k].x - P[k + 1].x, P[k].y - P[k + 1].y) * scale; sArr[k] = acc; }
+    P.forEach((p, k) => p.s = sArr[k]);
+    // taper both ends (arc length from each end, output px)
+    let tot = 0; const fromStart = new Float32Array(P.length);
+    for (let k = 1; k < P.length; k++) { tot += Math.hypot(P[k].x - P[k - 1].x, P[k].y - P[k - 1].y) * scale; fromStart[k] = tot; }
+    P.forEach((p, k) => { p.b *= sstep(0, 14, fromStart[k]) * sstep(0, 14, tot - fromStart[k]); });
+    emit(P, { flags: FL.CORONA | FL.SKY | FL.NOFADE });
   }
   return out;
 }

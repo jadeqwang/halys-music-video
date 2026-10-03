@@ -1,0 +1,119 @@
+{
+ "plate": "P27",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "Thales (staff, chiton, terracotta mantle) stands between a Lydian and a Mede frozen mid-strike, looking up at the dusk sky; camera arcs around them.",
+   "costume": "Thales per sheet incl. the staff; fillet not clearly visible.",
+   "identity": "Matches thales.jpg.",
+   "artefacts": "He does not walk (the model orbited the camera instead).",
+   "notes": "Fallback; retake requested (static camera, clear steps).",
+   "sync": [
+    {
+     "song_t": 182.485,
+     "event": "'Thales' (plate 1.26)",
+     "expected_plate_t": 1.255,
+     "measured_plate_t": 0.75,
+     "offset_s": -0.505,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P27/take1.review.jpg",
+   "contact": "media/plates/P27/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T02:11:35"
+  },
+  "2": {
+   "verdict": "weak",
+   "score": 2,
+   "purpose": "Low-angle orbit around Thales between frozen warriors under a bright sunset sky.",
+   "costume": "No staff in hand.",
+   "identity": "OK.",
+   "artefacts": "No real walk; sky too bright for totality.",
+   "notes": "Reject.",
+   "sync": [
+    {
+     "song_t": 182.485,
+     "event": "'Thales' (plate 1.26)",
+     "expected_plate_t": 1.255,
+     "measured_plate_t": 0.75,
+     "offset_s": -0.505,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P27/take2.review.jpg",
+   "contact": "media/plates/P27/take2.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T02:11:35"
+  },
+  "3": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S52 delivered: static camera; Thales (staff, chiton, terracotta mantle) walks toward the lens from the middle distance to a medium shot between a Lydian frozen mid-thrust and a Mede frozen behind his wicker shield, a line of frozen soldiers far behind; looks up at the sky; dusk.",
+   "costume": "Per sheet, staff in hand.",
+   "identity": "Matches thales.jpg.",
+   "artefacts": "None; the frozen men do not move.",
+   "notes": "1:1 from t0 (name on 182.485 = plate 1.26, mid-walk).",
+   "sync": [
+    {
+     "song_t": 182.485,
+     "event": "'Thales' (plate 1.26)",
+     "expected_plate_t": 1.255,
+     "measured_plate_t": 1.25,
+     "offset_s": -0.005,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P27/take3.review.jpg",
+   "contact": "media/plates/P27/take3.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T02:35:38",
+   "short": "-"
+  },
+  "4": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "Thales walks toward camera between two large foreground frozen warriors (silhouettes) with a frozen crowd behind; dusk.",
+   "costume": "Per sheet.",
+   "identity": "Matches.",
+   "artefacts": "Foreground warriors are big dark masses (less readable).",
+   "notes": "Alternate.",
+   "sync": [
+    {
+     "song_t": 182.485,
+     "event": "'Thales' (plate 1.26)",
+     "expected_plate_t": 1.255,
+     "measured_plate_t": 1.083,
+     "offset_s": -0.172,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P27/take4.review.jpg",
+   "contact": "media/plates/P27/take4.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T02:35:38"
+  }
+ },
+ "shots": "S52",
+ "t_song": [
+  181.23,
+  185.23
+ ],
+ "audio_t0": 181.23,
+ "chosen": 3,
+ "chosen_why": "Clear walk toward a static camera with full, readable frozen figures (takes 1-2 had no walk; take 4 is darker and more cluttered).",
+ "t_chosen": "2026-10-03T02:35:38"
+}

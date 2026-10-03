@@ -1,0 +1,49 @@
+{
+ "plate": "P16",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S26 delivered: macro slide across the crimson lion shield and its convex bronze rim (0-2.2 s), up over the crested Corinthian helmet (2.2-5 s); the low sun's glint flashes across the bronze at ~2.5 s.",
+   "costume": "Lion blazon and helmet exactly as the sheet.",
+   "identity": "Sheet props.",
+   "artefacts": "A thin horizontal lens-flare streak at 2.8-3.5 s (renderer ignores/repaints).",
+   "notes": "Glint ~2.5 s vs 'bronze' 84.38 (plate 3.02): -0.5 s.",
+   "sync": [
+    {
+     "song_t": 82.65,
+     "event": "'burning' (plate 1.29)",
+     "expected_plate_t": 1.29,
+     "measured_plate_t": 0.958,
+     "offset_s": -0.332,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 84.38,
+     "event": "'bronze': the glint sweeps (plate 3.02)",
+     "expected_plate_t": 3.02,
+     "measured_plate_t": 2.5,
+     "offset_s": -0.52,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P16/take1.review.jpg",
+   "contact": "media/plates/P16/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T02:05:36",
+   "short": "Thin horizontal lens-flare streak at 2.8-3.5 s."
+  }
+ },
+ "shots": "S26, S36",
+ "t_song": [
+  81.36,
+  86.36
+ ],
+ "audio_t0": 81.36,
+ "chosen": 1,
+ "chosen_why": "Only take.",
+ "t_chosen": "2026-10-03T02:23:03"
+}

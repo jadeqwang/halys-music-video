@@ -46,7 +46,20 @@ function spans(s, prompt) {
   return [[s, C.pearl]];
 }
 
-function wrap(s, cols) { if (!s.length) return [{ s: '', o: 0 }]; const out = []; for (let i = 0; i < s.length; i += cols) out.push({ s: s.slice(i, i + cols), o: i }); return out; }
+function wrap(s, cols, words = false) {
+  if (!s.length) return [{ s: '', o: 0 }];
+  const out = [];
+  if (!words) { for (let i = 0; i < s.length; i += cols) out.push({ s: s.slice(i, i + cols), o: i }); return out; }
+  let i = 0;                                       // word wrap (the side panes format their own lines), hanging indent
+  while (i < s.length) {
+    const ind = out.length ? 10 : 0, room = cols - ind;
+    let j = Math.min(s.length, i + room);
+    if (j < s.length) { const sp = s.lastIndexOf(' ', j); if (sp > i) j = sp; }
+    out.push({ s: ' '.repeat(ind) + s.slice(i, j), o: i - ind });
+    i = j; while (s[i] === ' ') i++;
+  }
+  return out;
+}
 
 export function terminalState(T, t) {
   const lines = T.main.filter(l => l.t <= t + 1e-6).map(l => l.text);
@@ -60,8 +73,8 @@ export function terminalState(T, t) {
   return lines;
 }
 
-function renderPane(canvas, rows, cols, lines, t, { cursor = true, prompt, px }) {
-  const c = canvas.getContext('2d'), face = FACE.mono;
+function renderPane(canvas, rows, cols, lines, t, { cursor = true, prompt, px, words = false }) {
+  const c = canvas.getContext('2d', { willReadFrequently: true }), face = FACE.mono;
   const cw = .6 * px, lh = 1.42 * px, pad = .9 * px;
   const W = Math.ceil(cols * cw + 2 * pad), H = Math.ceil(rows * lh + 2 * pad);
   if (canvas.width !== W || canvas.height !== H) { canvas.width = W; canvas.height = H; }
@@ -70,7 +83,7 @@ function renderPane(canvas, rows, cols, lines, t, { cursor = true, prompt, px })
   bg.addColorStop(0, '#0b0f1a'); bg.addColorStop(1, '#070a12');
   c.fillStyle = bg; c.fillRect(0, 0, W, H);
   const phys = [];
-  for (const s of lines) for (const w of wrap(s, cols)) phys.push({ s: w.s, o: w.o, full: s });
+  for (const s of lines) for (const w of wrap(s, cols, words)) phys.push({ s: w.s, o: w.o, full: s });
   const vis = phys.slice(Math.max(0, phys.length - rows));
   applyFont(c, face, px);
   vis.forEach((ln, i) => {
@@ -81,7 +94,7 @@ function renderPane(canvas, rows, cols, lines, t, { cursor = true, prompt, px })
     const start = ln.o;
     let k = 0, acc = 0;
     for (let j = 0; j < ln.s.length; j++) {
-      const gi = start + j;
+      const gi = Math.max(0, start + j);
       while (k < sp.length - 1 && gi >= acc + sp[k][0].length) { acc += sp[k][0].length; k++; }
       const ch = ln.s[j], colr = sp[k][1];
       if (SUBST.has(ch)) drawCellGlyph(c, ch, x, y, cw, px, colr);
@@ -144,7 +157,8 @@ export function drawTerminal(g, f, e, t) {
   const lines = terminalState(T, t);
   if (S.main) {
     const qw = Math.hypot(S.main[1][0] - S.main[0][0], S.main[1][1] - S.main[0][1]);
-    const cols = T.cols, rows = 17, px = Math.max(9, qw / (cols * .6 + 1.8));
+    const qh = Math.hypot(S.main[3][0] - S.main[0][0], S.main[3][1] - S.main[0][1]);
+    const cols = T.cols, px = Math.max(9, qw / (cols * .6 + 1.8)), rows = Math.max(6, Math.floor((qh - 1.8 * px) / (1.42 * px)));
     _main ||= makeCanvas(16, 16);
     renderPane(_main, rows, cols, lines, t, { prompt: T.prompt, px });
     g.save(); g.imageSmoothingQuality = 'high';
@@ -154,13 +168,13 @@ export function drawTerminal(g, f, e, t) {
   }
   if (S.side) {
     const qw = Math.hypot(S.side[1][0] - S.side[0][0], S.side[1][1] - S.side[0][1]);
-    const cols = 34, px = Math.max(8, qw / (cols * .6 + 1.8));
+    const cols = 36, px = Math.max(8, qw / (cols * .6 + 1.8));
     // side panes: the persistent tmux panes, wrapped to the vertical monitor
     _side ||= makeCanvas(16, 16);
     const qh = Math.hypot(S.side[3][0] - S.side[0][0], S.side[3][1] - S.side[0][1]), rows = Math.max(8, Math.floor((qh - 1.8 * px) / (1.42 * px)));
     const sideLines = [];
     T.side.forEach((s, i) => { if (i) sideLines.push('─'.repeat(cols)); sideLines.push(s); });
-    renderPane(_side, rows, cols, sideLines, t, { cursor: false, prompt: T.prompt, px });
+    renderPane(_side, rows, cols, sideLines, t, { cursor: false, prompt: T.prompt, px, words: true });
     g.save(); g.imageSmoothingQuality = 'high';
     if (isAxisRect(S.side)) g.drawImage(_side, S.side[0][0], S.side[0][1], S.side[1][0] - S.side[0][0], S.side[3][1] - S.side[0][1]);
     else warp(g, _side, S.side);

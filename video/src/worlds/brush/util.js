@@ -128,6 +128,44 @@ function boxV(src, dst, w, h, r) {
     for (let x = 0; x < w; x++) { dst[o + x] = acc[x] * inv; acc[x] += src[a + x] - src[b + x]; }
   }
 }
+// true box blur of radius r (two running-sum passes)
+export function boxBlur(src, w, h, r, out = null) {
+  const N = w * h; out = out || new Float32Array(N);
+  if (r < 1) { out.set(src.subarray(0, N)); return out; }
+  const tmp = scratch(N); boxH(src, tmp, w, h, r); boxV(tmp, out, w, h, r); return out;
+}
+// 2x / 4x box downsample and bilinear upsample (for blurs at large sigma)
+export function down(src, w, h, f) {
+  const dw = Math.ceil(w / f), dh = Math.ceil(h / f), out = new Float32Array(dw * dh), inv = 1 / (f * f);
+  for (let y = 0; y < dh; y++) for (let x = 0; x < dw; x++) {
+    let s = 0;
+    for (let j = 0; j < f; j++) { const yy = Math.min(h - 1, y * f + j) * w; for (let i = 0; i < f; i++) s += src[yy + Math.min(w - 1, x * f + i)]; }
+    out[y * dw + x] = s * inv;
+  }
+  return out;
+}
+export function up(src, dw, dh, w, h, f, out = null) {
+  out = out || new Float32Array(w * h);
+  const inv = 1 / f, o = .5 / f - .5;
+  for (let y = 0; y < h; y++) {
+    let fy = y * inv + o; if (fy < 0) fy = 0; if (fy > dh - 1.001) fy = dh - 1.001;
+    const yi = fy | 0, ty = fy - yi, r0 = yi * dw, r1 = Math.min(dh - 1, yi + 1) * dw;
+    for (let x = 0; x < w; x++) {
+      let fx = x * inv + o; if (fx < 0) fx = 0; if (fx > dw - 1.001) fx = dw - 1.001;
+      const xi = fx | 0, tx = fx - xi, x1 = Math.min(dw - 1, xi + 1);
+      out[y * w + x] = (src[r0 + xi] * (1 - tx) + src[r0 + x1] * tx) * (1 - ty) + (src[r1 + xi] * (1 - tx) + src[r1 + x1] * tx) * ty;
+    }
+  }
+  return out;
+}
+// Gaussian blur that drops to half / quarter resolution for large sigma (the result is smooth anyway)
+export function blurFast(src, w, h, sigma, out = null) {
+  const f = sigma >= 7 ? 4 : sigma >= 3 ? 2 : 1;
+  if (f === 1) return blur(src, w, h, sigma, out);
+  const dw = Math.ceil(w / f), dh = Math.ceil(h / f), d = down(src, w, h, f), b = blur(d, dw, dh, sigma / f);
+  return up(b, dw, dh, w, h, f, out);
+}
+
 // Gaussian blur of a Float32 field (exact kernel below sigma 3, three box passes above). Returns a new array
 // (or writes into `out` when given; out may not alias src).
 export function blur(src, w, h, sigma, out = null) {
@@ -135,7 +173,7 @@ export function blur(src, w, h, sigma, out = null) {
   out = out || new Float32Array(N);
   if (sigma <= 0.05) { out.set(src.subarray ? src.subarray(0, N) : src); return out; }
   const tmp = scratch(N);
-  if (sigma < 3) {
+  if (sigma < 1.8) {
     const { r, k } = gaussKernel(sigma);
     for (let y = 0; y < h; y++) {
       const o = y * w;

@@ -1,0 +1,49 @@
+{
+ "plate": "P19",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S29 delivered: XCU of the Lydian's eye inside the bronze cheek-piece edge; the eye opens wide by 0.9 s (on 'eye' 93.95) and holds an upward gaze, pupil dark with a sky glint.",
+   "costume": "Bronze cheek-piece edge, weathered skin.",
+   "identity": "Matches.",
+   "artefacts": "Eyelid half-lowered in the first 0.3 s (reads as a squint opening).",
+   "notes": "1:1 from t0.",
+   "sync": [
+    {
+     "song_t": 93.95,
+     "event": "'eye' (plate 0.95)",
+     "expected_plate_t": 0.95,
+     "measured_plate_t": 0.9,
+     "offset_s": -0.05,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 95.185,
+     "event": "'god' (plate 2.19)",
+     "expected_plate_t": 2.185,
+     "measured_plate_t": 1.792,
+     "offset_s": -0.393,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P19/take1.review.jpg",
+   "contact": "media/plates/P19/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T02:05:36",
+   "short": "Eyelid half-lowered in the first 0.3 s."
+  }
+ },
+ "shots": "S29, S36",
+ "t_song": [
+  93.0,
+  97.0
+ ],
+ "audio_t0": 93.0,
+ "chosen": 1,
+ "chosen_why": "Only take.",
+ "t_chosen": "2026-10-03T02:23:03"
+}

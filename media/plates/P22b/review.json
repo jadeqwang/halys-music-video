@@ -1,0 +1,49 @@
+{
+ "plate": "P22b",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S33 right panel delivered: the Mede's fist (ochre sleeve, red rosette cuff) enters from frame right, opens from 2.0 s to reveal the terracotta toy horse in his palm, holds open from 3.0 s; black background, warm rim.",
+   "costume": "Rosette cuff as on the sheet; toy horse terracotta (reads, slightly lumpy).",
+   "identity": "Sheet prop.",
+   "artefacts": "Fingers count correct; fist partly out of frame in the first 0.4 s.",
+   "notes": "1:1 from t0 ('home' 107.02 = plate 1.17, the hand is still closing/opening then).",
+   "sync": [
+    {
+     "song_t": 105.85,
+     "event": "'Go' (plate 0)",
+     "expected_plate_t": 0.0,
+     "measured_plate_t": 0.417,
+     "offset_s": 0.417,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 107.02,
+     "event": "'home' (plate 1.17)",
+     "expected_plate_t": 1.17,
+     "measured_plate_t": 1.083,
+     "offset_s": -0.087,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P22b/take1.review.jpg",
+   "contact": "media/plates/P22b/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T02:07:12",
+   "short": "Fist partly out of frame for 0.4 s."
+  }
+ },
+ "shots": "S33 (right panel)",
+ "t_song": [
+  105.85,
+  109.85
+ ],
+ "audio_t0": 105.85,
+ "chosen": 1,
+ "chosen_why": "Only take.",
+ "t_chosen": "2026-10-03T02:23:04"
+}

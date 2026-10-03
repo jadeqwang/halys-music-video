@@ -1,0 +1,83 @@
+{
+ "plate": "P29",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S57/S58 delivered: a dense mixed crowd frozen in dim dusk, a wave of golden light sweeps in from the right (1.7-4.0 s) and they come alive, look up and around; both armies roar from ~5.8 s, raising spears and arms, embracing by 8.5 s.",
+   "costume": "Crests/crimson/lion shields and red caps/ochre/wicker shields mixed.",
+   "identity": "Crowd-level; the front figures read as both sides.",
+   "artefacts": "Dense crowd at the back merges slightly (fine for a crowd); no stirrups/flags.",
+   "notes": "Roar ~+0.4 s vs 200.315.",
+   "sync": [
+    {
+     "song_t": 200.315,
+     "event": "'Shadow turned to day': the roar (plate 5.46)",
+     "expected_plate_t": 5.455,
+     "measured_plate_t": 5.85,
+     "offset_s": 0.395,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 203.6,
+     "event": "boom (plate 8.74)",
+     "expected_plate_t": 8.74,
+     "measured_plate_t": 8.458,
+     "offset_s": -0.282,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P29/take1.review.jpg",
+   "contact": "media/plates/P29/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 2.0808,
+   "job": null,
+   "reviewed": "2026-10-03T02:19:51",
+   "short": "Back of the crowd merges slightly."
+  },
+  "2": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "Crowd goes from still to cheering and embracing, push-in.",
+   "costume": "Correct.",
+   "identity": "Crowd-level.",
+   "artefacts": "Light is already golden from the start (no clear dusk-to-gold transition).",
+   "notes": "Backup.",
+   "sync": [
+    {
+     "song_t": 200.315,
+     "event": "'Shadow turned to day': the roar (plate 5.46)",
+     "expected_plate_t": 5.455,
+     "measured_plate_t": 5.542,
+     "offset_s": 0.087,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 203.6,
+     "event": "boom (plate 8.74)",
+     "expected_plate_t": 8.74,
+     "measured_plate_t": 8.25,
+     "offset_s": -0.49,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P29/take2.review.jpg",
+   "contact": "media/plates/P29/take2.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 2.0808,
+   "job": null,
+   "reviewed": "2026-10-03T02:19:51"
+  }
+ },
+ "shots": "S57, S58",
+ "t_song": [
+  194.86,
+  203.86
+ ],
+ "audio_t0": 194.86,
+ "chosen": 1,
+ "chosen_why": "Clear dusk-to-gold light sweep and statues-to-flesh transition; take 2 starts already golden.",
+ "t_chosen": "2026-10-03T02:23:04"
+}

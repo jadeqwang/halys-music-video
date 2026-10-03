@@ -157,8 +157,10 @@ ev("S35.glover", "quote", "S35", [('"we just went sci-fi." — V. Glover, Artemi
 ev("S36.stutter", "chop", "S36", [("SKY", {"key": "sky"})], stutter=True,
    invert=[112.74, 113.173, 113.607, 115.783, 116.217, 116.652, 117.086])
 ev("S37.hud", "hud", "S37", [("C2 · TOTALITY · 00:00:07", {"key": "hud", "reveal": "line"})], c2=110.58, anchor="corner")
+# chop cycles: the corona ring is locked centre (SHOTLIST S41), so by default the words' streamers radiate from the frame
+# centre and the Moon's disk shows through the letters (ring: true); elsewhere the scene passes f.type.sun
 for sid in ("S41", "S42", "S43", "S44"):
-    ev(f"{sid}.chops", "chop", sid, [("HALO", {"key": "c1"}), ("IN THE", {"key": "c2"}), ("SKY", {"key": "c3"}), ("SKY", {"key": "c4"})])
+    ev(f"{sid}.chops", "chop", sid, [("HALO", {"key": "c1"}), ("IN THE", {"key": "c2"}), ("SKY", {"key": "c3"}), ("SKY", {"key": "c4"})], ring=True)
 
 # 9 · verse 2 (marble, small italic lower thirds; the last one cut into a plinth)
 ev("S46.v", "inscr", "S46", [("What was it like when reality suddenly broke", {"key": "l", "reveal": "words"})], anchor="lower")

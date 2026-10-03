@@ -1,0 +1,49 @@
+{
+ "plate": "P24",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S38 delivered: the Lydian from behind/side on a ridge against a dark dusk sky with an orange horizon; raises his right arm and pushes his open, spread palm up against the sky (1.0-3.8 s), leaning up into it.",
+   "costume": "Helmet + crest, braids, scales, crimson, shield rim at frame bottom.",
+   "identity": "Matches.",
+   "artefacts": "The 'glass' press reads as a reach with spread fingers (no head push-through).",
+   "notes": "Palm reaches the 'membrane' ~1.6-2.3 s (kick returns 126.206 = plate 1.74).",
+   "sync": [
+    {
+     "song_t": 124.475,
+     "event": "kick out: hand to the sky",
+     "expected_plate_t": 0.005,
+     "measured_plate_t": 0.042,
+     "offset_s": 0.037,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 126.206,
+     "event": "kick returns (plate 1.74)",
+     "expected_plate_t": 1.736,
+     "measured_plate_t": 1.583,
+     "offset_s": -0.153,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P24/take1.review.jpg",
+   "contact": "media/plates/P24/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T02:07:12",
+   "short": "Reads as a reach with spread fingers (no head push-through)."
+  }
+ },
+ "shots": "S38",
+ "t_song": [
+  124.47,
+  128.47
+ ],
+ "audio_t0": 124.47,
+ "chosen": 1,
+ "chosen_why": "Only take.",
+ "t_chosen": "2026-10-03T02:23:04"
+}

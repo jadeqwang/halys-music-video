@@ -42,6 +42,48 @@
    "est_cost_usd": 3.468,
    "job": null,
    "reviewed": "2026-10-03T01:53:33"
+  },
+  "2": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "Same structure as take 1: canonical master composition 0-4.5 s, then descends into the armies, which fill the riverbed by 10-12 s (the river disappears under the melee).",
+   "costume": "Army-level correct.",
+   "identity": "-",
+   "artefacts": "Armies flood the riverbed late; ignores 'stay high'/'battle already raging': the WIDE ref acts as a first frame.",
+   "notes": "Backup to take 1.",
+   "sync": [
+    {
+     "song_t": 7.18,
+     "event": "strings enter (plate 0)",
+     "expected_plate_t": 0.0,
+     "measured_plate_t": 0.083,
+     "offset_s": 0.083,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 10.69,
+     "event": "S06 descent begins",
+     "expected_plate_t": 3.51,
+     "measured_plate_t": 3.292,
+     "offset_s": -0.218,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 14.19,
+     "event": "cut to S07",
+     "expected_plate_t": 7.01,
+     "measured_plate_t": 7.292,
+     "offset_s": 0.282,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P01/take2.review.jpg",
+   "contact": "media/plates/P01/take2.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 3.468,
+   "job": null,
+   "reviewed": "2026-10-03T01:59:16"
   }
  },
  "shots": "S04-06, S16, S20, S24, S30, S35, S44",

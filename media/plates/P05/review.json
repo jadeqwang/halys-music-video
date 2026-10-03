@@ -1,0 +1,42 @@
+{
+ "plate": "P05",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S09/S22 left panel: Alyattes on a chestnut horse facing right, raises his right hand (1.7-2.4 s), turns and shouts at ~4.0 s; gold lion standard on a pole, Lydian spear ranks behind; king centred for the half-frame crop.",
+   "costume": "Gold fillet, grey-streaked long hair, full beard, purple mantle with gold meander border over a white chiton (court dress per the sheet); crimson saddlecloth, bronze bridle, no stirrups.",
+   "identity": "Matches media/chars/alyattes.jpg.",
+   "artefacts": "None. Background is a bright warm sky (low angle), not dark.",
+   "notes": "Matches P06 (same framing, light and timing).",
+   "sync": [
+    {
+     "song_t": 23.3,
+     "event": "ostinato stops, rubato swell (plate 2.15)",
+     "expected_plate_t": 2.15,
+     "measured_plate_t": 2.4,
+     "offset_s": 0.25,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P05/take1.review.jpg",
+   "contact": "media/plates/P05/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.3872,
+   "job": null,
+   "reviewed": "2026-10-03T01:59:16",
+   "short": "Bright warm sky behind (low angle), not a dark background.",
+   "timing": "S09 (21.15-25.50): hand rises 1.7-2.4 s (up at 2.4 on the 23.3 swell). S22 (62.20-65.67): use the shout section, plate 3.6-6.0 (mouth opens at 4.0); S43 any section."
+  }
+ },
+ "shots": "S09, S22, S43",
+ "t_song": [
+  21.15,
+  27.15
+ ],
+ "audio_t0": 21.15,
+ "chosen": 1,
+ "chosen_why": "Only take; mirrors P06.",
+ "t_chosen": "2026-10-03T02:23:03"
+}

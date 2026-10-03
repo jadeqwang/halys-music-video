@@ -1,0 +1,49 @@
+{
+ "plate": "P10",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S14 delivered: a disciplined kneeling rank of hooded Median archers at full draw (0-2.1 s), all loose in unison at 2.21 s, arrows streak across the sky to frame right, bows lower.",
+   "costume": "Undyed felt hoods with flaps, ochre tunics, sheepskin cloaks, dark trousers, composite bows; individual faces; sword side not visible.",
+   "identity": "Matches media/chars/median_archer.jpg.",
+   "artefacts": "None. No standing second rank; bright sky behind (low angle).",
+   "notes": "The loose lands on the 38.23 timpani (-0.04 s).",
+   "sync": [
+    {
+     "song_t": 36.845,
+     "event": "stab (plate 0.87)",
+     "expected_plate_t": 0.865,
+     "measured_plate_t": 0.417,
+     "offset_s": -0.448,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 38.23,
+     "event": "timpani: the loose (plate 2.25)",
+     "expected_plate_t": 2.25,
+     "measured_plate_t": 2.21,
+     "offset_s": -0.04,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P10/take1.review.jpg",
+   "contact": "media/plates/P10/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T02:01:24",
+   "short": "No standing second rank; bright sky."
+  }
+ },
+ "shots": "S14",
+ "t_song": [
+  35.98,
+  40.98
+ ],
+ "audio_t0": 35.98,
+ "chosen": 1,
+ "chosen_why": "Only take; the loose lands on the timpani.",
+ "t_chosen": "2026-10-03T02:23:03"
+}

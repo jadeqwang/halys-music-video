@@ -1,0 +1,49 @@
+{
+ "plate": "P34",
+ "takes": {
+  "1": {
+   "verdict": "weak",
+   "score": 2,
+   "purpose": "S63: a steel rocket lifts off at dusk on a bright flame and climbs, centred and vertical, camera tilting up.",
+   "costume": "Unbranded, no logos.",
+   "identity": "-",
+   "artefacts": "Silhouette is essentially SpaceX Starship (forward and aft flaps): conflicts with the style bible's no-Musk-iconography rule.",
+   "notes": "RETAKE with a generic rocket shape.",
+   "sync": [],
+   "cuts_s": [],
+   "sheet": "media/plates/P34/take1.review.jpg",
+   "contact": "media/plates/P34/take1.sheet.jpg",
+   "virtual_avatar": false,
+   "est_cost_usd": 1.6184,
+   "job": null,
+   "reviewed": "2026-10-03T02:19:51"
+  },
+  "2": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S63 delivered: a generic polished-steel rocket (pointed ogive nose, three small fins at the base, no flaps) lifts off at dusk on a white-gold flame, climbs centred and vertical, camera tilting up.",
+   "costume": "Unbranded: no logos, flags or lettering.",
+   "identity": "-",
+   "artefacts": "Steel ring panels still hint at the real thing, but the silhouette is generic.",
+   "notes": "Starts on the pad at plate 0 (Drop 2 kick 215.287): 1:1 from t0.",
+   "sync": [],
+   "cuts_s": [],
+   "sheet": "media/plates/P34/take2.review.jpg",
+   "contact": "media/plates/P34/take2.sheet.jpg",
+   "virtual_avatar": false,
+   "est_cost_usd": 1.6184,
+   "job": null,
+   "reviewed": "2026-10-03T02:35:37",
+   "short": "Steel ring panels still hint at the real vehicle; silhouette generic."
+  }
+ },
+ "shots": "S63",
+ "t_song": [
+  215.29,
+  222.29
+ ],
+ "audio_t0": 215.29,
+ "chosen": 2,
+ "chosen_why": "Generic silhouette without the Starship flaps of take 1.",
+ "t_chosen": "2026-10-03T02:35:37"
+}

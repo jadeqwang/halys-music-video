@@ -1,0 +1,66 @@
+{
+ "plate": "P20",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 242.8,
+ "est_cost_usd": 0.9248,
+ "duration_s": 4.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 100.24,
+   "dur": 4.0,
+   "file": "media/plates/P20/audio_song_0100.24_4.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 4,
+  "refs": [
+   "LYD",
+   "MED"
+  ],
+  "audio": {
+   "t0": 100.24,
+   "src": "song"
+  },
+  "t_song": [
+   100.24,
+   104.24
+  ],
+  "shots": "S31, S55",
+  "sync": [
+   [
+    100.27,
+    "boom (plate 0.03)"
+   ],
+   [
+    102.21,
+    "BIGGEST BOOM: every face up in unison (plate 1.97)"
+   ]
+  ],
+  "prompt": "Low-angle, medium-wide shot of massed soldiers of both armies standing close together on a riverbank during a total solar eclipse: Lydians dressed like reference image 1 (crested bronze helmets, crimson tunics, lion shields) on the left half and Medes dressed like reference image 2 (red felt caps, ochre tunics, wicker shields) on the right half, mirrored, dozens of faces readable. The sky above them is a dark umber dome with an orange glow along the horizon; the faces and costumes stay clearly readable in the dim, even twilight. 0-1.9 s: everyone stands completely still, eyes lowered, frozen in silence. At exactly 2.0 s, on the huge drum hit of the reference audio, every soldier lifts his face to the sky at the same instant, in unison, as one body; then they hold the upward gaze, motionless, to the end. Open, empty sky in the upper third (no sun, no moon). Camera static, low. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. No fog, no smoke. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "notes": "The formation moment: all faces up on 102.21 (plate 1.97). Also S55 (statues gaze up).",
+  "avatar": true
+ },
+ "request": {
+  "prompt": "Low-angle, medium-wide shot of massed soldiers of both armies standing close together on a riverbank during a total solar eclipse: Lydians dressed like reference image 1 (crested bronze helmets, crimson tunics, lion shields) on the left half and Medes dressed like reference image 2 (red felt caps, ochre tunics, wicker shields) on the right half, mirrored, dozens of faces readable. The sky above them is a dark umber dome with an orange glow along the horizon; the faces and costumes stay clearly readable in the dim, even twilight. 0-1.9 s: everyone stands completely still, eyes lowered, frozen in silence. At exactly 2.0 s, on the huge drum hit of the reference audio, every soldier lifts his face to the sky at the same instant, in unison, as one body; then they hold the upward gaze, motionless, to the end. Open, empty sky in the upper third (no sun, no moon). Camera static, low. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. No fog, no smoke. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "duration": 4,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(582 KB)",
+   "data:image/jpeg;base64...(557 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(130 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T02:03:38"
+}

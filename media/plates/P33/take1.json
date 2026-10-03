@@ -1,0 +1,64 @@
+{
+ "plate": "P33",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 163.1,
+ "est_cost_usd": 0.9248,
+ "duration_s": 4.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 211.88,
+   "dur": 4.0,
+   "file": "media/plates/P33/audio_song_0211.88_4.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 4,
+  "refs": [
+   "LYD"
+  ],
+  "audio": {
+   "t0": 211.88,
+   "src": "song"
+  },
+  "t_song": [
+   211.88,
+   215.88
+  ],
+  "shots": "S62 (-> S63 match cut)",
+  "sync": [
+   [
+    212.3,
+    "riser (plate 0.42)"
+   ],
+   [
+    215.287,
+    "DROP 2 kick: match cut at the apex (plate 3.41)"
+   ]
+  ],
+  "prompt": "Low-angle shot looking up at the Lydian from reference image 1 (crested bronze helmet pushed up, braids, short beard, crimson tunic, bronze scale corselet, crimson lion shield) on a riverbank in warm golden light, a golden sky with painterly clouds behind him. At 0.3 s, grinning, he tosses his short bronze sword high into the air; the camera tilts up to follow it; the sword spins end over end, rising against the golden sky and flashing in the low sun each time it turns; it slows as it climbs, and at about 3.3 s it hangs almost still at the top of its arc, point up, centred in the frame against the sky. Hard, low golden sun from frame right. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Slow motion. Clear air. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "notes": "The sword at its apex, point up, match-cuts to the rocket (P34) on the Drop 2 kick.",
+  "avatar": true
+ },
+ "request": {
+  "prompt": "Low-angle shot looking up at the Lydian from reference image 1 (crested bronze helmet pushed up, braids, short beard, crimson tunic, bronze scale corselet, crimson lion shield) on a riverbank in warm golden light, a golden sky with painterly clouds behind him. At 0.3 s, grinning, he tosses his short bronze sword high into the air; the camera tilts up to follow it; the sword spins end over end, rising against the golden sky and flashing in the low sun each time it turns; it slows as it climbs, and at about 3.3 s it hangs almost still at the top of its arc, point up, centred in the frame against the sky. Hard, low golden sun from frame right. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Slow motion. Clear air. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "duration": 4,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(582 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(130 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T02:11:03"
+}

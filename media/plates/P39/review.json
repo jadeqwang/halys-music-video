@@ -1,0 +1,41 @@
+{
+ "plate": "P39",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S78 delivered: from behind her chair (room_a), she types at the ultrawide and side monitors; RARE EARTH and the patch on the back of the white jacket face the camera; window with fog and the red-blinking tower.",
+   "costume": "Per sheet/ROOM.md (blue circle is faint on the back).",
+   "identity": "Matches.",
+   "artefacts": "Screen pseudo-text (renderer replaces).",
+   "notes": "1:1 from t0.",
+   "sync": [
+    {
+     "song_t": 266.12,
+     "event": "ticking build: one terminal line per tick",
+     "expected_plate_t": 0.0,
+     "measured_plate_t": 0.458,
+     "offset_s": 0.458,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P39/take1.review.jpg",
+   "contact": "media/plates/P39/take1.sheet.jpg",
+   "virtual_avatar": false,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T02:19:51",
+   "short": "Blue back circle faint."
+  }
+ },
+ "shots": "S78",
+ "t_song": [
+  266.12,
+  270.12
+ ],
+ "audio_t0": 266.12,
+ "chosen": 1,
+ "chosen_why": "Only take.",
+ "t_chosen": "2026-10-03T02:23:04"
+}

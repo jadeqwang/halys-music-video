@@ -1,0 +1,83 @@
+{
+ "plate": "P18",
+ "takes": {
+  "1": {
+   "verdict": "weak",
+   "score": 2,
+   "purpose": "S28 intent (faces turn up one after another) is barely there: a row of men look down, a few heads lift slightly from 1.8-3.3 s; no readable left-to-right wave, no clear upturned faces on the 91.31 boom.",
+   "costume": "One Lydian at the front, seven Medes behind (not mixed).",
+   "identity": "OK.",
+   "artefacts": "Pale beach-like shore and bright sky; subject motion tiny (max 0.18 px/frame).",
+   "notes": "RETAKE: bigger, staggered head-tilts, alternating Lydian/Mede, chest-up framing, dark background.",
+   "sync": [
+    {
+     "song_t": 89.78,
+     "event": "'halo' (plate 0.56)",
+     "expected_plate_t": 0.56,
+     "measured_plate_t": 0.25,
+     "offset_s": -0.31,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 91.31,
+     "event": "boom 'warriors': all faces up (plate 2.09)",
+     "expected_plate_t": 2.09,
+     "measured_plate_t": 2.583,
+     "offset_s": 0.493,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P18/take1.review.jpg",
+   "contact": "media/plates/P18/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T02:05:36"
+  },
+  "2": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "S28: six warriors chest-up against a dark bank (2 Lydians, 4 Medes); faces turn up one after another left to right (first ~2.0 s, all six up by ~3.5 s) and hold.",
+   "costume": "Correct.",
+   "identity": "Consistent.",
+   "artefacts": "Not strictly alternating (L, M, M, L, M, M); the wave is late (+1.4 s) and the first part is static.",
+   "notes": "Retime: the 91.31 boom = all faces up at plate ~3.5.",
+   "sync": [
+    {
+     "song_t": 89.78,
+     "event": "'halo' (plate 0.56)",
+     "expected_plate_t": 0.56,
+     "measured_plate_t": 2.0,
+     "offset_s": 1.44,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 91.31,
+     "event": "boom 'warriors': all faces up (plate 2.09)",
+     "expected_plate_t": 2.09,
+     "measured_plate_t": 3.5,
+     "offset_s": 1.41,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P18/take2.review.jpg",
+   "contact": "media/plates/P18/take2.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T02:35:38",
+   "short": "2 Lydians : 4 Medes (not alternating); wave ~1.4 s late."
+  }
+ },
+ "shots": "S28",
+ "t_song": [
+  89.22,
+  93.22
+ ],
+ "audio_t0": 89.22,
+ "chosen": 2,
+ "chosen_why": "Readable wave of upturned faces (take 1's was invisible).",
+ "t_chosen": "2026-10-03T02:35:38"
+}

@@ -34,6 +34,41 @@
    "est_cost_usd": 1.156,
    "job": null,
    "reviewed": "2026-10-03T01:53:33"
+  },
+  "2": {
+   "verdict": "pass",
+   "score": 5,
+   "purpose": "S79 delivered: typing from behind (0-1.1 s), one smooth half-turn spin (1.2-2.1 s), facing the camera squarely with a perfect deadpan stare from ~2.1 s to the end (2.9 s of hold).",
+   "costume": "Per sheet.",
+   "identity": "Matches.",
+   "artefacts": "None.",
+   "notes": "Spin lands ~+0.35 s after the 270.04 chord.",
+   "sync": [
+    {
+     "song_t": 270.04,
+     "event": "final stark chord: the spin ends facing camera (plate 1.74)",
+     "expected_plate_t": 1.74,
+     "measured_plate_t": 2.1,
+     "offset_s": 0.36,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 271.6,
+     "event": "freeze (plate 3.3)",
+     "expected_plate_t": 3.3,
+     "measured_plate_t": 3.25,
+     "offset_s": -0.05,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P40/take2.review.jpg",
+   "contact": "media/plates/P40/take2.sheet.jpg",
+   "virtual_avatar": false,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T02:19:51",
+   "short": "Deadpan hold 2.9 s (S79 wants 3.36 s: hold the last drawing)."
   }
  },
  "shots": "S79",
@@ -41,5 +76,8 @@
   268.3,
   273.3
  ],
- "audio_t0": 268.3
+ "audio_t0": 268.3,
+ "chosen": 2,
+ "chosen_why": "Spin lands 1.06 s closer to the chord than take 1 and leaves a longer deadpan hold (2.9 s).",
+ "t_chosen": "2026-10-03T02:23:05"
 }

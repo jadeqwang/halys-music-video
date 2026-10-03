@@ -1,0 +1,41 @@
+{
+ "plate": "P36",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S68 delivered: a mixed modern crowd in a park in paper eclipse glasses looking up; at ~2.1 s arms go up, a child on shoulders raises both arms, several point up.",
+   "costume": "Plain clothes, no logos.",
+   "identity": "-",
+   "artefacts": "None.",
+   "notes": "Faces-up moment +0.1 s vs plate 2.0.",
+   "sync": [
+    {
+     "song_t": 237.66,
+     "event": "faces lift together (plate 2.0)",
+     "expected_plate_t": 2.0,
+     "measured_plate_t": 2.1,
+     "offset_s": 0.1,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P36/take1.review.jpg",
+   "contact": "media/plates/P36/take1.sheet.jpg",
+   "virtual_avatar": false,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T02:19:51",
+   "short": "-"
+  }
+ },
+ "shots": "S68",
+ "t_song": [
+  235.66,
+  239.66
+ ],
+ "audio_t0": 235.66,
+ "chosen": 1,
+ "chosen_why": "Only take.",
+ "t_chosen": "2026-10-03T02:23:04"
+}

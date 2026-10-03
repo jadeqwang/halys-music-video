@@ -1,0 +1,47 @@
+{
+ "plate": "P37",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 144.1,
+ "est_cost_usd": 0.9248,
+ "duration_s": 4.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 242.45,
+   "dur": 4.0,
+   "file": "media/plates/P37/audio_song_0242.45_4.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 4,
+  "audio": {
+   "t0": 242.45,
+   "src": "song"
+  },
+  "t_song": [
+   242.45,
+   246.45
+  ],
+  "shots": "S70",
+  "prompt": "Looking straight up from the stone floor of the Great Hypostyle Hall of Karnak temple in Egypt: massive papyrus columns carved with reliefs rise from every side of the frame and converge toward a patch of open midday sky in the centre, with heavy stone architraves crossing it. Harsh, high midday sun lights the column tops; deep shadows below. Over the 4 seconds the daylight dims steadily and strangely, the sky deepening and the shadows softening as if noon were turning to dusk, but the stone stays readable to the end. Camera: a slow, steady rotation around the vertical axis while looking straight up. No people. Photoreal live-action cinema, crisp, no lens-flare rays. No text, no watermark.",
+  "notes": "Darkness at noon (2027, near Luxor); the renderer paints the black sun near the zenith."
+ },
+ "request": {
+  "prompt": "Looking straight up from the stone floor of the Great Hypostyle Hall of Karnak temple in Egypt: massive papyrus columns carved with reliefs rise from every side of the frame and converge toward a patch of open midday sky in the centre, with heavy stone architraves crossing it. Harsh, high midday sun lights the column tops; deep shadows below. Over the 4 seconds the daylight dims steadily and strangely, the sky deepening and the shadows softening as if noon were turning to dusk, but the stone stays readable to the end. Camera: a slow, steady rotation around the vertical axis while looking straight up. No people. Photoreal live-action cinema, crisp, no lens-flare rays. No text, no watermark.",
+  "duration": 4,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": false,
+  "reference_audios": [
+   "data:audio/mpeg;base64...(130 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T02:12:56"
+}

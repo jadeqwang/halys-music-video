@@ -1,0 +1,49 @@
+{
+ "plate": "P26",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S51 delivered: three warriors (two Lydians, a Mede) frozen mid-action on the bank at dusk; only the wind moves: crimson cloaks billow, the ribbons under the gold lion standard stream, feather grass bends.",
+   "costume": "Correct; the Lydians wear crimson cloaks (not on the sheet, plausible).",
+   "identity": "Consistent.",
+   "artefacts": "None; orange horizon, readable dusk.",
+   "notes": "1:1 from t0.",
+   "sync": [
+    {
+     "song_t": 179.23,
+     "event": "'wind' (plate 0.57)",
+     "expected_plate_t": 0.57,
+     "measured_plate_t": 0.417,
+     "offset_s": -0.153,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 181.115,
+     "event": "'chill' (plate 2.46)",
+     "expected_plate_t": 2.455,
+     "measured_plate_t": 1.833,
+     "offset_s": -0.622,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P26/take1.review.jpg",
+   "contact": "media/plates/P26/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T02:09:12",
+   "short": "Lydians wear crimson cloaks (not on the sheet)."
+  }
+ },
+ "shots": "S51",
+ "t_song": [
+  178.66,
+  182.66
+ ],
+ "audio_t0": 178.66,
+ "chosen": 1,
+ "chosen_why": "Only take.",
+ "t_chosen": "2026-10-03T02:23:04"
+}

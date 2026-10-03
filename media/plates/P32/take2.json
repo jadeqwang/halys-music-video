@@ -1,0 +1,77 @@
+{
+ "plate": "P32",
+ "take": 2,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 169.8,
+ "est_cost_usd": 1.156,
+ "duration_s": 5.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 208.7,
+   "dur": 5.0,
+   "file": "media/plates/P32/audio_song_0208.70_5.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 5,
+  "takes": 2,
+  "refs": [
+   "LYD",
+   "MED",
+   "WIDE"
+  ],
+  "audio": {
+   "t0": 208.7,
+   "src": "song"
+  },
+  "t_song": [
+   208.7,
+   213.7
+  ],
+  "shots": "S61",
+  "sync": [
+   [
+    208.7,
+    "'Throw' (plate 0)"
+   ],
+   [
+    209.945,
+    "'blade' (plate 1.25)"
+   ],
+   [
+    210.18,
+    "low end out: hold on the sinking sword (plate 1.48)"
+   ],
+   [
+    211.877,
+    "beat returns (plate 3.18)"
+   ]
+  ],
+  "prompt": "Two shots joined by one hard cut at 2 seconds. Shot 1 (0-2 s): a wide slow-motion shot across the red-brown river of reference image 3 in warm golden light: on the left bank Lydian soldiers dressed like reference image 1 (crested bronze helmets, crimson tunics), on the right bank Median soldiers dressed like reference image 2 (red felt caps, ochre tunics), all throw their swords and spears into the river at the same moment; a rain of bronze blades arcs through the golden air from both banks and splashes into the water. Shot 2 (2-5 s): close-up at the surface of the red-brown water: one bronze sword enters the water point-first and slowly sinks, the hilt disappearing last, rings spreading across the water lit gold. Camera static in both shots. Hard, low golden sun raking in from frame right (the sun itself is outside the frame, beyond the right edge), long shadows, deep black shadows, warm rim light, background much darker than the figures. Clear air: no fog, no haze, no smoke. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. High-frame-rate slow motion. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "notes": "Rain of bronze; then one sword sinking during the held 'blade'.",
+  "avatar": true
+ },
+ "request": {
+  "prompt": "Two shots joined by one hard cut at 2 seconds. Shot 1 (0-2 s): a wide slow-motion shot across the red-brown river of reference image 3 in warm golden light: on the left bank Lydian soldiers dressed like reference image 1 (crested bronze helmets, crimson tunics), on the right bank Median soldiers dressed like reference image 2 (red felt caps, ochre tunics), all throw their swords and spears into the river at the same moment; a rain of bronze blades arcs through the golden air from both banks and splashes into the water. Shot 2 (2-5 s): close-up at the surface of the red-brown water: one bronze sword enters the water point-first and slowly sinks, the hilt disappearing last, rings spreading across the water lit gold. Camera static in both shots. Hard, low golden sun raking in from frame right (the sun itself is outside the frame, beyond the right edge), long shadows, deep black shadows, warm rim light, background much darker than the figures. Clear air: no fog, no haze, no smoke. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. High-frame-rate slow motion. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(582 KB)",
+   "data:image/jpeg;base64...(557 KB)",
+   "data:image/jpeg;base64...(801 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(161 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T02:11:10"
+}

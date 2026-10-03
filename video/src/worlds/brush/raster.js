@@ -30,9 +30,9 @@ void main() {
   float ds = s < 0.0 ? -s : (s > Lp ? (s - Lp) * 1.5 : 0.0);         // round head, flatter dragged-off tail
   float r = length(vec2(ds / hw, v));
   float sp = max(1.4, hw * 0.13);
-  float b1 = texture(uNoise, vec2(v * hw / sp * 0.0098 + seed * 7.13, s / sp * 0.00045 + seed * 3.7)).r;
-  float b2 = texture(uNoise, vec2(v * hw / sp * 0.0055 + seed * 1.9, s / sp * 0.0011 + seed * 5.3)).g;
-  float br = b1 * 0.65 + b2 * 0.35;
+  // bristle tracks (two scales in one fetch: long streaks along the stroke, about one per 1.4-3 px across)
+  vec4 nz = texture(uNoise, vec2(v * hw / sp * 0.0098 + seed * 7.13, s / sp * 0.00045 + seed * 3.7));
+  float br = nz.r * 0.65 + nz.g * 0.35;
   float rag = (texture(uNoise, vec2(s / max(hw, 1.0) * 0.022 + seed * 5.1, v > 0.0 ? 0.31 : 0.77)).a - 0.5) * 0.16;
   float cover = 1.0 - smoothstep(1.0 - 1.3 / hw + rag, 1.0 + rag, r);
   float dry = smoothstep(mix(0.42, 0.8, fract(seed * 13.7)), 1.2, u) * smoothstep(2.5, 7.0, hw);
@@ -40,9 +40,21 @@ void main() {
   float a = cover * vCol.a;
   vec3 col = vCol.rgb * (1.0 - 0.09 * uBristle + 0.18 * uBristle * br);
   oCol = vec4(col * a, a);
-  float load = mix(1.0, 0.6, u);
-  float h = thick * (load * (0.8 + 0.4 * (br - 0.5)) + 0.12 * smoothstep(0.6, 0.95, r));
+  float h = thick * (mix(1.0, 0.6, u) * (0.8 + 0.4 * (br - 0.5)) + 0.12 * smoothstep(0.6, 0.95, r));
   oHgt = vec4(h * a, 0.0, 0.0, a);
+}`;
+
+// the lay-in: the reference blurred and toned down, under every stroke (gaps show local colour, never black ground)
+const UNDER_FS = `#version 300 es
+precision highp float;
+in vec2 vUv;
+uniform sampler2D uUnder; uniform float uAlpha, uTone;
+layout(location = 0) out vec4 oCol;
+layout(location = 1) out vec4 oHgt;
+void main() {
+  vec3 c = texture(uUnder, vUv).rgb * uTone;
+  oCol = vec4(c * uAlpha, uAlpha);
+  oHgt = vec4(0.02 * uAlpha, 0.0, 0.0, uAlpha);
 }`;
 
 // exact sun / moon / beads / diamond ring / Jupiter (premultiplied over the strokes; glows are additive: alpha 0)
@@ -197,7 +209,7 @@ export function strokeMesh(list) {
   for (const s of list) {
     let L = 0; const P = s.pts; for (let k = 1; k < P.length; k++) L += Math.hypot(P[k][0] - P[k - 1][0], P[k][1] - P[k - 1][1]);
     s._len = L;
-    const seg = Math.max(2, Math.min(s.maxSeg ?? 16, Math.round((L + s.r * 2) / Math.max(2.2, s.r * .8))));
+    const seg = Math.max(2, Math.min(s.maxSeg ?? 16, Math.round((L + s.r * 2) / Math.max(4, s.r * 1.1))));
     s._M = Math.max(1, seg - 2);
     nv += (s._M + 3) * 2; ni += (s._M + 2) * 6;
   }
@@ -224,7 +236,7 @@ export function strokeMesh(list) {
       const nx = -ey, ny = ex;
       const u = clamp(sA[k] / Math.max(Lc, 1));
       const prof = (.55 + .45 * sstep(0, .16, u)) * (1 - (s.taper ?? .72) * sstep(.5, 1, u));
-      const hw = Math.max(.35, s.r * prof), ext = hw + 1.5;
+      const hw = Math.max(.35, s.r * prof), ext = hw + 1.0;
       const r = c0[0] + (c1[0] - c0[0]) * u, g = c0[1] + (c1[1] - c0[1]) * u, bl = c0[2] + (c1[2] - c0[2]) * u;
       for (let sd = -1; sd <= 1; sd += 2) {
         pos[vi * 2] = cx[k] + nx * ext * sd; pos[vi * 2 + 1] = cy[k] + ny * ext * sd;
@@ -239,13 +251,25 @@ export function strokeMesh(list) {
   return { attrs: { aPos: { data: pos.subarray(0, vi * 2), size: 2 }, aUV: { data: uv.subarray(0, vi * 2), size: 2 }, aCol: { data: col.subarray(0, vi * 4), size: 4 }, aPar: { data: par.subarray(0, vi * 4), size: 4 } }, idx, ni: ii, ntri: ii / 3 };
 }
 
+// the screen box the sun pass can touch (render-target rows are image rows: row 0 = top)
+function sunBox(sun, W, H) {
+  let R = Math.max(sun.r, sun.mr) * 1.2 + 6;
+  if (sun.limb && sun.limb[0] > 0) R = Math.max(R, sun.mr + sun.limb[1] * 8);
+  if (sun.beads && sun.beads.length) R = Math.max(R, sun.r + Math.max(...sun.beads.map(b => b.size * 14)));
+  if (sun.ring && sun.ring[3] > 0) R = Math.max(R, sun.r + sun.ring[2] * 90);
+  let x0 = sun.cx - R, y0 = sun.cy - R, x1 = sun.cx + R, y1 = sun.cy + R;
+  if (sun.jup && sun.jup[3] > 0) { const jr = sun.jup[2] * 8; x0 = Math.min(x0, sun.jup[0] - jr); y0 = Math.min(y0, sun.jup[1] - jr); x1 = Math.max(x1, sun.jup[0] + jr); y1 = Math.max(y1, sun.jup[1] + jr); }
+  x0 = Math.max(0, x0); y0 = Math.max(0, y0); x1 = Math.min(W, x1); y1 = Math.min(H, y1);
+  return x1 > x0 && y1 > y0 ? [x0, y0, x1 - x0, y1 - y0] : [0, 0, 0, 0];
+}
+
 // ---------------------------------------------------------------- the painter (one per output size)
 const PAINTERS = new Map();
 export function getPainter(W, H) {
   const k = `${W}x${H}`;
   if (PAINTERS.has(k)) return PAINTERS.get(k);
   const glw = new GL(W, H);
-  const P = { glw, W, H, noise: noiseTexture(glw, 256, 11), tgt: glw.target(W, H, ['rgba16f', 'rgba16f']), canvasTex: null, skyTex: null };
+  const P = { glw, W, H, noise: noiseTexture(glw, 256, 11), tgt: glw.target(W, H, ['rgba16f', 'r16f']), canvasTex: null, skyTex: null };
   P.canvasTex = glw.target(W, H, ['rgba8']);
   glw.pass(CANVAS_FS, {}, P.canvasTex, null);
   PAINTERS.set(k, P);
@@ -253,17 +277,24 @@ export function getPainter(W, H) {
 }
 
 // paint a stroke list (+ optional exact sun) and finish into the painter's canvas; returns stats
-export function rasterize(Pn, list, cfg, sun = null) {
-  const { glw, tgt } = Pn, gl = glw.gl;
+export function rasterize(Pn, list, cfg, sun = null, over = null) {
+  const { glw, tgt } = Pn, gl = glw.gl, tm = {}; let t0 = performance.now(), tMesh = 0;
   glw.clear(tgt, [0, 0, 0, 0]);
+  if (cfg._under) {
+    const U = cfg._under;
+    if (!Pn.underTex || Pn.underTex.w !== U.w || Pn.underTex.h !== U.h) Pn.underTex = glw.texture(U.w, U.h, { fmt: 'rgba8' });
+    glw.upload(Pn.underTex, U.data);
+    glw.pass(UNDER_FS, { uUnder: Pn.underTex, uAlpha: cfg.underAlpha ?? .9, uTone: cfg.underTone ?? .8 }, tgt, null);
+  }
   const prog = glw.program(STROKE_VS, STROKE_FS);
   const CH = 30000;
   let ntri = 0;
   for (let i = 0; i < list.length; i += CH) {
-    const m = strokeMesh(list.slice(i, i + CH));
+    const tq = performance.now(); const m = strokeMesh(list.slice(i, i + CH)); tMesh += performance.now() - tq;
     glw.meshDraw(prog, m.attrs, m.idx, m.ni, { uNoise: Pn.noise, uBristle: cfg.bristle ?? 1 }, tgt, 'premult');
     ntri += m.ntri;
   }
+  if (cfg.timing) { glw.finish(); tm.strokes = Math.round(performance.now() - t0); tm.mesh = Math.round(tMesh); t0 = performance.now(); }
   if (sun) {
     // sky mask texture at analysis resolution (land and figures occlude the sun)
     if (!Pn.skyTex || Pn.skyTex.w !== sun.aw || Pn.skyTex.h !== sun.ah) Pn.skyTex = glw.texture(sun.aw, sun.ah, { fmt: 'r32f' });
@@ -278,12 +309,21 @@ export function rasterize(Pn, list, cfg, sun = null) {
       uGold: [0, 1, 2].map(k => lerp(nap[k], ver[k], .3)), uPink: [0, 1, 2].map(k => lerp(mad[k], lead[k], .45)),
       uWarm: sun.warm ?? 0, uBlaze: sun.blaze ?? 1.45, uSunVis: sun.sunVis ?? 1,
       uBead: beads, uNBead: nb, uRing: sun.ring || [0, 0, 1, 0], uJup: sun.jup || [0, 0, 1, 0], uLimb: sun.limb || [0, 1, 0, 0],
-    }, tgt, 'premult');
+    }, tgt, 'premult', sunBox(sun, glw.w, glw.h));
   }
+  if (over && over.length) {                 // strokes in front of the sun (an arrow across the disk, a foreground)
+    for (let i = 0; i < over.length; i += CH) {
+      const m = strokeMesh(over.slice(i, i + CH));
+      glw.meshDraw(prog, m.attrs, m.idx, m.ni, { uNoise: Pn.noise, uBristle: cfg.bristle ?? 1 }, tgt, 'premult');
+      ntri += m.ntri;
+    }
+  }
+  if (cfg.timing) { glw.finish(); tm.sun = Math.round(performance.now() - t0); t0 = performance.now(); }
   glw.pass(POST_FS, {
     uCol: tgt.tex[0], uHgt: tgt.tex[1], uCanvas: Pn.canvasTex.tex[0], uGround: cfg.ground, uImpasto: cfg.impasto, uSpec: cfg.spec, uWeave: cfg.weave,
     uCrack: cfg.crack, uVarnish: cfg.varnish, uVarnishCol: cfg.varnishCol || [1, .93, .76], uVignette: cfg.vignette, uFlip: 1, uMetal: cfg.metal ?? 0,
     uWhite: cfg.white ?? 0, uWarmFlash: cfg.warmFlash ?? 0, uExposure: cfg.exposure ?? 1, uBlack: cfg.black ?? 0,
   }, null, null);
-  return { nStrokes: list.length, ntri };
+  if (cfg.timing) { glw.finish(); tm.post = Math.round(performance.now() - t0); }
+  return { nStrokes: list.length, ntri, tm };
 }

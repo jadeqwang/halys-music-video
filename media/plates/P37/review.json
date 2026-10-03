@@ -1,0 +1,32 @@
+{
+ "plate": "P37",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S70 delivered: looking straight up between massive carved Karnak columns and architraves at a cross of sky, slow rotation, the sky dims from blue to violet dusk.",
+   "costume": "-",
+   "identity": "-",
+   "artefacts": "Blue sky (renderer recolours); carved reliefs, no text.",
+   "notes": "1:1 from t0.",
+   "sync": [],
+   "cuts_s": [],
+   "sheet": "media/plates/P37/take1.review.jpg",
+   "contact": "media/plates/P37/take1.sheet.jpg",
+   "virtual_avatar": false,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T02:19:51",
+   "short": "Blue sky (renderer recolours)."
+  }
+ },
+ "shots": "S70",
+ "t_song": [
+  242.45,
+  246.45
+ ],
+ "audio_t0": 242.45,
+ "chosen": 1,
+ "chosen_why": "Only take.",
+ "t_chosen": "2026-10-03T02:23:04"
+}

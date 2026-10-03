@@ -1,0 +1,66 @@
+{
+ "plate": "P35",
+ "takes": {
+  "1": {
+   "verdict": "fail",
+   "score": 1,
+   "purpose": "S67 needs a Concorde: this is a T-tail business jet.",
+   "costume": "-",
+   "identity": "-",
+   "artefacts": "Wrong aircraft type.",
+   "notes": "RETAKE with an explicit Concorde description (ogival delta, no tailplane, drooped needle nose, four podded engines).",
+   "sync": [],
+   "cuts_s": [],
+   "sheet": "media/plates/P35/take1.review.jpg",
+   "contact": "media/plates/P35/take1.sheet.jpg",
+   "virtual_avatar": false,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T02:19:51"
+  },
+  "2": {
+   "verdict": "weak",
+   "score": 2,
+   "purpose": "Supersonic-looking jet with a needle nose.",
+   "costume": "-",
+   "identity": "-",
+   "artefacts": "Has a T-tail and podded engines: not a Concorde.",
+   "notes": "Reject.",
+   "sync": [],
+   "cuts_s": [],
+   "sheet": "media/plates/P35/take2.review.jpg",
+   "contact": "media/plates/P35/take2.sheet.jpg",
+   "virtual_avatar": false,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T02:35:38"
+  },
+  "3": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S67 delivered: a Concorde-type SST in clean side profile above a sea of clouds at dusk (needle nose, slender fuselage with a window row, single swept fin and no tailplane, rectangular under-wing nacelle), camera tracking alongside.",
+   "costume": "Plain white, no markings.",
+   "identity": "-",
+   "artefacts": "Wing planform not visible in pure profile.",
+   "notes": "1:1 from t0.",
+   "sync": [],
+   "cuts_s": [],
+   "sheet": "media/plates/P35/take3.review.jpg",
+   "contact": "media/plates/P35/take3.sheet.jpg",
+   "virtual_avatar": false,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T02:35:38",
+   "short": "Wing planform not visible in pure profile."
+  }
+ },
+ "shots": "S67",
+ "t_song": [
+  232.27,
+  236.27
+ ],
+ "audio_t0": 232.27,
+ "chosen": 3,
+ "chosen_why": "The only take that reads as a Concorde (no tailplane, needle nose).",
+ "t_chosen": "2026-10-03T02:35:38"
+}

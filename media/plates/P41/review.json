@@ -1,0 +1,215 @@
+{
+ "plate": "P41",
+ "takes": {
+  "1": {
+   "verdict": "weak",
+   "score": 2,
+   "purpose": "S80/S81: deadpan close-up, arm reaching back to the keyboard, smile from ~3.4 s.",
+   "costume": "Per sheet.",
+   "identity": "Face drifts slightly (longer, messier hair).",
+   "artefacts": "The 'wink' is BOTH eyes closing into a happy squint at ~4.85 s (no one-eye wink).",
+   "notes": "Reject for the wink.",
+   "sync": [
+    {
+     "song_t": 273.45,
+     "event": "key 1 (plate 0.05)",
+     "expected_plate_t": 0.05,
+     "measured_plate_t": 0.042,
+     "offset_s": -0.008,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 274.05,
+     "event": "key 2 (plate 0.65)",
+     "expected_plate_t": 0.65,
+     "measured_plate_t": 1.083,
+     "offset_s": 0.433,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 274.95,
+     "event": "key 3 (plate 1.55)",
+     "expected_plate_t": 1.55,
+     "measured_plate_t": 1.542,
+     "offset_s": -0.008,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 276.95,
+     "event": "the 'ting': THE WINK (plate 3.55)",
+     "expected_plate_t": 3.55,
+     "measured_plate_t": 2.917,
+     "offset_s": -0.633,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P41/take1.review.jpg",
+   "contact": "media/plates/P41/take1.sheet.jpg",
+   "virtual_avatar": false,
+   "est_cost_usd": 1.3872,
+   "job": null,
+   "reviewed": "2026-10-03T02:19:52"
+  },
+  "2": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "S80/S81: medium close-up facing camera, monitors glowing behind, right arm reaching back to the keyboard typing blind, deadpan (0-3.2 s), small sly smile from ~3.3 s; the right eye (frame-left) starts closing at 4.35 s, both eyes shut 4.6-5.0 s, then a clean one-eye wink (left eye open) held 5.2-6.0 s.",
+   "costume": "Per sheet (headphones, white jacket, orange stripes).",
+   "identity": "Matches.",
+   "artefacts": "0.4 s of both eyes closed before the wink settles.",
+   "notes": "Usable; the renderer redraws the eyelid. Retake requested for a cleaner single-eye wink.",
+   "sync": [
+    {
+     "song_t": 273.45,
+     "event": "key 1 (plate 0.05)",
+     "expected_plate_t": 0.05,
+     "measured_plate_t": 0.25,
+     "offset_s": 0.2,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 274.05,
+     "event": "key 2 (plate 0.65)",
+     "expected_plate_t": 0.65,
+     "measured_plate_t": 0.25,
+     "offset_s": -0.4,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 274.95,
+     "event": "key 3 (plate 1.55)",
+     "expected_plate_t": 1.55,
+     "measured_plate_t": 0.917,
+     "offset_s": -0.633,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 276.95,
+     "event": "the 'ting': THE WINK (plate 3.55)",
+     "expected_plate_t": 3.55,
+     "measured_plate_t": 4.45,
+     "offset_s": 0.9,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P41/take2.review.jpg",
+   "contact": "media/plates/P41/take2.sheet.jpg",
+   "virtual_avatar": false,
+   "est_cost_usd": 1.3872,
+   "job": null,
+   "reviewed": "2026-10-03T02:19:52"
+  },
+  "3": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S81: front-facing close-up, monitors and lamp behind, deadpan, sly smile from ~3.2 s, a clean single-eye wink 3.88-4.54 s (frame-left eye; the other stays open), then the sly smile with both eyes open.",
+   "costume": "Per sheet.",
+   "identity": "Matches.",
+   "artefacts": "No blind-typing gesture at all.",
+   "notes": "Alternate (best wink timing, +0.33 s).",
+   "sync": [
+    {
+     "song_t": 273.45,
+     "event": "key 1 (plate 0.05)",
+     "expected_plate_t": 0.05,
+     "measured_plate_t": 0.042,
+     "offset_s": -0.008,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 274.05,
+     "event": "key 2 (plate 0.65)",
+     "expected_plate_t": 0.65,
+     "measured_plate_t": 0.042,
+     "offset_s": -0.608,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 274.95,
+     "event": "key 3 (plate 1.55)",
+     "expected_plate_t": 1.55,
+     "measured_plate_t": 1.75,
+     "offset_s": 0.2,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 276.95,
+     "event": "the 'ting': THE WINK (plate 3.55)",
+     "expected_plate_t": 3.55,
+     "measured_plate_t": 3.95,
+     "offset_s": 0.4,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P41/take3.review.jpg",
+   "contact": "media/plates/P41/take3.sheet.jpg",
+   "virtual_avatar": false,
+   "est_cost_usd": 1.3872,
+   "job": null,
+   "reviewed": "2026-10-03T02:35:38"
+  },
+  "4": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S80/S81 delivered: front-facing close-up, monitors and lamp behind; deadpan stare while her right shoulder and sleeve dip at frame-left as she types blind (0.2-1.8 s); sly smile from ~3.25 s; a clean single-eye wink (frame-left eye closed ~4.4-5.1 s, other eye open), then the sly smile to the end.",
+   "costume": "Per sheet (headphones, white bomber, orange stripe, black top).",
+   "identity": "Matches the sheet.",
+   "artefacts": "None.",
+   "notes": "Wink +0.9 s late: 276.95 ting = plate 4.45 (closed by 4.55).",
+   "sync": [
+    {
+     "song_t": 273.45,
+     "event": "key 1 (plate 0.05)",
+     "expected_plate_t": 0.05,
+     "measured_plate_t": 0.417,
+     "offset_s": 0.367,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 274.05,
+     "event": "key 2 (plate 0.65)",
+     "expected_plate_t": 0.65,
+     "measured_plate_t": 0.417,
+     "offset_s": -0.233,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 274.95,
+     "event": "key 3 (plate 1.55)",
+     "expected_plate_t": 1.55,
+     "measured_plate_t": 1.583,
+     "offset_s": 0.033,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 276.95,
+     "event": "the 'ting': THE WINK (plate 3.55)",
+     "expected_plate_t": 3.55,
+     "measured_plate_t": 4.45,
+     "offset_s": 0.9,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P41/take4.review.jpg",
+   "contact": "media/plates/P41/take4.sheet.jpg",
+   "virtual_avatar": false,
+   "est_cost_usd": 1.3872,
+   "job": null,
+   "reviewed": "2026-10-03T02:35:39",
+   "short": "Wink +0.9 s late (retime)."
+  }
+ },
+ "shots": "S80, S81",
+ "t_song": [
+  273.4,
+  279.4
+ ],
+ "audio_t0": 273.4,
+ "chosen": 4,
+ "chosen_why": "Typing gesture plus a clean single-eye wink (take 3 has no typing; take 2 closes both eyes before winking; take 1 never winks with one eye).",
+ "t_chosen": "2026-10-03T02:35:39"
+}

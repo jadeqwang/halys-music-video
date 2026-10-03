@@ -16,7 +16,7 @@ import { beatPos, pulse, TM } from '../time.js';
 const WORLD_LIGHT = { bronze: 'bronze', gold: 'gold', marble: 'marble', corona: 'corona', orbit: 'orbit', room: 'end' };
 function ctxOf(f, e, t) {
   const cad = f.cad || 60, T = f.type || {};
-  return { t, tq: t + Math.min(1 / cad, .06) - 1e-4, cad, boil: cad <= 15 ? 1 : 0, seed: f.seed || 0, leaf: strSeed(e.id) % 997, L: f.L, T,
+  return { t, tq: t + Math.min(1 / cad, .06) - 1e-4, cad, boil: cad <= 15 ? 1 : 0, seed: f.seed || 0, leaf: strSeed(e.id) % 997, L: f.L, T, world: f.world,
     light: T.light || LIGHT[e.light] || LIGHT[WORLD_LIGHT[f.world] || 'bronze'] };
 }
 const mixPal = (a, b, k) => a.map((c, i) => mixHex(c, b[i], clamp(k)));
@@ -39,7 +39,7 @@ export function anchorPos(L, anchor) {
     default: return { x: L.cx, y: L.cy, align: 'center', valign: 'middle', maxW: S.w * .8 };
   }
 }
-const SIZE = { hook: 74, lyric: 96, bottom: 84, small: 46, plaque: 29, plaqueHook: 34, inscr: 0, title: 150 };
+const SIZE = { hook: 74, lyric: 96, bottom: 84, small: 46, plaque: 31, plaqueHook: 35, inscr: 0, title: 150 };
 
 // cached layout of a CARVED block: items stacked (an item may wrap), words positioned
 const _lay = new Map();
@@ -61,7 +61,7 @@ function carvedLayout(e, f, { face = FACE.carved, size, anchor = e.anchor || 'le
   const lay = layoutLines(lines.map(l => l.ws), face, px, { x: A.x, y: A.y, align: A.align, valign: A.valign, lead });
   // map words back to items / word indices
   const counters = items.map(() => 0);
-  lay.words.forEach(w => { const ii = lines[w.line].ii; w.item = ii; w.wi = counters[ii]++; });
+  lay.words.forEach(w => { const ii = lines[w.line].ii; w.item = ii; w.itemObj = items[ii]; w.wi = counters[ii]++; });
   lay.lines = lines; lay.anchor = A;
   _lay.set(key, lay);
   return lay;
@@ -69,6 +69,7 @@ function carvedLayout(e, f, { face = FACE.carved, size, anchor = e.anchor || 'le
 
 // onset of a positioned word: sung onset (reveal words), a sweep across the line (reveal line), or the item time
 function onsetOf(e, it, w, lay) {
+  if (e.ellipsis && w.text === '…') return e.ellipsis[0];
   if (it.reveal === 'words' && it.words && it.words[w.wi] && it.words[w.wi].t != null) return it.words[w.wi].t;
   if (it.reveal === 'words' && it.words) {               // punctuation token: right after the previous sung word
     for (let j = w.wi - 1; j >= 0; j--) if (it.words[j].t != null) return (it.words[j].e ?? it.words[j].t) - .05;
@@ -84,7 +85,7 @@ function onsetOf(e, it, w, lay) {
 function carvedRuns(e, lay, c, mod) {
   const runs = [];
   for (const w of lay.words) {
-    const it = e.items[w.item], on = onsetOf(e, it, w, lay);
+    const it = w.itemObj || e.items[w.item], on = onsetOf(e, it, w, lay);
     const p = it.reveal === 'none' ? (c.tq >= it.t ? 1 : -1) : sweepP(c.tq, on, w.text.length);
     if (p < 0) continue;
     const r = { text: w.text, x: w.x, y: w.y, face: w.face, px: w.px, sweep: { p, band: .85 * w.px }, w, it, on };
@@ -94,7 +95,7 @@ function carvedRuns(e, lay, c, mod) {
   }
   return runs;
 }
-const gildOpts = (c, e, extra = {}) => ({ light: c.light, boil: c.boil, seed: c.seed, leaf: c.leaf, ...extra });
+const gildOpts = (c, e, extra = {}) => ({ light: c.light, boil: c.boil, seed: c.seed, leaf: c.leaf, ...(c.world === 'gold' ? { shadow: 1.45, ao: .5, sigS: c.L.u * 7 } : {}), ...extra });
 
 // ---------------------------------------------------------------- CARVED: generic block (lyrics, hook lines)
 function carved(g, f, e, t) {
@@ -104,8 +105,12 @@ function carved(g, f, e, t) {
   if (e.fadeout) opacity *= 1 - smooth(clamp((t - (e.t1 - e.fadeout)) / e.fadeout));
   if (e.backlit) sil = Math.max(sil, smooth(clamp((t - e.backlit[0]) / (e.backlit[1] - e.backlit[0]))));
   const runs = carvedRuns(e, lay, c, r => {
-    if (e.rewind && t >= e.rewind[0]) r.sweep = { p: 1 - clamp((t - e.rewind[0]) / (e.rewind[1] - e.rewind[0]) * 1.15), band: r.sweep.band, angle: .32 };
-    if (e.isolate && t >= e.isolate[1] - 1e-4 && r.text !== e.isolate[0]) r.reveal = 1 - smooth(clamp((t - e.isolate[1]) / .12));
+    if (e.rewind && t >= e.rewind[0]) {                  // the rewind: one frontier retracts right to left along the line
+      const ws = lay.words.filter(v => v.line === r.w.line), x0 = Math.min(...ws.map(v => v.x)), lw = lay.widths[r.w.line];
+      const F = lw * (1 - clamp((t - e.rewind[0]) / (e.rewind[1] - e.rewind[0]) * 1.1));
+      r.sweep = { p: clamp((F - (r.x - x0)) / Math.max(1, r.w.w)), band: .35 * r.px, angle: .32, peak: .8 };
+    }
+    if (e.isolate && c.tq >= e.isolate[1] && r.text !== e.isolate[0]) r.reveal = 1 - smooth(clamp((c.tq - e.isolate[1]) / .09));
     if (e.isolate && r.text === e.isolate[0] && r.on < e.isolate[1] - .5) r.skip = true;          // only the last LOVE
     if (e.sink && r.text === e.sink[0]) r.y += .07 * r.px * smooth(clamp((t - e.sink[1]) / (e.sink[2] - e.sink[1])));
     if (e.ellipsis && r.text === '…') r.sweep = { p: clamp((c.tq - e.ellipsis[0]) / (e.ellipsis[1] - e.ellipsis[0])), band: .25 * r.px, angle: 0, peak: .7 };
@@ -118,27 +123,35 @@ function carved(g, f, e, t) {
 
 // ---------------------------------------------------------------- PLAQUE (Canvas 2D: small tracked caps, museum label)
 function plaqueColor(f) { return f.world === 'corona' || f.world === 'orbit' ? C.pearl : C.bone; }
+let _lab = null;
 export function drawLabel(g, f, text, { x, y, align = 'left', face = FACE.plaque, px, color, t0 = -1e9, t, rule = false, alpha = 1, stagger = .012, shadow = true, m = null }) {
   const L = f.L, s = smartQuotes(text), gl = glyphX(face, px, s), wv = textWidth(face, px, s);
   const x0 = align === 'left' ? x : align === 'right' ? x - wv : x - wv / 2;
-  g.save();
-  g.translate(x0, y);
-  if (m) g.transform(m[0], m[1], m[2], m[3], 0, 0);
-  applyFont(g, face, px);
-  g.letterSpacing = '0px';
-  g.fillStyle = color || plaqueColor(f);
-  if (shadow) { g.shadowColor = 'rgba(8,5,2,.62)'; g.shadowBlur = 5 * u(L); g.shadowOffsetY = 1.2 * u(L); }
-  const n = gl.length, dur = .3;
+  // the label is set once into an offscreen canvas (glyphs fading in left to right), then composited with ONE soft
+  // shadow: a shadowBlur per glyph costs ~1 ms each
+  const pad = Math.ceil(12 * u(L) + .2 * px), cw = Math.ceil(wv + 2 * pad), ch = Math.ceil(px * 1.9 + 2 * pad);
+  _lab ||= document.createElement('canvas');
+  _lab.width = cw; _lab.height = ch;            // exact size, freshly cleared: filtered drawImage must never see stale pixels
+  const c = _lab.getContext('2d', { willReadFrequently: true });
+  applyFont(c, face, px); c.letterSpacing = '0px'; c.fillStyle = color || plaqueColor(f);
+  const by = pad + face.asc * px + .25 * px, n = gl.length, dur = .3;
+  let any = false;
   gl.forEach((q, i) => {
     const a = fadeIn(t, t0 + i * Math.min(stagger, dur / n), .16) * alpha;
     if (a <= .01 || q.ch === ' ') return;
-    g.globalAlpha = a; g.fillText(q.ch, q.x, 0);
+    c.globalAlpha = a; c.fillText(q.ch, pad + q.x, by); any = true;
   });
   if (rule) {
     const k = ease.out(clamp((t - t0) / .45));
-    g.shadowColor = 'transparent'; g.globalAlpha = .75 * alpha; g.fillStyle = color || plaqueColor(f);
-    g.fillRect(0, -face.cap * px - .75 * px, wv * k, Math.max(1, 1.1 * u(L)));
+    c.globalAlpha = .75 * alpha; c.fillRect(pad, by - face.cap * px - .75 * px, wv * k, Math.max(1, 1.1 * u(L)));
+    any = any || k > 0;
   }
+  if (!any) return { x0, w: wv };
+  g.save();
+  g.translate(x0, y);
+  if (m) g.transform(m[0], m[1], m[2], m[3], 0, 0);
+  if (shadow) { g.shadowColor = 'rgba(8,5,2,.62)'; g.shadowBlur = 5 * u(L); g.shadowOffsetY = 1.2 * u(L); }
+  g.drawImage(_lab, -pad, -by);
   g.restore();
   return { x0, w: wv };
 }
@@ -154,7 +167,7 @@ function plaque(g, f, e, t) {
 }
 
 // ---------------------------------------------------------------- INSCR (Cormorant italic lower thirds, word by word)
-function inscrPx(L) { return Math.round((L.portrait ? .056 : .072) * L.H); }
+function inscrPx(L) { return Math.round(L.portrait ? .078 * L.W : .072 * L.H); }   // 16:9: cap = 4.5 % of H; portrait: by width (4:5 = 6.2 % of H)
 function inscrLines(g, f, text, words, { x, y, valign = 'bottom', t, tq, maxW, color = C.warmWhite, px, alpha = 1, t0 }) {
   const L = f.L, face = FACE.inscr, s = smartQuotes(text).split(' ');
   const lines = breakLines(s, face, px, maxW, 3);
@@ -188,42 +201,53 @@ function inscr(g, f, e, t) {
 }
 
 // ---------------------------------------------------------------- INSCR incised into a plinth (S49)
+// The scene passes the plinth's front face as f.type.plinth = {x, y, w, h} (fractions of the frame; x = centre) and
+// draw: false when it paints the stone itself. Without one, a marble block is drawn: a statue's base running out of frame.
 function incised(g, f, e, t) {
   const L = f.L, c = ctxOf(f, e, t), T = c.T, it = e.items[0];
   const P = T.plinth || {};
-  const W = byAspect(L, { '16:9': [.56, .2], portrait: [.86, .16] });
-  const pw = (P.w ?? W[0]) * L.W, ph = (P.h ?? W[1]) * L.H, px0 = (P.x ?? .5) * L.W - pw / 2, py0 = (P.y ?? (L.portrait ? .8 : .8)) * L.H - ph / 2;
-  if (P.draw !== false) drawPlinth(g, L, px0, py0, pw, ph, c.seed);
-  const face = FACE.inscrBold, s = it.text.split(' ');
-  let px = ph * .36;
-  let lines = breakLines(s, face, px, pw * .86, 2);
-  while (lines.length > 1 && px > ph * .2 && lines.length * px * 1.1 > ph * .8) { px *= .94; lines = breakLines(s, face, px, pw * .86, 2); }
-  const lay = layoutLines(lines, face, px, { x: px0 + pw / 2, y: py0 + ph / 2 + .12 * px, align: 'center', valign: 'middle', lead: 1.08 });
+  const W = byAspect(L, { '16:9': [.58, .26], portrait: [.9, .2] });
+  const pw = (P.w ?? W[0]) * L.W, ph = (P.h ?? W[1]) * L.H, px0 = (P.x ?? .5) * L.W - pw / 2, py0 = (P.y ?? (L.portrait ? .78 : .74)) * L.H;
+  if (P.draw !== false) drawPlinth(g, L, px0, py0, pw, L.H - py0 + 4, c.seed);
+  const face = FACE.inscrBold, words = it.text.split(' ');
+  const zone = { x: px0 + .06 * pw, w: pw * .88, y: py0 + .08 * ph, h: ph * .84 };
+  let px = zone.h * .5, lines = breakLines(words, face, px, zone.w, 2);
+  for (let k = 0; k < 40 && (lines.length * px * 1.05 > zone.h || words.some(w => textWidth(face, px, w) > zone.w)); k++) { px *= .95; lines = breakLines(words, face, px, zone.w, 2); }
+  const lay = layoutLines(lines, face, px, { x: zone.x + zone.w / 2, y: zone.y + zone.h / 2 + .1 * px, align: 'center', valign: 'middle', lead: 1.02 });
   const runs = [];
-  let k = 0;
-  for (const w of lay.words) {
-    const wt = it.words[k++].t;
-    const p = sweepP(c.tq, wt, w.text.length);
-    if (p < 0) continue;
-    runs.push({ text: w.text, x: w.x, y: w.y, face, px, sweep: { p, band: .6 * px, peak: .35 } });
-  }
-  gild(g, runs, { light: LIGHT.marble, incised: true, palette: C.stone, boil: 0, seed: c.seed, leaf: c.leaf, sigB: Math.max(1.2, .05 * px) });
+  lay.words.forEach((w, k) => {
+    const p = sweepP(c.tq, it.words[k].t, w.text.length);
+    if (p >= 0) runs.push({ text: w.text, x: w.x, y: w.y, face, px, sweep: { p, band: .6 * px, peak: .3 } });
+  });
+  gild(g, runs, { light: LIGHT.marble, incised: true, palette: C.stone, boil: 0, seed: c.seed, leaf: c.leaf, chisel: Math.max(1.6, .06 * px) });
 }
 function drawPlinth(g, L, x, y, w, h, seed) {
+  const u = L.u, top = .045 * L.H, inset = .03 * w;
   g.save();
-  const gr = g.createLinearGradient(x, y, x, y + h);
-  gr.addColorStop(0, '#d9d3c8'); gr.addColorStop(.55, '#bdb6aa'); gr.addColorStop(1, '#8f897e');
-  g.fillStyle = gr; g.fillRect(x, y, w, h);
-  // veins: a few soft grey streaks
-  g.globalAlpha = .18; g.strokeStyle = '#6f695f';
-  for (let k = 0; k < 7; k++) {
-    const a = hash2(k, 11), b = hash2(k, 23);
-    g.lineWidth = (1 + 2 * hash2(k, 5)) * u(L);
-    g.beginPath(); g.moveTo(x + a * w, y); g.bezierCurveTo(x + (a + .2) * w, y + .3 * h, x + (b - .1) * w, y + .7 * h, x + b * w, y + h); g.stroke();
+  // the top face, receding, lit by the corona overhead
+  g.beginPath(); g.moveTo(x, y); g.lineTo(x + w, y); g.lineTo(x + w - inset, y - top); g.lineTo(x + inset, y - top); g.closePath();
+  const tg = g.createLinearGradient(0, y - top, 0, y);
+  tg.addColorStop(0, '#cfc9be'); tg.addColorStop(1, '#ebe6dc');
+  g.fillStyle = tg; g.fill();
+  // the front face: polished marble falling into shadow, with veins
+  const fg = g.createLinearGradient(0, y, 0, y + h);
+  fg.addColorStop(0, '#c9c2b6'); fg.addColorStop(.35, '#ada69a'); fg.addColorStop(1, '#5f5a52');
+  g.fillStyle = fg; g.fillRect(x, y, w, h);
+  g.save(); g.beginPath(); g.rect(x, y - top, w, h + top); g.clip();
+  for (let k = 0; k < 9; k++) {
+    const a = hash2(k, 11), b = hash2(k, 23), c = hash2(k, 37);
+    g.globalAlpha = .1 + .12 * c; g.strokeStyle = c > .5 ? '#5d574f' : '#857e73'; g.lineWidth = (.8 + 2.2 * hash2(k, 5)) * u;
+    g.beginPath(); g.moveTo(x + a * w, y - top); g.bezierCurveTo(x + (a + .25) * w, y + .3 * h, x + (b - .2) * w, y + .5 * h, x + b * w, y + h); g.stroke();
   }
+  g.restore();
+  // edges: the arris catching the light, the sides turning away
   g.globalAlpha = 1;
-  g.fillStyle = 'rgba(255,255,255,.35)'; g.fillRect(x, y, w, Math.max(1, 2 * u(L)));
-  g.fillStyle = 'rgba(0,0,0,.35)'; g.fillRect(x, y + h - 2 * u(L), w, Math.max(1, 2 * u(L)));
+  g.fillStyle = 'rgba(255,255,250,.55)'; g.fillRect(x, y - .5 * u, w, Math.max(1, 1.6 * u));
+  const sg = g.createLinearGradient(x, 0, x + w, 0);
+  sg.addColorStop(0, 'rgba(0,0,0,.35)'); sg.addColorStop(.08, 'rgba(0,0,0,0)'); sg.addColorStop(.92, 'rgba(0,0,0,0)'); sg.addColorStop(1, 'rgba(0,0,0,.45)');
+  g.fillStyle = sg; g.fillRect(x, y, w, h);
+  // the orange rim of the 360-degree horizon, faint on the left edge
+  g.fillStyle = 'rgba(255,138,58,.25)'; g.fillRect(x, y, Math.max(1, 2 * u), h);
   g.restore();
 }
 
@@ -242,7 +266,7 @@ export function counterAt(t, e, mag) {
 }
 function counter(g, f, e, t) {
   const L = f.L, c = ctxOf(f, e, t), s = counterAt(t, e, c.T.magnitude);
-  const face = FACE.plaqueBold, px = 27 * u(L), S = L.safe;
+  const face = FACE.plaqueBold, px = 31 * u(L), S = L.safe;
   const head = 'TOTALITY IN ', digits = s.slice(head.length);
   applyFont(g, face, px);
   const cell = textWidth(face, px, '0') + face.track * px, colon = textWidth(face, px, ':') + face.track * px;
@@ -271,7 +295,7 @@ function hud(g, f, e, t) {
   const L = f.L, S = L.safe, el = Math.max(0, Math.floor(t - e.c2 + .05));
   const hh = Math.floor(el / 3600), mm = Math.floor(el / 60) % 60, ss = el % 60, p2 = n => String(n).padStart(2, '0');
   const s = `C2 · TOTALITY · ${p2(hh)}:${p2(mm)}:${p2(ss)}`;
-  const px = 23 * u(L), face = FACE.mono, k = pulse(t, 9);
+  const px = 26 * u(L), face = FACE.mono, k = pulse(t, 9);
   g.save();
   applyFont(g, face, px);
   const x = S.x + 18 * u(L), y = S.y + face.cap * px;
@@ -285,7 +309,7 @@ function hud(g, f, e, t) {
 // ---------------------------------------------------------------- CHOP (drops)
 const chopFits = new Map();
 function fitFor(L, word) { const k = `${L.W}x${L.H}|${word}`; if (!chopFits.has(k)) chopFits.set(k, chopFit(L, word)); return chopFits.get(k); }
-function chopPhase(t) { const b = beatPos(t), fb = b - Math.floor(b); return .5 * t + .55 * Math.floor(b) + .55 * ease.out(Math.min(1, fb * 4)); }
+function chopPulse(t, L) { const b = beatPos(t), fb = b - Math.floor(b); return { pulseR: fb * 1.1 * L.vmax, pulse: .7 * Math.exp(-fb * 3) }; }
 function chop(g, f, e, t) {
   const L = f.L, T = f.type || {}, fps = 60;
   let cur = -1;
@@ -293,6 +317,7 @@ function chop(g, f, e, t) {
   if (cur < 0 && !e.stutter) return;
   const it = e.items[Math.max(cur, 0)], word = it.text, fit = fitFor(L, word);
   const center = T.field && T.field.center || (T.sun ? [T.sun.x, T.sun.y] : [L.cx, L.cy]);
+  const disk = T.field && T.field.r != null ? T.field.r : T.sun ? T.sun.r : e.ring ? .16 * L.vmin : 0;   // S41-S44: the ring locked centre
   let onset = cur >= 0 ? it.t : -1e9, k = -1;
   if (e.stutter) e.onsets.forEach((s, i) => { if (t >= s - 1e-6) { onset = s; k = i; } });
   const fr = Math.round((t - onset) * fps);
@@ -301,7 +326,7 @@ function chop(g, f, e, t) {
     scale = fr <= 0 ? 1.075 : fr === 1 ? 1.025 : 1;
     const pat = [0, 1, -1, .5, -.5, 1.5, -1.5, 0];
     dx = pat[k % pat.length] * .011 * L.W; dy = pat[(k + 3) % pat.length] * .006 * L.H;
-  } else if (fr >= 0 && fr < 3) scale = [1.24, 1.08, 1.02][fr];
+  } else if (fr >= 0 && fr < 3) scale = [1.16, 1.05, 1.01][fr];
   const invert = !!(T.invert ?? (e.invert && e.invert.some(s => t >= s - 1e-6 && t < s + 2 / fps - 1e-6)));
   const kick = clamp(T.kick ?? pulse(t, 10));
   const cx = L.cx + dx, cy = (T.chopY ?? L.cy) + dy;
@@ -311,9 +336,9 @@ function chop(g, f, e, t) {
     chopEcho(g, L, fit, L.cx + pat[kk % pat.length] * .011 * L.W, cy - dy + pat[(kk + 3) % pat.length] * .006 * L.H, 1 + .035 * j, (.5 / j) * clamp(1 - age / 14), invert ? C.navyBlack : C.orange);
   }
   if (!e.stutter && fr >= 0 && fr < 6) chopEcho(g, L, fit, cx, cy, 1 + .05 + .03 * fr, .55 * (1 - fr / 6));
-  const res = chopWord(g, f, { word, fit, cx, cy, scale, invert, center, kick, t, phase: chopPhase(t), opacity: 1 });
+  const res = chopWord(g, f, { word, fit, cx, cy, scale, invert, center, disk, kick, t, spacing: 6.4, ...chopPulse(t, L), opacity: 1 });
   // HAL: on the first HALO the O is eclipsed for four frames
-  if (it.hal && fr >= 0 && fr < 4 && !(T.disk && T.disk.hal === false)) halDisk(g, L, res, word, fr / 3);
+  if (it.hal && fr >= 0 && fr < 4 && !(T.disk && T.disk.hal === false)) halDisk(g, L, res, word, fr / 3, scale);
 }
 
 // ---------------------------------------------------------------- the Glover caption (S35)
@@ -329,18 +354,21 @@ function quote(g, f, e, t) {
 
 // ---------------------------------------------------------------- S06: map labels on the banks
 function map(g, f, e, t) {
-  const L = f.L, c = ctxOf(f, e, t), k = clamp((t - e.t0) / (e.t1 - e.t0));
+  const L = f.L, c = ctxOf(f, e, t), k = clamp((t - e.t0) / (e.t1 - e.t0)), S = L.safe;
   const P = L.portrait;
-  const spots = P ? { west: [.27, .63], east: [.73, .63] } : { west: [.2, .67], east: [.8, .67] };
-  const cpx = (P ? 84 : 92) * u(L) * (1 + .06 * k), spx = (P ? 22 : 25) * u(L) * (1 + .06 * k);
+  // 16:9: centred on each bank. Portrait: the banks are half a frame wide, so the labels hug their own side and are
+  // staggered in depth (the far bank higher), which keeps the sub-labels from meeting over the river.
+  const spots = P ? { west: [S.x, .57], east: [S.x + S.w, .69] } : { west: [.2 * L.W, .67], east: [.8 * L.W, .67] };
+  const cpx = (P ? 80 : 92) * u(L) * (1 + .06 * k), spx = (P ? 23 : 25) * u(L) * (1 + .06 * k);
   const sy = .6 - .05 * k;
   for (const side of ['west', 'east']) {
     const lab = e.items.find(i => i.key === side), sub = e.items.find(i => i.key === side + '_sub');
-    const [ux, uy] = spots[side], x = ux * L.W, y = uy * L.H, sgn = side === 'west' ? -1 : 1;
-    const rot = sgn * -.07, kx = sgn * .33, cs = Math.cos(rot), sn = Math.sin(rot);
+    const [x, uy] = spots[side], y = uy * L.H, sgn = side === 'west' ? -1 : 1;
+    const rot = sgn * .07, kx = sgn * .33, cs = Math.cos(rot), sn = Math.sin(rot);
     const m = [cs, sn, -sn * sy + kx * sy * cs, cs * sy];        // rotate, lay flat (squash), lean toward the vanishing point
+    const align = P ? (side === 'west' ? 0 : 1) : .5;              // 0 left, .5 centre, 1 right
     if (lab && t >= lab.t) {
-      const w = textWidth(FACE.carved, cpx, lab.text), x0 = x - w / 2 * cs, y0 = y - w / 2 * sn;
+      const w = textWidth(FACE.carved, cpx, lab.text), x0 = x - w * align * cs, y0 = y - w * align * sn;
       const ks = clamp((t - lab.t) / .42), kf2 = smooth(clamp((t - lab.t - .2) / .38));
       if (kf2 < 1) {                                           // engraver's stroke: the outline draws itself in
         g.save(); g.translate(x0, y0); g.transform(m[0], m[1], m[2], m[3], 0, 0);
@@ -352,13 +380,12 @@ function map(g, f, e, t) {
       if (kf2 > 0) gild(g, [{ text: lab.text, x: x0, y: y0, face: FACE.carved, px: cpx, m, reveal: kf2 }], gildOpts(c, e, { shadow: .8 }));
     }
     if (sub && t >= sub.t) {
-      const w = textWidth(FACE.plaque, spx, sub.text);
-      const off = 1.05 * cpx * sy;
-      drawLabel(g, f, sub.text, { x: x - w / 2 * cs - sn * off, y: y + off * cs, align: 'left', px: spx, t0: sub.t, t, m: [cs, sn, -sn * sy + kx * sy * cs, cs * sy], color: '#efdcb0' });
+      const w = textWidth(FACE.plaque, spx, sub.text), off = 1.05 * cpx * sy;
+      drawLabel(g, f, sub.text, { x: x - w * align * cs - sn * off, y: y - w * align * sn + off * cs, align: 'left', px: spx, t0: sub.t, t, m, color: '#f1e0b6', face: FACE.plaqueBold });
     }
   }
   const foot = e.items.find(i => i.key === 'foot');
-  if (foot && t >= foot.t) drawLabel(g, f, foot.text, { x: L.cx, y: L.safe.y + L.safe.h - .01 * L.H, align: 'center', px: SIZE.plaque * u(L), t0: foot.t, t, rule: false });
+  if (foot && t >= foot.t) drawLabel(g, f, foot.text, { x: L.cx, y: S.y + S.h - .01 * L.H, align: 'center', px: SIZE.plaque * u(L), t0: foot.t, t, rule: false });
 }
 
 // ---------------------------------------------------------------- diptych divider + captions (S09, S22, S43)
@@ -564,7 +591,7 @@ function shadow(g, f, e, t) {
   if (!rise) {
     const runs = carvedRuns(e, lay, c);
     gild(g, runs, gildOpts(c, e, {
-      rimColor: '#f0b25a',
+      rimColor: '#ffc56a', rim: 1.6,
       fx2: ctx => {                                           // shadow above the front (it comes from the horizon, down)
         const gr = ctx.createLinearGradient(0, yf - soft, 0, yf + soft);
         gr.addColorStop(0, '#f00'); gr.addColorStop(1, '#000');
@@ -578,7 +605,7 @@ function shadow(g, f, e, t) {
   // rise: every glyph is its own run; it sits low and dark until the light reaches it, then rises into gold
   const runs = [];
   for (const w of lay.words) {
-    const it = e.items[w.item], on = onsetOf(e, it, w, lay);
+    const it = w.itemObj || e.items[w.item], on = onsetOf(e, it, w, lay);
     if (c.tq < on) continue;
     const a = fadeIn(c.tq, on, .12);
     for (const q of glyphX(w.face, w.px, w.text)) {
@@ -607,10 +634,10 @@ function thales(g, f, e, t) {
 // ---------------------------------------------------------------- S53: the forecast card (generic, no market's look)
 function forecast(g, f, e, t) {
   const L = f.L, P = L.portrait, k = clamp((t - e.t0) / .1);
-  const cw = (P ? .82 : .3) * L.W, x = P ? L.cx - cw / 2 : L.safe.x + L.safe.w - cw, y = P ? L.safe.y + .1 * L.H : L.safe.y + .02 * L.H;
-  const face = FACE.mono, qpx = (P ? 27 : 24) * u(L), pad = 20 * u(L);
+  const cw = (P ? .86 : .37) * L.W, x = P ? L.cx - cw / 2 : L.safe.x + L.safe.w - cw, y = P ? L.safe.y + .1 * L.H : L.safe.y + .02 * L.H;
+  const face = FACE.mono, qpx = (P ? 31 : 29) * u(L), pad = 24 * u(L);
   const lines = breakLines(e.question.split(' '), face, qpx, cw - 2 * pad, 3);
-  const ch = pad * 2 + lines.length * qpx * 1.35 + 110 * u(L);
+  const ch = pad * 2 + lines.length * qpx * 1.35 + 132 * u(L);
   const jk = clamp((t - e.jump) / .42), steps = [3, 3, 6, 14, 31, 58, 79, 92, 97, 99];
   const yes = jk <= 0 ? e.yes[0] : steps[Math.min(steps.length - 1, Math.floor(jk * (steps.length - 1) + 1e-6))];
   g.save();
@@ -622,9 +649,9 @@ function forecast(g, f, e, t) {
   lines.forEach((ws, i) => g.fillText(ws.join(' '), x + pad, y + pad + qpx * .8 + i * qpx * 1.35));
   const yb = y + pad + lines.length * qpx * 1.35 + 18 * u(L);
   // prices
-  const bpx = 44 * u(L);
+  const bpx = 54 * u(L);
   applyFont(g, FACE.monoBold, bpx * .5); g.fillStyle = C.orange; g.fillText('YES', x + pad, yb + bpx * .55);
-  applyFont(g, FACE.monoBold, bpx); g.fillStyle = C.pearl; g.fillText(`${yes}¢`, x + pad + 62 * u(L), yb + bpx * .78);
+  applyFont(g, FACE.monoBold, bpx); g.fillStyle = C.pearl; g.fillText(`${yes}¢`, x + pad + 72 * u(L), yb + bpx * .78);
   applyFont(g, face, bpx * .42); g.fillStyle = 'rgba(243,239,230,.6)'; g.fillText(`NO ${100 - yes}¢`, x + pad, yb + bpx * 1.75);
   // the price line: flat at 3, then straight up
   const gx0 = x + cw * .52, gx1 = x + cw - pad, gy0 = yb + bpx * 1.7, gy1 = yb;
@@ -654,10 +681,10 @@ function spark(g, f, e, t) {
   g.save();
   applyFont(g, FACE.carved, px);
   for (let k = 0; k < 3; k++) {
-    const kk = clamp((dt - k * .09) / .85); if (kk <= 0 || kk >= 1) continue;
-    const s = 1 + .9 * ease.out(kk);
+    const kk = clamp((dt - k * .07) / .5); if (kk <= 0 || kk >= 1) continue;
+    const s = 1 + .7 * ease.out(kk);
     g.save(); g.translate(cxw, cyw); g.scale(s, s); g.translate(-cxw, -cyw);
-    g.globalAlpha = (1 - kk) * .7 * fade; g.strokeStyle = '#ffe7a8'; g.lineWidth = Math.max(1, 1.6 * u(L) / s);
+    g.globalAlpha = Math.pow(1 - kk, 2) * .6 * fade; g.strokeStyle = '#ffe7a8'; g.lineWidth = Math.max(.8, 1.1 * u(L) / s);
     g.strokeText(it.text, x, y); g.restore();
   }
   g.restore();
@@ -685,14 +712,14 @@ function spark(g, f, e, t) {
 function era(g, f, e, t) {
   const L = f.L, S = L.safe, P = L.portrait, it = e.items[0];
   const [year, place, ...rest] = it.text.split(' · '), fact = rest.join(' · ');
-  const ypx = (P ? 50 : 54) * u(L), ppx = (P ? 25 : 26) * u(L), fpx = (P ? 25 : 26) * u(L);
-  const mw = P ? S.w : .44 * L.W, x = S.x + 16 * u(L);
+  const ypx = (P ? 62 : 66) * u(L), ppx = (P ? 30 : 31) * u(L), fpx = (P ? 30 : 31) * u(L);
+  const mw = P ? S.w - 16 * u(L) : .5 * L.W, x = S.x + 16 * u(L);
   const factLines = breakLines(fact.split(' '), FACE.plaque, fpx, mw, 3);
   const lh = fpx * 1.5, yBot = S.y + S.h - .004 * L.H;
   const yFact0 = yBot - (factLines.length - 1) * lh, yPlace = yFact0 - lh * 1.05, yYear = yPlace - ppx * 1.55;
   const t0 = it.t;
   // the spine: a hairline from the first era downwards; earlier years stacked above, dim
-  const hist = e.history || [], hpx = 19 * u(L), hlh = hpx * 1.65;
+  const hist = e.history || [], hpx = 20 * u(L), hlh = hpx * 1.65;
   const top = yYear - FACE.plaqueBold.cap * ypx - .5 * hpx - hist.length * hlh;
   g.save();
   g.fillStyle = C.pearl; g.globalAlpha = .45 * fadeIn(t, t0, .2);

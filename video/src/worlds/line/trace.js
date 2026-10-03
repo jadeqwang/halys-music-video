@@ -96,6 +96,16 @@ export function prepFields(F, cfg) {
       for (let i = 0; i < N; i++) { const a = m[i] * tr; xx[i] += a * c * c; xy[i] += a * c * s; yy[i] += a * s * s; }
     }
   }
+  if (river && cfg.riverFlow) {   // inside the river the flow runs along it, toward its vanishing point
+    const vx = cfg.riverFlow.x * aw, vy = cfg.riverFlow.y * ah, kk = cfg.riverFlow.k ?? 4;
+    let tr = 0; for (let i = 0; i < N; i += 7) tr += xx[i] + yy[i]; tr = tr / (N / 7) * kk;
+    for (let y = 0; y < ah; y++) for (let x = 0; x < aw; x++) {
+      const i = y * aw + x, r = river[i]; if (r < .01) continue;
+      let tx = x - vx, ty = y - vy; const m = Math.hypot(tx, ty) || 1; tx /= m; ty /= m;
+      const nx = -ty, ny = tx, a = r * tr;                 // tensor of the normal: its minor eigenvector is the tangent
+      xx[i] += a * nx * nx; xy[i] += a * nx * ny; yy[i] += a * ny * ny;
+    }
+  }
   const B = new Float32Array(N), sep = new Float32Array(N), ok = new Float32Array(N), O = new Float32Array(N);
   for (let i = 0; i < N; i++) {
     const t = clamp((F.T[i] - cfg.darkCut) / (1 - cfg.darkCut)), s = subj[i];
@@ -254,7 +264,7 @@ export function decorate(F, f, lines, cfg) {
       const x = L.xy[k * 2], y = L.xy[k * 2 + 1];
       const edge = Math.min(x, y, F.aw - 1 - x, F.ah - 1 - y);
       b[k] = samp(F, f.B, x, y) * sstep(0, cfg.edgeFade, edge) * wgt;
-      o[k] = samp(F, f.O, x, y) + (f.river ? .55 * Math.pow(samp(F, f.river, x, y), 2) * 0 : 0);
+      o[k] = samp(F, f.O, x, y);
       d[k] = f.Db ? samp(F, f.Db, x, y) : .5;
       w[k] = lerp(cfg.width[0], cfg.width[1], clamp(b[k]));
     }

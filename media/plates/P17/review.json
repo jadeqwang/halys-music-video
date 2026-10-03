@@ -1,0 +1,49 @@
+{
+ "plate": "P17",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S27 delivered: the Lydian beside the edge of a big wicker shield (frame right); small bright dapples of light on his scales, shield and face; glances down at his chest (0.8-1.8 s), lifts his face to the sky toward frame right from ~2.8 s (on 'strange' 88.69).",
+   "costume": "Correct (helmet, braids, scales, crimson, lion shield).",
+   "identity": "Matches.",
+   "artefacts": "Dapples are round spots (renderer paints the stretched crescents).",
+   "notes": "1:1 from t0.",
+   "sync": [
+    {
+     "song_t": 87.68,
+     "event": "'when light went strange' (plate 1.77)",
+     "expected_plate_t": 1.77,
+     "measured_plate_t": 1.583,
+     "offset_s": -0.187,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 88.69,
+     "event": "'strange': he looks up (plate 2.78)",
+     "expected_plate_t": 2.78,
+     "measured_plate_t": 2.85,
+     "offset_s": 0.07,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P17/take1.review.jpg",
+   "contact": "media/plates/P17/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T02:06:13",
+   "short": "Dapples are round spots (renderer paints the crescents)."
+  }
+ },
+ "shots": "S27",
+ "t_song": [
+  85.91,
+  89.91
+ ],
+ "audio_t0": 85.91,
+ "chosen": 1,
+ "chosen_why": "Only take.",
+ "t_chosen": "2026-10-03T02:23:03"
+}

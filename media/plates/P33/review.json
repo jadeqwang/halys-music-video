@@ -1,0 +1,49 @@
+{
+ "plate": "P33",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S62 delivered: the Lydian on the bank against a golden sky tosses his sword at ~0.8 s; the camera tilts up; the sword spins end over end into the golden clouds and slows to near-still at the apex at ~3.4 s.",
+   "costume": "Correct.",
+   "identity": "Matches.",
+   "artefacts": "None.",
+   "notes": "Apex lands on the Drop 2 kick (215.287 = plate 3.41).",
+   "sync": [
+    {
+     "song_t": 212.3,
+     "event": "riser (plate 0.42)",
+     "expected_plate_t": 0.42,
+     "measured_plate_t": 0.875,
+     "offset_s": 0.455,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 215.287,
+     "event": "DROP 2 kick: match cut at the apex (plate 3.41)",
+     "expected_plate_t": 3.407,
+     "measured_plate_t": 3.4,
+     "offset_s": -0.007,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P33/take1.review.jpg",
+   "contact": "media/plates/P33/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T02:19:51",
+   "short": "-"
+  }
+ },
+ "shots": "S62 (-> S63 match cut)",
+ "t_song": [
+  211.88,
+  215.88
+ ],
+ "audio_t0": 211.88,
+ "chosen": 1,
+ "chosen_why": "Only take; apex on the Drop 2 kick.",
+ "t_chosen": "2026-10-03T02:23:04"
+}

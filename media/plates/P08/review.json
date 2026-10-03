@@ -1,0 +1,41 @@
+{
+ "plate": "P08",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S11 delivered: both lines rush in, the central shields collide and stop dead at plate 1.58, a crown of red-clay spray rises from 1.9 s and hangs in slow motion.",
+   "costume": "Lydian crest/crimson/scales/lion shield vs Mede red cap/ochre/iron scales/wicker shield.",
+   "identity": "Consistent with the sheets.",
+   "artefacts": "The spray is very red (reads as river clay in context); after 1.7 s the shot is near-frozen slow motion. Sun at the right edge, bright sky.",
+   "notes": "Impact 27.24 = plate 1.58 (+0.34).",
+   "sync": [
+    {
+     "song_t": 27.24,
+     "event": "BOOM: shields collide (plate 1.24)",
+     "expected_plate_t": 1.24,
+     "measured_plate_t": 1.58,
+     "offset_s": 0.34,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P08/take1.review.jpg",
+   "contact": "media/plates/P08/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T01:59:16",
+   "short": "Spray very red; near-frozen slow motion after 1.7 s; bright sky."
+  }
+ },
+ "shots": "S11",
+ "t_song": [
+  26.0,
+  31.0
+ ],
+ "audio_t0": 26.0,
+ "chosen": 1,
+ "chosen_why": "Only take; impact reads, spray crown.",
+ "t_chosen": "2026-10-03T02:23:03"
+}

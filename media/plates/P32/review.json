@@ -1,0 +1,119 @@
+{
+ "plate": "P32",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S61 delivered: wide backlit river with both armies hurling swords and spears from both banks, a rain of blades arcing through gold air (0-2.17 s); hard cut at 2.17 s to one bronze sword entering the red water point-first and sinking, hilt last, rings spreading (2.2-5 s).",
+   "costume": "Army-level correct.",
+   "identity": "-",
+   "artefacts": "None.",
+   "notes": "Hold the sinking sword (plate 2.2-5) under the held 'blade' (210.18-211.88).",
+   "sync": [
+    {
+     "song_t": 208.7,
+     "event": "'Throw' (plate 0)",
+     "expected_plate_t": 0.0,
+     "measured_plate_t": 0.583,
+     "offset_s": 0.583,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 209.945,
+     "event": "'blade' (plate 1.25)",
+     "expected_plate_t": 1.245,
+     "measured_plate_t": 1.6,
+     "offset_s": 0.355,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 210.18,
+     "event": "low end out: hold on the sinking sword (plate 1.48)",
+     "expected_plate_t": 1.48,
+     "measured_plate_t": 2.17,
+     "offset_s": 0.69,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 211.877,
+     "event": "beat returns (plate 3.18)",
+     "expected_plate_t": 3.177,
+     "measured_plate_t": 3.75,
+     "offset_s": 0.573,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [
+    2.167
+   ],
+   "sheet": "media/plates/P32/take1.review.jpg",
+   "contact": "media/plates/P32/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T02:19:51",
+   "short": "-"
+  },
+  "2": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "Same structure, cut at 1.875 s; fewer blades readable in the air.",
+   "costume": "Correct.",
+   "identity": "-",
+   "artefacts": "None.",
+   "notes": "Backup.",
+   "sync": [
+    {
+     "song_t": 208.7,
+     "event": "'Throw' (plate 0)",
+     "expected_plate_t": 0.0,
+     "measured_plate_t": 0.083,
+     "offset_s": 0.083,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 209.945,
+     "event": "'blade' (plate 1.25)",
+     "expected_plate_t": 1.245,
+     "measured_plate_t": 1.75,
+     "offset_s": 0.505,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 210.18,
+     "event": "low end out: hold on the sinking sword (plate 1.48)",
+     "expected_plate_t": 1.48,
+     "measured_plate_t": 1.958,
+     "offset_s": 0.478,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 211.877,
+     "event": "beat returns (plate 3.18)",
+     "expected_plate_t": 3.177,
+     "measured_plate_t": 3.083,
+     "offset_s": -0.094,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [
+    1.875
+   ],
+   "sheet": "media/plates/P32/take2.review.jpg",
+   "contact": "media/plates/P32/take2.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T02:19:51"
+  }
+ },
+ "shots": "S61",
+ "t_song": [
+  208.7,
+  213.7
+ ],
+ "audio_t0": 208.7,
+ "chosen": 1,
+ "chosen_why": "More blades readable in the air; otherwise equal to take 2.",
+ "t_chosen": "2026-10-03T02:23:04"
+}

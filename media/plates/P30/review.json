@@ -1,0 +1,57 @@
+{
+ "plate": "P30",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 5,
+   "purpose": "S59 delivered: the Lydian and the Mede side by side, faces lit gold, looking up and laughing with relief; the Mede claps the Lydian's shoulder at ~3.3 s; cheering crowd dark behind.",
+   "costume": "Correct (crest, braids, scales; red cap, beard, ochre, iron scales).",
+   "identity": "Match the sheets.",
+   "artefacts": "None.",
+   "notes": "1:1 from t0.",
+   "sync": [
+    {
+     "song_t": 203.6,
+     "event": "boom (plate 0.21)",
+     "expected_plate_t": 0.21,
+     "measured_plate_t": 0.25,
+     "offset_s": 0.04,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 205.08,
+     "event": "boom (plate 1.69)",
+     "expected_plate_t": 1.69,
+     "measured_plate_t": 1.917,
+     "offset_s": 0.227,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 207.0,
+     "event": "boom (plate 3.61)",
+     "expected_plate_t": 3.61,
+     "measured_plate_t": 3.875,
+     "offset_s": 0.265,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P30/take1.review.jpg",
+   "contact": "media/plates/P30/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T02:19:51",
+   "short": "-"
+  }
+ },
+ "shots": "S59",
+ "t_song": [
+  203.39,
+  207.39
+ ],
+ "audio_t0": 203.39,
+ "chosen": 1,
+ "chosen_why": "Only take.",
+ "t_chosen": "2026-10-03T02:23:04"
+}

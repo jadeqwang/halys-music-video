@@ -1,0 +1,42 @@
+{
+ "plate": "P06",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S09/S22 right panel: Cyaxares on a dark bay facing left, raises his LEFT hand (2.3-2.6 s), turns toward his men and shouts at ~4.0 s; bronze horse standard on a pole, Median ranks behind; mirror of P05.",
+   "costume": "Madder cap with gold band, grey curled beard, saffron tunic, ochre kandys as a cape, belt of gold plaques; no stirrups. Sword/bow not clearly visible.",
+   "identity": "Matches media/chars/cyaxares.jpg.",
+   "artefacts": "None. Bright warm sky behind (low angle).",
+   "notes": "Pairs with P05.",
+   "sync": [
+    {
+     "song_t": 23.3,
+     "event": "ostinato stops, rubato swell (plate 2.15)",
+     "expected_plate_t": 2.15,
+     "measured_plate_t": 2.55,
+     "offset_s": 0.4,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P06/take1.review.jpg",
+   "contact": "media/plates/P06/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.3872,
+   "job": null,
+   "reviewed": "2026-10-03T01:59:16",
+   "short": "Bright warm sky behind (low angle); bow/sword not clearly visible.",
+   "timing": "S09: left hand rises 2.3-2.6 s (up at 2.55 on the 23.3 swell). S22: use plate 3.6-6.0 (turns to his men and shouts at ~4.0); mirrors P05."
+  }
+ },
+ "shots": "S09, S22, S43",
+ "t_song": [
+  21.15,
+  27.15
+ ],
+ "audio_t0": 21.15,
+ "chosen": 1,
+ "chosen_why": "Only take; mirrors P05.",
+ "t_chosen": "2026-10-03T02:23:03"
+}

@@ -1,0 +1,53 @@
+{
+ "plate": "P36",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 175.8,
+ "est_cost_usd": 0.9248,
+ "duration_s": 4.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 235.66,
+   "dur": 4.0,
+   "file": "media/plates/P36/audio_song_0235.66_4.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 4,
+  "audio": {
+   "t0": 235.66,
+   "src": "song"
+  },
+  "t_song": [
+   235.66,
+   239.66
+  ],
+  "shots": "S68",
+  "sync": [
+   [
+    237.66,
+    "faces lift together (plate 2.0)"
+   ]
+  ],
+  "prompt": "A crowd of people of all ages and backgrounds stands together in an open park, everyone wearing simple paper eclipse glasses and looking up at the sky; plain modern clothes with no logos and no text. The late-afternoon light is slowly and strangely dimming. 0-1.5 s they look up, some steadying their glasses with a hand; at 2 s, all at once, their faces lift further and their mouths open in awe, a few point up, and a child on a parent's shoulders raises both arms. Medium-wide shot, slightly low angle, many faces readable, sky above them. Camera static. Photoreal live-action cinema, crisp, no motion blur. No text, no logos, no brands, no watermark.",
+  "notes": "2024 crowd; rhymes with the warriors' faces-up moment (P20)."
+ },
+ "request": {
+  "prompt": "A crowd of people of all ages and backgrounds stands together in an open park, everyone wearing simple paper eclipse glasses and looking up at the sky; plain modern clothes with no logos and no text. The late-afternoon light is slowly and strangely dimming. 0-1.5 s they look up, some steadying their glasses with a hand; at 2 s, all at once, their faces lift further and their mouths open in awe, a few point up, and a child on a parent's shoulders raises both arms. Medium-wide shot, slightly low angle, many faces readable, sky above them. Camera static. Photoreal live-action cinema, crisp, no motion blur. No text, no logos, no brands, no watermark.",
+  "duration": 4,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": false,
+  "reference_audios": [
+   "data:audio/mpeg;base64...(130 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T02:13:13"
+}

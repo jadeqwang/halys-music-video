@@ -1,0 +1,72 @@
+{
+ "plate": "P18",
+ "take": 2,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 184.3,
+ "est_cost_usd": 0.9248,
+ "duration_s": 4.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 89.22,
+   "dur": 4.0,
+   "file": "media/plates/P18/audio_song_0089.22_4.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 4,
+  "refs": [
+   "LYD",
+   "MED"
+  ],
+  "audio": {
+   "t0": 89.22,
+   "src": "song"
+  },
+  "t_song": [
+   89.22,
+   93.22
+  ],
+  "shots": "S28",
+  "sync": [
+   [
+    89.78,
+    "'halo' (plate 0.56)"
+   ],
+   [
+    91.31,
+    "boom 'warriors': all faces up (plate 2.09)"
+   ]
+  ],
+  "prompt": "Medium shot at eye level of six warriors standing shoulder to shoulder on a riverbank after the fighting, framed from the chest up, alternating from left to right Lydian, Mede, Lydian, Mede, Lydian, Mede. The Lydians are dressed like reference image 1 (crested bronze helmets pushed up so the faces show, crimson tunics, bronze scale corselets); the Medes like reference image 2 (red felt caps with ear flaps, black beards, ochre tunics, iron scale corselets). At first they all look straight ahead, exhausted, breathing. Then one after another, from left to right, each man tips his whole head back and stares straight up at the sky: the first at 0.3 s, the second at 0.6 s, the third at 0.9 s, the fourth at 1.2 s, the fifth at 1.5 s, the sixth at 1.8 s; by 2.1 s all six faces point up at the sky, mouths slightly open in wonder, and they hold perfectly still. Every head movement is big and clear. The low sun from frame right lights their faces in a warm, slightly flat light; behind them a dark riverbank in deep shadow. Camera static. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. No fog. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "notes": "Faces turn up one after another; all up on the 91.31 boom.",
+  "prompt_v1": "Medium-wide shot of a line of seven or eight exhausted warriors standing side by side on a riverbank after fighting, Lydians dressed like reference image 1 (crested bronze helmets, crimson tunics, bronze scale corselets, lion shields) and Medes dressed like reference image 2 (red felt caps, ochre tunics, wicker shields) mixed together, all looking ahead at first. One after another, from left to right, each man turns his face up to the sky: the first at 0.4 s, then the next every quarter second, so that by 2.1 seconds every face is turned upward toward the sky at frame right, in wonder; then they hold still, gazing up. The low sun from frame right is weakening: the light is golden but flat and slightly metallic, shadows crisp, the background darker. Camera static, slightly low. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Clear air, no fog. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "refs_v1": [
+   "LYD",
+   "MED"
+  ],
+  "retake_note": "take 1: the upward-face wave was barely visible (tiny head moves), 1 Lydian + 7 Medes, pale beach",
+  "avatar": true
+ },
+ "request": {
+  "prompt": "Medium shot at eye level of six warriors standing shoulder to shoulder on a riverbank after the fighting, framed from the chest up, alternating from left to right Lydian, Mede, Lydian, Mede, Lydian, Mede. The Lydians are dressed like reference image 1 (crested bronze helmets pushed up so the faces show, crimson tunics, bronze scale corselets); the Medes like reference image 2 (red felt caps with ear flaps, black beards, ochre tunics, iron scale corselets). At first they all look straight ahead, exhausted, breathing. Then one after another, from left to right, each man tips his whole head back and stares straight up at the sky: the first at 0.3 s, the second at 0.6 s, the third at 0.9 s, the fourth at 1.2 s, the fifth at 1.5 s, the sixth at 1.8 s; by 2.1 s all six faces point up at the sky, mouths slightly open in wonder, and they hold perfectly still. Every head movement is big and clear. The low sun from frame right lights their faces in a warm, slightly flat light; behind them a dark riverbank in deep shadow. Camera static. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. No fog. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "duration": 4,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(582 KB)",
+   "data:image/jpeg;base64...(557 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(130 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T02:24:52"
+}

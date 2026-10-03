@@ -1,0 +1,66 @@
+{
+ "plate": "P40",
+ "take": 2,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 157.1,
+ "est_cost_usd": 1.156,
+ "duration_s": 5.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 268.3,
+   "dur": 5.0,
+   "file": "media/plates/P40/audio_song_0268.30_5.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 5,
+  "takes": 2,
+  "refs": [
+   "SHEET",
+   "ROOM_A"
+  ],
+  "audio": {
+   "t0": 268.3,
+   "src": "song"
+  },
+  "t_song": [
+   268.3,
+   273.3
+  ],
+  "shots": "S79",
+  "sync": [
+   [
+    270.04,
+    "final stark chord: the spin ends facing camera (plate 1.74)"
+   ],
+   [
+    271.6,
+    "freeze (plate 3.3)"
+   ]
+  ],
+  "prompt": "Anime style with clean cel shading and crisp tapered line art, exactly matching the character sheet of reference image 1: flat cel colours, one shadow tone, painted flat backgrounds, no depth-of-field blur, no yellow cast. The room is exactly the room of reference image 2, seen from the same angle, from behind her desk chair. A small dark apartment room at night: cool pearl glow from the monitors and one warm orange desk lamp; a foggy window with a distant red-blinking tower. Medium shot: the young woman from reference image 1 (long straight black hair, brown eyes, white cropped bomber jacket with orange stripes, a round 1420 MHz patch on the left sleeve and a light-blue circle with RARE EARTH on the back, orange headphones around her neck, black crop top, navy wide cargo trousers) sits typing at her monitors with her back to the camera. At 1.0 s she stops typing and spins her office chair around toward the camera in one smooth half-turn; at 1.7 s the chair stops facing the camera squarely and she looks straight into the lens. From 1.8 s to the end she holds a completely deadpan stare at the camera: expressionless, eyelids relaxed, mouth closed, perfectly still, no blinking, only her hair settling after the spin. The monitors glow behind her; the warm desk lamp lights her face. Camera static. No readable text on the screens, no captions, no watermark.",
+  "notes": "The spin lands on the final chord (270.04 = plate 1.74); deadpan hold after."
+ },
+ "request": {
+  "prompt": "Anime style with clean cel shading and crisp tapered line art, exactly matching the character sheet of reference image 1: flat cel colours, one shadow tone, painted flat backgrounds, no depth-of-field blur, no yellow cast. The room is exactly the room of reference image 2, seen from the same angle, from behind her desk chair. A small dark apartment room at night: cool pearl glow from the monitors and one warm orange desk lamp; a foggy window with a distant red-blinking tower. Medium shot: the young woman from reference image 1 (long straight black hair, brown eyes, white cropped bomber jacket with orange stripes, a round 1420 MHz patch on the left sleeve and a light-blue circle with RARE EARTH on the back, orange headphones around her neck, black crop top, navy wide cargo trousers) sits typing at her monitors with her back to the camera. At 1.0 s she stops typing and spins her office chair around toward the camera in one smooth half-turn; at 1.7 s the chair stops facing the camera squarely and she looks straight into the lens. From 1.8 s to the end she holds a completely deadpan stare at the camera: expressionless, eyelids relaxed, mouth closed, perfectly still, no blinking, only her hair settling after the spin. The monitors glow behind her; the warm desk lamp lights her face. Camera static. No readable text on the screens, no captions, no watermark.",
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": false,
+  "reference_images": [
+   "data:image/jpeg;base64...(214 KB)",
+   "data:image/jpeg;base64...(537 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(161 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T02:13:51"
+}

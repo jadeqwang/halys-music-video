@@ -75,7 +75,9 @@ export async function sourceFields(spec, tp = 0, aw = 960, aspect = 16 / 9, opt 
     if (D) D = blur(D, aw, ah, 1.2 * dsc);          // 8-bit depth: remove the quantisation steps
     const fx = rect[2] / r.w, fy = rect[3] / r.h;
     const fc = faces.map(f => ({ ...f, box: [(f.box[0] * r.w - rect[0]) / rect[2], (f.box[1] * r.h - rect[1]) / rect[3], (f.box[2] * r.w - rect[0]) / rect[2], (f.box[3] * r.h - rect[1]) / rect[3]] }));
+    const ta = performance.now();
     const F = analyze(id, { depth: D, matte: M, faces: fc }, { gain: opt.gain ?? (r.kind === 'plate' ? (r.P.gain || 1) : 1), ...opt });
+    F.ms = Math.round(performance.now() - ta);
     Object.assign(F, { id: r.id, kind: r.kind, frame, fps: r.fps, n: r.n, win: rect, srcW: r.w, srcH: r.h, mirror, zoom: 1 / Math.max(fx, fy), key });
     return F;
   })();

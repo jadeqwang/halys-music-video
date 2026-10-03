@@ -1,0 +1,64 @@
+{
+ "plate": "P19",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 230.7,
+ "est_cost_usd": 0.9248,
+ "duration_s": 4.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 93.0,
+   "dur": 4.0,
+   "file": "media/plates/P19/audio_song_0093.00_4.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 4,
+  "refs": [
+   "LYD"
+  ],
+  "audio": {
+   "t0": 93.0,
+   "src": "song"
+  },
+  "t_song": [
+   93.0,
+   97.0
+  ],
+  "shots": "S29, S36",
+  "sync": [
+   [
+    93.95,
+    "'eye' (plate 0.95)"
+   ],
+   [
+    95.185,
+    "'god' (plate 2.19)"
+   ]
+  ],
+  "prompt": "Extreme close-up of one eye of the Lydian from reference image 1: the bronze edge of his helmet's cheek-piece and a few dark braids at the frame edge, sun-weathered skin, a dark brown iris. He is looking up toward the sky at frame right; a small bright reflection of the sky shines in the dark pupil. 0-1 s the eye searches the sky; at 1 s it locks still and the pupil slowly widens; the eye stays wide open and steady, with no blink, to the end, with the faintest tremble. Low golden light from frame right grazing the skin, deep shadows, black surroundings. Camera static, extremely slow push-in. Photoreal macro cinematography, crisp lashes and iris detail, no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "notes": "XCU eye; the renderer puts the crescent in the pupil.",
+  "avatar": true
+ },
+ "request": {
+  "prompt": "Extreme close-up of one eye of the Lydian from reference image 1: the bronze edge of his helmet's cheek-piece and a few dark braids at the frame edge, sun-weathered skin, a dark brown iris. He is looking up toward the sky at frame right; a small bright reflection of the sky shines in the dark pupil. 0-1 s the eye searches the sky; at 1 s it locks still and the pupil slowly widens; the eye stays wide open and steady, with no blink, to the end, with the faintest tremble. Low golden light from frame right grazing the skin, deep shadows, black surroundings. Camera static, extremely slow push-in. Photoreal macro cinematography, crisp lashes and iris detail, no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "duration": 4,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(582 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(130 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T02:02:27"
+}

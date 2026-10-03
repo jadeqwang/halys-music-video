@@ -707,6 +707,158 @@ PLATES = {
         notes="Audio = sound-design master 273.4-279.4 so the wink sits near the 276.95 ting (plate 3.55)."),
 }
 
+# ---------------------------------------------------------------- retakes (first-pass review, 2026-10-03)
+# Each override keeps the first-pass prompt in `prompt_v1` and says what went wrong in `retake_note`; every take's
+# take<N>.json snapshots the exact spec it was generated from. Reviews: media/plates/<id>/review.json.
+WATER = "they stand IN the middle of a red-brown river, the water flowing around their knees; there is no dry ground anywhere near them"
+RETAKES = {
+    "P01": dict(
+        refs=["LYD", "MED"],
+        retake_note="takes 1-2 copied the WIDE board as a first frame (parade ranks, no battle) and then dived into the melee; "
+                    "v2 drops the board and describes the battle at the ford and a constant-height drift in words",
+        prompt=("Aerial view from about 60 m above the middle of a broad red-brown clay river in the late afternoon, looking straight "
+                "downstream to the west-north-west: the river runs from the bottom of the frame straight to the low golden sun, which "
+                "hangs just above the horizon exactly at the river's vanishing point. In the middle distance, where the river widens "
+                "into a shallow ford, two armies are locked in a huge battle in knee-deep water: hundreds of small figures, spears and "
+                "shields churning, spray flashing gold. On the left bank the rest of the Lydian army, dressed like reference image 1 "
+                "(crested bronze helmets, crimson tunics, round crimson shields), pours down toward the ford in ranks, with horsemen and "
+                "a gold lion standard on a pole; on the right bank the Median army, dressed like reference image 2 (red felt caps, ochre "
+                "tunics, round wicker shields), with archers loosing volleys, horsemen and a bronze horse standard on a pole. "
+                "Mirror-symmetric composition with equal weight on both banks; red badland hills, broad-crowned trees, tall golden "
+                "clouds. Backlit golden hour: long shadows stretch toward the camera, rim-lit helmets and spear tips. Camera: one "
+                "continuous, slow, steady forward drift at constant height for all 15 seconds; it never descends, and the sun, the ford "
+                "and both banks stay in frame to the end; no cuts, no shake. Clear air: no fog, no haze, no smoke. Photoreal "
+                f"live-action cinema, crisp. {SHEET_ONLY} {PERIOD} {NOTXT}")),
+    "P18": dict(
+        retake_note="take 1: the upward-face wave was barely visible (tiny head moves), 1 Lydian + 7 Medes, pale beach",
+        prompt=("Medium shot at eye level of six warriors standing shoulder to shoulder on a riverbank after the fighting, framed from "
+                "the chest up, alternating from left to right Lydian, Mede, Lydian, Mede, Lydian, Mede. The Lydians are dressed like "
+                "reference image 1 (crested bronze helmets pushed up so the faces show, crimson tunics, bronze scale corselets); the "
+                "Medes like reference image 2 (red felt caps with ear flaps, black beards, ochre tunics, iron scale corselets). At first "
+                "they all look straight ahead, exhausted, breathing. Then one after another, from left to right, each man tips his whole "
+                "head back and stares straight up at the sky: the first at 0.3 s, the second at 0.6 s, the third at 0.9 s, the fourth at "
+                "1.2 s, the fifth at 1.5 s, the sixth at 1.8 s; by 2.1 s all six faces point up at the sky, mouths slightly open in "
+                "wonder, and they hold perfectly still. Every head movement is big and clear. The low sun from frame right lights their "
+                "faces in a warm, slightly flat light; behind them a dark riverbank in deep shadow. Camera static. "
+                f"{REAL} No fog. {NOSING} {SHEET_ONLY} {NOTXT}")),
+    "P21": dict(
+        refs=["LYD", "MED"],
+        retake_note="takes 1-2 stood on the dry gravel bar of the SHALLOWS board: the sword fell on stones (take 2: it vanished)",
+        prompt=(f"During a total solar eclipse, {LYD_S.format(n=1)} and {MED_S.format(n=2)}: {WATER}. Mirrored medium two-shot, the "
+                "Lydian on the left facing right, the Mede on the right facing left, a few steps apart, exactly symmetrical, both "
+                f"visible from the knees up. {DUSK} The Lydian holds a short iron sword in his right hand; the Mede holds a spear and "
+                "his wicker shield. 0-0.5 s: both are frozen mid-duel, faces turned up to the darkened sky. 0.5-1.1 s: slowly they "
+                "lower their eyes and look straight at each other. At 1.2 s the Lydian opens his hand and his sword drops straight down "
+                "and splashes into the water in front of him, a small bright splash; the Mede lowers his spear point into the water. "
+                "From 1.6 s they stand still, looking into each other's eyes, breathing. Camera static, waist-high above the water. "
+                f"{REAL} {NOSING} {SHEET_ONLY} {NOTXT}")),
+    "P23": dict(
+        refs=["LYD", "MED"],
+        retake_note="take 1 put them on a dry gravel bank with spears upright",
+        prompt=(f"During a total solar eclipse, mirrored medium-wide two-shot: {LYD_S.format(n=1)} on the left and {MED_S.format(n=2)} "
+                f"on the right; {WATER}. They stand a few steps apart, facing each other, exactly symmetrical. Their spears are "
+                "lowered, points resting in the water, shields hanging at their sides; both have their faces turned up to the dark "
+                "sky, completely still, in awe. Only the water ripples around their legs and their hair and tunics stir in a faint "
+                f"wind. {DUSK} Camera: an almost imperceptible slow push-in, steady. {REAL} {SHEET_ONLY} {NOTXT}")),
+    "P27": dict(
+        retake_note="takes 1-2: the model orbited the camera and Thales hardly walked (take 2 also lost the staff)",
+        prompt=("During a total solar eclipse, on a flat riverbank, Thales of Miletus, the man from reference image 1 (about 40, lean, "
+                "dark hair knotted at the nape under a braided fillet, short pointed beard with a shaved upper lip, crinkled off-white "
+                "linen chiton, terracotta-red wool mantle over the left shoulder, leather sandals), walks toward the camera: four slow, "
+                "clear steps (left foot, right foot, left, right), his tall wooden staff in his right hand touching the ground with each "
+                "step, his mantle swaying, his face tilted up to the sky with quiet curiosity. He walks along a path between warriors "
+                "frozen like statues mid-battle on both sides of him: a Lydian like reference image 2 (crested bronze helmet, crimson "
+                "tunic, lion shield) frozen mid-thrust on the left, a Mede like reference image 3 (red felt cap, ochre tunic, wicker "
+                "shield) frozen behind his shield on the right, more frozen warriors further back. The warriors are completely "
+                f"motionless; Thales is the only thing that moves. {DUSK} He is lit a little warmer than the frozen men. Camera static "
+                "on a tripod at chest height: he starts in the middle distance and ends in a medium shot. "
+                f"{REAL} {SHEET_ONLY} {NOTXT}")),
+    "P34": dict(
+        retake_note="take 1 came out as a SpaceX-Starship look-alike (forward and aft flaps): STYLE_BIBLE forbids Musk iconography",
+        prompt=("A slender, classic rocket with a smooth, polished stainless-steel skin: a plain cylinder tapering to a long pointed "
+                "nose cone, with three small swept-back fins at the very bottom and nothing else on its body: no flaps, no wings, no "
+                "canards, no grid fins, no windows, no logos, no flags, no lettering, no markings anywhere. At dusk it lifts off from a "
+                "plain concrete pad on a brilliant column of white-gold flame, slowly at first, then accelerating straight up; billows "
+                "of exhaust spread across the ground. A low-angle camera on the ground at a distance tilts up to follow it into a deep "
+                "dusk sky; the flame light slides over the steel skin. The rocket stays centred and vertical, a clean silhouette. No "
+                "people, no launch towers, no buildings, no lens-flare rays, no fog wall. Photoreal live-action cinema, crisp, no motion "
+                "blur. No text, no logos, no watermark.")),
+    "P35": dict(
+        retake_note="take 1 drew a T-tail business jet, not a Concorde",
+        prompt=("A Concorde supersonic airliner flying above a sea of clouds at dusk, seen in clean side profile: a long, very slender "
+                "white fuselage with a sharply pointed needle nose that droops slightly downward; one large ogival delta wing, a smooth "
+                "curved triangle set low on the fuselage, with four jet engines in two rectangular pairs under the wing; a single tall "
+                "swept tail fin and NO horizontal tailplane at all; a row of small round cabin windows. Plain white, no markings, no "
+                "logos, no lettering. The camera flies alongside at the same speed, the aircraft steady in the middle of the frame, "
+                "nose toward frame right, the cloud tops streaming past below, a warm orange glow along the horizon and a darker sky "
+                "above. Smooth and steady, no shake. Photoreal live-action cinema, crisp, no motion blur on the aircraft. No text, no "
+                "logos, no watermark.")),
+    "P38": dict(
+        retake_note="takes 1-2: a dense wall of soldiers, no visible straggler or shrug (take 1 dropped blades in unison at 2.54 s; "
+                    "take 2 never slammed); v2: nine distinct men, the straggler in the exact centre",
+        prompt=("Medium-wide shot at eye level in warm golden light on a riverbank, the red-brown river behind them: one front row of "
+                "nine soldiers stands shoulder to shoulder facing the camera, each clearly separate: four Lydians on the left dressed "
+                "like reference image 1 (crested bronze helmets, crimson tunics, bronze scale corselets), four Medes on the right "
+                "dressed like reference image 2 (red felt caps, ochre tunics, iron scale corselets), and in the exact centre a fifth "
+                "Lydian, the straggler. Smaller ranks of both armies stand behind them. Everyone holds a short sword. 0-1.5 s: at "
+                "rest. At 1.7 s all nine raise their swords high overhead in perfect unison and hold them up. At 2.9 s eight of them "
+                "swing their swords down hard together and stab them point-first into the sand in front of their feet, where the "
+                "blades stay standing upright in a row; the man in the exact centre is late: his sword is still raised, he glances left "
+                "and right at the others, then at 3.4 s he stabs his sword into the sand too, a beat late, and gives a sheepish shrug "
+                "with both shoulders and a small embarrassed grin. The ranks behind move with the front row. Camera static. "
+                f"{SUN} {REAL} {SHEET_ONLY} {PERIOD} {NOTXT}")),
+    "P41": dict(
+        retake_note="take 1 closed BOTH eyes (happy squint); take 2 shut both eyes for 0.4 s before settling into a one-eye wink",
+        prompt=(f"{ANIME} Close-up, head and shoulders, of {JADE}, facing the camera squarely, her desk and glowing monitors behind "
+                "her in a dark room; reference image 2 shows her face and lighting, reference image 3 the one-eye wink. She stares "
+                "straight into the lens, completely deadpan. Without looking away she reaches back with her right hand to the keyboard "
+                "behind her and taps three keys blind (at 0.1 s, 0.7 s and 1.6 s), only her shoulder and arm moving, eyes locked on "
+                "the camera. At 2.4 s the corner of her mouth curls into a small, mischievous half-smile. At 3.2 s she winks with ONE "
+                "eye only: her right eye (on the left side of the frame) closes quickly, stays closed for half a second and opens "
+                "again, while her left eye (on the right side of the frame) stays wide open, looking at the camera the whole time; "
+                "both eyes are never closed at the same time. Then she holds the sly smile with both eyes open, looking at the camera, "
+                "to the end. Light: cool pearl monitor glow from behind as a rim on her hair, warm orange desk lamp on her face. "
+                "Camera static. No readable text, no captions, no watermark.")),
+    "P07": dict(
+        refs=["LYD", "MED"],
+        retake_note="take 1: Lydians filled 2/3 of the frame (Medes cropped at the edge), bright sky behind",
+        prompt=("Slow-motion, very low-angle shot at the waterline in the middle of a wide shallow ford of a red-brown clay river. The "
+                "camera sits exactly halfway between two charging front lines: from the left the Lydian line, dressed like reference "
+                "image 1 (crested bronze helmets, crimson tunics, round crimson shields with a black lion, spears levelled), splashes "
+                "into the knee-deep water toward frame right; from the right the Median line, dressed like reference image 2 (red felt "
+                "caps, ochre tunics, round wicker shields, spears levelled), splashes in toward frame left. Both lines are the same "
+                "size, mirror images of each other, the closing gap in the centre of the frame; they do not meet. Legs churn the water, "
+                "spray is thrown up and lit gold. The far bank behind them is in deep shadow, darker than the men. Camera static, just "
+                f"above the water. {SUN} {REAL} High-frame-rate slow motion. {SHEET_ONLY} {PERIOD} {NOTXT}")),
+    "P09": dict(
+        refs=["LYD_CAV_H", "LYD_CAV"],
+        retake_note="take 1: spears held up (not lowered), sun in frame with a bright sky (SHALLOWS board), blurred pass-by; "
+                    "take 2 still raised the spears: v3 says level/horizontal and 'no spear points up'",
+        prompt=("Low-angle shot from the water: Lydian cavalry charging through the knee-deep shallows of a red-brown river straight "
+                "toward the camera. The riders are dressed like the man in reference images 1 and 2: open-faced crested bronze helmets, "
+                "crimson tunics, bronze scale corselets, ochre cloaks, soft boots; they ride chestnut and bay horses bareback on crimson "
+                "and ochre saddlecloths with bronze bridle fittings, NO stirrups, no saddles. Every rider levels a long 3-metre ash "
+                "spear level and horizontal at shoulder height, aimed straight at the camera like a row of lances, the iron points leading; "
+                "no spear points up at the sky. The lead horse is centred, five or six more follow "
+                "in a staggered line; hooves explode the water into spray lit gold. The horses grow larger in frame and the lead horse "
+                "fills a third of the frame by the end, still in frame and sharp (it does not pass the camera). The far bank behind "
+                f"them is in deep shadow, darker than the riders. Camera static, low, just above the water. {SUN} {REAL} {SHEET_ONLY} "
+                f"{PERIOD} {NOTXT}")),
+    "P13": dict(
+        refs=["LYD", "MED"],
+        retake_note="take 1 backlit with the sun in frame (SHALLOWS board); action fine",
+        prompt=(f"Medium-wide, side-on shot in the knee-deep red-brown shallows of a river. {LYD_S.format(n=1)[0].upper() + LYD_S.format(n=1)[1:]} "
+                f"fights {MED_S.format(n=2)}. At 0.9 s the Mede slams his wicker shield into the Lydian, who falls backward into the "
+                "water with a big splash; at 2.0 s the Mede drives his spear down at him; the Lydian rolls sideways, clear, and the "
+                "spear stabs into the water where he was, throwing up spray; by 3.5 s the Lydian is up on one knee, shield raised, "
+                "water streaming off him, facing the Mede again. Clear, readable action with sharp stops, no blood. The far bank is in "
+                f"deep shadow, darker than the fighters. Camera static, slightly low. {SUN} {REAL} {SHEET_ONLY} {NOTXT}")),
+}
+for _k, _v in RETAKES.items():
+    PLATES[_k]["prompt_v1"] = PLATES[_k]["prompt"]
+    PLATES[_k]["refs_v1"] = PLATES[_k].get("refs")
+    PLATES[_k].update(_v)
+
 # Every photoreal identity sheet trips Seedance's real-person filter (InputImageSensitiveContentDetected.PrivacyInformation,
 # measured on the 2026-10-03 pilot: P01, P03, P12 all rejected at input, free); the virtual-avatar route then accepts them and
 # keeps identity and costume. Go straight to it for plates that attach a photoreal sheet.

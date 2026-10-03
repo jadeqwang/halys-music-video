@@ -1,0 +1,65 @@
+{
+ "plate": "P14",
+ "take": 2,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 161.2,
+ "est_cost_usd": 1.156,
+ "duration_s": 5.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 65.67,
+   "dur": 5.0,
+   "file": "media/plates/P14/audio_song_0065.67_5.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 5,
+  "takes": 2,
+  "refs": [
+   "LYD"
+  ],
+  "audio": {
+   "t0": 65.67,
+   "src": "song"
+  },
+  "t_song": [
+   65.67,
+   70.67
+  ],
+  "shots": "S23, S36, S41, S47",
+  "sync": [
+   [
+    66.96,
+    "timpani (plate 1.29)"
+   ],
+   [
+    67.73,
+    "first sung word: the frame is still (plate 2.06)"
+   ]
+  ],
+  "prompt": "Close-up of the face of the Lydian from reference image 1 in the middle of a battle: crested bronze Corinthian helmet pushed up on his head, long dark braids, short beard, sweat and red river water on his skin, the bronze scale corselet at the bottom of the frame. The hard, low golden sun from frame right falls across his face in a tight pool of light; the background is near-black with faint shapes of fighting soldiers. 0-1.8 s: he breathes hard, chest heaving, eyes darting; at 1.8 s he goes completely still and holds his breath; at 2.6 s he slowly lifts his face and eyes toward the sky at frame right and his expression turns to awe; he holds that upward gaze, lips slightly parted, to the end. Camera static, a barely perceptible push-in. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Natural skin detail, clear air. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "notes": "One face in the chaos; still before the voice; then looking up (reused for S41 lines and S47 marble).",
+  "avatar": true
+ },
+ "request": {
+  "prompt": "Close-up of the face of the Lydian from reference image 1 in the middle of a battle: crested bronze Corinthian helmet pushed up on his head, long dark braids, short beard, sweat and red river water on his skin, the bronze scale corselet at the bottom of the frame. The hard, low golden sun from frame right falls across his face in a tight pool of light; the background is near-black with faint shapes of fighting soldiers. 0-1.8 s: he breathes hard, chest heaving, eyes darting; at 1.8 s he goes completely still and holds his breath; at 2.6 s he slowly lifts his face and eyes toward the sky at frame right and his expression turns to awe; he holds that upward gaze, lips slightly parted, to the end. Camera static, a barely perceptible push-in. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Natural skin detail, clear air. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(582 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(161 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T01:58:19"
+}

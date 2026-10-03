@@ -1,0 +1,70 @@
+{
+ "plate": "P30",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 162.6,
+ "est_cost_usd": 0.9248,
+ "duration_s": 4.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 203.39,
+   "dur": 4.0,
+   "file": "media/plates/P30/audio_song_0203.39_4.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 4,
+  "refs": [
+   "LYD",
+   "MED"
+  ],
+  "audio": {
+   "t0": 203.39,
+   "src": "song"
+  },
+  "t_song": [
+   203.39,
+   207.39
+  ],
+  "shots": "S59",
+  "sync": [
+   [
+    203.6,
+    "boom (plate 0.21)"
+   ],
+   [
+    205.08,
+    "boom (plate 1.69)"
+   ],
+   [
+    207.0,
+    "boom (plate 3.61)"
+   ]
+  ],
+  "prompt": "Close two-shot in glorious warm golden light: the Lydian from reference image 1 (crested bronze helmet pushed up, braids, short beard, crimson tunic, bronze scale corselet, crimson lion shield) on the left and the Mede from reference image 2 (red felt cap with ear flaps, full black curly beard, ochre tunic, iron scale corselet) on the right, side by side, their faces lit gold by the low sun from frame right, other cheering warriors behind them. They look up at the sky and burst out laughing with relief and joy, eyes shining, heads thrown back; at 1.7 s the Mede claps the Lydian on the shoulder and they laugh together, looking up, to the end. Warm, high-key golden light with rich shadows and a darker background. Camera static, slightly low. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Natural faces, clear air. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "notes": "Baroque glory: golden faces, laughter.",
+  "avatar": true
+ },
+ "request": {
+  "prompt": "Close two-shot in glorious warm golden light: the Lydian from reference image 1 (crested bronze helmet pushed up, braids, short beard, crimson tunic, bronze scale corselet, crimson lion shield) on the left and the Mede from reference image 2 (red felt cap with ear flaps, full black curly beard, ochre tunic, iron scale corselet) on the right, side by side, their faces lit gold by the low sun from frame right, other cheering warriors behind them. They look up at the sky and burst out laughing with relief and joy, eyes shining, heads thrown back; at 1.7 s the Mede claps the Lydian on the shoulder and they laugh together, looking up, to the end. Warm, high-key golden light with rich shadows and a darker background. Camera static, slightly low. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Natural faces, clear air. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "duration": 4,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(582 KB)",
+   "data:image/jpeg;base64...(557 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(130 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T02:10:14"
+}

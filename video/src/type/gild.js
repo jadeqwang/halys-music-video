@@ -22,7 +22,7 @@ const FRAG = `
 uniform sampler2D uP, uF1, uF2;
 uniform vec2 uSize, uShadowOff, uGroove;
 uniform vec3 uL, uLight, uAmb, uShadowCol, uC0, uC1, uC2, uC3, uC4, uSil, uRim;
-uniform float uIncised, uBoil, uSeed, uLeaf, uEm, uBevelK, uExposure, uOpacity, uShadowOp, uGrooveSh;
+uniform float uIncised, uBoil, uSeed, uLeaf, uEm, uBevelK, uExposure, uOpacity, uShadowOp, uGrooveSh, uAO;
 vec3 ramp(float r) {
   if (r < .3) return mix(uC0, uC1, r / .3);
   if (r < .58) return mix(uC1, uC2, (r - .3) / .28);
@@ -32,13 +32,20 @@ vec3 ramp(float r) {
 void main() {
   vec2 px = tc() * uSize;
   // boil: a sub-pixel warp at letter scale plus fine edge roughness, both seeded per drawing
-  vec2 w = vec2(vn(px / (uEm * .55) + uSeed * 7.13), vn(px / (uEm * .55) + uSeed * 3.71 + 17.3)) - .5;
-  vec2 q = px + w * 1.1 * uBoil;
+  vec2 q = px;
+  if (uBoil > 0.) q += (vec2(vn(px / (uEm * .55) + uSeed * 7.13), vn(px / (uEm * .55) + uSeed * 3.71 + 17.3)) - .5) * 1.1 * uBoil;
   vec2 e = 1. / uSize, qt = q * e;
   vec4 P = texture(uP, qt);
-  float edge = P.r + (vn(q / 2.6 + uSeed * 11.7) - .5) * .28 * uBoil;
+  vec2 sq = (q - uShadowOff) * e;
+  vec4 Ps = uIncised > .5 ? vec4(0.) : texture(uP, sq);
+  if (P.r < .004 && P.b < .004 && Ps.b < .004) { o = vec4(0.); return; }      // empty: most of the block
+  vec4 F1 = texture(uF1, qt), F2 = texture(uF2, qt);
+  float sa = Ps.b * texture(uF1, sq).r * uShadowOp * uOpacity * (1. - uIncised) * (1. - .7 * F2.r);
+  sa = max(sa, P.b * F1.r * uAO * uOpacity * (1. - uIncised));      // soft contact shadow hugging the letters (bright scenes)
+  float edge = P.r + (uBoil > 0. ? (vn(q / 2.6 + uSeed * 11.7) - .5) * .28 * uBoil : 0.);
   float aa = max(fwidth(edge), 2e-3) * .75;
-  float a = smoothstep(.5 - aa, .5 + aa, edge);
+  float a = smoothstep(.5 - aa, .5 + aa, edge) * F1.r * uOpacity;
+  if (a < .002) { o = vec4(uShadowCol * sa, sa); return; }                    // outside the letter: only its shadow
   float hx = texture(uP, qt + vec2(e.x, 0.)).g - texture(uP, qt - vec2(e.x, 0.)).g;
   float hy = texture(uP, qt + vec2(0., e.y)).g - texture(uP, qt - vec2(0., e.y)).g;
   vec2 grad = vec2(hx, hy) * .5;
@@ -54,25 +61,26 @@ void main() {
   float seam = smoothstep(0., .04, min(min(fl.x, 1. - fl.x), min(fl.y, 1. - fl.y)));
   base *= (.93 + .12 * h21(floor(lc) + 7.7)) * mix(.86, 1., seam) * (.95 + .09 * vn(px / 1.6 + uLeaf * 3.));
   vec3 col = base * uLight + uC4 * spec * uLight * 1.15 + uAmb * (1. - r) * .35;
-  if (uIncised > .5) {                       // the wall nearest the light shades the groove floor beside it
+  if (uIncised > .5) {                       // the wall nearest the light shades the groove beside it; deeper is darker
     float outside = 1. - smoothstep(.35, .65, texture(uP, qt + uGroove * e).r);
-    col *= 1. - uGrooveSh * outside;
+    col *= (1. - uGrooveSh * outside) * mix(1., .62, P.g);
   }
-  vec4 F1 = texture(uF1, qt), F2 = texture(uF2, qt);
   col += uC4 * F1.g * (.5 + 1.3 * spec + .9 * clamp(length(grad) * uBevelK, 0., 1.)) * uLight;
-  float gx = texture(uP, qt + vec2(e.x, 0.)).r - texture(uP, qt - vec2(e.x, 0.)).r;
-  float gy = texture(uP, qt + vec2(0., e.y)).r - texture(uP, qt - vec2(0., e.y)).r;
-  vec2 outward = -vec2(gx, gy); float gl = length(outward);
-  float facing = gl > 1e-4 ? clamp(dot(outward / gl, normalize(uL.xy + 1e-5)), 0., 1.) : 0.;
-  float band = smoothstep(.98, .6, P.g) * smoothstep(.0, .25, P.r);
-  col = mix(col, uSil + uRim * band * facing, F2.r);
+  if (F2.r > .002) {                         // silhouette: letters that lose their light keep a rim on the side still facing it
+    float gx = texture(uP, qt + vec2(e.x, 0.)).r - texture(uP, qt - vec2(e.x, 0.)).r;
+    float gy = texture(uP, qt + vec2(0., e.y)).r - texture(uP, qt - vec2(0., e.y)).r;
+    vec2 outward = -vec2(gx, gy); float gl = length(outward);
+    float facing = gl > 1e-4 ? clamp(dot(outward / gl, normalize(uL.xy + 1e-5)), 0., 1.) : 0.;
+    float band = smoothstep(.75, .25, P.g) * smoothstep(.0, .25, P.r);
+    col = mix(col, uSil + uRim * band * facing, F2.r);
+  }
   col *= uExposure * (1. + F1.b * 1.6);
-  a *= F1.r * uOpacity;
-  vec2 sq = (q - uShadowOff) * e;
-  float sa = texture(uP, sq).b * texture(uF1, sq).r * uShadowOp * uOpacity * (1. - uIncised) * (1. - .7 * F2.r);
   o = vec4(clamp(col, 0., 1.) * a + uShadowCol * sa * (1. - a), a + sa * (1. - a));
 }`;
 
+// Every scratch 2D canvas in the type layer is created with willReadFrequently: Chromium otherwise picks GPU or CPU
+// raster per canvas by its size at first use, and a reused canvas would then draw differently depending on what the
+// worker rendered before (non-deterministic frames).
 const _packs = new LRU(48);
 let _mask = null, _tint = null, _fx1 = null, _fx2 = null;
 const canvasOf = (c, w, h) => { if (!c) c = makeCanvas(w, h); if (c.width !== w || c.height !== h) { c.width = w; c.height = h; } return c; };
@@ -96,18 +104,56 @@ export function runBounds(r) {
   return { x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys), w };
 }
 
+// Exact Euclidean distance transform (Felzenszwalb-Huttenlocher), squared distances in place along one line
+function edt1d(f, n, d, v, z) {
+  let k = 0; v[0] = 0; z[0] = -1e20; z[1] = 1e20;
+  for (let q = 1; q < n; q++) {
+    let s = ((f[q] + q * q) - (f[v[k]] + v[k] * v[k])) / (2 * q - 2 * v[k]);
+    while (s <= z[k]) { k--; s = ((f[q] + q * q) - (f[v[k]] + v[k] * v[k])) / (2 * q - 2 * v[k]); }
+    k++; v[k] = q; z[k] = s; z[k + 1] = 1e20;
+  }
+  k = 0;
+  for (let q = 0; q < n; q++) { while (z[k + 1] < q) k++; d[q] = (q - v[k]) * (q - v[k]) + f[v[k]]; }
+}
+// distance (px) from every inside pixel to the letter's edge; 0 outside
+export function insideDistance(alpha, w, h) {
+  const N = w * h, D = new Float64Array(N), m = Math.max(w, h);
+  const f = new Float64Array(m), d = new Float64Array(m), v = new Int32Array(m), z = new Float64Array(m + 1);
+  for (let i = 0; i < N; i++) D[i] = alpha[i] >= 128 ? 1e20 : 0;
+  for (let x = 0; x < w; x++) { for (let y = 0; y < h; y++) f[y] = D[y * w + x]; edt1d(f, h, d, v, z); for (let y = 0; y < h; y++) D[y * w + x] = d[y]; }
+  for (let y = 0; y < h; y++) { const o = y * w; for (let x = 0; x < w; x++) f[x] = D[o + x]; edt1d(f, w, d, v, z); for (let x = 0; x < w; x++) D[o + x] = d[x]; }
+  const out = new Float32Array(N);
+  for (let i = 0; i < N; i++) out[i] = D[i] > 0 ? Math.max(0, Math.sqrt(D[i]) - .5 + alpha[i] / 255 * .5) : alpha[i] / 255 * .5;
+  return out;
+}
+
+// The pack: R = edge field (mask blurred by sig.e), G = chisel height (inside distance / maxD, clamped: a V-section with
+// a ridge on every stroke narrower than 2 maxD, a bevelled plateau on wider parts), B = soft field for the cast shadow.
 function buildPack(runs, ox, oy, bw, bh, sig) {
   _mask = canvasOf(_mask, bw, bh); _tint = canvasOf(_tint, bw, bh);
-  const m = _mask.getContext('2d');
+  const m = _mask.getContext('2d', { willReadFrequently: true });
   m.setTransform(1, 0, 0, 1, 0, 0); m.clearRect(0, 0, bw, bh); m.fillStyle = '#fff';
   eachRun(m, runs, ox, oy, r => m.fillText(r.text, 0, 0));
-  const pack = makeCanvas(bw, bh), p = pack.getContext('2d'), t = _tint.getContext('2d');
-  p.fillStyle = '#000'; p.fillRect(0, 0, bw, bh); p.globalCompositeOperation = 'lighter';
-  for (const [col, s] of [['#f00', sig.e], ['#0f0', sig.b], ['#00f', sig.s]]) {
-    t.globalCompositeOperation = 'source-over'; t.clearRect(0, 0, bw, bh); t.drawImage(_mask, 0, 0);
-    t.globalCompositeOperation = 'source-in'; t.fillStyle = col; t.fillRect(0, 0, bw, bh);
-    p.filter = s > .05 ? `blur(${s.toFixed(2)}px)` : 'none'; p.drawImage(_tint, 0, 0); p.filter = 'none';
+  const A = m.getImageData(0, 0, bw, bh).data, N = bw * bh, alpha = new Uint8ClampedArray(N);
+  for (let i = 0; i < N; i++) alpha[i] = A[i * 4 + 3];
+  const blurA = s => {
+    const t = _tint.getContext('2d', { willReadFrequently: true });
+    t.setTransform(1, 0, 0, 1, 0, 0); t.clearRect(0, 0, bw, bh); t.filter = s > .05 ? `blur(${s.toFixed(2)}px)` : 'none'; t.drawImage(_mask, 0, 0); t.filter = 'none';
+    return t.getImageData(0, 0, bw, bh).data;
+  };
+  const E = blurA(sig.e), S = blurA(sig.s);
+  const dist = insideDistance(alpha, bw, bh), H = new Float32Array(N);
+  for (let i = 0; i < N; i++) H[i] = Math.min(1, dist[i] / sig.d);
+  // soften the ridge a hair (3x3 box) so its line antialiases
+  const Hs = new Float32Array(N);
+  for (let y = 0; y < bh; y++) for (let x = 0; x < bw; x++) {
+    let acc = 0, n = 0;
+    for (let dy = -1; dy <= 1; dy++) { const yy = y + dy; if (yy < 0 || yy >= bh) continue; for (let dx = -1; dx <= 1; dx++) { const xx = x + dx; if (xx < 0 || xx >= bw) continue; acc += H[yy * bw + xx]; n++; } }
+    Hs[y * bw + x] = acc / n;
   }
+  const pack = makeCanvas(bw, bh), p = pack.getContext('2d', { willReadFrequently: true }), img = p.createImageData(bw, bh), o = img.data;
+  for (let i = 0; i < N; i++) { o[i * 4] = E[i * 4 + 3]; o[i * 4 + 1] = Math.round(Hs[i] * 255); o[i * 4 + 2] = S[i * 4 + 3]; o[i * 4 + 3] = 255; }
+  p.putImageData(img, 0, 0);
   return pack;
 }
 
@@ -141,7 +187,7 @@ export function resolveLight(light, cool) {
 export function gild(g, runs, o = {}) {
   if (!runs.length) return null;
   const em = o.em || Math.max(...runs.map(r => r.px));
-  const sig = { e: o.sigE ?? .75, b: o.sigB ?? clamp(.034 * em, 1.1, 7), s: o.sigS ?? clamp(.055 * em, 1.5, 14) };
+  const sig = { e: o.sigE ?? .75, b: o.sigB ?? clamp(.034 * em, 1.1, 7), s: o.sigS ?? clamp(.055 * em, 1.5, 14), d: o.chisel ?? clamp((o.incised ? .075 : .062) * em, 1.6, 16) };
   const Lr = resolveLight(o.light || { dir: [-.75, -.66], elev: .42 });
   const shLen = o.incised ? 0 : (o.shadowLen ?? clamp(.045 * em / Math.tan(Lr.e), 1, .4 * em));
   const shOff = [-Lr.dir[0] * shLen, -Lr.dir[1] * shLen];
@@ -158,7 +204,7 @@ export function gild(g, runs, o = {}) {
   if (!pack) pack = _packs.set(key, buildPack(runs, ox, oy, bw, bh, sig));
   // FX1: per run reveal / glint / boost, painted as the glyphs themselves (stroked wide so blur halos are covered)
   _fx1 = canvasOf(_fx1, bw, bh);
-  const f1 = _fx1.getContext('2d');
+  const f1 = _fx1.getContext('2d', { willReadFrequently: true });
   f1.setTransform(1, 0, 0, 1, 0, 0); f1.globalCompositeOperation = 'source-over'; f1.fillStyle = '#000'; f1.fillRect(0, 0, bw, bh);
   let k = 0;
   eachRun(f1, runs, ox, oy, r => {
@@ -168,7 +214,7 @@ export function gild(g, runs, o = {}) {
   });
   // FX2: silhouette amount (per run, then the caller's per-pixel effects in g's coordinates)
   _fx2 = canvasOf(_fx2, bw, bh);
-  const f2 = _fx2.getContext('2d');
+  const f2 = _fx2.getContext('2d', { willReadFrequently: true });
   f2.setTransform(1, 0, 0, 1, 0, 0); f2.globalCompositeOperation = 'source-over'; f2.filter = 'none'; f2.fillStyle = '#000'; f2.fillRect(0, 0, bw, bh);
   eachRun(f2, runs, ox, oy, r => {
     if (!r.sil) return;
@@ -184,10 +230,10 @@ export function gild(g, runs, o = {}) {
   G.draw(P, {
     uP: { tex: 0 }, uF1: { tex: 1 }, uF2: { tex: 2 }, uSize: [bw, bh], uL: Lr.L, uLight: lc,
     uAmb: rgb01(o.ambient || '#3a2414'), uShadowCol: rgb01(o.shadowColor || '#0d0704'),
-    uC0: pal[0], uC1: pal[1], uC2: pal[2], uC3: pal[3], uC4: pal[4], uSil: rgb01(o.silColor || C.sil), uRim: rgb01(o.rimColor || '#d9a050'),
+    uC0: pal[0], uC1: pal[1], uC2: pal[2], uC3: pal[3], uC4: pal[4], uSil: rgb01(o.silColor || C.sil), uRim: rgb01(o.rimColor || '#d9a050').map(v => v * (o.rim ?? 1.2)),
     uIncised: o.incised ? 1 : 0, uBoil: o.boil || 0, uSeed: ((o.seed || 0) % 9973) / 97.31, uLeaf: ((o.leaf || 0) % 997) / 13.7,
-    uEm: em, uBevelK: 3.2 * sig.b * (o.bevel ?? 1), uExposure: o.exposure ?? 1, uOpacity: o.opacity ?? 1,
-    uShadowOp: (o.shadow ?? 1) * .6, uShadowOff: shOff,
+    uEm: em, uBevelK: 1.15 * sig.d * (o.bevel ?? 1), uExposure: o.exposure ?? 1, uOpacity: o.opacity ?? 1,
+    uShadowOp: clamp((o.shadow ?? 1) * .6), uShadowOff: shOff, uAO: o.ao ?? 0,
     uGroove: [Math.cos(gr) * .07 * em, Math.sin(gr) * .07 * em], uGrooveSh: o.incised ? .55 : 0,
   });
   g.drawImage(G.canvas, ox, oy);

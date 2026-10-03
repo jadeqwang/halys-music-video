@@ -129,16 +129,17 @@ export function coronaStrokes(o) {
     }
     flush();
   };
-  const rip = (j, r, amp) => amp * Math.sin(r / R * 7 + t * (1.6 + .8 * h(j, 71)) + h(j, 72) * TAU) * (r / R - 1);
-  // 1. iris fibres: dense fine radial strokes hugging the limb, waving
-  const nF = Math.round((260 + 1500 * iris) * Math.min(2.2, R / 60) * sc);
+  const rip = (j, r, amp) => amp * Math.sin(r / R * 5 + t * (1.4 + .6 * h(j, 71)) + h(j, 72) * TAU) * Math.min(1, (r / R - 1) * 1.5);
+  // 1. iris fibres: dense radial strokes hugging the limb, mostly short; long ones rare and dimmer; waving
+  const nF = Math.round((300 + 1700 * iris) * Math.min(2.2, R / 60) * sc);
   for (let j = 0; j < nF; j++) {
-    const phi0 = h(j, 1) * TAU, len = R * (.12 + (.5 + .9 * iris) * Math.pow(h(j, 2), 1.7)), r0 = R * (1.0 + .012 * h(j, 3));
-    const amp = (.04 + .1 * iris) * (h(j, 4) - .5);
-    const b = (.55 + .6 * h(j, 5)) * Math.pow(Math.min(1, R * .6 / len), .25) * k;
-    const crypt = iris > 0 && Math.sin(phi0 * 23 + 2 * Math.sin(phi0 * 5)) > .55 ? .45 : 1;   // darker crypts between bundles
-    polar(q => { const r = r0 + len * q; return [r, phi0 + rip(j, r, amp) + .04 * Math.sin(q * 3 + h(j, 6) * 6)]; }, 6,
-      Math.max(.7, R * (.006 + .01 * h(j, 7)) * (1 + iris)), b * crypt, pearl, warmT, .5, h(j, 8), .9);
+    const phi0 = h(j, 1) * TAU, q2 = Math.pow(h(j, 2), 2.4), len = R * (.07 + (.32 + .75 * iris) * q2), r0 = R * (1.0 + .015 * h(j, 3));
+    const amp = (.03 + .08 * iris) * (h(j, 4) - .5);
+    const b = (.5 + .55 * h(j, 5)) * (1 - .5 * q2) * k;
+    const crypt = iris > 0 && Math.sin(phi0 * 23 + 2 * Math.sin(phi0 * 5)) > .55 ? .5 : 1;   // darker crypts between bundles
+    const inner = q2 < .15;                                                                   // the collarette: warm, broad
+    polar(q => { const r = r0 + len * q; return [r, phi0 + rip(j, r, amp) + .035 * Math.sin(q * 3 + h(j, 6) * 6)]; }, 5,
+      Math.max(.8, R * (.008 + .016 * h(j, 7)) * (1 + .6 * iris) * (inner ? 1.5 : 1)), b * crypt, inner ? warmT : pearl, inner ? pearl : warmT, .5, h(j, 8), .9);
   }
   // 2. helmet streamers: bulbous bases of curved strokes, then long open strokes converging slowly and fraying
   const streamers = o.streamers || [[.12, 3.0, .5, 1], [3.02, 2.5, .42, .85], [3.8, 1.5, .26, .55], [-.8, 1.9, .3, .6], [1.85, 1.2, .22, .45]];
@@ -148,7 +149,7 @@ export function coronaStrokes(o) {
       const u = (m + .5) / 26 * 2 - 1, phi0 = ph + u * ws * 1.1 + .05 * ws * (h(si * 50 + m, 5) - .5), q0 = Math.abs(u);
       const rEnd = R * (1 + len * (.35 + .65 * Math.pow(h(si * 50 + m, 6), .7))), r0 = R * (1.01 + .25 * Math.max(0, 1 - q0 * q0));
       const b = bs * (.6 + .5 * h(si * 50 + m, 7)) * k;
-      polar(q => { const r = lerp(r0, rEnd, Math.pow(q, 1.15)); return [r, ph + (phi0 - ph) * (.35 + .65 * Math.pow(R / r, 1.2)) + rip(si * 50 + m, r, .03)]; }, 14,
+      polar(q => { const r = lerp(r0, rEnd, Math.pow(q, 1.15)); return [r, ph + (phi0 - ph) * (.35 + .65 * Math.pow(R / r, 1.2)) + rip(si * 50 + m, r, .008)]; }, 14,
         Math.max(.9, R * (.012 + .012 * h(si * 50 + m, 8))), b, pearl, warmT, .45, h(si * 50 + m, 9), .85);
     }
   });

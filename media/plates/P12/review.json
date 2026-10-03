@@ -65,7 +65,74 @@
    "virtual_avatar": true,
    "est_cost_usd": 1.8496,
    "job": null,
-   "reviewed": "2026-10-03T01:53:33"
+   "reviewed": "2026-10-03T01:53:33",
+   "short": "Contre-jour (sun in frame), faces in shadow; strikes ~0.1-0.8 s late."
+  },
+  "2": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "Duel with better tenebrist light (sun at the right edge, faces side-lit, the black lion on the crimson shield readable); exchanges at 2.45, 3.75, 4.5, 6.15, 6.75 s.",
+   "costume": "Correct; the Mede's sword hangs at his right side.",
+   "identity": "Both match the sheets.",
+   "artefacts": "The Lydian's shield swings across the lens at 2.38-2.88 s with heavy motion blur (this is the first exchange S17 needs); the Lydian is nearer the camera and larger than the Mede (not equal size).",
+   "notes": "Alternate for S19/S27 close strikes.",
+   "sync": [
+    {
+     "song_t": 46.06,
+     "event": "beat: first thrust turned by the lion shield (plate 1.33)",
+     "expected_plate_t": 1.33,
+     "measured_plate_t": 2.45,
+     "offset_s": 1.12,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 47.563,
+     "event": "stab (plate 2.83)",
+     "expected_plate_t": 2.833,
+     "measured_plate_t": 3.75,
+     "offset_s": 0.917,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 48.912,
+     "event": "stab (plate 4.18)",
+     "expected_plate_t": 4.182,
+     "measured_plate_t": 4.5,
+     "offset_s": 0.318,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 49.533,
+     "event": "stab (plate 4.80)",
+     "expected_plate_t": 4.803,
+     "measured_plate_t": 4.5,
+     "offset_s": -0.303,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 50.633,
+     "event": "stab + timpani (plate 5.90)",
+     "expected_plate_t": 5.903,
+     "measured_plate_t": 6.15,
+     "offset_s": 0.247,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 51.484,
+     "event": "stab (plate 6.75)",
+     "expected_plate_t": 6.754,
+     "measured_plate_t": 6.75,
+     "offset_s": -0.004,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P12/take2.review.jpg",
+   "contact": "media/plates/P12/take2.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.8496,
+   "job": null,
+   "reviewed": "2026-10-03T02:03:23"
   }
  },
  "shots": "S17, S19, S27, S36, S37",
@@ -73,5 +140,8 @@
   44.73,
   52.73
  ],
- "audio_t0": 44.73
+ "audio_t0": 44.73,
+ "chosen": 1,
+ "chosen_why": "Clean, symmetric, equal-size exchanges with sharp stops (the first exchange, S17, is clean) and the best geometry for the S37 depth orbit; take 2 has nicer side light but its first exchange is a motion-blurred shield across the lens and the figures are unequal.",
+ "t_chosen": "2026-10-03T02:23:03"
 }

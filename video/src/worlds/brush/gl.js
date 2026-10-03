@@ -101,11 +101,14 @@ export class GL {
     else if (mode === 'add') gl.blendFunc(gl.ONE, gl.ONE);
     else if (mode === 'alpha') gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
   }
-  pass(fs, uniforms, T = null, blend = null) {
+  // fullscreen pass; scissor [x, y, w, h] in image px (row 0 = top) limits the work to a box
+  pass(fs, uniforms, T = null, blend = null, scissor = null) {
     const P = this.program(FS_VS, fs), gl = this.gl;
     this.bind(T); gl.useProgram(P.p); this.blend(blend);
     this.setUniforms(P, { uRes: [T ? T.w : this.w, T ? T.h : this.h], ...uniforms });
+    if (scissor) { gl.enable(gl.SCISSOR_TEST); const x0 = Math.max(0, Math.floor(scissor[0])), y0 = Math.max(0, Math.floor(scissor[1])); gl.scissor(x0, y0, Math.max(0, Math.ceil(scissor[2])), Math.max(0, Math.ceil(scissor[3]))); }
     gl.bindVertexArray(this.vao); gl.drawArrays(gl.TRIANGLES, 0, 3); gl.bindVertexArray(null);
+    if (scissor) gl.disable(gl.SCISSOR_TEST);
   }
   // a persistent dynamic mesh per program: attribute buffers are re-filled each draw (no per-frame allocation churn)
   meshDraw(P, attrs, idx, nIdx, uniforms, T, blend) {
@@ -129,7 +132,7 @@ export class GL {
     gl.drawElements(gl.TRIANGLES, nIdx, gl.UNSIGNED_INT, 0);
     gl.bindVertexArray(null);
   }
-  finish() { const px = new Uint8Array(4); this.gl.readPixels(0, 0, 1, 1, this.gl.RGBA, this.gl.UNSIGNED_BYTE, px); }
+  finish() { const gl = this.gl, px = new Uint8Array(4); gl.bindFramebuffer(gl.FRAMEBUFFER, null); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px); }
   deleteTexture(t) { this.gl.deleteTexture(t.tex || t); }
 }
 

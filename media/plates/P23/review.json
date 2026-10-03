@@ -1,0 +1,83 @@
+{
+ "plate": "P23",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "S03 partly: mirrored two-shot at dusk, both heroes still with faces turned up to the sky, spears grounded upright.",
+   "costume": "Correct on both.",
+   "identity": "Matches.",
+   "artefacts": "They stand on a dry gravel bank, not in the shallows; spears upright rather than lowered; dusk sky is blue-tinted.",
+   "notes": "Fallback; retake requested (in the water).",
+   "sync": [
+    {
+     "song_t": 3.65,
+     "event": "cut in",
+     "expected_plate_t": 0.0,
+     "measured_plate_t": 0.083,
+     "offset_s": 0.083,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 5.4,
+     "event": "cut out (plate 1.75)",
+     "expected_plate_t": 1.75,
+     "measured_plate_t": 1.25,
+     "offset_s": -0.5,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P23/take1.review.jpg",
+   "contact": "media/plates/P23/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T02:07:12"
+  },
+  "2": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S03 delivered: mirrored two-shot of the heroes standing IN the red-brown water, faces turned up to the dark sky, completely still, a thin orange horizon glow.",
+   "costume": "Correct on both.",
+   "identity": "Match.",
+   "artefacts": "Spears held upright (grounded) rather than lowered into the water; the river reads as a flat, wide water body.",
+   "notes": "1:1 from t0.",
+   "sync": [
+    {
+     "song_t": 3.65,
+     "event": "cut in",
+     "expected_plate_t": 0.0,
+     "measured_plate_t": 0.083,
+     "offset_s": 0.083,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 5.4,
+     "event": "cut out (plate 1.75)",
+     "expected_plate_t": 1.75,
+     "measured_plate_t": 1.625,
+     "offset_s": -0.125,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P23/take2.review.jpg",
+   "contact": "media/plates/P23/take2.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T02:35:37",
+   "short": "Spears grounded upright, not lowered."
+  }
+ },
+ "shots": "S03",
+ "t_song": [
+  3.65,
+  7.65
+ ],
+ "audio_t0": 3.65,
+ "chosen": 2,
+ "chosen_why": "In the water, as specified (take 1 stood on dry gravel).",
+ "t_chosen": "2026-10-03T02:35:38"
+}

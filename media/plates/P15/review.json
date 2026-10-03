@@ -1,0 +1,103 @@
+{
+ "plate": "P15",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "Face-off centred and mirrored (0-3.58 s), then a cut to a high wide of the river bend with a small, distant melee.",
+   "costume": "Correct.",
+   "identity": "Matches the sheets.",
+   "artefacts": "Shot 2 melee is tiny and far (top of frame); bright sky.",
+   "notes": "Backup.",
+   "sync": [
+    {
+     "song_t": 74.655,
+     "event": "'Lydians' (plate 0.25)",
+     "expected_plate_t": 0.245,
+     "measured_plate_t": 0.083,
+     "offset_s": -0.162,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 75.925,
+     "event": "'Medes' (plate 1.52)",
+     "expected_plate_t": 1.515,
+     "measured_plate_t": 1.75,
+     "offset_s": 0.235,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 77.88,
+     "event": "cut to the shore melee (plate 3.47)",
+     "expected_plate_t": 3.47,
+     "measured_plate_t": 3.625,
+     "offset_s": 0.155,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [
+    3.583
+   ],
+   "sheet": "media/plates/P15/take1.review.jpg",
+   "contact": "media/plates/P15/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.6184,
+   "job": null,
+   "reviewed": "2026-10-03T02:03:23"
+  },
+  "2": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S25 delivered: symmetric face-off in the shallows, Lydian left / Mede right in profile, shields up, spears lowered, circling (0-3.375 s); hard cut at 3.375 s to a mirrored side-on wide of the shore melee: a long line of Lydians and Medes clashing on the bank, dust, river in the foreground.",
+   "costume": "Correct on both heroes; melee figures read as the two sides at silhouette scale.",
+   "identity": "Matches the sheets.",
+   "artefacts": "None.",
+   "notes": "The cut lands on 77.88 (-0.10 s): use 1:1 from t0.",
+   "sync": [
+    {
+     "song_t": 74.655,
+     "event": "'Lydians' (plate 0.25)",
+     "expected_plate_t": 0.245,
+     "measured_plate_t": 0.417,
+     "offset_s": 0.172,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 75.925,
+     "event": "'Medes' (plate 1.52)",
+     "expected_plate_t": 1.515,
+     "measured_plate_t": 1.417,
+     "offset_s": -0.098,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 77.88,
+     "event": "cut to the shore melee (plate 3.47)",
+     "expected_plate_t": 3.47,
+     "measured_plate_t": 3.375,
+     "offset_s": -0.095,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [
+    3.375
+   ],
+   "sheet": "media/plates/P15/take2.review.jpg",
+   "contact": "media/plates/P15/take2.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.6184,
+   "job": null,
+   "reviewed": "2026-10-03T02:03:23",
+   "short": "-"
+  }
+ },
+ "shots": "S25",
+ "t_song": [
+  74.41,
+  81.41
+ ],
+ "audio_t0": 74.41,
+ "chosen": 2,
+ "chosen_why": "Side-lit symmetric face-off and a readable mirrored shore melee after a cut that lands on 77.88; take 1's melee is tiny and far.",
+ "t_chosen": "2026-10-03T02:23:03"
+}

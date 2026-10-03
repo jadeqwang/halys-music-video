@@ -1,0 +1,67 @@
+{
+ "plate": "P07",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "S10 delivered: low waterline slow-motion charge, the Lydian line runs in from the left, spears levelled, spray backlit; the Median wicker shields enter at the right edge from 2.8 s.",
+   "costume": "Lydians correct (crests, crimson, lion shields); Medes mostly cropped at the right edge.",
+   "identity": "Army-level.",
+   "artefacts": "Not mirror-symmetric (Lydians fill 2/3 of the frame); bright sky.",
+   "notes": "The lines never collide (as asked). Use plate 0-1.74 for S10.",
+   "sync": [
+    {
+     "song_t": 27.24,
+     "event": "boom = cut to the clash (plate 1.74)",
+     "expected_plate_t": 1.74,
+     "measured_plate_t": 2.25,
+     "offset_s": 0.51,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P07/take1.review.jpg",
+   "contact": "media/plates/P07/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T01:59:16"
+  },
+  "2": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S10 delivered: mirror-symmetric waterline charge: two equal lines (Lydian crests and crimson left, wicker shields right) converge in a V, legs churning the water, the gap closing in the centre, no collision.",
+   "costume": "Army-level correct.",
+   "identity": "-",
+   "artefacts": "Sun at the top-right corner; bright sky.",
+   "notes": "Use plate 0-1.74 (up to the boom).",
+   "sync": [
+    {
+     "song_t": 27.24,
+     "event": "boom = cut to the clash (plate 1.74)",
+     "expected_plate_t": 1.74,
+     "measured_plate_t": 1.25,
+     "offset_s": -0.49,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P07/take2.review.jpg",
+   "contact": "media/plates/P07/take2.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T02:35:39",
+   "short": "Sun in the top-right corner, bright sky."
+  }
+ },
+ "shots": "S10",
+ "t_song": [
+  25.5,
+  30.5
+ ],
+ "audio_t0": 25.5,
+ "chosen": 2,
+ "chosen_why": "Symmetric, as specified (take 1 was two-thirds Lydian).",
+ "t_chosen": "2026-10-03T02:35:39"
+}

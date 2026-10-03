@@ -1,0 +1,38 @@
+{
+ "w": 480,
+ "h": 270,
+ "n": 97,
+ "gain": 1.568,
+ "edge_norm": 1.479,
+ "palette": [
+  {
+   "hex": "#070305",
+   "share": 0.272
+  },
+  {
+   "hex": "#291711",
+   "share": 0.199
+  },
+  {
+   "hex": "#4f3322",
+   "share": 0.169
+  },
+  {
+   "hex": "#a46e4d",
+   "share": 0.163
+  },
+  {
+   "hex": "#794f36",
+   "share": 0.144
+  },
+  {
+   "hex": "#c2906a",
+   "share": 0.052
+  }
+ ],
+ "encoding": {
+  "g": "R=ink (relative DoG line art, 255=line), G=tone (bilateral luminance x gain), B=edge strength",
+  "o": "R,G=128+127*(cos2t, sin2t) edge-tangent direction t, B=coherence",
+  "v": "R,G=128+4*(dx,dy) map px/frame (f->f+1), B=min(255, 8*|flow|)"
+ }
+}

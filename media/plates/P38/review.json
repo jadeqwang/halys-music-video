@@ -1,0 +1,183 @@
+{
+ "plate": "P38",
+ "takes": {
+  "3": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "Nine-man front row on a sand bank, unison raise (~1.0 s) and unison stab into the sand (~2.4 s); the centre Lydian keeps his sword up and stabs at ~3.9 s.",
+   "costume": "Correct.",
+   "identity": "Consistent.",
+   "artefacts": "The straggler holds his raised sword for 1.5 s (reads as frozen rather than late); no shrug.",
+   "notes": "Alternate.",
+   "sync": [
+    {
+     "song_t": 259.35,
+     "event": "hit: blades raised (plate 1.67)",
+     "expected_plate_t": 1.67,
+     "measured_plate_t": 2.083,
+     "offset_s": 0.413,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 260.62,
+     "event": "BLADE: all blades slam down (plate 2.94)",
+     "expected_plate_t": 2.94,
+     "measured_plate_t": 2.4,
+     "offset_s": -0.54,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 261.05,
+     "event": "hit: the straggler's blade lands (plate 3.37)",
+     "expected_plate_t": 3.37,
+     "measured_plate_t": 3.9,
+     "offset_s": 0.53,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P38/take3.review.jpg",
+   "contact": "media/plates/P38/take3.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T02:35:38"
+  },
+  "4": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S75/S76 delivered: nine-man front row (Lydians left, Medes right, a straggler Lydian in the centre) with both armies massed behind on the sand; all raise swords at ~2.0 s; the row stabs its blades point-first into the sand at ~2.35 s; the centre man keeps his raised, glances, and stabs his late at ~3.6 s, leaving a row of upright blades (the barcode).",
+   "costume": "Correct (crests, crimson, scales; red caps, ochre, iron scales).",
+   "identity": "Consistent.",
+   "artefacts": "The shrug is barely visible (a small settle at 3.8-4.2 s).",
+   "notes": "Keys: raise 259.35 = plate 2.0, BLADE 260.62 = 2.35, straggler 261.05 = 3.6 (the late gap is 1.25 s in the plate vs 0.43 s in the music: compress it).",
+   "sync": [
+    {
+     "song_t": 259.35,
+     "event": "hit: blades raised (plate 1.67)",
+     "expected_plate_t": 1.67,
+     "measured_plate_t": 2.0,
+     "offset_s": 0.33,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 260.62,
+     "event": "BLADE: all blades slam down (plate 2.94)",
+     "expected_plate_t": 2.94,
+     "measured_plate_t": 2.35,
+     "offset_s": -0.59,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 261.05,
+     "event": "hit: the straggler's blade lands (plate 3.37)",
+     "expected_plate_t": 3.37,
+     "measured_plate_t": 3.6,
+     "offset_s": 0.23,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P38/take4.review.jpg",
+   "contact": "media/plates/P38/take4.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T02:35:38",
+   "short": "Shrug barely visible; the late gap is 1.25 s in the plate vs 0.43 s in the music."
+  },
+  "1": {
+   "verdict": "weak",
+   "score": 2,
+   "purpose": "Dense front rank (Lydians left, Medes right) before a wall of soldiers; unison raise at ~1.7-2.2 s and all blades drop to the sides together at ~2.54 s.",
+   "costume": "Correct.",
+   "identity": "Crowd-level.",
+   "artefacts": "No straggler, no shrug; blades lowered to the sides rather than slammed into the ground.",
+   "notes": "Reject (missing the S76 gag).",
+   "sync": [
+    {
+     "song_t": 259.35,
+     "event": "hit: blades raised (plate 1.67)",
+     "expected_plate_t": 1.67,
+     "measured_plate_t": 1.7,
+     "offset_s": 0.03,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 260.62,
+     "event": "BLADE: all blades slam down (plate 2.94)",
+     "expected_plate_t": 2.94,
+     "measured_plate_t": 2.54,
+     "offset_s": -0.4,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 261.05,
+     "event": "hit: the straggler's blade lands (plate 3.37)",
+     "expected_plate_t": 3.37,
+     "measured_plate_t": 2.75,
+     "offset_s": -0.62,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P38/take1.review.jpg",
+   "contact": "media/plates/P38/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T02:35:57"
+  },
+  "2": {
+   "verdict": "weak",
+   "score": 2,
+   "purpose": "Unison raise at ~1.75-2.2 s, then the arms simply stay up to the end.",
+   "costume": "Correct.",
+   "identity": "Crowd-level.",
+   "artefacts": "No slam; one stray blade falls at ~3.3 s; dense wall of soldiers.",
+   "notes": "Reject.",
+   "sync": [
+    {
+     "song_t": 259.35,
+     "event": "hit: blades raised (plate 1.67)",
+     "expected_plate_t": 1.67,
+     "measured_plate_t": 2.042,
+     "offset_s": 0.372,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 260.62,
+     "event": "BLADE: all blades slam down (plate 2.94)",
+     "expected_plate_t": 2.94,
+     "measured_plate_t": 3.417,
+     "offset_s": 0.477,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 261.05,
+     "event": "hit: the straggler's blade lands (plate 3.37)",
+     "expected_plate_t": 3.37,
+     "measured_plate_t": 3.417,
+     "offset_s": 0.047,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P38/take2.review.jpg",
+   "contact": "media/plates/P38/take2.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T02:35:57"
+  }
+ },
+ "shots": "S74, S75, S76",
+ "t_song": [
+  257.68,
+  262.68
+ ],
+ "audio_t0": 257.68,
+ "chosen": 4,
+ "chosen_why": "The only take with a clear, natural straggler and the upright-blade barcode (takes 1-2: no straggler; take 3: straggler frozen for 1.5 s).",
+ "t_chosen": "2026-10-03T02:35:38"
+}

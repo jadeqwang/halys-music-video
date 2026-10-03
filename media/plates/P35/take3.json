@@ -1,0 +1,50 @@
+{
+ "plate": "P35",
+ "take": 3,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 155.8,
+ "est_cost_usd": 0.9248,
+ "duration_s": 4.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 232.27,
+   "dur": 4.0,
+   "file": "media/plates/P35/audio_song_0232.27_4.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 4,
+  "audio": {
+   "t0": 232.27,
+   "src": "song"
+  },
+  "t_song": [
+   232.27,
+   236.27
+  ],
+  "shots": "S67",
+  "prompt": "A Concorde supersonic airliner flying above a sea of clouds at dusk, seen in clean side profile: a long, very slender white fuselage with a sharply pointed needle nose that droops slightly downward; one large ogival delta wing, a smooth curved triangle set low on the fuselage, with four jet engines in two rectangular pairs under the wing; a single tall swept tail fin and NO horizontal tailplane at all; a row of small round cabin windows. Plain white, no markings, no logos, no lettering. The camera flies alongside at the same speed, the aircraft steady in the middle of the frame, nose toward frame right, the cloud tops streaming past below, a warm orange glow along the horizon and a darker sky above. Smooth and steady, no shake. Photoreal live-action cinema, crisp, no motion blur on the aircraft. No text, no logos, no watermark.",
+  "notes": "1973 Concorde 001 eclipse chase; the renderer adds the eclipse through a porthole.",
+  "prompt_v1": "A white supersonic airliner with a slender delta wing and a long drooped needle nose (a Concorde-type jet), plain white with no markings, no logos and no lettering, flying fast above a sea of clouds at dusk. The camera tracks alongside at the same speed, a little behind and above, the aircraft steady in the middle of the frame in profile toward frame right, a row of small round cabin windows along the fuselage, the cloud tops streaming past below, a warm orange glow along the horizon and a darker sky above. Smooth and steady, no shake. Photoreal live-action cinema, crisp, no motion blur on the aircraft. No text, no logos, no watermark.",
+  "refs_v1": null,
+  "retake_note": "take 1 drew a T-tail business jet, not a Concorde"
+ },
+ "request": {
+  "prompt": "A Concorde supersonic airliner flying above a sea of clouds at dusk, seen in clean side profile: a long, very slender white fuselage with a sharply pointed needle nose that droops slightly downward; one large ogival delta wing, a smooth curved triangle set low on the fuselage, with four jet engines in two rectangular pairs under the wing; a single tall swept tail fin and NO horizontal tailplane at all; a row of small round cabin windows. Plain white, no markings, no logos, no lettering. The camera flies alongside at the same speed, the aircraft steady in the middle of the frame, nose toward frame right, the cloud tops streaming past below, a warm orange glow along the horizon and a darker sky above. Smooth and steady, no shake. Photoreal live-action cinema, crisp, no motion blur on the aircraft. No text, no logos, no watermark.",
+  "duration": 4,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": false,
+  "reference_audios": [
+   "data:audio/mpeg;base64...(130 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T02:27:10"
+}

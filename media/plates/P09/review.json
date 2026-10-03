@@ -1,0 +1,117 @@
+{
+ "plate": "P09",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "S13: Lydian cavalry gallop through the shallows toward camera; the lead rider (crested helmet, ochre cloak, long spear) grows from 0 to 3.4 s, then passes the lens.",
+   "costume": "Crested open-faced helmets, crimson, cloaks, saddlecloths; no stirrups visible.",
+   "identity": "Army-level.",
+   "artefacts": "Spears held raised, not lowered; sun in frame with a bright sky (SHALLOWS ref); the pass-by (3.5-4.7 s) is motion-blurred.",
+   "notes": "Use plate 0-3.5 for S13.",
+   "sync": [
+    {
+     "song_t": 34.19,
+     "event": "stab (plate 1.72)",
+     "expected_plate_t": 1.72,
+     "measured_plate_t": 1.333,
+     "offset_s": -0.387,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 35.3,
+     "event": "timpani (plate 2.83)",
+     "expected_plate_t": 2.83,
+     "measured_plate_t": 2.583,
+     "offset_s": -0.247,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P09/take1.review.jpg",
+   "contact": "media/plates/P09/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T01:59:16"
+  },
+  "2": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "S13: five Lydian riders gallop through the shallows toward camera, crests and cloaks readable, spray lit gold; the lead horse grows to fill the frame.",
+   "costume": "Saddlecloths, no stirrups.",
+   "identity": "Army-level.",
+   "artefacts": "Spears still held raised (not lowered); bright sky behind; the lead horse brushes past at the end.",
+   "notes": "Use plate 0-3.5.",
+   "sync": [
+    {
+     "song_t": 34.19,
+     "event": "stab (plate 1.72)",
+     "expected_plate_t": 1.72,
+     "measured_plate_t": 1.417,
+     "offset_s": -0.303,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 35.3,
+     "event": "timpani (plate 2.83)",
+     "expected_plate_t": 2.83,
+     "measured_plate_t": 2.583,
+     "offset_s": -0.247,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P09/take2.review.jpg",
+   "contact": "media/plates/P09/take2.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T02:35:39"
+  },
+  "3": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S13 delivered: five Lydian riders gallop through the knee-deep shallows straight at the camera, side-lit gold from frame right against a dark far bank; lances levelled forward toward the lens; spray lit gold; the lead horse grows to a third of the frame and stays sharp.",
+   "costume": "Crested open-faced helmets, crimson, ochre cloaks, saddlecloths, no stirrups.",
+   "identity": "Army-level, consistent with the cavalry sheets.",
+   "artefacts": "None.",
+   "notes": "1:1 from t0; use plate 0-3.5 for S13.",
+   "sync": [
+    {
+     "song_t": 34.19,
+     "event": "stab (plate 1.72)",
+     "expected_plate_t": 1.72,
+     "measured_plate_t": 1.5,
+     "offset_s": -0.22,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 35.3,
+     "event": "timpani (plate 2.83)",
+     "expected_plate_t": 2.83,
+     "measured_plate_t": 2.958,
+     "offset_s": 0.128,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P09/take3.review.jpg",
+   "contact": "media/plates/P09/take3.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T02:41:13",
+   "short": "-"
+  }
+ },
+ "shots": "S13",
+ "t_song": [
+  32.47,
+  37.47
+ ],
+ "audio_t0": 32.47,
+ "chosen": 3,
+ "chosen_why": "Only take with levelled lances, side light and a dark background (takes 1-2 raised the spears against a bright sky).",
+ "t_chosen": "2026-10-03T02:41:13"
+}

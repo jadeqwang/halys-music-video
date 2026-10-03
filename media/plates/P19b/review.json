@@ -1,0 +1,41 @@
+{
+ "plate": "P19b",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S42 Mede variant: XCU of the Mede's eye under the red felt cap edge, brown iris, steady gaze up and to the left.",
+   "costume": "Red cap edge visible.",
+   "identity": "Matches.",
+   "artefacts": "None.",
+   "notes": "1:1 from t0.",
+   "sync": [
+    {
+     "song_t": 93.95,
+     "event": "'eye' (plate 0.95)",
+     "expected_plate_t": 0.95,
+     "measured_plate_t": 0.583,
+     "offset_s": -0.367,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P19b/take1.review.jpg",
+   "contact": "media/plates/P19b/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T02:05:36",
+   "short": "-"
+  }
+ },
+ "shots": "S42 (and S36)",
+ "t_song": [
+  93.0,
+  97.0
+ ],
+ "audio_t0": 93.0,
+ "chosen": 1,
+ "chosen_why": "Only take.",
+ "t_chosen": "2026-10-03T02:23:03"
+}

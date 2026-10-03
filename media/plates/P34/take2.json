@@ -1,0 +1,56 @@
+{
+ "plate": "P34",
+ "take": 2,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 161.8,
+ "est_cost_usd": 1.6184,
+ "duration_s": 7.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 215.29,
+   "dur": 7.0,
+   "file": "media/plates/P34/audio_song_0215.29_7.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 7,
+  "audio": {
+   "t0": 215.29,
+   "src": "song"
+  },
+  "t_song": [
+   215.29,
+   222.29
+  ],
+  "shots": "S63",
+  "sync": [
+   [
+    215.287,
+    "Drop 2 kick (plate 0)"
+   ]
+  ],
+  "prompt": "A slender, classic rocket with a smooth, polished stainless-steel skin: a plain cylinder tapering to a long pointed nose cone, with three small swept-back fins at the very bottom and nothing else on its body: no flaps, no wings, no canards, no grid fins, no windows, no logos, no flags, no lettering, no markings anywhere. At dusk it lifts off from a plain concrete pad on a brilliant column of white-gold flame, slowly at first, then accelerating straight up; billows of exhaust spread across the ground. A low-angle camera on the ground at a distance tilts up to follow it into a deep dusk sky; the flame light slides over the steel skin. The rocket stays centred and vertical, a clean silhouette. No people, no launch towers, no buildings, no lens-flare rays, no fog wall. Photoreal live-action cinema, crisp, no motion blur. No text, no logos, no watermark.",
+  "notes": "Swords into starships: the spinning sword match-cuts to it. Unbranded, generic shape (no real rocket design).",
+  "prompt_v1": "A tall, slender, polished stainless-steel rocket with a pointed nose and four small fins at its base, completely unbranded: no logos, no flags, no lettering, no markings anywhere. At dusk it lifts off from a launch pad on a brilliant column of white-gold flame, slowly at first, then accelerating straight up; billows of exhaust spread across the pad. A low-angle camera on the ground at a distance tilts up to follow it as it rises into a deep dusk sky; the flame light slides over the steel skin. The rocket stays centred and vertical in the frame, a clean silhouette. No lens-flare rays, no fog wall, no people, no buildings with signs. Photoreal live-action cinema, crisp, no motion blur. No text, no logos, no watermark.",
+  "refs_v1": null,
+  "retake_note": "take 1 came out as a SpaceX-Starship look-alike (forward and aft flaps): STYLE_BIBLE forbids Musk iconography"
+ },
+ "request": {
+  "prompt": "A slender, classic rocket with a smooth, polished stainless-steel skin: a plain cylinder tapering to a long pointed nose cone, with three small swept-back fins at the very bottom and nothing else on its body: no flaps, no wings, no canards, no grid fins, no windows, no logos, no flags, no lettering, no markings anywhere. At dusk it lifts off from a plain concrete pad on a brilliant column of white-gold flame, slowly at first, then accelerating straight up; billows of exhaust spread across the ground. A low-angle camera on the ground at a distance tilts up to follow it into a deep dusk sky; the flame light slides over the steel skin. The rocket stays centred and vertical, a clean silhouette. No people, no launch towers, no buildings, no lens-flare rays, no fog wall. Photoreal live-action cinema, crisp, no motion blur. No text, no logos, no watermark.",
+  "duration": 7,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": false,
+  "reference_audios": [
+   "data:audio/mpeg;base64...(223 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T02:24:29"
+}

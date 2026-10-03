@@ -17,28 +17,38 @@ import { clamp } from '../core.js';
 const FRAG = `
 uniform sampler2D uP;
 uniform vec2 uSize, uOrigin, uCenter, uPivot;
-uniform float uSpacing, uLineW, uPhase, uTime, uInvert, uScale, uWarp, uHalo, uOpacity, uRimOn;
+uniform float uN0, uR0, uLineW, uTime, uInvert, uScale, uWarp, uHalo, uOpacity, uRimOn, uPulseR, uPulse, uDisk;
 uniform vec3 uPearl, uNavy, uOrange;
+const float TAU = 6.2831853;
+float ray(float psi, float fw, float w) { float f = fract(psi); return 1. - smoothstep(w * .5 - .55, w * .5 + .55, min(f, 1. - f) / fw); }
 void main() {
   vec2 px = tc() * uSize;
   vec2 q = uPivot + (px - uPivot) / uScale;
   vec4 P = texture(uP, q / uSize);
+  if (P.r < .004 && P.b < .004) { o = vec4(0.); return; }                    // empty: most of the block
   float aa = max(fwidth(P.r), 2e-3) * .7;
   float fill = smoothstep(.5 - aa, .5 + aa, P.r);
-  float rim = fill * smoothstep(.4, .6, P.g) * uRimOn;
-  vec2 d = (uOrigin + px - uCenter) / uSpacing;
-  float n = fbm(d * .035 + vec2(uTime * .09, -uTime * .06)) - .5;
-  float psi = length(d) + uWarp * n * 9. - uPhase;
-  float fw = max(fwidth(psi), 1e-4);
-  float fr = fract(psi);
-  float dist = min(fr, 1. - fr) / fw;
-  float line = 1. - smoothstep(uLineW * .5 - .55, uLineW * .5 + .55, dist);
   vec3 bg = mix(uNavy, uPearl, uInvert), fg = mix(uPearl, uNavy, uInvert);
-  vec3 col = mix(bg, fg, line * .94);
+  float ha = (1. - fill) * P.b * uHalo * (1. - .7 * uInvert) * uOpacity;
+  if (fill < .002) { o = vec4(uNavy * ha, ha); return; }                       // outside the letters: the dark halo only
+  float rim = fill * smoothstep(.4, .6, P.g) * uRimOn;
+  // streamers of the corona: radial lines from its centre, splitting by octaves so the spacing stays within [s, 2s]
+  vec2 d = uOrigin + px - uCenter;
+  float r = max(length(d), 1.), th = atan(d.y, d.x);
+  vec2 cs = vec2(cos(th), sin(th));
+  th += uWarp * .045 * (fbm2(cs * 2.2 + vec2(r / 900., -uTime * .12)) - .5);
+  float k = log2(max(r / uR0, 1.)), fl = floor(k), fr = fract(k);
+  float Na = uN0 * exp2(fl), psi = th * Na / TAU, fw = Na / (TAU * r);
+  float line = max(ray(psi, fw, uLineW), ray(psi + .5, fw, uLineW) * smoothstep(.1, .9, fr));
+  float bri = .55 + .45 * fbm2(cs * 5. + 3.1) + uPulse * exp(-pow((r - uPulseR) / (60. + .15 * uPulseR), 2.));
+  // the Moon: no streamers inside its limb (the black disk shows through the letters), the brightest light just outside it
+  float dsk = smoothstep(uDisk - 1., uDisk + 1., r);
+  line *= dsk * (uDisk > 0. ? 1. : smoothstep(.8 * uR0, 2.5 * uR0, r)); bri *= 1. + .8 * exp(-(r - uDisk) / (.25 * uDisk + 1.)) * dsk * step(1., uDisk);
+  line = max(line, (1. - smoothstep(.0, 1.4, abs(r - uDisk - 1.))) * .9 * step(1., uDisk));
+  vec3 col = mix(bg, fg, clamp(line * bri, 0., 1.));
   col = mix(col, uOrange, rim);
   float a = fill * uOpacity;
-  float ha = (1. - fill) * P.b * uHalo * uOpacity;
-  o = vec4(col * a + bg * ha * (1. - a), a + ha * (1. - a));
+  o = vec4(col * a + uNavy * ha * (1. - a), a + ha * (1. - a));
 }`;
 
 const _packs = new LRU(24);
@@ -65,10 +75,10 @@ export function chopFit(L, text, { maxH = .62, minCap = .2 } = {}) {
 function buildPack(lines, px, lead, bw, bh, cx, cy, rimW) {
   const face = FACE.chop;
   _mask = canvasOf(_mask, bw, bh); _tint = canvasOf(_tint, bw, bh);
-  const m = _mask.getContext('2d');
+  const m = _mask.getContext('2d', { willReadFrequently: true });
   const n = lines.length, lh = px * lead, cap = face.cap * px, y0 = cy - (cap + (n - 1) * lh) / 2 + cap;
   const draw = (c, fn) => lines.forEach((ws, i) => { const s = ws.join(' '); applyFont(c, face, px); fn(s, cx - textWidth(face, px, s) / 2, y0 + i * lh); });
-  const pack = makeCanvas(bw, bh), p = pack.getContext('2d'), t = _tint.getContext('2d');
+  const pack = makeCanvas(bw, bh), p = pack.getContext('2d', { willReadFrequently: true }), t = _tint.getContext('2d', { willReadFrequently: true });
   p.fillStyle = '#000'; p.fillRect(0, 0, bw, bh); p.globalCompositeOperation = 'lighter';
   const layer = (col, blur, paint) => {
     m.setTransform(1, 0, 0, 1, 0, 0); m.clearRect(0, 0, bw, bh); m.fillStyle = m.strokeStyle = '#fff'; m.lineJoin = 'miter';
@@ -110,7 +120,8 @@ export function chopWord(g, f, o) {
   const u = L.u, kick = o.kick || 0;
   G.draw(prog, {
     uP: { tex: 0 }, uSize: [bw, bh], uOrigin: [ox, oy], uCenter: center, uPivot: [cx - ox, cy - oy],
-    uSpacing: (o.spacing ?? 6.2) * u * (1 + .18 * kick), uLineW: Math.max(1, (1.35 + .9 * kick) * u), uPhase: o.phase ?? 0, uTime: o.t ?? 0,
+    uN0: 2 * Math.round(Math.PI * 40 / (o.spacing ?? 5.6)), uR0: 40 * u, uLineW: Math.max(1, (1.3 + .5 * kick) * u), uTime: o.t ?? 0,
+    uPulseR: o.pulseR ?? 0, uPulse: o.pulse ?? 0, uDisk: o.disk ?? 0,
     uInvert: o.invert ? 1 : 0, uScale: scale, uWarp: o.warp ?? 1, uHalo: o.halo ?? .78, uOpacity: o.opacity ?? 1, uRimOn: o.rim === false ? 0 : 1,
     uPearl: rgb01(pal.pearl || C.pearl), uNavy: rgb01(pal.navy || C.navyBlack), uOrange: rgb01(pal.orange || C.orange),
   });
@@ -132,7 +143,7 @@ export function chopEcho(g, L, fit, cx, cy, scale, alpha, color = C.orange, widt
 
 // HAL: the O of the first HALO eclipsed for a few frames. A disk the O's width (it overhangs cap height: an eclipse disk
 // is round, the expanded O is not) in navy-black, with the faintest pearl limb.
-export function halDisk(g, L, res, word, k) {
+export function halDisk(g, L, res, word, k, scale = 1) {
   if (!res) return;
   const face = FACE.chop, s = res.lines[0].join(' '), i = s.indexOf('O');
   if (i < 0) return;
@@ -140,11 +151,12 @@ export function halDisk(g, L, res, word, k) {
   const x0 = res.cx - textWidth(face, res.px, s) / 2;
   const pre = i ? g.measureText(s.slice(0, i)).width : 0, ow = textWidth(face, res.px, 'O');
   const ox = x0 + pre + ow / 2, oy = res.y0 - face.cap * res.px / 2;
-  const r = ow * .56;
+  const r = ow * .51 * scale, sx = res.cx + (ox - res.cx) * scale, sy = res.cy + (oy - res.cy) * scale;
   g.save();
-  g.fillStyle = C.navyBlack;
+  g.translate(sx - ox, sy - oy);
+  g.fillStyle = '#010102';
   g.beginPath(); g.arc(ox + (k - .5) * .05 * ow, oy, r, 0, Math.PI * 2); g.fill();
-  g.strokeStyle = 'rgba(243,239,230,.55)'; g.lineWidth = Math.max(1, 1.2 * L.u);
+  g.strokeStyle = 'rgba(243,239,230,.9)'; g.lineWidth = Math.max(1, 1.6 * L.u);
   g.beginPath(); g.arc(ox + (k - .5) * .05 * ow, oy, r + .6 * L.u, 0, Math.PI * 2); g.stroke();
   g.restore();
 }

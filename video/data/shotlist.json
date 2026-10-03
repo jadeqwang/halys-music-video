@@ -287,12 +287,12 @@
     {
      "role": "plaque",
      "t": null,
-     "text": "HERODOTUS 1.74"
+     "text": "HERODOTUS 1.74 · TR. MACAULAY"
     }
    ],
    "section": "3 · Intro B, 27.24–67.42 (B16–38), the boom, the build, first contact",
    "picture": "Lull: in slow motion one arrow arcs across the low golden disk.",
-   "text": "INSCR `\"…suddenly the day became night.\"` PLAQUE `HERODOTUS 1.74`",
+   "text": "INSCR `\"…suddenly the day became night.\"` PLAQUE `HERODOTUS 1.74 · TR. MACAULAY`",
    "sync": "Sub drops out (B17–18)"
   },
   {
@@ -361,12 +361,12 @@
     {
      "role": "plaque",
      "t": null,
-     "text": "THE EARLIEST EVENT IN HISTORY WE CAN DATE TO THE DAY"
+     "text": "THE SKY DATES THIS BATTLE TO THE DAY"
     }
    ],
    "section": "3 · Intro B, 27.24–67.42 (B16–38), the boom, the build, first contact",
    "picture": "Altdorfer wide: massed armies along the river, the huge low Sun.",
-   "text": "PLAQUE `THE EARLIEST EVENT IN HISTORY WE CAN DATE TO THE DAY`",
+   "text": "PLAQUE `THE SKY DATES THIS BATTLE TO THE DAY`",
    "sync": "Choir swell 41.5–42.9"
   },
   {
@@ -406,12 +406,12 @@
     {
      "role": "plaque",
      "t": null,
-     "text": "TOTALITY IN 56:00"
+     "text": "TOTALITY IN 55:28"
     }
    ],
    "section": "3 · Intro B, 27.24–67.42 (B16–38), the boom, the build, first contact",
    "picture": "**First contact.** Tight on the low Sun: a black bite appears on its leading limb. Below, silhouettes keep fighting; nobody notices.",
-   "text": "PLAQUE `17:25 · FIRST CONTACT`; small engraved counter starts `TOTALITY IN 56:00` and runs (compressed) to `00:00` at 110.58",
+   "text": "PLAQUE `17:25 · FIRST CONTACT`; small engraved counter starts `TOTALITY IN 55:28` and runs (compressed) to `00:00` at 110.58",
    "sync": "Bass out B27–29: the bite is the only event"
   },
   {
@@ -805,13 +805,15 @@
     "corona"
    ],
    "plates": [
-    "P01"
+    "P01",
+    "P42",
+    "P44"
    ],
    "cues": [
     {
      "role": "plaque",
      "t": 110.58,
-     "text": "\"we just went sci-fi.\" — V. Glover, Artemis II, during totality, 6 Apr 2026",
+     "text": "\"We just went sci-fi.\" — V. Glover, Artemis II, during totality, 6 Apr 2026",
      "t_end": 113.5
     },
     {
@@ -842,9 +844,9 @@
     }
    ],
    "section": "7 · Drop 1, 110.58–153.83 (B64–88). Totality: CORONA, 60 fps.",
-   "picture": "**The break.** The world comes back as light: the master composition in field lines, the corona blazing.",
-   "text": "CHOP on beats `HALO` 110.66 · `IN THE` 110.98 · `SKY` 111.45 · `SKY` 111.89. On the first HALO the O is eclipsed for 3–4 frames, leaving **HAL**. PLAQUE small, lower third 110.58–113.5: `\"we just went sci-fi.\" — V. Glover, Artemis II, during totality, 6 Apr 2026`",
-   "sync": "Kick 110.575"
+   "picture": "**The break, and the whole battlefield reacts.** The world comes back as light (master composition in field lines, corona blazing) and the armies ripple like a wave: spear ticks tilt and fall as men drop to their knees, others scatter. One chop-cut per word: HALO on the master, IN THE on a Lydian sinking to his knees arms raised (P42), SKY on a rearing horse (P44), SKY on a Mede prostrate (P43).",
+   "text": "CHOP on beats `HALO` 110.66 · `IN THE` 110.98 · `SKY` 111.45 · `SKY` 111.89. On the first HALO the O is eclipsed for 3–4 frames, leaving **HAL**. PLAQUE small, lower third 110.58–113.5: `\"We just went sci-fi.\" — V. Glover, Artemis II, during totality, 6 Apr 2026`",
+   "sync": "Kick 110.575; type needs readable space, so keep the busiest action off the word block"
   },
   {
    "id": "S36",
@@ -855,10 +857,10 @@
     "corona"
    ],
    "plates": [
+    "P42",
+    "P45",
     "P14",
-    "P12",
-    "P19",
-    "P16"
+    "P19"
    ],
    "cues": [
     {
@@ -868,9 +870,9 @@
     }
    ],
    "section": "7 · Drop 1, 110.58–153.83 (B64–88). Totality: CORONA, 60 fps.",
-   "picture": "**Stutter**: a hard cut on each of the 34 stutter onsets between CORONA close-ups (faces, spear tips, the eye, shields). 2-frame inversions on stabs 112.74, 113.17, 113.61, 115.78, 116.22, 116.65, 117.09.",
+   "picture": "**The \"WTF\" montage**: a hard cut on the stutter onsets, every cut a different human reaction to the sky going out. A Mede whips his head round, eyes wide. A Lydian falls to his knees, arms up, palms open (Greek prayer). A Mede presses his forehead to the river stones (proskynesis). An archer lets his bow drop. A rider's horse rears. Someone covers his eyes. Two enemies grab each other's arms. Someone points up, shouting. Alyattes' face. Cyaxares' face. A young soldier clutches an amulet. Bar 65 (8ths): cut on every onset; bars 66–67 (16ths): cut every 2 onsets. 2-frame inversions on stabs 112.74, 113.17, 113.61, 115.78, 116.22, 116.65, 117.09.",
    "text": "CHOP `SKY` stutter",
-   "sync": "`chops[word=stutter]`"
+   "sync": "`chops[word=stutter]`; equal numbers of Lydian and Median reactions"
   },
   {
    "id": "S37",
@@ -881,7 +883,7 @@
     "corona"
    ],
    "plates": [
-    "P12"
+    "P46"
    ],
    "cues": [
     {
@@ -891,7 +893,7 @@
     }
    ],
    "section": "7 · Drop 1, 110.58–153.83 (B64–88). Totality: CORONA, 60 fps.",
-   "picture": "**The orbit**: the camera orbits the frozen duel in 3D; the painting was a world.",
+   "picture": "**The orbit** around a frozen reaction tableau, a Baroque sculpture group drawn in light. The two duelists at its centre stopped mid-strike, faces up; around them men kneeling with raised arms, one prostrate, one pointing, one covering his eyes, a rider holding a rearing horse. The painting was a world.",
    "text": "MONO HUD corner `C2 · TOTALITY · 00:00:07` counting up",
    "sync": "Kick pulse"
   },
@@ -1544,12 +1546,12 @@
     {
      "role": "carved",
      "t": null,
-     "text": "C. 100 BC · ANTIKYTHERA · A BRONZE COMPUTER PREDICTS ECLIPSES"
+     "text": "2ND–1ST C. BC · ANTIKYTHERA · A BRONZE COMPUTER PREDICTS ECLIPSES"
     }
    ],
    "section": "13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.",
    "picture": "Bronze gear train; the saros dial is the ring.",
-   "text": "`C. 100 BC · ANTIKYTHERA · A BRONZE COMPUTER PREDICTS ECLIPSES`",
+   "text": "`2ND–1ST C. BC · ANTIKYTHERA · A BRONZE COMPUTER PREDICTS ECLIPSES`",
    "sync": ""
   },
   {
@@ -1590,12 +1592,12 @@
     {
      "role": "carved",
      "t": null,
-     "text": "1919 · PRÍNCIPE · STARLIGHT BENDS. EINSTEIN WAS RIGHT."
+     "text": "1919 · PRÍNCIPE & SOBRAL · STARLIGHT BENDS. EINSTEIN WAS RIGHT."
     }
    ],
    "section": "13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.",
    "picture": "A glass plate: displaced stars around the black Sun.",
-   "text": "`1919 · PRÍNCIPE · STARLIGHT BENDS. EINSTEIN WAS RIGHT.`",
+   "text": "`1919 · PRÍNCIPE & SOBRAL · STARLIGHT BENDS. EINSTEIN WAS RIGHT.`",
    "sync": ""
   },
   {
@@ -1636,12 +1638,12 @@
     {
      "role": "carved",
      "t": null,
-     "text": "2024 · NORTH AMERICA · 31 MILLION IN THE PATH"
+     "text": "2024 · USA · 31.6 MILLION LIVE IN THE PATH"
     }
    ],
    "section": "13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.",
    "picture": "A crowd in eclipse glasses looking up, rhyming with the warriors at 102.21.",
-   "text": "`2024 · NORTH AMERICA · 31 MILLION IN THE PATH`",
+   "text": "`2024 · USA · 31.6 MILLION LIVE IN THE PATH`",
    "sync": ""
   },
   {
@@ -1682,12 +1684,12 @@
     {
      "role": "carved",
      "t": null,
-     "text": "2027 · LUXOR · NEXT: 6 MIN 23 S"
+     "text": "2027 · NEAR LUXOR · NEXT: 6 MIN 23 S"
     }
    ],
    "section": "13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.",
-   "picture": "The black Sun over Karnak's columns.",
-   "text": "`2027 · LUXOR · NEXT: 6 MIN 23 S`",
+   "picture": "Looking straight up between Karnak's columns at a black Sun almost overhead (82° up at midday): darkness at noon, the opposite of 585 BC's sunset.",
+   "text": "`2027 · NEAR LUXOR · NEXT: 6 MIN 23 S`",
    "sync": ""
   },
   {
@@ -1923,12 +1925,12 @@
     {
      "role": "plaque",
      "t": null,
-     "text": "NEXT TOTALITY · …"
+     "text": "NEXT TOTALITY · 2027-08-02 · NEAR LUXOR · 6M23S"
     }
    ],
    "section": "14 · Outro, 257.68–281.0 (B150–159 + the sound-design tail: frozen chord, room tone, keys, ting; audio ends 279.60)",
    "picture": "**The wink**, on the ting: her eyelid crosses her iris with the Moon's curved edge. Hold 0.6 s, cut to black, end card (video runs ~1.4 s past the audio in silence).",
-   "text": "CARVED `HALYS` · `JADE WANG`; PLAQUE `NEXT TOTALITY · …` (per FACTCHECK.md)",
+   "text": "CARVED `HALYS` · `JADE WANG`; PLAQUE `NEXT TOTALITY · 2027-08-02 · NEAR LUXOR · 6M23S`",
    "sync": "Ting 276.95; audio ends 279.60"
   }
  ]

@@ -1,0 +1,74 @@
+{
+ "plate": "P21",
+ "take": 3,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 171.0,
+ "est_cost_usd": 0.9248,
+ "duration_s": 4.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 103.64,
+   "dur": 4.0,
+   "file": "media/plates/P21/audio_song_0103.64_4.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 4,
+  "takes": 2,
+  "refs": [
+   "LYD",
+   "MED"
+  ],
+  "audio": {
+   "t0": 103.64,
+   "src": "song"
+  },
+  "t_song": [
+   103.64,
+   107.64
+  ],
+  "shots": "S32",
+  "sync": [
+   [
+    104.26,
+    "'down' (plate 0.62)"
+   ],
+   [
+    104.96,
+    "'blade': the sword hits the water (plate 1.32)"
+   ]
+  ],
+  "prompt": "During a total solar eclipse, the Lydian from reference image 1 (crested bronze helmet pushed up, braids, short beard, crimson tunic, bronze scale corselet, crimson lion shield) and the Mede from reference image 2 (red felt cap, black curly beard, long-sleeved ochre tunic, iron scale corselet, wicker shield, short sword on his RIGHT thigh): they stand IN the middle of a red-brown river, the water flowing around their knees; there is no dry ground anywhere near them. Mirrored medium two-shot, the Lydian on the left facing right, the Mede on the right facing left, a few steps apart, exactly symmetrical, both visible from the knees up. Readable dusk light of a total eclipse: dim, even twilight, an orange glow low along the horizon, every face and costume still clearly readable. No fog, no smoke. The Lydian holds a short iron sword in his right hand; the Mede holds a spear and his wicker shield. 0-0.5 s: both are frozen mid-duel, faces turned up to the darkened sky. 0.5-1.1 s: slowly they lower their eyes and look straight at each other. At 1.2 s the Lydian opens his hand and his sword drops straight down and splashes into the water in front of him, a small bright splash; the Mede lowers his spear point into the water. From 1.6 s they stand still, looking into each other's eyes, breathing. Camera static, waist-high above the water. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "notes": "The duelists stop; the sword drop must read and land near 104.96 (plate 1.32).",
+  "prompt_v1": "Mirrored medium two-shot in the knee-deep red-brown shallows of reference image 3, during a total solar eclipse. Readable dusk light of a total eclipse: dim, even twilight, an orange glow low along the horizon, every face and costume still clearly readable. No fog, no smoke. The Lydian from reference image 1 (crested bronze helmet pushed up, braids, crimson tunic, bronze scale corselet, crimson lion shield, a short iron sword in his right hand) stands on the left facing right; the Mede from reference image 2 (red felt cap, black curly beard, ochre tunic, iron scale corselet, wicker shield, spear, short sword sheathed on his RIGHT thigh) stands on the right facing left. Exactly centred and symmetrical. 0-0.5 s: both are frozen mid-duel, faces turned up to the darkened sky. 0.5-1.2 s: slowly they lower their eyes to each other and let their weapons sink. At 1.3 s the Lydian opens his hand and his sword drops straight down into the water with a small splash; the Mede lowers his spear point into the water. From 1.6 s they stand still, shields lowered, looking into each other's eyes, breathing. Camera static. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "refs_v1": [
+   "LYD",
+   "MED",
+   "SHALLOWS"
+  ],
+  "retake_note": "takes 1-2 stood on the dry gravel bar of the SHALLOWS board: the sword fell on stones (take 2: it vanished)",
+  "avatar": true
+ },
+ "request": {
+  "prompt": "During a total solar eclipse, the Lydian from reference image 1 (crested bronze helmet pushed up, braids, short beard, crimson tunic, bronze scale corselet, crimson lion shield) and the Mede from reference image 2 (red felt cap, black curly beard, long-sleeved ochre tunic, iron scale corselet, wicker shield, short sword on his RIGHT thigh): they stand IN the middle of a red-brown river, the water flowing around their knees; there is no dry ground anywhere near them. Mirrored medium two-shot, the Lydian on the left facing right, the Mede on the right facing left, a few steps apart, exactly symmetrical, both visible from the knees up. Readable dusk light of a total eclipse: dim, even twilight, an orange glow low along the horizon, every face and costume still clearly readable. No fog, no smoke. The Lydian holds a short iron sword in his right hand; the Mede holds a spear and his wicker shield. 0-0.5 s: both are frozen mid-duel, faces turned up to the darkened sky. 0.5-1.1 s: slowly they lower their eyes and look straight at each other. At 1.2 s the Lydian opens his hand and his sword drops straight down and splashes into the water in front of him, a small bright splash; the Mede lowers his spear point into the water. From 1.6 s they stand still, looking into each other's eyes, breathing. Camera static, waist-high above the water. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "duration": 4,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(582 KB)",
+   "data:image/jpeg;base64...(557 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(130 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T02:24:39"
+}

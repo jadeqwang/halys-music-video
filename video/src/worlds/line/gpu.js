@@ -34,6 +34,7 @@ uniform float uOver; uniform vec2 uPan; uniform vec2 uC;
 uniform vec4 uPush;              // cx, cy, px, falloff px
 uniform float uWidth, uKickW, uMinW;
 uniform vec4 uReveal;            // cx, cy, radius px (lines inside are hidden), ramp px
+uniform vec2 uReveal2;           // ignition boost just outside the radius, its falloff px
 out vec4 vA; out vec4 vB; out vec4 vC;
 vec3 proj(vec2 xy, float d) {
   vec2 p = vec2(dot(uXf0, vec3(xy, 1.0)), dot(uXf1, vec3(xy, 1.0)));
@@ -57,7 +58,7 @@ void main() {
   vec2 pos = P.xy + vec2(-t.y, t.x) * a0.w * ext;
   if (tip > 0.5) pos = P.xy + vec2(a0.w * ext, (a4.z - 0.5) * 2.0 * ext);   // a point: a tiny square splat
   float rv = 1.0;
-  if (uReveal.z > 0.0) rv = smoothstep(uReveal.z, uReveal.z + uReveal.w, length(P.xy - uReveal.xy));
+  if (uReveal.z > 0.0) { float dr = length(P.xy - uReveal.xy); rv = smoothstep(uReveal.z, uReveal.z + uReveal.w, dr) * (1.0 + uReveal2.x * exp(-max(dr - uReveal.z, 0.0) / max(uReveal2.y, 1.0))); }
   vA = vec4(a0.w, a2.z, a3.x * rv, a3.z);
   vB = vec4(a4.x, hw, a4.y, flags);
   vC = vec4(a2.w, a4.z, a4.w, tip);
@@ -93,11 +94,17 @@ void main() {
 const FS_VS = `#version 300 es
 void main() { vec2 p = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2); gl_Position = vec4(p * 2.0 - 1.0, 0.0, 1.0); }`;
 
+// downsample by `uK` (2 or 4) in one pass: bilinear taps placed on texel corners average 2x2 blocks each
 const DOWN_FS = `#version 300 es
 precision highp float;
-uniform sampler2D uSrc; uniform vec2 uRes; out vec4 o;
-void main() { vec2 uv = gl_FragCoord.xy / uRes; vec2 d = 0.25 / uRes;
-  o = 0.25 * (texture(uSrc, uv + vec2(-d.x, -d.y)) + texture(uSrc, uv + vec2(d.x, -d.y)) + texture(uSrc, uv + vec2(-d.x, d.y)) + texture(uSrc, uv + vec2(d.x, d.y))); }`;
+uniform sampler2D uSrc; uniform vec2 uRes; uniform float uK; out vec4 o;
+void main() { vec2 src = uRes * uK, c = gl_FragCoord.xy * uK; vec2 d = vec2(uK * 0.25);
+  if (uK < 3.0) { o = texture(uSrc, c / src); return; }
+  o = 0.25 * (texture(uSrc, (c + vec2(-d.x, -d.y)) / src) + texture(uSrc, (c + vec2(d.x, -d.y)) / src) + texture(uSrc, (c + vec2(-d.x, d.y)) / src) + texture(uSrc, (c + vec2(d.x, d.y)) / src)); }`;
+const COMBINE_FS = `#version 300 es
+precision highp float;
+uniform sampler2D uA, uB; uniform vec2 uRes; uniform float uWa, uWb; out vec4 o;
+void main() { vec2 uv = gl_FragCoord.xy / uRes; o = uWa * texture(uA, uv) + uWb * texture(uB, uv); }`;
 
 const BLUR_FS = `#version 300 es
 precision highp float;
@@ -117,10 +124,10 @@ void main() {
 
 const POST_FS = `#version 300 es
 precision highp float;
-uniform sampler2D uLines, uSharp, uG1, uG2;
+uniform sampler2D uLines, uGlow;
 uniform vec2 uRes;
 uniform vec3 uBg, uPearl, uInk;
-uniform float uExposure, uW1, uW2, uVig, uInvert, uFade, uSoft;
+uniform float uExposure, uVig, uInvert, uFade, uSoft;
 uniform vec4 uDisk;   // x, y (screen px, y down), r, on
 uniform vec4 uRing;   // r, width, intensity, on   (a bright ring of light at radius r around the disk centre)
 uniform vec4 uFlash;  // pearl flash amount (whole frame)
@@ -129,8 +136,9 @@ float hash12(vec2 p) { vec3 p3 = fract(vec3(p.xyx) * .1031); p3 += dot(p3, p3.yz
 vec3 l2s(vec3 c) { c = max(c, 0.); return mix(c * 12.92, 1.055 * pow(c, vec3(1. / 2.4)) - .055, step(.0031308, c)); }
 void main() {
   vec2 uv = gl_FragCoord.xy / uRes;
-  vec3 c = texture(uLines, uv).rgb + texture(uSharp, uv).rgb + uW1 * texture(uG1, uv).rgb + uW2 * texture(uG2, uv).rgb;
-  if (uSoft > 0.0) c = mix(c, texture(uG1, uv).rgb * 1.6, uSoft);
+  vec3 gl = texture(uGlow, uv).rgb;
+  vec3 c = texelFetch(uLines, ivec2(gl_FragCoord.xy), 0).rgb + gl;
+  if (uSoft > 0.0) c = mix(c, gl * 2.2, uSoft);
   vec2 p = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y);
   if (uRing.w > 0.5) { float dr = length(p - uDisk.xy) - uRing.x; c += uPearl * uRing.z * (exp(-dr * dr / (uRing.y * uRing.y)) + 0.35 * exp(-max(dr, 0.0) / (uRing.y * 6.0)) * step(0.0, dr)); }
   if (uDisk.w > 0.5) { float dk = length(p - uDisk.xy) - uDisk.z; c *= smoothstep(-0.6, 0.6, dk); }
@@ -149,15 +157,15 @@ export class LineGL {
   constructor(W, H) {
     this.W = W; this.H = H;
     this.canvas = new OffscreenCanvas(W, H);
-    const gl = this.gl = this.canvas.getContext('webgl2', { antialias: false, alpha: false, premultipliedAlpha: false, preserveDrawingBuffer: true });
+    const gl = this.gl = this.canvas.getContext('webgl2', { antialias: false, alpha: false, premultipliedAlpha: false, preserveDrawingBuffer: false, depth: false, stencil: false });
     if (!gl) throw new Error('WebGL2 unavailable');
     if (!gl.getExtension('EXT_color_buffer_float')) throw new Error('EXT_color_buffer_float unavailable');
     gl.getExtension('OES_texture_float_linear'); gl.getExtension('EXT_float_blend');
     this.progs = new Map(); this.vao0 = gl.createVertexArray();
-    this.TL = this.target(W, H); this.TS = this.target(W, H);
-    this.TH = [this.target(W >> 1, H >> 1), this.target(W >> 1, H >> 1)];
-    this.TQ = [this.target(W >> 2, H >> 2), this.target(W >> 2, H >> 2)];
-    this.P = { line: this.program(LINE_VS, LINE_FS), down: this.program(FS_VS, DOWN_FS), blur: this.program(FS_VS, BLUR_FS), post: this.program(FS_VS, POST_FS) };
+    this.TL = this.target(W, H);
+    this.TQ = [this.target(W >> 2, H >> 2), this.target(W >> 2, H >> 2), this.target(W >> 2, H >> 2)];
+    this.TE = [this.target(W >> 3, H >> 3), this.target(W >> 3, H >> 3)];
+    this.P = { line: this.program(LINE_VS, LINE_FS), down: this.program(FS_VS, DOWN_FS), blur: this.program(FS_VS, BLUR_FS), post: this.program(FS_VS, POST_FS), comb: this.program(FS_VS, COMBINE_FS) };
   }
   program(vs, fs) {
     const gl = this.gl, key = vs + fs; if (this.progs.has(key)) return this.progs.get(key);
@@ -236,40 +244,52 @@ export class LineGL {
   }
 
   // ---- one frame. layers: [{ meshes: [mesh...], u: {...uniform overrides} }]; post: {...}
+  sync() { const px = new Uint8Array(4); this.gl.readPixels(0, 0, 1, 1, this.gl.RGBA, this.gl.UNSIGNED_BYTE, px); }
   render(layers, post = {}) {
-    const gl = this.gl, W = this.W, H = this.H;
-    this.clear(this.TL); this.clear(this.TS);
+    const gl = this.gl, W = this.W, H = this.H, prof = this.prof = {}; let tq = performance.now();
+    const lap = k => { if (!this.profile) return; this.sync(); const n = performance.now(); prof[k] = Math.round(n - tq); tq = n; };
+    this.clear(this.TL);
     gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE);
-    const P = this.P.line; gl.useProgram(P.p);
+    const P = this.P.line;
     const C = post.colors || {};
     const shared = { uRes: [W, H], uPearl: C.pearl, uOrange: C.orange, uRed: C.red };
-    for (const Ly of layers) {
-      const u = { ...shared, ...defaultsU(W, H), ...Ly.u };
-      for (const [T, part] of [[this.TL, 'glow'], [this.TS, 'sharp']]) {
+    const raster = part => {
+      for (const Ly of layers) {
         let any = false; for (const m of Ly.meshes) if (m && m[part]) any = true;
         if (!any) continue;
-        this.bind(T); gl.useProgram(P.p); this.uniforms(P, u);
+        this.bind(this.TL); gl.useProgram(P.p); this.uniforms(P, { ...shared, ...defaultsU(W, H), ...Ly.u });
         for (const m of Ly.meshes) { const mm = m && m[part]; if (!mm) continue; gl.bindVertexArray(mm.vao); gl.drawElements(gl.TRIANGLES, mm.count, gl.UNSIGNED_INT, 0); }
       }
-    }
-    gl.bindVertexArray(null); gl.disable(gl.BLEND);
-    // restrained glow: half and quarter resolution
+      gl.bindVertexArray(null);
+    };
+    raster('glow');
+    gl.disable(gl.BLEND);
+    lap('raster');
+    // restrained glow: quarter (tight) and eighth (wide) resolution, combined at quarter resolution
     const pass = (prog, u, T) => { this.bind(T); gl.useProgram(prog.p); this.uniforms(prog, { uRes: [T ? T.w : W, T ? T.h : H], ...u }); gl.bindVertexArray(this.vao0); gl.drawArrays(gl.TRIANGLES, 0, 3); };
     const g = post.glow ?? [.24, .09];
     if (g[0] > 0 || g[1] > 0 || post.soft) {
-      pass(this.P.down, { uSrc: this.TL }, this.TH[0]);
-      pass(this.P.blur, { uSrc: this.TH[0], uDir: [1, 0] }, this.TH[1]);
-      pass(this.P.blur, { uSrc: this.TH[1], uDir: [0, 1] }, this.TH[0]);
-      pass(this.P.down, { uSrc: this.TH[0] }, this.TQ[0]);
+      pass(this.P.down, { uSrc: this.TL, uK: 4 }, this.TQ[0]);
       pass(this.P.blur, { uSrc: this.TQ[0], uDir: [1, 0] }, this.TQ[1]);
       pass(this.P.blur, { uSrc: this.TQ[1], uDir: [0, 1] }, this.TQ[0]);
-    } else { this.clear(this.TH[0]); this.clear(this.TQ[0]); }
+      pass(this.P.down, { uSrc: this.TQ[0], uK: 2 }, this.TE[0]);
+      pass(this.P.blur, { uSrc: this.TE[0], uDir: [1, 0] }, this.TE[1]);
+      pass(this.P.blur, { uSrc: this.TE[1], uDir: [0, 1] }, this.TE[0]);
+      pass(this.P.comb, { uA: this.TQ[0], uB: this.TE[0], uWa: g[0] * 1.6, uWb: g[1] * 1.6 }, this.TQ[2]);
+    } else this.clear(this.TQ[2]);
+    lap('glow');
+    // sharp lines (spear ticks, tips) join the picture after the glow: they are never haloed
+    gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE);
+    raster('sharp');
+    gl.disable(gl.BLEND);
+    lap('sharp');
     const disk = post.disk, ring = post.ring;
     pass(this.P.post, {
-      uLines: this.TL, uSharp: this.TS, uG1: this.TH[0], uG2: this.TQ[0], uBg: C.bg, uPearl: C.pearl, uInk: C.ink || [0.004, 0.005, 0.009],
-      uExposure: post.exposure ?? 1.6, uW1: g[0], uW2: g[1], uVig: post.vignette ?? .35, uInvert: post.invert ? 1 : 0, uFade: post.fade ?? 1, uSoft: post.soft || 0,
+      uLines: this.TL, uGlow: this.TQ[2], uBg: C.bg, uPearl: C.pearl, uInk: C.ink || [0.004, 0.005, 0.009],
+      uExposure: post.exposure ?? 1.6, uVig: post.vignette ?? .35, uInvert: post.invert ? 1 : 0, uFade: post.fade ?? 1, uSoft: post.soft || 0,
       uDisk: disk ? [disk.x, disk.y, disk.r, 1] : [0, 0, 0, 0], uRing: ring ? [ring.r, ring.w, ring.i, 1] : [0, 0, 0, 0], uFlash: [post.flash || 0, 0, 0, 0],
     }, null);
+    lap('post');
     return this.canvas;
   }
 }
@@ -277,7 +297,7 @@ export class LineGL {
 export function defaultsU(W, H) {
   return {
     uXf0: [1, 0, 0], uXf1: [0, 1, 0], uS: 1, uOff: [0, 0], uCam: [1.2 * W, 1, 2.6, 1.25], uZp: 1.6, uRot: [1, 0, 1, 0], uOver: 1, uPan: [0, 0], uC: [W / 2, H / 2],
-    uPush: [W / 2, H / 2, 0, 500 * H / 1080], uWidth: H / 1080, uKickW: 0, uMinW: 0, uReveal: [0, 0, 0, 1],
+    uPush: [W / 2, H / 2, 0, 500 * H / 1080], uWidth: H / 1080, uKickW: 0, uMinW: 0, uReveal: [0, 0, 0, 1], uReveal2: [0, 100],
     uT: 0, uLambda: 70, uPulse: .5, uKick: 0, uBright: 1, uFlat: 0, uEndFade: 10, uWhite: 0,
   };
 }

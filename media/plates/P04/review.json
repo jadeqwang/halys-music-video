@@ -1,0 +1,49 @@
+{
+ "plate": "P04",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S08 delivered: mirror of P03, three-quarters toward frame left, grips the spear (0.6-0.9 s), stands resolute looking left; dark riverbank with soldier ranks behind.",
+   "costume": "Red felt cap with ear flaps, black curly beard, long ochre sleeves, iron scale corselet, baldric; the terracotta toy horse is visible at his belt. Sword not in frame (cropped at the waist).",
+   "identity": "Matches media/chars/mede.jpg.",
+   "artefacts": "None.",
+   "notes": "1:1 from t0. Light on the broad side of his face (equal to P03).",
+   "sync": [
+    {
+     "song_t": 17.66,
+     "event": "cut in",
+     "expected_plate_t": 0.0,
+     "measured_plate_t": 0.125,
+     "offset_s": 0.125,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 21.15,
+     "event": "cut out (plate 3.49)",
+     "expected_plate_t": 3.49,
+     "measured_plate_t": 3.583,
+     "offset_s": 0.093,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P04/take1.review.jpg",
+   "contact": "media/plates/P04/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T01:59:16",
+   "short": "Sword not in frame (cropped at the waist)."
+  }
+ },
+ "shots": "S08, S42",
+ "t_song": [
+  17.66,
+  22.66
+ ],
+ "audio_t0": 17.66,
+ "chosen": 1,
+ "chosen_why": "Only take; strong mirror of P03.",
+ "t_chosen": "2026-10-03T02:23:03"
+}

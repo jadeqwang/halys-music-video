@@ -38,8 +38,10 @@ const server = createServer((req, res) => {
   const url = decodeURIComponent(req.url.split('?')[0]);
   let p = null;
   if (url.startsWith('/__standin/')) { const f = STANDIN[url.slice(11)]; if (f) p = join(ROOT, f); }
+  else if (url.startsWith('/media/lookdev/')) p = join(ROOT, url);          // as render.mjs: the designated stand-in plates
   else p = join(VIDEO, url);
-  if (!p || (!p.startsWith(VIDEO + '/') && !url.startsWith('/__standin/')) || !existsSync(p) || statSync(p).isDirectory()) { res.writeHead(404); res.end(); return; }
+  const okRoot = p && (p.startsWith(VIDEO + '/') || p.startsWith(join(ROOT, 'media/lookdev') + '/') || url.startsWith('/__standin/'));
+  if (!okRoot || !existsSync(p) || statSync(p).isDirectory()) { res.writeHead(404); res.end(); return; }
   res.writeHead(200, { 'Content-Type': MIME[extname(p).toLowerCase()] || 'application/octet-stream', 'Cache-Control': 'no-cache' });
   createReadStream(p).pipe(res);
 });

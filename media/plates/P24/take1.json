@@ -1,0 +1,64 @@
+{
+ "plate": "P24",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 161.6,
+ "est_cost_usd": 0.9248,
+ "duration_s": 4.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 124.47,
+   "dur": 4.0,
+   "file": "media/plates/P24/audio_song_0124.47_4.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 4,
+  "refs": [
+   "LYD"
+  ],
+  "audio": {
+   "t0": 124.47,
+   "src": "song"
+  },
+  "t_song": [
+   124.47,
+   128.47
+  ],
+  "shots": "S38",
+  "sync": [
+   [
+    124.475,
+    "kick out: hand to the sky"
+   ],
+   [
+    126.206,
+    "kick returns (plate 1.74)"
+   ]
+  ],
+  "prompt": "Low-angle medium shot from behind and slightly to the side of the Lydian from reference image 1 (crested bronze helmet pushed up, braids, short beard, crimson tunic, bronze scale corselet, crimson lion shield), standing on a bare ridge against an empty, dark dusk sky; the only light is a dim twilight and an orange glow along the horizon, his silhouette crisp and readable. Action: 0-1.5 s he slowly raises his right arm overhead and presses his open palm flat against the sky, as if the sky were a sheet of glass just above him: the palm flattens and stops against the invisible surface; at 2 s he spreads his fingers and pushes harder; at 2.6 s he leans his head and shoulders forward and up, pressing his face toward the surface beside his hand, curious and awed. Camera static. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Clear air, no fog. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "notes": "Flammarion: the renderer makes the sky a membrane of lines where the palm presses.",
+  "avatar": true
+ },
+ "request": {
+  "prompt": "Low-angle medium shot from behind and slightly to the side of the Lydian from reference image 1 (crested bronze helmet pushed up, braids, short beard, crimson tunic, bronze scale corselet, crimson lion shield), standing on a bare ridge against an empty, dark dusk sky; the only light is a dim twilight and an orange glow along the horizon, his silhouette crisp and readable. Action: 0-1.5 s he slowly raises his right arm overhead and presses his open palm flat against the sky, as if the sky were a sheet of glass just above him: the palm flattens and stops against the invisible surface; at 2 s he spreads his fingers and pushes harder; at 2.6 s he leans his head and shoulders forward and up, pressing his face toward the surface beside his hand, curious and awed. Camera static. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Clear air, no fog. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No text, no watermark.",
+  "duration": 4,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(582 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(130 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T02:05:24"
+}

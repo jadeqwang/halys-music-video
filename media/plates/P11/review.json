@@ -1,0 +1,51 @@
+{
+ "plate": "P11",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S15 delivered: two mirrored singles, hard cut at plate 2.0 (asked 2.5). Shot 1 (0-2.0): the Lydian in a dark melee looks off toward frame right. Shot 2 (2.0-5.0): the Mede turns from frame right to camera-left, recognition; both faces warm-lit, dark melee behind.",
+   "costume": "Correct on both (crest/braids/scales/crimson; red cap/beard/ochre/iron scales).",
+   "identity": "Both match their sheets.",
+   "artefacts": "None.",
+   "notes": "Renderer: Lydian = plate 0-2.0, Mede = plate 2.0-5.0; cut S15 on beat 3 wherever needed.",
+   "sync": [
+    {
+     "song_t": 39.48,
+     "event": "cut in",
+     "expected_plate_t": 0.0,
+     "measured_plate_t": 0.292,
+     "offset_s": 0.292,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 41.24,
+     "event": "cut out",
+     "expected_plate_t": 1.76,
+     "measured_plate_t": 2.0,
+     "offset_s": 0.24,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [
+    2.0
+   ],
+   "sheet": "media/plates/P11/take1.review.jpg",
+   "contact": "media/plates/P11/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T02:01:24",
+   "short": "Cut at 2.0 s (asked 2.5)."
+  }
+ },
+ "shots": "S15",
+ "t_song": [
+  39.48,
+  44.48
+ ],
+ "audio_t0": 39.48,
+ "chosen": 1,
+ "chosen_why": "Only take; mirrored singles with a clean cut.",
+ "t_chosen": "2026-10-03T02:23:03"
+}

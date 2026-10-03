@@ -1,0 +1,49 @@
+{
+ "plate": "P02",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "S01-02 base: the master view at totality, matched to halys_totality3 (same river, banks, armies), frozen armies, slow push-in, orange 360-degree horizon glow.",
+   "costume": "Armies are dark silhouettes (army-level only).",
+   "identity": "-",
+   "artefacts": "The black sun + corona and Jupiter are drawn (copied from the board) although the prompt asked for an empty sky; the renderer paints the eclipse over it. Land is dim: mean 0.12, p95 0.30 (analysable; pipeline gain lifts it).",
+   "notes": "1:1 from t0 = 0. Upturned faces are not readable at this scale.",
+   "sync": [
+    {
+     "song_t": 1.45,
+     "event": "diamond-ring flash (renderer)",
+     "expected_plate_t": 1.45,
+     "measured_plate_t": 1.583,
+     "offset_s": 0.133,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 1.89,
+     "event": "S02 text",
+     "expected_plate_t": 1.89,
+     "measured_plate_t": 2.25,
+     "offset_s": 0.36,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P02/take1.review.jpg",
+   "contact": "media/plates/P02/take1.sheet.jpg",
+   "virtual_avatar": false,
+   "est_cost_usd": 1.8496,
+   "job": null,
+   "reviewed": "2026-10-03T01:59:16",
+   "short": "Land dim (mean 0.12); a black sun + corona is drawn in the sky (renderer paints over); faces-up not readable at army scale."
+  }
+ },
+ "shots": "S01-02",
+ "t_song": [
+  0.0,
+  8.0
+ ],
+ "audio_t0": 0.0,
+ "chosen": 1,
+ "chosen_why": "Only take; matches the totality board, frozen armies, analysable.",
+ "t_chosen": "2026-10-03T02:23:03"
+}

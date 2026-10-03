@@ -1,0 +1,64 @@
+{
+ "plate": "P10",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 175.0,
+ "est_cost_usd": 1.156,
+ "duration_s": 5.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 35.98,
+   "dur": 5.0,
+   "file": "media/plates/P10/audio_song_0035.98_5.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 5,
+  "refs": [
+   "MED_ARCH"
+  ],
+  "audio": {
+   "t0": 35.98,
+   "src": "song"
+  },
+  "t_song": [
+   35.98,
+   40.98
+  ],
+  "shots": "S14",
+  "sync": [
+   [
+    36.845,
+    "stab (plate 0.87)"
+   ],
+   [
+    38.23,
+    "timpani: the loose (plate 2.25)"
+   ]
+  ],
+  "prompt": "Side-on, medium-wide shot of a disciplined rank of Median archers on a riverbank, all dressed like the man in reference image 1 (soft undyed felt hoods with side flaps, long-sleeved ochre tunics with embroidered hems, dark leather trousers, sheepskin cloaks, short double-curved composite bows, decorated bow-cases at the hip, short sword on the right thigh). The front rank kneels, the second rank stands behind; every man is an individual, noble, calm and focused. Action: 0-2 s they nock arrows and draw together to the chin in one smooth motion and hold; at the 2.2-second mark, on the drum hit of the reference audio, they all loose at once: the bows snap forward and a volley of arrows rises across the sky toward frame right; then they reach for the next arrows. They face frame right, into the light. Camera static on a tripod, slightly low, the arrows' flight visible against the sky. Hard, low golden sun raking in from frame right (the sun itself is outside the frame, beyond the right edge), long shadows, deep black shadows, warm rim light, background much darker than the figures. Clear air: no fog, no haze, no smoke. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "notes": "Disciplined, dignified, never a horde.",
+  "avatar": true
+ },
+ "request": {
+  "prompt": "Side-on, medium-wide shot of a disciplined rank of Median archers on a riverbank, all dressed like the man in reference image 1 (soft undyed felt hoods with side flaps, long-sleeved ochre tunics with embroidered hems, dark leather trousers, sheepskin cloaks, short double-curved composite bows, decorated bow-cases at the hip, short sword on the right thigh). The front rank kneels, the second rank stands behind; every man is an individual, noble, calm and focused. Action: 0-2 s they nock arrows and draw together to the chin in one smooth motion and hold; at the 2.2-second mark, on the drum hit of the reference audio, they all loose at once: the bows snap forward and a volley of arrows rises across the sky toward frame right; then they reach for the next arrows. They face frame right, into the light. Camera static on a tripod, slightly low, the arrows' flight visible against the sky. Hard, low golden sun raking in from frame right (the sun itself is outside the frame, beyond the right edge), long shadows, deep black shadows, warm rim light, background much darker than the figures. Clear air: no fog, no haze, no smoke. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(710 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(161 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T01:58:08"
+}

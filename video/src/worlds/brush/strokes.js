@@ -15,11 +15,10 @@
 // Thresholds are dithered per cell (strokes appear one by one as the error grows, never all at once) and strokes
 // are stacked in a stable per-cell order, so nothing strobes.
 
-import { clamp, lerp, sstep, blur, hash3, hash4, samp, hex01, rgb2lab, lab2rgb } from './util.js';
+import { clamp, lerp, sstep, blur, blurFast, boxBlur, down, up, hash3, hash4, samp, hex01, rgb2lab, lab2rgb } from './util.js';
 import { flowAt } from './fields.js';
 
 // ---------------------------------------------------------------- edge-preserving smoothing (guided filter)
-function boxBlur(src, w, h, r) { return blur(src, w, h, r * .62); }   // a Gaussian of similar support is fine here
 function guidedSmooth(R, G, B, Lg, w, h, r = 3, eps = .004) {
   const N = w * h, mI = boxBlur(Lg, w, h, r), II = new Float32Array(N);
   for (let i = 0; i < N; i++) II[i] = Lg[i] * Lg[i];
@@ -37,17 +36,23 @@ function guidedSmooth(R, G, B, Lg, w, h, r = 3, eps = .004) {
   return out;
 }
 
-// region-aware blur: colour never bleeds across the silhouette or the horizon (regions blurred separately)
+// region-aware blur: colour never bleeds across the silhouette or the horizon (regions blurred separately). Large
+// sigmas run at half / quarter resolution (normalised per region, so upsampling never mixes regions' colours).
 function regionBlur(chs, regs, aw, ah, sig) {
-  const N = aw * ah, outs = chs.map(() => new Float32Array(N));
-  if (regs.length === 1 && regs[0].full) { chs.forEach((ch, c) => blur(ch, aw, ah, sig, outs[c])); return outs; }
-  const t = new Float32Array(N);
+  const N = aw * ah;
+  if (sig < 1.2) return chs.map(ch => boxBlur(ch, aw, ah, 1));   // the finest brushes: a touch of blur on the smoothed reference
+  const outs = chs.map(() => new Float32Array(N));
+  if ((regs.length === 1 && regs[0].full) || sig < 2.5) { chs.forEach((ch, c) => blurFast(ch, aw, ah, sig, outs[c])); return outs; }
+  const f = sig >= 7 ? 4 : sig >= 3 ? 2 : 1, dw = Math.ceil(aw / f), dh = Math.ceil(ah / f), sg = sig / f, DN = dw * dh;
+  const t = new Float32Array(N), ratio = new Float32Array(DN);
   for (const w of regs) {
-    const den = blur(w, aw, ah, sig);
+    const wd = f > 1 ? down(w, aw, ah, f) : w, den = blur(wd, dw, dh, sg);
     chs.forEach((ch, c) => {
       for (let i = 0; i < N; i++) t[i] = ch[i] * w[i];
-      const num = blur(t, aw, ah, sig), o = outs[c];
-      for (let i = 0; i < N; i++) { const wi = w[i]; if (wi > 0) o[i] += wi * (den[i] > 1e-4 ? num[i] / den[i] : ch[i]); }
+      const td = f > 1 ? down(t, aw, ah, f) : t, num = blur(td, dw, dh, sg);
+      for (let i = 0; i < DN; i++) ratio[i] = den[i] > 1e-4 ? num[i] / den[i] : -1;
+      const full = f > 1 ? up(ratio, dw, dh, aw, ah, f) : ratio, o = outs[c];
+      for (let i = 0; i < N; i++) { const wi = w[i]; if (wi > 0) { const v = full[i]; o[i] += wi * (v >= 0 ? v : ch[i]); } }
     });
   }
   return outs;
@@ -57,16 +62,17 @@ function regionBlur(chs, regs, aw, ah, sig) {
 // returns [{pts:[[x,y]...] (screen px), apts (analysis px), r (radius px), c0, c1 (rgb), a, thick, seed, key, layer}]
 // mat: {mx, my} material coordinates (layout px) per analysis pixel, or null for identity (x * S, y * S)
 export function placeStrokes(F, ref, cfg, drawIdx, mat, eyeMask, W) {
-  const { aw, ah, N } = F, S = W / aw;
+  const { aw, ah, N } = F, S = W / aw, TM = { prep: 0, blur: 0, err: 0, cells: 0, place: 0, paint: 0 }; let tq = performance.now();
+  const lap = k => { const n = performance.now(); TM[k] += n - tq; tq = n; };
   const cR = new Float32Array(N), cG = new Float32Array(N), cB = new Float32Array(N), painted = new Uint8Array(N);
   const out = [], perLayer = [];
   const seed = cfg.seed | 0, bseed = seed * 131 + drawIdx * 7919 + 1;
   // regions: figure (matte), sky, land; a region id per pixel lets strokes stop at the boundary
   const fig = new Float32Array(N), skyR = new Float32Array(N), land = new Float32Array(N), rid = new Uint8Array(N);
-  let anyFig = false, anySky = false;
+  let anyFig = false, anySky = false; const wall = F.wall || null;
   for (let i = 0; i < N; i++) {
     fig[i] = F.M && cfg.matteRegion !== false ? sstep(.4, .6, F.M[i]) : 0; skyR[i] = ref.sky ? Math.min(1 - fig[i], sstep(.4, .6, ref.sky[i])) : 0;
-    land[i] = Math.max(0, 1 - fig[i] - skyR[i]); rid[i] = fig[i] > .5 ? 1 : skyR[i] > .5 ? 2 : 0;
+    land[i] = Math.max(0, 1 - fig[i] - skyR[i]); rid[i] = (fig[i] > .5 ? 1 : skyR[i] > .5 ? 2 : 0) + (wall ? 4 * wall[i] : 0);
     if (fig[i] > 0) anyFig = true; if (skyR[i] > 0) anySky = true;
   }
   const regs = anyFig || anySky ? [fig, skyR, land].filter((w, k) => k === 2 || (k === 0 ? anyFig : anySky)) : [Object.assign(land, { full: true })];
@@ -75,6 +81,7 @@ export function placeStrokes(F, ref, cfg, drawIdx, mat, eyeMask, W) {
   const eImp = blur(eS, aw, ah, 1.4); let em = 1e-6; for (let i = 0; i < N; i++) if (eImp[i] > em) em = eImp[i];
   for (let i = 0; i < N; i++) eImp[i] = Math.min(1, eImp[i] / (em * .35));
   const smoothRef = cfg.smoothRef ? guidedSmooth(ref.R, ref.G, ref.B, ref.L, aw, ah) : [ref.R, ref.G, ref.B];
+  lap('prep');
   // material coordinates and their bounding box
   const MX = mat ? mat.mx : null, MY = mat ? mat.my : null;
   let mx0 = 0, my0 = 0, mx1 = W, my1 = ah * S;
@@ -85,7 +92,7 @@ export function placeStrokes(F, ref, cfg, drawIdx, mat, eyeMask, W) {
   for (let li = 0; li < nL; li++) {
     const Rs = cfg.brushes[li] * scale, Ra = Rs / S, sig = Math.max(.6, cfg.fs * Ra * 1.6);
     const src = li >= 2 ? smoothRef : [ref.R, ref.G, ref.B];
-    const [rb, gb, bb] = regionBlur(src, regs, aw, ah, sig);
+    lap('place'); const [rb, gb, bb] = regionBlur(src, regs, aw, ah, sig); lap('blur');
     for (let i = 0; i < N; i++) {
       if (!painted[i]) { D[i] = 9; continue; }
       const dr = cR[i] - rb[i], dg = cG[i] - gb[i], db = cB[i] - bb[i]; D[i] = Math.sqrt(dr * dr + dg * dg + db * db);
@@ -94,6 +101,7 @@ export function placeStrokes(F, ref, cfg, drawIdx, mat, eyeMask, W) {
     for (let y = 0; y < ah; y++) { let row = 0; for (let x = 0; x < aw; x++) { row += D[y * aw + x]; I[(y + 1) * (aw + 1) + x + 1] = I[y * (aw + 1) + x + 1] + row; } }
     const boxMean = (x0, y0, x1, y1) => { x0 = Math.max(0, x0); y0 = Math.max(0, y0); x1 = Math.min(aw - 1, x1); y1 = Math.min(ah - 1, y1); if (x1 < x0 || y1 < y0) return 0;
       const A = I[y0 * (aw + 1) + x0], Bq = I[y0 * (aw + 1) + x1 + 1], C = I[(y1 + 1) * (aw + 1) + x0], Dq = I[(y1 + 1) * (aw + 1) + x1 + 1]; return (Dq - Bq - C + A) / ((x1 - x0 + 1) * (y1 - y0 + 1)); };
+    lap('err');
     const gL = Math.max(S, cfg.fg[li] * Rs), gA = gL / S, J = Rs >= 12 ? F.Jc : F.J;
     const T0 = cfg.T[li], layer = [];
     // material cells: the screen pixel whose material coordinate is nearest each cell's jittered seed point
@@ -105,13 +113,25 @@ export function placeStrokes(F, ref, cfg, drawIdx, mat, eyeMask, W) {
       o[0] = (cx + .5 + jx * .5) * gL; o[1] = (cy + .5 + jy * .5) * gL; return o;
     };
     const sp = [0, 0];
-    if (!MX) {
-      // identity material map: each cell's seed point is directly a screen point
-      for (let cy = 0; cy < ch; cy++) for (let cx = 0; cx < cw; cx++) {
+    if (!MX || gA < 3) {
+      // identity material map (or a fine brush): each cell's seed point is directly a screen point; with a material map
+      // the per-cell randomness is hashed from the material cell under the point instead (cheap, still content-stable)
+      if (!MX) for (let cy = 0; cy < ch; cy++) for (let cx = 0; cx < cw; cx++) {
         seedPt(cx + cx0, cy + cy0, sp);
         const x = Math.round(sp[0] / S), y = Math.round(sp[1] / S);
         if (x < 0 || y < 0 || x >= aw || y >= ah) continue;
         bestP[cy * cw + cx] = y * aw + x; bestD[cy * cw + cx] = 0;
+      }
+      else {
+        // screen cells of the same size; the cell id is the material cell under the cell centre
+        for (let sy = 0; sy * gA < ah; sy++) for (let sx = 0; sx * gA < aw; sx++) {
+          const x0 = Math.min(aw - 1, Math.round((sx + .5) * gA)), y0 = Math.min(ah - 1, Math.round((sy + .5) * gA)), i0 = y0 * aw + x0;
+          const mcx = Math.floor(MX[i0] / gL), mcy = Math.floor(MY[i0] / gL), ci = (mcy - cy0) * cw + (mcx - cx0);
+          if (ci < 0 || ci >= nC || bestP[ci] >= 0) continue;
+          seedPt(mcx, mcy, sp);
+          const jx = Math.round(x0 + (sp[0] - (mcx + .5) * gL) / S), jy = Math.round(y0 + (sp[1] - (mcy + .5) * gL) / S);
+          bestP[ci] = clamp(jy, 0, ah - 1) * aw + clamp(jx, 0, aw - 1); bestD[ci] = 0;
+        }
       }
     } else {
       const step = Math.max(1, Math.floor(gA / 3));
@@ -123,11 +143,12 @@ export function placeStrokes(F, ref, cfg, drawIdx, mat, eyeMask, W) {
         if (dd < bestD[ci]) { bestD[ci] = dd; bestP[ci] = i; }
       }
     }
+    lap('cells');
     const hb = Math.max(0, Math.round(gA / 2));
     for (let ci = 0; ci < nC; ci++) {
       const pi = bestP[ci]; if (pi < 0) continue;
       // a cell whose nearest pixel is far from its seed point is not really on screen (left the frame, occluded)
-      if (MX && bestD[ci] > gL * gL * 1.5) continue;
+      if (MX && gA >= 3 && bestD[ci] > gL * gL * 1.5) continue;
       const cx = (ci % cw) + cx0, cy = Math.floor(ci / cw) + cy0;
       const gx = pi % aw, gy = (pi / aw) | 0;
       const f = ref.focus[pi] + (detail ? detail[pi] : 0), p = ref.pool[pi], ey = eyeMask ? eyeMask[pi] : 0;
@@ -138,6 +159,7 @@ export function placeStrokes(F, ref, cfg, drawIdx, mat, eyeMask, W) {
       if (li === nL - 1 && (eImp[pi] * Math.max(p, Math.min(1, f)) < cfg.fineGate * (1 - .45 * Math.min(1, f)) || ey > .3)) continue;
       layer.push(makeStroke(F, J, gx, gy, Ra, Rs, rb, gb, bb, cR, cG, cB, painted, cfg, li, nL, rid, hash4(cx, cy, li, seed + 11), cx, cy, seed, bseed, p, S));
     }
+    lap('place');
     // coverage: the first layer must leave no holes (occlusions in a flow-advected material map can leave a few)
     if (li === 0) {
       for (const s of layer) paintVirtual(s, F, cR, cG, cB, painted, S);
@@ -155,9 +177,11 @@ export function placeStrokes(F, ref, cfg, drawIdx, mat, eyeMask, W) {
       layer.sort((a, b) => a.key - b.key);
       for (const s of layer) paintVirtual(s, F, cR, cG, cB, painted, S);
     }
+    lap('paint');
     for (const s of layer) out.push(s);
     perLayer.push(layer.length);
   }
+  out.tm = Object.fromEntries(Object.entries(TM).map(([k, v]) => [k, Math.round(v)]));
   out.perLayer = perLayer;
   out.canvas = { cR, cG, cB };
   return out;
@@ -212,20 +236,39 @@ function traceStroke(F, J, x0, y0, Ra, rb, gb, bb, cR, cG, cB, painted, cfg, li,
   return { pts, c };
 }
 
-// rasterise a stroke (capsules along its polyline) into the CPU canvas at analysis res
+// rasterise a stroke (capsules along its polyline) into the CPU canvas at analysis res: per row, the capsule's
+// x-interval is found analytically (two end disks and the swept rectangle), so only covered pixels are touched
+const profile = (u, taper) => (.55 + .45 * sstep(0, .16, u)) * (1 - taper * sstep(.5, 1, u));
 export function paintVirtual(s, F, cR, cG, cB, painted, S) {
-  const aw = F.aw, ah = F.ah, r = s.r / S, r2 = r * r, P = s.apts || s.pts.map(([x, y]) => [x / S, y / S]), n = P.length;
+  const aw = F.aw, ah = F.ah, P = s.apts || s.pts.map(([x, y]) => [x / S, y / S]), n = P.length, taper = s.taper ?? .72;
+  const c0 = s.c0, c1 = s.c1;
   for (let k = 0; k < n - 1; k++) {
-    const ax = P[k][0], ay = P[k][1], bx = P[k + 1][0], by = P[k + 1][1], dx = bx - ax, dy = by - ay, L2 = dx * dx + dy * dy || 1e-6;
-    const t0 = k / (n - 1), t1 = (k + 1) / (n - 1);
-    const x0 = Math.max(0, Math.floor(Math.min(ax, bx) - r)), x1 = Math.min(aw - 1, Math.ceil(Math.max(ax, bx) + r));
-    const y0 = Math.max(0, Math.floor(Math.min(ay, by) - r)), y1 = Math.min(ah - 1, Math.ceil(Math.max(ay, by) + r));
-    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
-      let t = ((x - ax) * dx + (y - ay) * dy) / L2; t = t < 0 ? 0 : t > 1 ? 1 : t;
-      const qx = ax + dx * t - x, qy = ay + dy * t - y;
-      if (qx * qx + qy * qy > r2) continue;
-      const u = t0 + (t1 - t0) * t, i = y * aw + x;
-      cR[i] = s.c0[0] + (s.c1[0] - s.c0[0]) * u; cG[i] = s.c0[1] + (s.c1[1] - s.c0[1]) * u; cB[i] = s.c0[2] + (s.c1[2] - s.c0[2]) * u; painted[i] = 1;
+    const ax = P[k][0], ay = P[k][1], bx = P[k + 1][0], by = P[k + 1][1], dx = bx - ax, dy = by - ay, L2 = dx * dx + dy * dy || 1e-6, L = Math.sqrt(L2);
+    const t0 = k / (n - 1), t1 = (k + 1) / (n - 1), nx = -dy / L, ny = dx / L;
+    // the segment's radius: the ribbon's width at the segment's middle (the GPU footprint, approximately)
+    const r = s.r / S * Math.max(.35, profile((t0 + t1) / 2, taper)), r2 = r * r;
+    const y0 = Math.max(0, Math.ceil(Math.min(ay, by) - r)), y1 = Math.min(ah - 1, Math.floor(Math.max(ay, by) + r));
+    // the swept rectangle's corners
+    const qx = [ax + nx * r, bx + nx * r, bx - nx * r, ax - nx * r], qy = [ay + ny * r, by + ny * r, by - ny * r, ay - ny * r];
+    for (let y = y0; y <= y1; y++) {
+      let lo = 1e9, hi = -1e9;
+      let d = y - ay; if (d * d <= r2) { const w = Math.sqrt(r2 - d * d); lo = Math.min(lo, ax - w); hi = Math.max(hi, ax + w); }
+      d = y - by; if (d * d <= r2) { const w = Math.sqrt(r2 - d * d); lo = Math.min(lo, bx - w); hi = Math.max(hi, bx + w); }
+      for (let e = 0; e < 4; e++) {
+        const e2 = (e + 1) & 3, ya = qy[e], yb = qy[e2];
+        if ((ya <= y && yb >= y) || (yb <= y && ya >= y)) {
+          const xx = Math.abs(yb - ya) < 1e-9 ? qx[e] : qx[e] + (qx[e2] - qx[e]) * (y - ya) / (yb - ya);
+          if (xx < lo) lo = xx; if (xx > hi) hi = xx;
+          if (Math.abs(yb - ya) < 1e-9) { if (qx[e2] < lo) lo = qx[e2]; if (qx[e2] > hi) hi = qx[e2]; }
+        }
+      }
+      if (hi < lo) continue;
+      const xa = Math.max(0, Math.ceil(lo)), xb = Math.min(aw - 1, Math.floor(hi)), o = y * aw;
+      for (let x = xa; x <= xb; x++) {
+        let t = ((x - ax) * dx + (y - ay) * dy) / L2; t = t < 0 ? 0 : t > 1 ? 1 : t;
+        const u = t0 + (t1 - t0) * t, i = o + x;
+        cR[i] = c0[0] + (c1[0] - c0[0]) * u; cG[i] = c0[1] + (c1[1] - c0[1]) * u; cB[i] = c0[2] + (c1[2] - c0[2]) * u; painted[i] = 1;
+      }
     }
   }
 }

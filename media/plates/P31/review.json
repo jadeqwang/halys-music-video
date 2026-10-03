@@ -1,0 +1,49 @@
+{
+ "plate": "P31",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S60 delivered: close mirrored profile two-shot, Lydian left facing right, Mede right facing left, a metre apart, weapons in hand, still, breathing; low sun at the right edge.",
+   "costume": "Correct.",
+   "identity": "Match.",
+   "artefacts": "The river surface behind them has an odd pink-white streaked texture.",
+   "notes": "1:1 from t0.",
+   "sync": [
+    {
+     "song_t": 207.4,
+     "event": "drop-out breath (plate 0)",
+     "expected_plate_t": 0.0,
+     "measured_plate_t": 0.25,
+     "offset_s": 0.25,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 208.5,
+     "event": "hold ends (plate 1.1)",
+     "expected_plate_t": 1.1,
+     "measured_plate_t": 1.042,
+     "offset_s": -0.058,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P31/take1.review.jpg",
+   "contact": "media/plates/P31/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T02:19:51",
+   "short": "Odd pink-white streaked water texture behind them."
+  }
+ },
+ "shots": "S60",
+ "t_song": [
+  207.4,
+  211.4
+ ],
+ "audio_t0": 207.4,
+ "chosen": 1,
+ "chosen_why": "Only take.",
+ "t_chosen": "2026-10-03T02:23:04"
+}
