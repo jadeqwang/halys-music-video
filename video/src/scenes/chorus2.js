@@ -168,11 +168,12 @@ function s62cam(f, t) {
 scene('S62', async f => {
   const cam = s62cam(f, f.t);
   const src = await plate(f, 'P53', cam, { keys: S62.keys, standin: 'a_duel' });
-  redRiver(src, .62); src.depth = null; src.key += '|nodepth';
+  redRiver(src, .62);
   // (the sun is beyond the right edge, low over the bank he walks toward: no disk, its light on the clouds). The plate's own
-  // sky is kept; it only becomes a stroke region above the far bank's crest (plate v .445), so no long stroke carries the
-  // bright cloud colour down onto the dark bank
+  // sky is kept and made a stroke region above the far bank's crest (plate v .445); the strokes are kept a little shorter
+  // than GOLD's (maxLen), because the long ones dragged cream sky-coloured scraps into the thin dark band of the far bank
+  // under the walking figures
   const hz = camScreen(f, cam)(.5, .445)[1] / f.H;
   await gold2(f, src, { cam, sky: false, groundFlow: { y0: .72, k: .7 }, detail: .85, tag: 'S62', typeDir: [.75, -.66],
-    post: st => { st.sky = plateSky(src, { horizon: hz }); st.key += '|hz' + hz.toFixed(3); } });
+    post: st => { st.sky = plateSky(src, { horizon: hz }); st.key += '|hz' + hz.toFixed(3); }, paint: { maxLen: [3, 4, 4, 4, 3] } });
 });

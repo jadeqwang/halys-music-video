@@ -134,6 +134,9 @@ const E = (cx, cy, rx, ry) => ({ cx, cy, rx, ry });
 // her orange)
 const HAND57 = { 13: E(.502, .652, .04, .046), 49: E(.515, .654, .036, .042), 69: E(.481, .646, .036, .044) };
 const CHEEK57 = E(.39, .402, .011, .044);
+// her head and hair in every S78 drawing (setup px): the hair takes its second tone (the sheen) only here, from the plate's
+// lighter locks, so the black reads as anime hair; the chair and trousers stay one flat black
+export const HAIR57 = { poly: [[226, 56], [474, 56], [474, 338], [226, 338]].map(([x, y]) => [x / 960, y / 540]) };
 const CHAIR57 = { poly: [[60, 372], [330, 378], [352, 540], [40, 540]].map(([x, y]) => [x / 960, y / 540]), mat: 'black', from: ['orange'] };
 export function celZones(e) {
   if (!e) return {};
@@ -141,7 +144,7 @@ export function celZones(e) {
   if (e.src === 'sc') return { faces: true, skin: [], navy: null, allowBlue: null };
   if (e.src === 'P57') {
     const body = e.ref || e.pf, near = [13, 49, 69].reduce((b, k) => Math.abs(k - body) < Math.abs(b - body) ? k : b, 13);
-    return { faces: false, skin: near === 49 ? [HAND57[49]] : [HAND57[near], CHEEK57], navy: null, allowBlue: null, clear: [CHAIR57], darkStrands: true };
+    return { faces: false, skin: near === 49 ? [HAND57[49]] : [HAND57[near], CHEEK57], navy: null, allowBlue: null, clear: [CHAIR57], darkStrands: true, hairRidge: [.022, .012], strandMin: 10, strandW: 1.5, sheenZone: HAIR57 };
   }
   if (e.src === 'P58') return { faces: true, skin: [], navy: null, allowBlue: null, brows: true };
   return {};

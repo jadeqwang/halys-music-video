@@ -23,7 +23,7 @@ import { TM } from '../time.js';
 import { PLATES } from '../plates.js';
 import { drawText } from '../type/index.js';
 import * as INK from '../worlds/ink/index.js';
-import { roomSheets, standinSheets, setEvents, EV, REG, celZones, lidAt, WINK } from '../worlds/ink/sheets.js';
+import { roomSheets, standinSheets, setEvents, EV, REG, celZones, lidAt, WINK, HAIR57 } from '../worlds/ink/sheets.js';
 import { expose } from '../worlds/ink/xsheet.js';
 import { paintBG, drawBG } from '../worlds/ink/bg.js';
 import { drawWindow, WIN39, SCR39, subQuad, toOut, qpt, drawEarthPanel, drawDTMap, drawCloseBG, drawSidebar, drawLamp39, CLOSE41, poly } from '../worlds/ink/props.js';
@@ -47,14 +47,16 @@ async function initRoom() {
   else await initDecals({ P57: takes.P57 });
   const wideZones = e => { const z = celZones(e), d = decalZones(SET.wide, e); return { ...z, clear: [...(z.clear || []), ...d.clear], ...(d.allowBlue ? { allowBlue: d.allowBlue } : {}) }; };
   SET.wide = INK.setup({ id: 'wide', space: 'P39', reg: { P40: REG['P40:take2.mp4->P39'], P57: REG[`P57:${takes.P57}->P39`] },
-    calib: { P57: { src: 'P57', pf: 13 } }, calibOpts: { flat: ['white', 'brow'] }, celFor: wideZones });
+    calib: { P57: { src: 'P57', pf: 13 } }, calibOpts: { flat: ['white', 'brow'], sheenZone: HAIR57, sheenP: .62, sheenSpread: .02 }, celFor: wideZones, strand: '#3d4252' });
   SET.close = INK.setup({ id: 'close', space: 'P58', calib: { P58: { src: 'P58', pf: 30 } }, celFor: celZones, wScale: 1.3 });
 }
 
-// framing: cover the 16:9 plate; other aspects re-frame around the focus
-const FRAME = { wide: { zoom: 1.2, focus: [.479, .49] }, close: { zoom: 1.0, focus: [.5, .42] } };
+// framing: cover the 16:9 plate; portrait re-frames around her back (the circle, RARE EARTH and the patch all in frame)
+const FRAME = { wide: { zoom: 1.2, focus: [.479, .49], portrait: { zoom: 1.0, focus: [.42, .5] } },
+  close: { zoom: 1.0, focus: [.5, .42], portrait: { zoom: 1.0, focus: [.5, .4] } } };
+const coverFor = (L, k) => { const fr = L.portrait ? FRAME[k].portrait : FRAME[k]; return L.cover(960, 540, fr.focus, fr.zoom); };
 function viewFor(f, k) {
-  const fr = FRAME[k], c = f.L.cover(960, 540, f.L.portrait ? (k === 'wide' ? [.45, .5] : [.5, .4]) : fr.focus, fr.zoom);
+  const c = coverFor(f.L, k);
   return { ox: c.x, oy: c.y, s: c.w / 960 };
 }
 
@@ -62,7 +64,7 @@ async function character(f, S, sheet, view) {
   const e = expose(sheet, f.i);
   const res = await INK.cel(S, e);
   if (DBG) { INK.debugDraw(f.g, res, view, DBG, f.L.u); return { e, res }; }
-  INK.drawCel(f.g, res, view, f.L.u, { wScale: S.wScale || 1, beforeLines: (cg, maskOf) => drawDecals(cg, view, S, e, f.L.u, maskOf) });
+  INK.drawCel(f.g, res, view, f.L.u, { wScale: S.wScale || 1, strand: S.strand, beforeLines: (cg, maskOf) => drawDecals(cg, view, S, e, f.L.u, maskOf) });
   return { e, res };
 }
 
@@ -116,7 +118,7 @@ async function close(f) {
 // it is on, so the pull-back can end exactly in it. Same maths as drawEarthPanel. Usage (scenes/drop2.js):
 //   import { roomHandoff } from './room.js'; const h = roomHandoff(f.W, f.H);   // { earth: {x, y, r}, bezel: [[x,y] x4] }
 export function roomHandoff(W, H) {
-  const L = makeLayout(W, H), fr = FRAME.wide, c = L.cover(960, 540, L.portrait ? [.45, .5] : fr.focus, fr.zoom);
+  const L = makeLayout(W, H), c = coverFor(L, 'wide');
   const view = { ox: c.x, oy: c.y, s: c.w / 960 }, Q = toOut(view, WIDE_SCREENS.earth);
   const w = Math.hypot(Q[1][0] - Q[0][0], Q[1][1] - Q[0][1]), h = Math.hypot(Q[3][0] - Q[0][0], Q[3][1] - Q[0][1]);
   const p = qpt(Q, .5, .44);

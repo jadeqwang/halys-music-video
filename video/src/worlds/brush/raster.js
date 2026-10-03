@@ -2,8 +2,10 @@
 //
 // 1. Strokes are Catmull-Rom ribbons with round heads and dragged-off tails, textured with bristle tracks and dry-brush
 //    skips, writing colour and paint height (MRT, half float, premultiplied).
-// 2. The sun pass draws what must be exact: the flat blazing disk, the moon's bite, the black disk at totality with
-//    its crisp limb, Baily's beads, the diamond ring and Jupiter.
+// 2. The sun pass draws what must be exact: the moon's bite, the black disk at totality with its crisp limb, Baily's
+//    beads, the diamond ring and Jupiter. The disk itself is painted: the pass lays a hot underpaint, the Sun's own
+//    strokes (index.js sunPaintStrokes, SUNSTROKE_FS) build it and break its limb, masked by the land and cut by the
+//    moon along a clean curve; the lights that must stay on top follow them.
 // 3. The finish lights the height from the upper left (impasto where the paint is thick), shows canvas weave where it
 //    is thin, craquelure in the darks, an aged varnish, vignette, the eclipse's metallic drain, and scene-level
 //    flashes (white, warm). Weave, cracks and mottling are a property of the canvas: baked once per output size.
@@ -90,7 +92,7 @@ void main() {
     disc = 1.0 - smoothstep(rD - 0.8 + wob, rD + 0.8 + wob, d);
     vec2 un = q / r;
     float marks = texture(uNoise, un * vec2(0.22, 0.07) + vec2(0.31, uBoil * 0.017)).r * 0.65 + texture(uNoise, un * 0.12 + 0.7).g * 0.35;
-    // a flat blazing disk: one warm colour (golden-orange when low), only a thin deeper band at the very limb
+    // a flat blazing disk (when painted, the underpaint): one warm colour (golden-orange when low), a deeper band at the limb
     vec3 core = mix(uLead, uNaples, 0.2 + 0.6 * uWarm);
     vec3 limb = mix(uNaples, uGold, 0.35 + 0.55 * uWarm);
     sunC = mix(core, limb, 0.25 + 0.75 * smoothstep(0.78 * r, 1.02 * r, d)) * (0.975 + 0.05 * marks) * uBlaze;

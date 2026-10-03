@@ -546,7 +546,13 @@ function silhouettesP49(fig, hz) {
       out[y * aw + x] = 1 - sstep(.12, .3, .2126 * fig.R[j] + .7152 * fig.G[j] + .0722 * fig.B[j]);
     }
   }
-  return out;
+  // fatten by one analysis pixel (a 3x3 max): spears and crests are 1-2 px in the plate, thinner than the finest brush
+  const fat = new Float32Array(aw * ah);
+  for (let y = 1; y < ah - 1; y++) for (let x = 1; x < aw - 1; x++) {
+    let m = 0; for (let j = -1; j <= 1; j++) for (let q = -1; q <= 1; q++) m = Math.max(m, out[(y + j) * aw + x + q]);
+    fat[y * aw + x] = m;
+  }
+  return fat;
 }
 scene('S18', async f => {
   const t = f.t, hz = S18_HZ;
@@ -577,6 +583,9 @@ scene('S18', async f => {
     sky: SKY(t, { horizonY: hz, glowR: .3, glow: 1.1, drama: .3, cover: .58, vortex: .32, twist: .9, haze: .3 }),
     sun: SUN(t, { x: .5, y: .44, r: .1, alt: 19 }),
     accents: 0, T: [0, .06, .07, .1, .12],
+    // the fighters' band is a focus region, so the small brushes cut their spears, crests and shields (unlit, it would
+    // otherwise get only the big brushes)
+    focus: [{ poly: [[0, hz - .17], [1, hz - .17], [1, hz + .012], [0, hz + .012]], k: 1, feather: 4 }], focusLift: 0,
   });
 });
 

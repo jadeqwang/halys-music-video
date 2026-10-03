@@ -20,7 +20,7 @@ const tw = t => Math.floor(t * 12 + 1e-6) / 12;                  // on twos (a d
 
 // eye narrowing per side at time t: {t, b} fractions of the opening. The knowing look is constant; the open eye narrows a
 // little more while the other one winks.
-export const NARROW = { t: .13, b: .12 };
+export const NARROW = { t: .05, b: .09 };
 export function narrowAt(t, side) {
   const w = side === WINK.side ? 0 : lidAt(tw(t));
   return { t: NARROW.t + .06 * w, b: NARROW.b + .08 * w };
@@ -128,6 +128,25 @@ function drawSmirk(g, view, res, fc, u) {
   ribbon(g, [[m[0] - lw * .14 - up[0] * d, m[1] - up[1] * d], [m[0] + lw * .1 - up[0] * d * .95, m[1] - up[1] * d * .95]].map(O), 2.2 * u, 1.6 * u, '#cf9282');
 }
 
+// catchlights: tracing drops the plate's small highlights, and without them the eyes go dull. One bright oval toward the
+// lamp (upper right) and a small second dot opposite, inside the (narrowed) opening; drawn before the wink, whose lid
+// covers them
+function catchlights(g, view, res, side, nar, u) {
+  const E = eyeGeom(res, side); if (!E) return;
+  const NP = narrowed(E, nar), s = view.s, X = x => view.ox + x * s, Y = y => view.oy + y * s, r = E.r;
+  g.save();
+  g.beginPath();
+  const N = 24;
+  for (let j = 0; j <= N; j++) { const x = NP.x0 + (NP.x1 - NP.x0) * j / N; j ? g.lineTo(X(x), Y(NP.top(x))) : g.moveTo(X(x), Y(NP.top(x))); }
+  for (let j = N; j >= 0; j--) { const x = NP.x0 + (NP.x1 - NP.x0) * j / N; g.lineTo(X(x), Y(NP.bot(x))); }
+  g.closePath(); g.clip();
+  const top = NP.top(E.cx + r * .3);
+  g.fillStyle = '#ffffff';
+  g.beginPath(); g.ellipse(X(E.cx + r * .34), Y(Math.max(E.cy - r * .42, top + r * .32)), r * .26 * s, r * .22 * s, -.4, 0, TAU); g.fill();
+  g.beginPath(); g.arc(X(E.cx - r * .36), Y(E.cy + r * .38), r * .1 * s, 0, TAU); g.fill();
+  g.restore();
+}
+
 // the close-up's acting. Returns the winking eye's narrowing for drawWink.
 export function drawExpression(g, view, res, t, u) {
   const fc = faceOf(res); if (!fc) return null;
@@ -147,6 +166,9 @@ export function drawExpression(g, view, res, t, u) {
   drawSmirk(g, view, res, fc, u);
   // 3. both eyes heavy-lidded; the winking eye's upper lid is drawWink's once the eclipse starts
   const winking = lidAt(t) > 0;
-  for (const side of ['R', 'L']) narrowEye(g, view, res, side, narrowAt(t, side), u, !(winking && side === WINK.side));
+  for (const side of ['R', 'L']) {
+    catchlights(g, view, res, side, narrowAt(t, side), u);
+    narrowEye(g, view, res, side, narrowAt(t, side), u, !(winking && side === WINK.side));
+  }
   return narrowAt(t, WINK.side);
 }

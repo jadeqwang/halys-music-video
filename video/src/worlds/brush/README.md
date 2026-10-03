@@ -56,10 +56,16 @@ from 5 o'clock, `magnitude`, `moonOffset`, `beads`, `diamondRing`, `jupiterAt`, 
 **Sky** `sky: {...}` an Altdorfer vortex wound around the sun (see `sky.js` `SKY_DEFAULTS`: `vortex, twist, arms,
 cover, glow, glowR, drama, fire, night, ring, haze`), masked by depth (`maxDepth`), an explicit `horizonLine`
 `[[u, v], ...]`, or `src.sky`. Its strokes follow the spiral tensor and turn with it.
-`sun: {x, y, r, alt, off, moonVis, beads, ring, ringAng, limb, jupiter {ppd|x,y}, vis}` drawn exactly (a flat
-blazing disk, golden-orange near the horizon, no rings) after the strokes; `corona {k, photo, scale, tilt, glow,
-asym}`: `photo: true` paints the corona as a totality photograph shows it (inner corona, asymmetric helmet streamers,
-polar plumes, coronal holes, a few prominences) with a matching asymmetric glow; every Act I corona uses it.
+`sun: {x, y, r, alt, off, moonVis, beads, ring, ringAng, limb, jupiter {ppd|x,y}, vis, paint}`: a blazing disk,
+golden-orange near the horizon, no rings, **painted** (v2): the sun pass lays a hot underpaint and the Sun's own strokes
+build it in the engine's brushwork (broad hot strokes in the core, loaded strokes that follow and break the limb, flicks
+lifting off it, sky paint cutting back in), seeded per stroke in sun-local polar coordinates with a small boil per
+drawing. The moon's bite cuts them along a clean curve (always an actual eclipse); the limb calms as the crescent thins
+and the strokes stop at totality, so the black disk stays exact. `paint` (default 1) scales how far the limb breaks; 0
+is v1's exact flat disk. Beads, the diamond ring, the totality limb and Jupiter are drawn after the strokes.
+`corona {k, photo, scale, tilt, glow, asym}`: `photo: true` paints the corona as a totality photograph shows it (inner
+corona, asymmetric helmet streamers, polar plumes, coronal holes, a few prominences) with a matching asymmetric glow;
+every Act I corona uses it.
 
 **Strokes** `brushes` (px at 1080p, 5 layers), `strokeScale`, `T` (per-layer error thresholds), `midGate`,
 `fineGate` (detail needed for the small brushes), `maxLen`, `minLen`, `fg`, `jitter`, `boil`, `boilColor`,

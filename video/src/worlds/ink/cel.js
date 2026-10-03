@@ -297,7 +297,7 @@ export function analyzeCel(inp, cfg0 = {}) {
   for (let i = 0; i < N; i++) {
     const m = mat[i]; if (!m) continue;
     const t = thr[m];
-    lab[i] = m === ID.black ? label(m, sheen[i] || (t != null && Ls[i] > t)) : label(m, t != null && Ls[i] < t);
+    lab[i] = m === ID.black ? label(m, sheen[i] || (t != null && Ls[i] > t && (!cfg.sheenZone || inZone(cfg.sheenZone, (i % W) / W, ((i / W) | 0) / H)))) : label(m, t != null && Ls[i] < t);
   }
   for (const z of cfg.clear || []) {
     if (z.keepShade) continue;
@@ -339,10 +339,13 @@ export function calibrate(res, opts = {}) {
     for (let i = 0; i < N; i++) if (res.mat[i] === m.id) { msk[i] = 1; n++; }
     if (n < 400 || flat.includes(m.name)) continue;
     if (m.sheen) {                     // black: the brightest ~10 % of the hair is its sheen (when there is any spread)
-      const v = []; for (let i = 0; i < N; i += 3) if (msk[i]) v.push(res.Ls[i]);
+      // (opts.sheenZone: only the hair counts, setup-normalised; the chair and the trousers are black too)
+      const z = opts.sheenZone, W = res.W, H = res.H, v = [];
+      for (let i = 0; i < N; i += 3) if (msk[i] && (!z || inZone(z, (i % W) / W, ((i / W) | 0) / H))) v.push(res.Ls[i]);
+      if (v.length < 100) continue;
       v.sort((a, b) => a - b);
       const p50 = v[v.length >> 1], p90 = v[Math.floor(v.length * (opts.sheenP ?? .9))];
-      if (p90 - p50 > .035) t[m.id] = p90;
+      if (p90 - p50 > (opts.sheenSpread ?? .035)) t[m.id] = p90;
       continue;
     }
     const o = otsu(res.Ls, msk);

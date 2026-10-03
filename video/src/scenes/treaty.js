@@ -83,6 +83,26 @@ function cutStrokes(f, cam, tp, pal) {
   return out;
 }
 
+// the Caravaggio key: the clasp must be the single brightest thing in the frame. Everything bright that is not the
+// clasp or a face (the white chiton, Labynetus' robe, the river's glow) is pulled down in value through the engine's
+// shadowField (analysis px; L -> lerp(L, shadowL, s)); the figures' highlights more, the background glow a little.
+function shadeField(src, clasp, arm, heads, o = {}) {
+  const { aw, ah } = src, N = aw * ah, out = new Float32Array(N), M = src.matte;
+  const amb = o.amb ?? .14, hiFig = o.hiFig ?? .18, hiBg = o.hiBg ?? .07;
+  const ell = (u, v, e) => Math.hypot((u - e.x) / e.rx, (v - e.y) / e.ry);
+  for (let j = 0; j < ah; j++) for (let i = 0; i < aw; i++) {
+    const k = j * aw + i, u = (i + .5) / aw, v = (j + .5) / ah;
+    const key = Math.max(1 - sstep(.8, 1.35, ell(u, v, clasp)), 1 - sstep(.8, 1.35, ell(u, v, arm)));
+    if (key >= 1) continue;
+    let head = 0; for (const h of heads) head = Math.max(head, 1 - sstep(.85, 1.4, ell(u, v, h)));
+    const L = .2126 * src.R[k] + .7152 * src.G[k] + .0722 * src.B[k], m = M ? M[k] : 1;
+    // an ambient shade everywhere outside the key (half on the heads), plus the highlights: more on figures, a little on the river
+    const s = amb * (1 - .5 * head) + (1 - head) * Math.max(hiFig * sstep(.45, .85, L) * m, hiBg * sstep(.25, .62, L) * (1 - m));
+    out[k] = s * (1 - key);
+  }
+  return out;
+}
+
 // the plaque: the type module's own PLAQUE renderer (small tracked caps, lower left), as in S16/S18
 const OATH = { id: 'S79.oath', fx: 'plaque', shot: 'S79', anchor: 'lowerLeft', t0: S79.t0, t1: S79.t1,
   items: [{ key: 'p', role: 'plaque', text: 'THE OATH · HERODOTUS 1.74', reveal: 'line', t: 270.45 }] };
@@ -98,25 +118,31 @@ scene('S79', async f => {
   const faces = real ? keyed(tp, TRACK.faces).map(([u, v]) => toUV(f, cam, u, v)) : [[.4, .3], [.62, .32]];
   const meds = real ? keyed(tp, TRACK.mediators).map(([u, v]) => toUV(f, cam, u, v)) : [];
   const zs = camAt(cam, f).zoom * (portraitOf(f) ? 1 / .45 : 1);       // uv scale of plate distances on screen (x)
+  // the key: one tight, warm, fast-falling pool on the clasped hands and a narrow band along both forearms
+  const clasp = { x: cx, y: cy, rx: .055 * zs, ry: .1 }, arm = { x: cx - .004 * zs, y: cy + .004, rx: .115 * zs, ry: .05 };
+  const heads = faces.map(([x, y], j) => ({ x: x + (j ? .008 : -.008) * zs, y: y - .04, rx: .055 * zs, ry: .14 }));
+  const medHeads = meds.map(([x, y]) => ({ x, y, rx: .035 * zs, ry: .08 }));
   await paint(f, src, {
     palette: 'bronze', eclipse: 0,
     lightDir: [-.3, -.95], lightColor: '#f6c878',
-    // one Caravaggio pool on the clasp, the kings' faces in its spill, a low warm fill on the two bodies; the mediators'
-    // faces get a dim key (people, not voids) and the rest of them stays in the umber dark. No pool is flagged `fig`:
-    // the plate's matte carries full figure value (poolMatte), so the river behind the hands is not lit into a halo.
-    pool: [{ x: cx, y: cy, rx: .075 * zs, ry: .14, feather: .7, k: .92 },
-      // each king's head, raised to take in the regalia (Alyattes' gold fillet, Cyaxares' cap and its gold band)
-      ...faces.map(([x, y], j) => ({ x: x + (j ? .008 : -.008) * zs, y: y - .04, rx: .05 * zs, ry: .13, feather: .75, k: .88 })),
-      ...meds.map(([x, y]) => ({ x, y, rx: .028 * zs, ry: .065, feather: .8, k: .5 })),
-      { x: .5, y: cy - .16, rx: .27 * zs, ry: .34, feather: .85, k: .58 }],
-    poolFromLight: { k: .45, bg: .15 }, poolMatte: .12, envDim: .45, crushFloor: .075, crush: .2, rim: .55,
-    plateKeep: real ? .3 : 0, keepDim: .6, faceMin: null, glint: 1.15, glintT: .64, accents: .9, focusLift: .12,
-    // the small brushes work the clasp, the cuts and the two faces
-    focus: [{ x: cx, y: cy, rx: .05 * zs, ry: .07, k: 1 }, { x: cx, y: cy - .02, rx: .1 * zs, ry: .05, k: .8 },
-      ...faces.map(([x, y]) => ({ x, y, rx: .03 * zs, ry: .06, k: .9 })),
+    // the clasp gets the full key; the kings' heads (faces and regalia) sit in its falloff, the bodies get a low warm
+    // fill, the mediators' faces a dim key (people, not voids). No pool is flagged `fig`: the plate's matte carries full
+    // figure value (poolMatte), so the river behind the hands is not lit into a halo.
+    pool: [{ ...clasp, feather: .5, k: 1 }, { ...arm, feather: .5, k: .92 },
+      ...heads.map(h => ({ ...h, rx: .05 * zs, ry: .13, feather: .75, k: .72 })),
+      ...meds.map(([x, y]) => ({ x, y, rx: .028 * zs, ry: .065, feather: .8, k: .55 })),
+      { x: .5, y: cy - .16, rx: .27 * zs, ry: .34, feather: .85, k: .45 }],
+    poolFromLight: { k: .2, bg: .05 }, poolMatte: .12, envDim: .46, crushFloor: .07, crush: .18, rim: .5, warmIn: .04,
+    plateKeep: real ? .25 : 0, keepDim: .55, faceMin: null, glint: 1.1, glintT: .66, accents: .85,
+    // the lift is the clasp's: full on the hands and forearms, less on the faces and regalia (which still get the small brushes)
+    focusLift: .3,
+    exposure: real ? 1.3 : 1,                          // the spotlight: everything outside the key is shaded back (shadeField)
+    focus: [{ x: cx, y: cy, rx: .05 * zs, ry: .07, k: 1 }, { x: cx, y: cy - .005, rx: .1 * zs, ry: .045, k: .85 },
+      ...faces.map(([x, y]) => ({ x, y, rx: .03 * zs, ry: .06, k: .4 })),
       // the regalia that say who they are: Alyattes' gold fillet, Cyaxares' madder cap and its gold band
-      ...faces.map(([x, y], j) => ({ x: x + (j ? .012 : -.012) * zs, y: y - (j ? .12 : .085), rx: .04 * zs, ry: .05, k: 1 }))],
+      ...faces.map(([x, y], j) => ({ x: x + (j ? .012 : -.012) * zs, y: y - (j ? .12 : .085), rx: .04 * zs, ry: .05, k: .7 }))],
     fineGate: .2, midGate: .15,
+    shadowField: real ? shadeField(src, clasp, arm, [...heads, ...medHeads]) : null, shadowL: .06,
     groundFlow: { y0: 0, k: .65 },                     // the river behind and the gravel in front: horizontal flicks
     overStrokes: real ? ({ pal }) => cutStrokes(f, cam, tp, pal) : null,
   });

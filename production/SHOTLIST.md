@@ -213,7 +213,7 @@ Generate 2 takes of hero plates; keep the best.
 | P37 | S70 | Karnak temple columns, camera looking up between them at a high midday sky that darkens | — | 242.45–246.5 | 4 |
 | P38 | S74–76 | Both armies raise blades high together, then drop them at once; one soldier drops his late and shrugs | armies | 257.68–262.7 | 5 |
 | P39 | S78 | Anime: from behind her chair at the monitors, typing; RARE EARTH circle on her back | Jade, ROOM | 266.12–270.1 | 4 |
-| P40 | S79 | Anime: she spins the chair to face camera, then holds a deadpan stare | Jade, ROOM | 268.3–273.4 | 5 |
+| P40 | unused since v2 (S79 is P55) | Anime: she spins the chair to face camera, then holds a deadpan stare (v1) | Jade, ROOM | 268.3–273.4 | 5 |
 | P41 | S80–81 | Anime: close-up, deadpan stare, types without looking, then a mischievous smile and a wink | Jade, ROOM | 273.4–279.6 (use the sound-design master) | 6 |
 | P42 | S35–S36 | REACTIONS, Lydians: a group of Lydian infantry in the shallows at dusk as the sky goes dark. One spins round staring everywhere in terror; one sinks to his knees raising both arms to the sky, palms up; one covers his eyes; one lets his spear fall. Reactions land on the kicks. | Lydian, armies | 110.58–115.6 | 5 |
 | P43 | S35–S36 | REACTIONS, Medes (the mirror): one prostrates with his forehead to the river stones; one clutches an amulet and prays; an archer lets his bow fall; one grabs his neighbour's arm. Reactions land on the kicks. | Mede, archer, armies | 110.58–115.6 | 5 |
@@ -221,6 +221,7 @@ Generate 2 takes of hero plates; keep the best.
 | P45 | S36 | FACES: tight close-ups, a Lydian and a Mede looking around wildly, eyes darting, breathing fast, then up; plus Alyattes and Cyaxares in shock. | heroes, kings | 112.31–117.5 | 5 |
 | P46 | S37 | FROZEN TABLEAU, camera orbit: everyone completely still like statues. At the centre the two duelists stopped mid-strike, faces turned up; around them men kneeling with raised arms, one prostrate, one pointing at the sky, one covering his eyes, a rider holding a rearing horse. The camera slowly orbits about 30°. | heroes, armies, cavalry | 117.53–125.5 | 8 |
 | P47 | S31b | THE ARM-PULL: shallows at dusk; the Lydian hero (crested bronze helmet) stands over the Mede hero, who is down on one knee in the water, sword raised high to strike. A second Lydian soldier behind him grabs the raised forearm with both hands and pulls it back; the striker turns his head; the comrade points up at the sky; all three look up in awe. Behind them both armies turn their faces up. The grab lands on the audio boom ~2 s in. | Lydian, Mede, Lydian infantry, armies | 100.24–105.0 | 5 |
+| P55 | S79 | THE OATH (v2): on a gravel riverbank at dusk, Alyattes (left) and Cyaxares (right) clasp right hands. One firm shake lands on the final chord, then a still, solemn hold. Each bare forearm has a thin fresh cut (no gore). Syennesis and Labynetus watch from the edges. Opens on the keyframe `media/plates/P55/key_t4.jpg`. | keyframe, Alyattes, Cyaxares, mediators | 269.54–274.54 (use the sound-design master) | 5 |
 
 Procedural (no plate): the sun and every eclipse state, Altdorfer sky, crescents, umbra, corona, particles and formations, eyes, relief map, birds,
 history-cascade graphics (Antikythera, Halley, Eddington, Artemis, Phobos), Earth, Moon, the pull-back, the terminal, all type and HUD.

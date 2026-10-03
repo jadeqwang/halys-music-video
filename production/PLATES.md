@@ -65,13 +65,15 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 | S14 | P10 (1) | loose 38.23 → 2.21 |
 | S15 | P11 (1) | Lydian = plate 0–2.0, Mede = 2.0–5.0 (hard cut) |
 | S16, S20, S24, S30, S44 | P01 (1) | the static master, plate 0–4.5 (slow/hold for S24's 7 s) |
-| S17, S19, S27 | P12 (1) | strikes 46.06 → 2.12, 47.56 → 3.30, 48.91 → 3.88, 49.53 → 5.20, 50.63 → 6.05, 51.48 → 6.90 |
+| S17 | P48 (1) | v2, the first exchange in the middle of the battle: the lion shield turns the thrust 46.057 → 2.00 (1:1 from 44.06; S17 = plate 0.67–2.43) |
+| S18 | P49 (2) | v2, the battle line on the horizon: silhouettes keyed above v 0.868, 1:1 from 0.70 s in (46.49 → 0.70) |
+| S19, S27 | P12 (1) | strikes 46.06 → 2.12, 47.56 → 3.30, 48.91 → 3.88, 49.53 → 5.20, 50.63 → 6.05, 51.48 → 6.90 (v1 S17/S18 also read these) |
 | S21 | P13 (2) | knock-down 59.60 → 1.00; up on one knee at 3.5 (= 62.20) |
 | S23, S41, S47 | P14 (2) | breathing 0–1.6, still ~1.6–2.0, the long upward gaze from 2.0 (→ 67.73) |
 | S25 | P15 (2) | face-off 0–3.375, cut on 77.88 to the shore melee 3.375–7.0 |
 | S26 | P16 (1) | glint 84.38 → 2.50 |
 | S27 ("light went strange") | P17 (1) | looks up 88.69 → 2.85 |
-| S28 | P18 (2) | faces up one by one 2.0–3.5; all up 91.31 → 3.50 |
+| S28 | P50 (2) | v2, caught mid-fight (P18 is unused): fighting 0–1.7, faces up left to right 89.78 → 1.90, 90.20 → 2.25, 90.60 → 2.60, 90.87 → 2.90, all up 91.31 → 3.30 (cut to the sky, S28b) |
 | S29 / S42 | P19 (1) / P19b (1) | eye opens 93.95 → 0.90 / the Mede's eye |
 | S31, S55 | P20 (1) | every face up 102.21 → 2.04 |
 | S31b | P47 (2) | the arm-pull: grab 102.21 → 1.90, striker turns ~2.6, both Lydians look up ~3.6, comrade points ~4.8 (far ranks static: borrow P20's look-up) |
@@ -92,7 +94,7 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 | S63 / S67 / S68 / S70 | P34 (2) / P35 (3) / P36 (1) / P37 (1) | 1:1 (P36 faces up 237.66 → 2.10) |
 | S74–S76 | P38 (4) | raise 259.35 → 2.00, BLADE 260.62 → 2.35, straggler 261.05 → 3.60 |
 | S78 | P39 (1) | 1:1 |
-| S79 | P40 (2) | spin lands 270.04 → 2.10; deadpan hold to the end (hold the last drawing) |
+| S79 | P55 (1) | v2, the kings' oath (P40 is unused): the clasp's shake 270.04 → 0.42, settled by 270.30 → 0.68; the hold runs at 0.61x to 273.40 → 2.58 |
 | S80–S81 | P41 (4) | blind typing 0.2–1.8, smile from 3.25, wink 276.95 → 4.45 (closed ~4.4–5.1) |
 
 ## Weak spots to know about
@@ -172,13 +174,13 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 | P09 | S13 | take3 | pass 4 | 32.47 | 1:1 from t0 | - |
 | P10 | S14 | take1 | pass 4 | 35.98 | 38.23→2.21 (-0.04) | No standing second rank; bright sky. |
 | P11 | S15 | take1 | pass 4 | 39.48 | 41.24→2.00 (+0.24) | Cut at 2.0 s (asked 2.5). |
-| P12 | S17, S19, S27 (S36/S37 moved to P42-P46 in the 02:43 shot list) | take1 | pass 3 | 44.73 | 46.06→2.12 (+0.79); 47.56→3.30 (+0.47); 48.91→3.88 (-0.30); 49.53→5.20 (+0.40); 50.63→6.05 (+0.15); 51.48→6.90 (+0.15) | Contre-jour (sun in frame), faces in shadow; strikes ~0.1-0.8 s late. |
+| P12 | S19, S27 (v2: S17 is P48, S18 P49; S36/S37 moved to P42-P46 in the 02:43 shot list) | take1 | pass 3 | 44.73 | 46.06→2.12 (+0.79); 47.56→3.30 (+0.47); 48.91→3.88 (-0.30); 49.53→5.20 (+0.40); 50.63→6.05 (+0.15); 51.48→6.90 (+0.15) | Contre-jour (sun in frame), faces in shadow; strikes ~0.1-0.8 s late. |
 | P13 | S21 | take2 | pass 4 | 58.72 | 59.60→1.00 (+0.12); 62.20→3.50 (+0.02) | - |
 | P14 | S23, S36, S41, S47 | take2 | pass 4 | 65.67 | 67.73→2.00 (-0.06) | Face dark for the first 1.6 s; upward gaze ~2.8 s (S41/S47 want ~3.4 s). |
 | P15 | S25 | take2 | pass 4 | 74.41 | 77.88→3.38 (-0.10) | - |
 | P16 | S26 | take1 | pass 4 | 81.36 | 84.38→2.50 (-0.52) | Thin horizontal lens-flare streak at 2.8-3.5 s. |
 | P17 | S27 | take1 | pass 4 | 85.91 | 88.69→2.85 (+0.07) | Dapples are round spots (renderer paints the crescents). |
-| P18 | S28 | take2 | pass 3 | 89.22 | 89.78→2.00 (+1.44); 91.31→3.50 (+1.41) | 2 Lydians : 4 Medes (not alternating); wave ~1.4 s late. |
+| P18 | unused since v2 (S28 is P50) | take2 | pass 3 | 89.22 | 89.78→2.00 (+1.44); 91.31→3.50 (+1.41) | 2 Lydians : 4 Medes (not alternating); wave ~1.4 s late. |
 | P19 | S29, S36 | take1 | pass 4 | 93.0 | 93.95→0.90 (-0.05) | Eyelid half-lowered in the first 0.3 s. |
 | P19b | S42 (and S36) | take1 | pass 4 | 93.0 | 1:1 from t0 | - |
 | P20 | S31, S55 | take1 | pass 5 | 100.24 | 102.21→2.04 (+0.07) | - |
@@ -202,7 +204,7 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 | P37 | S70 | take1 | pass 4 | 242.45 | 1:1 from t0 | Blue sky (renderer recolours). |
 | P38 | S74, S75, S76 | take4 | pass 4 | 257.68 | 259.35→2.00 (+0.33); 260.62→2.35 (-0.59); 261.05→3.60 (+0.23) | Shrug barely visible; the late gap is 1.25 s in the plate vs 0.43 s in the music. |
 | P39 | S78 | take1 | pass 4 | 266.12 | 1:1 from t0 | Blue back circle faint. |
-| P40 | S79 | take2 | pass 5 | 268.3 | 270.04→2.10 (+0.36) | Deadpan hold 2.9 s (S79 wants 3.36 s: hold the last drawing). |
+| P40 | unused since v2 (S79 is P55) | take2 | pass 5 | 268.3 | 270.04→2.10 (+0.36) | The v1 chair spin; no shot reads it. |
 | P41 | S80, S81 | take4 | pass 4 | 273.4 | 276.95→4.45 (+0.90) | Wink +0.9 s late (retime). |
 | P42 | S35, S36 | take2 | pass 4 | 110.58 | 110.98→1.00 (+0.60); 111.44→1.60 (+0.74); 111.86→2.90 (+1.61); 112.31→4.50 (+2.77) | Reactions spread over 1.0-4.5 s rather than on consecutive kicks. |
 | P43 | S35, S36 | take2 | pass 4 | 110.58 | 111.89→1.10 (-0.21); 111.44→1.80 (+0.94); 111.86→3.50 (+2.21); 112.31→4.30 (+2.58) | Amulet small, arm grab subtle; reactions spread over 1.1-4.3 s. |
@@ -210,6 +212,10 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 | P45 | S36 | take1 | pass 4 | 112.31 | 1:1 from t0 | Cuts at 1.79/3.08/4.38 s (asked 1.25/2.5/3.75); Cyaxares' shot is 0.66 s. |
 | P46 | S37 | take4 | pass 4 | 117.53 | 1:1 from t0 | Both crossed spears held by Lydians (the central Mede kneels); 4:3 figures. |
 | P47 | S31b | take2 | pass 4 | 100.24 | 102.21→1.90 (-0.07) | Comrade bareheaded; background ranks static (no readable faces-up wave). |
+| P48 | S17 (v2) | take1 | pass 4 | 44.06 | 46.06→2.00 (+0.00) | Golden dust haze over the far melee (asked for clear air): the renderer paints its sky and sun into it. Take 2 renamed `rejected_take2.*`. |
+| P49 | S18 (v2) | take2 | pass 4 | 46.49 | 1:1 from 0.70 s in (46.49→0.70) | The plate's sun sits on the horizon behind the fighters: S18 keys the silhouettes and paints its own sun higher. |
+| P50 | S28 (v2) | take2 | pass 4 | 88.28 | 89.78→1.90 (+0.40); 90.20→2.25 (+0.33); 90.60→2.60 (+0.28); 90.87→2.90 (+0.31); 91.31→3.30 (+0.27) | The central Mede stays behind his wicker shield: five faces turn up, not six. |
+| P55 | S79 (v2) | take1 | pass 4 | 269.54 | 270.04→0.42 (-0.08); 270.30→0.68; 273.40→2.58 (the hold slowed to 0.61x) | Profile faces: MediaPipe finds only Syennesis, so the faces, clasp and cuts are tracked by hand in treaty.js; Cyaxares' akinakes is at his left hip. |
 
 ## Per plate
 
@@ -809,4 +815,4 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 * **Checks:** Costumes match the sheets. Cyaxares' akinakes hangs at his left hip, on the camera side (it is in shadow in the painting). No licking, no gore.
 * **Notes for the renderer:** MediaPipe finds only Syennesis' frontal face, so `video/src/scenes/treaty.js` tracks the kings' faces, the mediators' faces, the clasp and both cuts by hand (`TRACK`, measured on plate frames 11, 17, 33, 49 and 63). It also re-paints the cuts as thin madder lines once the pump settles.
 * **Review sheet:** `media/plates/P55/take1.review.jpg` (motion curve + frames at the hits); 8-frame contact `media/plates/P55/take1.sheet.jpg`.
-* Take 2: no shake on the chord (the clasp is static to 1.2 s), a late bump at ~4 s, and its push drops the clasp out of frame by 3.3 s.
+* Take 2: no shake on the chord (the clasp is static to 1.2 s), a late bump at ~4 s, and its push drops the clasp out of frame by 3.3 s. Its files are renamed `media/plates/P55/rejected_take2.*`, so a pipeline run without ids can never extract it over take 1 (the genlog still records the original `take2.mp4` path).
