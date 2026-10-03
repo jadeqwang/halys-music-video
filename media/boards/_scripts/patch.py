@@ -55,3 +55,63 @@ def main(argv):
 
 if __name__ == "__main__":
     main(sys.argv[1:])
+
+
+def mirror(src_raw, name, folder, note):
+    """Horizontally mirror a whole sheet (all views stay mutually consistent); manifest row with model 'composite'."""
+    im = Image.open(src_raw).convert("RGB").transpose(Image.FLIP_LEFT_RIGHT)
+    raw = boards.RAW / f"{name}.png"
+    im.save(raw)
+    out = boards.BOARDS / folder / f"{name}.jpg"
+    size, kb, q = boards.finish_jpg(raw, out)
+    m = {"job": name.rsplit("_t", 1)[0], "take": 1, "name": name, "file": str(out.relative_to(boards.ROOT)), "folder": folder,
+         "model": "composite", "prompt": f"Horizontal mirror (no generation) of {pathlib.Path(src_raw).name}: {note}",
+         "refs": [], "ref_files": [str(src_raw)], "raw": str(raw), "raw_size": list(im.size), "size": list(size),
+         "kb": kb, "secs": 0, "est_cost_usd": 0.0, "t": time.strftime("%Y-%m-%dT%H:%M:%S"), "cf_job": None, "params": {}}
+    with open(boards.MANIFEST, "a") as f:
+        f.write(json.dumps(m) + "\n")
+    print("mirror ->", out, size, kb, "KB")
+
+
+def move_point(src_raw, name, folder, old_xy, new_xy, r=7, note=""):
+    """Move a small bright point (a planet) on a smooth sky: inpaint it at old_xy, add its glow profile at new_xy."""
+    a = np.asarray(Image.open(src_raw).convert("RGB")).astype(np.float32)
+    H, W = a.shape[:2]
+    ox, oy = old_xy
+    mask = np.zeros((H, W), np.uint8)
+    cv2.circle(mask, (int(round(ox)), int(round(oy))), r, 255, -1)
+    base = cv2.inpaint(a.astype(np.uint8), mask, 5, cv2.INPAINT_TELEA).astype(np.float32)
+    x0, y0 = int(round(ox)) - r - 2, int(round(oy)) - r - 2
+    k = 2 * r + 5
+    dot = np.clip(a[y0:y0 + k, x0:x0 + k] - base[y0:y0 + k, x0:x0 + k], 0, 255)
+    nx, ny = int(round(new_xy[0])) - r - 2, int(round(new_xy[1])) - r - 2
+    out = base.copy()
+    out[ny:ny + k, nx:nx + k] = np.clip(out[ny:ny + k, nx:nx + k] + dot, 0, 255)
+    im = Image.fromarray(out.astype(np.uint8))
+    raw = boards.RAW / f"{name}.png"
+    im.save(raw)
+    dst = boards.BOARDS / folder / f"{name}.jpg"
+    size, kb, q = boards.finish_jpg(raw, dst)
+    m = {"job": name.rsplit("_t", 1)[0], "take": 1, "name": name, "file": str(dst.relative_to(boards.ROOT)), "folder": folder,
+         "model": "composite", "prompt": f"Local composite (no generation) of {pathlib.Path(src_raw).name}: planet point moved "
+         f"from {tuple(round(v) for v in old_xy)} to {tuple(round(v) for v in new_xy)} px. {note}",
+         "refs": [], "ref_files": [str(src_raw)], "raw": str(raw), "raw_size": list(im.size), "size": list(size),
+         "kb": kb, "secs": 0, "est_cost_usd": 0.0, "t": time.strftime("%Y-%m-%dT%H:%M:%S"), "cf_job": None, "params": {}}
+    with open(boards.MANIFEST, "a") as f:
+        f.write(json.dumps(m) + "\n")
+    print("moved point ->", dst, size, kb, "KB")
+    return dst
+
+
+def tilt_up(src_raw, dst_raw, shift):
+    """Reframe as a small camera tilt-up: shift the frame down by `shift` px, fill the new top band by mirroring the
+    (near-uniform) top sky and median-filtering out its point stars; the bottom `shift` px of foreground are cropped."""
+    a = np.asarray(Image.open(src_raw).convert("RGB"))
+    H = a.shape[0]
+    band = np.flipud(a[:shift]).copy()
+    band = cv2.medianBlur(band, 5)
+    out = np.vstack([band, a[:H - shift]])
+    seam = np.linspace(0, 1, 12)[:, None, None]
+    out[shift - 6:shift + 6] = (out[shift - 6:shift + 6] * seam + cv2.medianBlur(out[shift - 6:shift + 6].copy(), 5) * (1 - seam)).astype(np.uint8)
+    Image.fromarray(out).save(dst_raw)
+    return dst_raw

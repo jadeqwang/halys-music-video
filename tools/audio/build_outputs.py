@@ -13,6 +13,7 @@ timing.json (times in seconds of song time; t = 0 is the first sample of Halys.m
   events{drop_impacts, kicks, snares, snare_rolls, stabs, low_hits, timpani, choir, vocal_phrases, risers,
          holds, final_chord, key_moments}
   curves{fps, n, t0, rms, low, mid, high, onset, vocal}   0..1 per frame at 24 fps (frame i = song time i/24)
+  sound_design{mp3, master, dur, last_sound, wink_ting, ending, loudness, cues[{name,t0,t1,cue}]}   (sound_design.py)
 """
 import json
 import pathlib
@@ -56,7 +57,8 @@ SECTIONS = [
      "(194.84 s) and the vowel is held ~5 s (194.9-200.2 s) as the orchestra swells: the diamond ring"),
     ("chorus2", "Final chorus (beat held back)", 116, 124,
      "'Shadow turned to day' 200.3 s; bright layer drops out 207.4-208.5 s; 'Throw down your blade' 208.7 s; "
-     "low end OUT for bar 122 (210.18-211.88 s, held 'blade'); beat returns bar 123 with 'Home'; riser ~212.3 s -> drop"),
+     "low end OUT for bar 122 (210.18-211.88 s, held 'blade'); pickup 'Home' 211.44, beat returns on bar 123 (211.88); "
+     "riser ~212.3 s -> drop"),
     ("drop2", "Drop 2", 125, 149,
      "fierce orchestral EDM drop, kick from 215.28 s; the topline is wordless sustained vocal (bars 125-133, 138-148); "
      "the shouted chops come at its end: THROW DOWN 256.41 / 257.25 (bar 149)"),
@@ -65,21 +67,22 @@ SECTIONS = [
      "ticking build; final stark chord 270.04 s decaying to silence by ~273.4 s"),
 ]
 
-KEY_MOMENTS = [  # (t or None to look up, label)
-    (7.161, "low end + full strings enter (bar 5)"),
-    (27.24, "intro boom (bar 16)"),
+KEY_MOMENTS = [  # (bar number -> its downbeat, or a time in s, label)
+    (("bar", 5), "low end + full strings enter"),
+    (("bar", 16), "intro boom"),
     (67.73, "first sung word 'The'"),
-    (110.57, "DROP 1 first kick (bar 64)"),
-    (124.475, "Drop 1 one-bar break (bar 72)"),
-    (126.206, "Drop 1 kick returns (bar 73)"),
-    (153.827, "Drop 1 ends -> breakdown (bar 89)"),
+    (("bar", 64), "DROP 1 first kick"),
+    (("bar", 72), "Drop 1 one-bar break (kick out)"),
+    (("bar", 73), "Drop 1 kick returns"),
+    (("bar", 89), "Drop 1 ends -> breakdown"),
     (168.32, "'quiet' (Birds went quiet)"),
-    (194.84, "'spark' (bar 113, held ~5 s)"),
-    (200.31, "'Shadow turned to day' - final chorus"),
-    (210.177, "beat held back: low end out (bar 122)"),
-    (211.877, "beat returns (bar 123)"),
-    (215.28, "DROP 2 first kick (bar 125)"),
-    (257.675, "Drop 2 kick stops; stop-time hit (bar 150)"),
+    (194.845, "'spark' (on the bar-113 downbeat, vowel held ~5 s)"),
+    (200.315, "'Shadow turned to day' - final chorus"),
+    (("bar", 122), "beat held back: low end out"),
+    (211.44, "'Home' (pickup)"),
+    (("bar", 123), "beat returns"),
+    (("bar", 125), "DROP 2 first kick"),
+    (("bar", 150), "Drop 2 kick stops; stop-time hit"),
     (270.04, "final stark chord"),
 ]
 
@@ -164,7 +167,9 @@ def main():
                dict(t0=bt[122]["t0"], t1=bt[122]["t1"], what="beat held back: low end out (sub ~-60 dB), 'blade' held"),
                dict(t0=bt[150]["t0"], t1=bt[151]["t0"], what="Drop 2 kick stops; low end out after the hit")],
         final_chord=dict(t=270.04, decay_to=273.4),
-        key_moments=[dict(t=t, what=w, bar=bar_of(t)) for t, w in KEY_MOMENTS],
+        key_moments=[dict(t=bt[t[1]]["t0"] if isinstance(t, tuple) else t, what=w,
+                          bar=t[1] if isinstance(t, tuple) else bar_of(float(g[int(np.argmin(np.abs(g - t)))])))
+                     for t, w in KEY_MOMENTS],
     )
     cur = A["curves"]
     curves = dict(fps=24, n=len(cur["rms"]), t0=0.0, **{k: cur[k] for k in ("rms", "low", "mid", "high", "onset", "vocal")})
@@ -178,9 +183,15 @@ def main():
         tempo=[dict(t=b["t0"], bpm=b["bpm"]) for b in bars if b["bpm"]],
         sections=sections, lines=lines, chops=chops, events=events, curves=curves,
     )
-    prev = json.loads(OUT.read_text()) if OUT.exists() else {}
-    if prev.get("durExt"):
-        out["durExt"] = prev["durExt"]
+    sdj = ROOT / "media" / "sfx" / "cues.json"          # written by sound_design.py (the extended "updated sound" mix)
+    if sdj.exists():
+        sd = json.loads(sdj.read_text())
+        out["durExt"] = sd["dur_new"]
+        out["sound_design"] = dict(
+            mp3="release/Halys_sound_design.mp3", master="media/stems/halys_sd_master.wav", dur=sd["dur_new"],
+            last_sound=sd["last_sound"], wink_ting=sd["wink_ting"], ending=sd["ending"], loudness=sd["loudness"],
+            note="same t = 0 as Halys.mp3; identical to the original up to the crossfade, then the frozen chord tail",
+            cues=[dict(name=c["name"], t0=c["t0"], t1=c["t1"], cue=c["cue"]) for c in sd["cues"]])
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(out, separators=(",", ":")))
     print(f"wrote {OUT} ({OUT.stat().st_size / 1e3:.0f} kB): {len(g)} beats, {len(bars)} bars, {len(sections)} sections, "

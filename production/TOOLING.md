@@ -203,6 +203,7 @@ mediapipe, jsonschema, Pillow are installed). Audited 2026-10-02: every CLI belo
 | `pipeline.sh` | runs the above in dependency order: extract → meta (writes the gain) → fields → mattes → depth | `tools/pipeline.sh [--mattes\|--depth\|--all] [ids]` |
 | `review_sheets.py` | contact sheets: any video, all takes of a plate, frame strips, one frame next to all its maps, rendered film frames | `video FILE` · `plates [ids]` · `strip FILE --from= --to=` · `maps ID --frame=N` · `frames [--from= --to= --every=]` |
 | `models.py` | downloads the local analysis models (face landmarker, anime cascade, Depth Anything ONNX) to `~/.cache/halys/models` | `python3 tools/models.py [face\|animeface\|depth]` |
+| `shotlist.py` | parses `production/SHOTLIST.md` (79 shots S01–S79: times, worlds, plate ids, text cues with times and roles) into `video/data/shotlist.json`, which `video/src/edit.js` turns into shots; validates gaps/overlaps | `python3 tools/shotlist.py [--check] [--table]` (re-run after every SHOTLIST.md edit) |
 | `encode_release.sh` | release encodes from the rendered frames (section 4) | `tools/encode_release.sh [--hevc\|--h264] [--test=a:b]` |
 
 Fixes made in the audit: `pipeline.sh` no longer hides a `plate_meta.py` crash behind `| grep ... || true` (stderr is
@@ -241,20 +242,22 @@ video/
   package.json          playwright-core 1.56.1 (matches /opt/pw-browsers chromium 1194 = Chromium 141); `npm install` once
   render.mjs            the driver (static server + Chromium workers + ffmpeg)
   studio.html           the page: render target (?render) and interactive scrubber with audio
-  fonts/                Cinzel (carved caps), Archivo variable (ultra-heavy wide grotesk), Instrument Serif, JetBrains Mono (all OFL)
+  fonts/                Cinzel, Archivo (variable, wide), Cormorant Garamond italic, Cardo (Greek fallback), Instrument Serif,
+                        JetBrains Mono (all OFL; licence files alongside)
   data/timing.json      beat grid / sections / lyric timings (written by tools/audio/, optional for the harness)
+  data/shotlist.json    the locked edit, parsed from production/SHOTLIST.md by tools/shotlist.py
   plates/               plate frames + analysis (tools/pipeline.sh; frames/maps/masks are gitignored)
   src/main.js           boot, renderFrame(i), hold keys, window.HALYS API
   src/time.js           60 fps master timeline, cadence quantisation, timing.json loader, beat helpers (beatPos, pulse, curve)
   src/registry.js       scene() / shot() registry, default cadence per world, frame-grid snapping, gaps
-  src/edit.js           THE SHOT LIST (placeholder until SHOTLIST.md: one shot per timing.json section): one shot() per cut
+  src/edit.js           the edit: one shot() per S## of data/shotlist.json (fallbacks: timing.json sections, a built-in table)
   src/layout.js         size-aware layout: safe areas, type unit, cover/contain with focus, per-aspect pick()
   src/assets.js         fetch/ImageBitmap/JSON loaders with LRU caches, pixels() for map decoding
   src/plates.js         plate frames, maps (g/o/v/d/m), meta, fields; plate-time mapping; numeric field decoding
-  src/fonts.js          FontFace loading + type roles (carved, drop, verse, serif, mono)
+  src/fonts.js          FontFace loading + type roles (carved, plaque, inscr, chop, mono)
   src/gl.js             shared WebGL2 context per size: programs, textures, full-screen passes
   src/core.js           math, hashing, seeded rng, value noise, colour, world palettes (colour script)
-  src/scenes/placeholder.js   the stand-in test card for every world
+  src/scenes/placeholder.js   the stand-in test card for every world (draws each shot's text cues at their times)
   src/studio.js         the scrubber UI
 ```
 
@@ -275,12 +278,14 @@ video/
   `TM.sections` (`{id, name, t0, t1, bar0, bar1}`, 16 bar-aligned sections), `TM.lines` (lyrics with word timings),
   `TM.chops` (each chopped drop word with its time), `TM.events` (drop impacts, kicks, snares, stabs, timpani, choir,
   risers, final chord, ...), `TM.curves` (24 fps envelopes: rms, low, mid, high, onset, vocal) and helpers
-  `beatPos(t)`, `beatTime(n)`, `pulse(t)`, `section(id)`, `sectionAt(t)`, `chopAt(t)`, `curve(name, t)`. The placeholder
-  edit cuts on `TM.sections`; its drop words slam in on `TM.chops` (verified frame-exact: "HALO" first appears on master
-  frame 6640, the first frame at or after the measured 110.66 s chop; "IN THE" on 6659, "SKY" on 6688).
+  `beatPos(t)`, `beatTime(n)`, `pulse(t)`, `section(id)`, `sectionAt(t)`, `chopAt(t)`, `curve(name, t)`. Timed events
+  land frame-exact at 60 fps: S35's CHOP "HALO" (110.66 s in both SHOTLIST.md and `TM.chops`) first appears on master
+  frame 6640, the first frame at or after 110.66 s; "IN THE" on 6659, "SKY" on 6688. At 12 fps a cue can only appear on
+  the next drawing (≤ 83 ms late): shots that need sample-exact hits should run at 60.
 * **Hold de-duplication.** All frames of one drawing share a key `"<shot>#<d>"`. `render.mjs --frames` renders one frame
-  per key and hard-links the held frames (`f06628.jpg … f06632.jpg` → one inode). Placeholder film: 16 418 frames from
-  ~8 000 drawings; 12 fps sections cost ~3 ms per frame effective. Encoders see identical frames, which compress to
+  per key and hard-links the held frames (`f06628.jpg … f06632.jpg` → one inode). The locked edit (SHOTLIST v1,
+  79 shots) needs **8 529 drawings for 16 418 frames** (12 fps for 140 s, 30 fps for 39 s, 60 fps for 94 s; `--list`
+  prints this), so 12 fps sections cost ~3 ms per frame effective. Encoders see identical frames, which compress to
   almost nothing.
 
 ### 3.2 Scenes, shots and the frame context
@@ -308,6 +313,18 @@ Scenes are ES modules under `src/scenes/` (import `plateFieldsAt`, `plateMap`, `
 `getGL` from `../gl.js`, `setFont` from `../fonts.js`) and register themselves when `edit.js` imports them. The
 look-dev materials in `video/lab/src/` are ES modules too: port a material by wrapping its draw call in `scene()` and
 replacing its fixed 1920×1080 constants with `f.W`, `f.H` and `f.L`.
+
+**The edit** (`src/edit.js`) builds one shot per `S##` of `data/shotlist.json`: times from SHOTLIST.md, `world` = the
+first world named (sets the cadence; transitions like `CORONA→MARBLE` keep the full list in `params.worlds`), plate ids
+in `params.plates`, and `params.cues` = the Text column as `{role, t, t_end, text}` (CARVED / PLAQUE / INSCR / CHOP /
+MONO; a cue timed into the next shot moves there; "held to 110.56" becomes `t_end`). Every shot currently draws with
+the placeholder scene, which shows the cues at their times (CHOP: the latest chop only), so the studio already previews
+the locked edit's cuts and type timing against the song. To start real work, give a world its scene in `edit.js`.
+
+**Type roles** (`src/fonts.js`, SHOTLIST.md's names): CARVED = Cinzel 700 · PLAQUE = Cinzel 500, small, tracked +0.18 em
+· INSCR = Cormorant Garamond italic · CHOP = Archivo 900 at 125 % width · MONO = JetBrains Mono. `setFont(g, role, px)`
+sets font, width and tracking. None of the display faces has Greek, so every role falls back to bundled **Cardo** (S52's
+ΘΑΛΗΣ); without it the browser would substitute a system font.
 
 ### 3.3 Output sizes and aspect ratios
 
@@ -340,7 +357,8 @@ Options: `--fps=60`, `--q=0.93` (JPEG), `--dir=`, `--song=` (e.g. an extended fi
 frames are written atomically and a re-run resumes.
 
 **Resume safety (`keys.json`).** Each frames directory keeps a ledger: for every frame file, the drawing key it holds
-and a hash of the sources it was drawn from (`src/`, `studio.html`, `data/timing.json`, `plates/index.json`). On a
+and a hash of the sources it was drawn from (`src/`, `studio.html`, `data/timing.json`, `data/shotlist.json`,
+`plates/index.json`). On a
 re-run, frames whose key changed (the edit moved a cut or changed a cadence) are **redrawn automatically**; frames drawn
 from older sources, and frames with no ledger entry, are **kept with a warning** (redraw them with `--stale`, or
 everything in the range with `--force`), so a scene tweak never silently mixes old and new drawings without you being
@@ -371,11 +389,12 @@ shift+←/→ one second, `[` `]` previous/next shot, size presets (16:9, 4:5, 9
 ### 3.6 Proven so far
 
 * **5-second render + encode with the song** (108–113 s, crossing the C2 cut from 12 fps BRONZE to 60 fps WebGL
-  CORONA): 300 frames from 176 drawings in 9.5 s with 4 workers; `--encode --range=108:113` → H.264 1920×1080 60/1,
+  CORONA): 300 frames from 177 drawings in 9.5–11 s with 4 workers; `--encode --range=108:113` → H.264 1920×1080 60/1,
   300 frames, 5.000 s, AAC 48 kHz 5.000 s, 1.5 MB, tagged BT.709/tv. The muxed audio matches `Halys.mp3` at
   **108.000 s (0.0 ms offset, correlation 0.998)**; decoded frames match the source JPEGs within ~1 level.
-* **The whole placeholder film**: `--frames=0:273.7 --workers=4` → 16 418 master frames from 8 052 drawings
-  (49 %: the rest are hold links) in ≈ 6 min total (7 360 drawings in 323 s = 21 ms/frame effective), 680 MB on disk.
+* **The whole placeholder film** (with the earlier section-based edit): `--frames=0:273.7 --workers=4` → 16 418 master
+  frames from 8 052 drawings (49 %: the rest are hold links) in ≈ 6 min total (7 360 drawings in 323 s = 21 ms/frame
+  effective), 680 MB on disk.
 * **Determinism**: 24 frames around the cut drawn independently (`--no-dedupe`, 2 workers) are byte-identical to the
   hold-linked render (3 workers), and `renderAt(t)` returns identical bytes for repeated t.
 * 4:5: `--size=1080x1350` frames + encode (1080×1350 60/1); `--fps=30` lists and warns about uneven 12 fps holds.
@@ -414,6 +433,11 @@ H264_SIZE=1920x1080 H264_MB=240 tools/encode_release.sh --h264                  
   sections are expensive; a size target moves the bits to the drops. Expect the drops (≈ 82 s of 60 fps drawing) to be
   the quality bottleneck at ~2.5 Mbit/s; if they break up, raise `HEVC_MB` only for an off-repo file, or simplify the
   60 fps material (flat blacks and clean field lines compress well, film grain does not).
-* Measured on a 20 s excerpt (100–120 s, placeholder): HEVC projected 97.7 MB at a 95 MB target, H.264 98.1 MB at 92 MB
-  (short-excerpt rate control overshoots 3–7 %), hence the 94/90 MB defaults and the refit step. Speed (preset slow,
-  4 CPUs): ≈ 220 s for both codecs on 1 200 frames, so ≈ 50 min for the whole film.
+* **Verified on the full 4:34 film** (the placeholder render, all 16 418 frames; `OUT=video/out/release_test`):
+  **`Halys_1080p60_hevc.mp4` 92.2 MB** (HEVC Main, `hvc1`, 1920×1080 60/1, 2.49 Mbit/s video, AAC-LC 48 kHz 192k,
+  BT.709/tv, 273.63 s) and **`Halys_720p60_h264.mp4` 87.7 MB** (H.264 High 1280×720 60/1, AAC 160k); no refit was
+  needed; audio offset 0.0 ms at 30 s, 150 s and 260 s. Wall time **43 min** for both (x265 two-pass ≈ 30 min, x264
+  ≈ 13 min, preset slow, 4 CPUs). Real painted frames are busier than the placeholder, so expect the same sizes (the
+  rate control holds them) at visibly lower quality in the 60 fps drops, and somewhat longer encodes.
+* Short excerpts overshoot (a 20 s `--test` projected 97.7 MB at a 95 MB target and 98.1 MB at 92 MB), so read `--test`
+  projections as a pessimistic bound; the full-length encode is what lands on target.

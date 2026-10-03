@@ -66,7 +66,7 @@ is masked by the crash/riser and is good to about ±10 ms. Risers: 108.0 s → D
 | 11 | **Verse 2** | 2:40.70 | 2:54.39 | 160.70 | 174.39 | 93–100 | 140.3 | 'What was it like...': piano + strings, faint pulse, close vocal |
 | 12 | **'a shadow crossed the hills'** | 2:54.39 | 3:01.23 | 174.39 | 181.23 | 101–104 | 140.3 | two lines; orchestra thickens |
 | 13 | **'Thales foretold...' build** | 3:01.23 | 3:19.98 | 181.23 | 199.98 | 105–115 | 140.4 | strings + choir climbing; breath 187.65-188.55 s; '[rest]' 192.75-193.1 s; 'a sudden SPARK' lands on bar 113 (194.84 s) and the vowel is held ~5 s (194.9-200.2 s) as the orchestra swells: the diamond ring |
-| 14 | **Final chorus (beat held back)** | 3:19.98 | 3:35.29 | 199.98 | 215.29 | 116–124 | 141.2 | 'Shadow turned to day' 200.3 s; bright layer drops out 207.4-208.5 s; 'Throw down your blade' 208.7 s; low end OUT for bar 122 (210.18-211.88 s, held 'blade'); beat returns bar 123 with 'Home'; riser ~212.3 s -> drop |
+| 14 | **Final chorus (beat held back)** | 3:19.98 | 3:35.29 | 199.98 | 215.29 | 116–124 | 141.2 | 'Shadow turned to day' 200.3 s; bright layer drops out 207.4-208.5 s; 'Throw down your blade' 208.7 s; low end OUT for bar 122 (210.18-211.88 s, held 'blade'); pickup 'Home' 211.44, beat returns on bar 123 (211.88); riser ~212.3 s -> drop |
 | 15 | **Drop 2** | 3:35.29 | 4:17.68 | 215.29 | 257.68 | 125–149 | 141.2 | fierce orchestral EDM drop, kick from 215.28 s; the topline is wordless sustained vocal (bars 125-133, 138-148); the shouted chops come at its end: THROW DOWN 256.41 / 257.25 (bar 149) |
 | 16 | **Outro: stop-time hits, final chord** | 4:17.68 | 4:33.60 | 257.68 | 273.60 | 150–159 | 141.6 | kick stops; hits on bars 150-153 with THROW DOWN 259.78 and BLADE 260.63; boom + held 'throw down' 262.7-266.1 s; ticking build; final stark chord 270.04 s decaying to silence by ~273.4 s |
 
@@ -74,20 +74,21 @@ is masked by the crash/riser and is good to about ±10 ms. Risers: 108.0 s → D
 
 | Time | s | Frame @24 | Bar | Moment |
 |---|---|---|---|---|
-| 0:07.16 | 7.16 | 172 | 4 | low end + full strings enter (bar 5) |
-| 0:27.24 | 27.24 | 654 | 16 | intro boom (bar 16) |
+| 0:07.18 | 7.18 | 173 | 5 | low end + full strings enter |
+| 0:27.24 | 27.24 | 654 | 16 | intro boom |
 | 1:07.73 | 67.73 | 1626 | 39 | first sung word 'The' |
-| 1:50.57 | 110.57 | 2654 | 63 | DROP 1 first kick (bar 64) |
-| 2:04.47 | 124.47 | 2988 | 72 | Drop 1 one-bar break (bar 72) |
-| 2:06.21 | 126.21 | 3029 | 73 | Drop 1 kick returns (bar 73) |
-| 2:33.83 | 153.83 | 3692 | 89 | Drop 1 ends -> breakdown (bar 89) |
+| 1:50.58 | 110.58 | 2654 | 64 | DROP 1 first kick |
+| 2:04.47 | 124.47 | 2988 | 72 | Drop 1 one-bar break (kick out) |
+| 2:06.21 | 126.21 | 3029 | 73 | Drop 1 kick returns |
+| 2:33.83 | 153.83 | 3692 | 89 | Drop 1 ends -> breakdown |
 | 2:48.32 | 168.32 | 4040 | 97 | 'quiet' (Birds went quiet) |
-| 3:14.84 | 194.84 | 4677 | 112 | 'spark' (bar 113, held ~5 s) |
+| 3:14.84 | 194.84 | 4677 | 113 | 'spark' (on the bar-113 downbeat, vowel held ~5 s) |
 | 3:20.31 | 200.31 | 4808 | 116 | 'Shadow turned to day' - final chorus |
-| 3:30.18 | 210.18 | 5045 | 122 | beat held back: low end out (bar 122) |
-| 3:31.88 | 211.88 | 5086 | 123 | beat returns (bar 123) |
-| 3:35.28 | 215.28 | 5167 | 124 | DROP 2 first kick (bar 125) |
-| 4:17.68 | 257.68 | 6185 | 150 | Drop 2 kick stops; stop-time hit (bar 150) |
+| 3:30.18 | 210.18 | 5045 | 122 | beat held back: low end out |
+| 3:31.44 | 211.44 | 5075 | 122 | 'Home' (pickup) |
+| 3:31.88 | 211.88 | 5086 | 123 | beat returns |
+| 3:35.29 | 215.29 | 5167 | 125 | DROP 2 first kick |
+| 4:17.68 | 257.68 | 6185 | 150 | Drop 2 kick stops; stop-time hit |
 | 4:30.04 | 270.04 | 6481 | 157 | final stark chord |
 
 ## Lyrics, word by word
@@ -170,7 +171,7 @@ Stutter onsets, Drop 1 bars 65–67 (34; 8th notes in bar 65, 16ths in bars 66�
 * **Silences / holds:** `events.holds` (Drop 1 break, final-chorus drop-out 207.4–208.5, beat held back bar 122, outro stop at 257.68).
 * **Ending:** kick stops 257.68 with a hit; stop-time hits 259.35 and 261.05; boom 262.72; ticking build from 266.1;
   final hits 266.99–269.8; **final stark chord 270.04**, decaying to silence by ~273.4 (file ends 273.60).
-  
+  Sound-design version runs to 279.60 s (see SOUND_DESIGN.md).
 
 ## Curves (24 fps)
 
@@ -199,5 +200,8 @@ Stutter onsets, Drop 1 bars 65–67 (34; 8th notes in bar 65, 16ths in bars 66�
 * Pipeline (`tools/audio/`): `separate.sh` (stems) → `madmom_beats.py` → `analyze.py` (grid, bars, events, curves) →
   `whisper_cf.py` (Cloudflare Whisper passes, logged in `media/genlog.jsonl`) → `align_lyrics.py` (true words, onset
   snapping, chops) → `build_outputs.py` (timing.json) → `audio_map.py` (this file) → `overview_plot.py`.
+* Sound design (the "updated sound" mp3): `sfx_gen.py` (ElevenLabs sources) → `sound_design.py` (cues, freeze ending,
+  loudness match → `release/Halys_sound_design.mp3`, `media/stems/halys_sd_master.wav`) → `sound_design_doc.py`
+  (`production/SOUND_DESIGN.md`). `timing.json` → `durExt`, `sound_design{}` carry its duration and cue times.
 * Stems used: MDX-Net Kim_Vocal_2 vocals/instrumental + UVR KARA_2 lead/backing split (clean enough for every
   measurement here; the interrupted BS-Roformer re-separation was not needed).

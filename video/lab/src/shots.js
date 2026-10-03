@@ -18,7 +18,7 @@ export const SHOTS = {
         { x: .53, y: .48, rx: .07, ry: .04, k: .7 },            // blade + fist
       ],
       sky: { maxDepth: .006, soft: .01, below: .16, horizon: .11, zenith: .34, horizonL: .56, vortex: .2 },
-      sun: { x: .13, y: .07, r: .035 }, eclipse: .18,
+      sun: { x: .13, y: .07, r: .035, alt: 9 }, eclipse: .18,
     },
     corona: {
       sky: { maxDepth: .006, soft: .01, below: .16 },
@@ -58,8 +58,8 @@ export const SHOTS = {
       poolMatte: 0, poolBound: null, envDim: .9,
       focus: [{ x: .3, y: .62, rx: .25, ry: .2, k: .5 }, { x: .8, y: .7, rx: .2, ry: .25, k: .5 }],
       sky: { maxDepth: .012, soft: .02, below: .34, horizon: .27, zenith: .24, horizonL: .68, vortex: .13, glowR: .22, twist: 1.4 },
-      sun: { x: .1, y: .19, r: .042 }, eclipse: .35,
-      crushFloor: .17, crush: .3, satOut: .6, glintReach: 30,
+      sun: { x: .1, y: .19, r: .042, alt: 9 }, eclipse: .35,
+      crushFloor: .17, crush: .3, satOut: .6, glintReach: 30, accents: .45,
     },
     corona: {
       sky: { maxDepth: .012, soft: .02, below: .34 },
@@ -69,8 +69,11 @@ export const SHOTS = {
         { x: .3, y: .62, rx: .26, ry: .22, rot: .35, feather: .7, k: 1 },
         { x: .78, y: .7, rx: .22, ry: .26, rot: -.2, feather: .7, k: 1 },
         { x: .56, y: .68, rx: .09, ry: .42, rot: -.3, feather: .7, k: .8 },
-      ], envDim: .3, particles: 1,
+      ], armies: 1, contour: 0, innerEdges: 0,
     },
+  },
+  seedance: {
+    corona: { lightDir: [.7, -.7], bgCut: .3, shadowCut: .08 },
   },
   d_room: {
     ink: {

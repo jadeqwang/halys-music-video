@@ -42,42 +42,82 @@ function fit(g, lines, maxW, px, role, minPx = 8) {
   return { lines, px: minPx };
 }
 
-function title(f, lines, role) {
+// ---- type, one function per SHOTLIST role (placeholder layout: 16:9 anchors left, portrait centres) ----
+function chopWord(f, word) {                         // CHOP: one giant word filling the frame width
   const { g, L } = f, P = PAL[f.world] || PAL.bronze;
+  let px = L.H * (L.portrait ? .2 : .36);
+  setFont(g, 'chop', px);
+  const w = g.measureText(word).width;
+  if (w > L.safe.w) { px *= L.safe.w / w; setFont(g, 'chop', px); }
+  g.textAlign = 'center'; g.fillStyle = rgba(P.pearl || '#efe9dc', .92);
+  g.fillText(word, L.cx, L.cy + px * .36);
+}
+function carvedBlock(f, lines) {                     // CARVED: gold capitals; returns the block's bottom y
+  const { g, L } = f;
+  const maxW = L.portrait ? L.safe.w : L.safe.w * .62;
+  const r = fit(g, lines, maxW, L.pick({ '16:9': L.H * .085, '4:5': L.W * .085, '9:16': L.W * .1 }), 'carved');
+  g.textAlign = L.portrait ? 'center' : 'left';
+  const x = L.portrait ? L.cx : L.safe.x, y0 = L.portrait ? L.H * .62 : L.H * .7 - (r.lines.length - 1) * r.px * 1.15;
+  const grad = g.createLinearGradient(0, y0 - r.px, 0, y0 + r.lines.length * r.px * 1.15);
+  grad.addColorStop(0, '#fff1c9'); grad.addColorStop(.5, '#f1b545'); grad.addColorStop(1, '#8a5a1c');
+  g.fillStyle = grad;
+  r.lines.forEach((s, j) => g.fillText(s, x, y0 + j * r.px * 1.15));
+  return y0 + (r.lines.length - 1) * r.px * 1.15 + r.px * .5;
+}
+// PLAQUE: small tracked caps (museum label): under the carved block (yTop), else above an inscription (yAbove), else
+// at the foot of the safe area
+function plaqueLines(f, lines, yTop, yAbove) {
+  const { g, L } = f;
+  const r = fit(g, lines, L.portrait ? L.safe.w : L.safe.w * .62, Math.max(L.type(.028), 18 * L.u), 'plaque');
+  g.textAlign = L.portrait ? 'center' : 'left'; g.fillStyle = rgba('#e9e0cc', .85);
+  const x = L.portrait ? L.cx : L.safe.x, lead = r.px * 1.5, n = r.lines.length;
+  const y0 = yTop != null ? yTop + r.px * 1.4 : (yAbove != null ? yAbove - r.px : L.safe.y + L.safe.h) - (n - 1) * lead;
+  r.lines.forEach((s, j) => g.fillText(s, x, y0 + j * lead));
+}
+function inscrLines(f, lines) {                      // INSCR: small italic lower third (>= 4.5 % of frame height); returns its top y
+  const { g, L } = f;
+  const r = fit(g, lines, L.safe.w, Math.max(L.type(.05), 28 * L.u), 'inscr', L.type(.045));
+  g.textAlign = 'center'; g.fillStyle = rgba('#efe9dc', .92);
+  const base = L.safe.y + L.safe.h, n = r.lines.length;
+  r.lines.forEach((s, j) => g.fillText(s, L.cx, base - (n - 1 - j) * r.px * 1.2));
+  return base - (n - 1) * r.px * 1.2 - r.px;
+}
+function monoBlock(f, lines) {                       // MONO: terminal / HUD block, top left of the safe area
+  const { g, L } = f;
+  const r = fit(g, lines, L.safe.w, Math.round(26 * L.u), 'mono');
+  g.textAlign = 'left'; g.fillStyle = PAL.room.screen;
+  r.lines.forEach((s, j) => g.fillText(s, L.safe.x, L.safe.y + r.px * (1.4 * j + 1)));
+}
+
+// SHOTLIST text cues [{role, t, t_end, text}], time-gated: a cue shows from its time (or the cut) until t_end or the
+// shot's end; CHOP shows only the latest chop.
+function drawCues(f, cues) {
+  const vis = cues.filter(q => (q.t == null || q.t <= f.t + 1e-6) && (q.t_end == null || f.t < q.t_end));
+  const of = role => vis.filter(q => q.role === role).map(q => q.text);
+  const g = f.g;
+  g.save(); g.textBaseline = 'alphabetic';
+  const chops = vis.filter(q => q.role === 'chop');
+  if (chops.length) chopWord(f, chops.reduce((a, b) => ((b.t ?? -1) >= (a.t ?? -1) ? b : a)).text.toUpperCase());
+  const carved = of('carved'), plaque = of('plaque'), inscr = of('inscr'), mono = of('mono');
+  const yb = carved.length ? carvedBlock(f, carved) : null, yi = inscr.length ? inscrLines(f, inscr) : null;
+  if (plaque.length) plaqueLines(f, plaque, yb, yi);
+  if (mono.length) monoBlock(f, mono);
+  g.restore();
+}
+
+// section-based fallback edit: params.title + params.role ('drop' | 'verse' | 'mono' | carved)
+function title(f, lines, role) {
   if (!lines || !lines.length) return;
-  g.save();
-  g.textBaseline = 'alphabetic';
-  if (role === 'drop') {                             // giant chopped word: fills the frame width
+  const g = f.g;
+  g.save(); g.textBaseline = 'alphabetic';
+  if (role === 'drop') {
     // the measured chop (timing.json `chops`) slams in on its own frame; without timing data, one word per beat
     const ch = chopAt(f.t, 1.5), n = lines.length;
     const word = ch && ch.t >= f.shot.t0 - 1e-6 ? ch.word.toUpperCase() : TM.chops.length ? null : lines[((Math.floor(beatPos(f.t)) % n) + n) % n];
-    if (!word) { g.restore(); return; }
-    let px = L.H * (L.portrait ? .2 : .36);
-    setFont(g, 'drop', px);
-    const w = g.measureText(word).width, max = L.safe.w;
-    if (w > max) { px *= max / w; setFont(g, 'drop', px); }
-    g.textAlign = 'center';
-    g.fillStyle = rgba(P.pearl || '#efe9dc', .92);
-    g.fillText(word, L.cx, L.cy + px * .36);
-  } else if (role === 'verse') {                     // small italic lower third (>= 4.5 % of frame height), wrapped
-    const r = fit(g, lines, L.safe.w, Math.max(L.type(.05), 28 * L.u), 'verse', L.type(.045));
-    g.textAlign = 'center'; g.fillStyle = rgba('#efe9dc', .9);
-    r.lines.forEach((s, j) => g.fillText(s, L.cx, L.safe.y + L.safe.h - (r.lines.length - 1 - j) * r.px * 1.2));
-  } else if (role === 'mono') {                      // terminal block, top left of the safe area
-    const r = fit(g, lines, L.safe.w, Math.round(26 * L.u), 'mono');
-    g.textAlign = 'left'; g.fillStyle = PAL.room.screen;
-    r.lines.forEach((s, j) => g.fillText(s, L.safe.x, L.safe.y + r.px * (1.4 * j + 1)));
-  } else {                                           // carved capitals: left half on 16:9, top block on portrait
-    const maxW = L.portrait ? L.safe.w : L.safe.w * .62;
-    const { lines: ls, px } = fit(g, lines, maxW, L.pick({ '16:9': L.H * .085, '4:5': L.W * .085, '9:16': L.W * .1 }), 'carved');
-    lines = ls;
-    g.textAlign = L.portrait ? 'center' : 'left';
-    const x = L.portrait ? L.cx : L.safe.x, y0 = L.portrait ? L.H * .62 : L.H * .7 - (lines.length - 1) * px * 1.15;
-    const grad = g.createLinearGradient(0, y0 - px, 0, y0 + lines.length * px * 1.15);
-    grad.addColorStop(0, '#fff1c9'); grad.addColorStop(.5, '#f1b545'); grad.addColorStop(1, '#8a5a1c');
-    g.fillStyle = grad;
-    lines.forEach((s, j) => g.fillText(s, x, y0 + j * px * 1.15));
-  }
+    if (word) chopWord(f, word);
+  } else if (role === 'verse') inscrLines(f, lines);
+  else if (role === 'mono') monoBlock(f, lines);
+  else carvedBlock(f, lines);
   g.restore();
 }
 
@@ -152,7 +192,7 @@ scene('placeholder', async f => {
     g.imageSmoothingQuality = 'high'; g.drawImage(ink, R.x, R.y, R.w, R.h);
   }
 
-  title(f, params.title, params.role || 'carved');
+  if (params.cues) drawCues(f, params.cues); else title(f, params.title, params.role || 'carved');
 
   // test-card labels (a real HUD is a design element of the drops; this one proves the cadence and layout)
   g.save();

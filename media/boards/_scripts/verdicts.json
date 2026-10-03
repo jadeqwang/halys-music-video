@@ -1,0 +1,217 @@
+{
+ "lydian_t1": {
+  "subject": "THE LYDIAN",
+  "verdict": "reject",
+  "issues": "Helmet came out closed (Chalcidian with nose guard): face half hidden; naturalistic heraldic lion on a cream field (not archaic, not crimson); bare sword blade; cartoon dog-bone knucklebone."
+ },
+ "lydian_t2": {
+  "subject": "THE LYDIAN",
+  "verdict": "alt",
+  "issues": "Fixed helmet (Corinthian pushed up, face visible), archaic black-figure lion on crimson, sheathed sword. Knucklebone still a cartoon dog-bone: superseded by lydian_e1 (edit of this take)."
+ },
+ "lydian_e1_t1": {
+  "subject": "THE LYDIAN",
+  "verdict": "canonical",
+  "issues": "Edit of lydian_t2: real-looking lumpy astragalus in the palm inset and on the neck cord. Minor: the astragalus is a plausible knucklebone, not an anatomically exact sheep astragalus; scale corselet reads all-bronze rather than linen faced with scales; the lion is black-figure black on crimson (the brief said gold-ochre; black-figure is the more period-correct choice)."
+ },
+ "mede_t1": {
+  "subject": "THE MEDE",
+  "verdict": "reject",
+  "issues": "Strong face and costume, but the akinakes hangs at the left hip, modern loafer-like shoes, reads 40+ with heavy grey."
+ },
+ "mede_t2": {
+  "subject": "THE MEDE",
+  "verdict": "alt",
+  "issues": "Curls at the nape, toy-horse inset excellent; but SHORT sleeves (brief: long-sleeved), modern lace-up boots, akinakes on the left in front/back views."
+ },
+ "mede_e1_t1": {
+  "subject": "THE MEDE",
+  "verdict": "alt",
+  "issues": "Edit of mede_t2: long sleeves and soft thong-tied boots fixed; akinakes still on the left hip in front and back views."
+ },
+ "mede_e2_t1": {
+  "subject": "THE MEDE",
+  "verdict": "alt",
+  "issues": "Edit of mede_e1: akinakes now on the right thigh in the 3/4 and profile views only; front and back still wrong."
+ },
+ "mede_e3_t1": {
+  "subject": "THE MEDE",
+  "verdict": "canonical",
+  "issues": "Edit of mede_e2 with per-view image-space instructions: akinakes on the RIGHT thigh in all four views, long sleeves, soft boots, toy-horse inset. Third-generation edit: very slightly more contrasty than t2, no visible artefacts."
+ },
+ "mede_g1_t1": {
+  "subject": "THE MEDE",
+  "verdict": "alt",
+  "issues": "gpt-image-2 edit of mede_e2 with the same instruction: also correct in front/3-4/back, sword missing in profile, softer detail than NBP. Proof that gpt-image-2 follows left/right instructions better."
+ },
+ "lyd_cav_rider_t1": {
+  "subject": "LYDIAN CAVALRYMAN",
+  "verdict": "canonical",
+  "issues": "Open-faced crested bronze helmet (face clear), crimson chiton, bronze-scale linen corselet, ochre cloak, 3 m spear. Minor: lace-up boots look a little modern; cloak pinned at the front rather than the right shoulder."
+ },
+ "lyd_cav_horse_t1": {
+  "subject": "LYDIAN CAVALRYMAN",
+  "verdict": "canonical",
+  "issues": "Mounted sheet using the rider sheet as identity ref: same face/kit; chestnut stallion, crimson-and-ochre saddlecloth with girth and breast-strap, bronze-bossed bridle and frontlet, NO stirrups, unshod. Horse anatomy correct in all three views."
+ },
+ "med_archer_t1": {
+  "subject": "MEDIAN ARCHER",
+  "verdict": "reject",
+  "issues": "Hood reads as a medieval monk's cowl with shoulder cape; gorytos on his right hip and a bare blade on the left (both sides reversed)."
+ },
+ "med_archer2_t1": {
+  "subject": "MEDIAN ARCHER",
+  "verdict": "reject",
+  "issues": "Better bashlyk with lappets, but passing take 1 as reference copied its reversed gorytos/sword sides."
+ },
+ "med_archer3_t1": {
+  "subject": "MEDIAN ARCHER",
+  "verdict": "alt",
+  "issues": "Fresh take: good bashlyk with long lappets, sheepskin cloak, Scythian bow in the left hand; gorytos and sword still on reversed sides (model bias)."
+ },
+ "med_archer3_e1_t1": {
+  "subject": "MEDIAN ARCHER",
+  "verdict": "reject",
+  "issues": "NBP edit to swap sides: no change."
+ },
+ "thales_t1": {
+  "subject": "THALES",
+  "verdict": "reject",
+  "issues": "Excellent man and costume, but printed '(1) (2) (3) (4)' labels under the figures (text violation) and scribbles on the tablet."
+ },
+ "thales_e1_t1": {
+  "subject": "THALES",
+  "verdict": "canonical",
+  "issues": "Edit of thales_t1: labels removed, floor cleaned. Lean, ~45 (top of the 40-50 brief), long hair knotted at the nape with grey at the temples, pointed beard with shaved upper lip, crinkled linen chiton with pinned sleeves, terracotta himation over the left shoulder, gnomon rod, wax diptych; bronze bowl, knotted cord, pebbles in the inset. Minor: two tiny pseudo-letters remain on the first tally row."
+ },
+ "alyattes_t1": {
+  "subject": "ALYATTES",
+  "verdict": "canonical",
+  "issues": "Court/oath dress: gold fillet, long grey-streaked crimped tresses, murex-purple mantle with meander+rosette borders, white chiton, decorated red-brown boots, gold-knobbed staff, lion-head bracelets, phiale with boss in the inset. Minor: beard is a natural full beard rather than combed archaic locks."
+ },
+ "cyaxares_t1": {
+  "subject": "CYAXARES",
+  "verdict": "alt",
+  "issues": "Superb torque with lion heads and winged-creature embroidery; but SHORT sleeves and akinakes on the left."
+ },
+ "cyaxares_e1_t1": {
+  "subject": "CYAXARES",
+  "verdict": "reject",
+  "issues": "Edit added long sleeves but deleted the kandys in the front and back views; sword still on the left."
+ },
+ "cyaxares2_t1": {
+  "subject": "CYAXARES",
+  "verdict": "alt",
+  "issues": "Fresh take: long sleeves with embroidered cuffs, kandys draped as a cape, belt of gold plaques, roll of curls at the nape, torque; akinakes still on the left (model bias)."
+ },
+ "cyaxares2_e1_t1": {
+  "subject": "CYAXARES",
+  "verdict": "reject",
+  "issues": "NBP edit deleted the bow and gave him a long bare medieval-looking blade."
+ },
+ "aryenis_t1": {
+  "subject": "ARYENIS",
+  "verdict": "canonical",
+  "issues": "Saffron crinkled chiton, crimson-purple mantle with animal-frieze borders and gold appliques, embroidered mitra with gold rosettes, fringe of small curls, stacked gold necklaces with pendants, granulated disc earrings, lion bracelets, striped lydion. Veil falls from the headband behind and beside the face, face fully uncovered. Minor: shoes read like modern flats."
+ },
+ "astyages_t1": {
+  "subject": "ASTYAGES",
+  "verdict": "reject",
+  "issues": "Beanie-like cap, kandys worn as a short-sleeved coat, akinakes on the left."
+ },
+ "astyages2_t1": {
+  "subject": "ASTYAGES",
+  "verdict": "alt",
+  "issues": "Median cap with cheek flaps, madder long-sleeved tunic, kandys as a cape, torque, gold belt; family resemblance to cyaxares2; trousers read as black jeans; akinakes on the left."
+ },
+ "astyages2_e1_t1": {
+  "subject": "ASTYAGES",
+  "verdict": "alt",
+  "issues": "Edit fixed the trousers (red-brown wool); akinakes still on the left."
+ },
+ "labynetus_t1": {
+  "subject": "LABYNETUS (mediator)",
+  "verdict": "alt",
+  "issues": "Good Babylonian envoy, but the crescent pin was tilted like a modern Islamic crescent (wrong iconography, sensitive)."
+ },
+ "labynetus_e1_t1": {
+  "subject": "LABYNETUS (mediator)",
+  "verdict": "canonical",
+  "issues": "Edit: Sin crescent lying on its back (horns up) on a gold disc. White robe with spiral fringed shawl (saffron/red fringes), curled beard, cylinder seal, staff, cuneiform-style tablet (signs are generic, not readable cuneiform). Minor: the cap reads a little like a modern skullcap."
+ },
+ "syennesis_t1": {
+  "subject": "SYENNESIS (mediator)",
+  "verdict": "alt",
+  "issues": "Patterned robe and upturned shoes good; bow-tie-shaped brooch (not a fibula), flat peaked cap, light flare at top."
+ },
+ "syennesis_e1_t1": {
+  "subject": "SYENNESIS (mediator)",
+  "verdict": "canonical",
+  "issues": "Edit: real arched Phrygian fibula, rounded felt cap with gold band, flare removed. Robe of red/ochre squares and rosettes, fringed shawl, upturned shoes, staff."
+ },
+ "halys_wide_t1": {
+  "subject": "HALYS_WIDE",
+  "verdict": "reject",
+  "issues": "Beautiful light, but both armies stand on the SAME (near) bank, columnar poplars, sun not over the river's vanishing point."
+ },
+ "halys_wide2_t1": {
+  "subject": "HALYS_WIDE",
+  "verdict": "alt",
+  "issues": "Correct master layout (river from bottom centre to the sun, Lydians left bank, Medes right bank, standards); but flat front lighting despite the sun in frame, cloned parade ranks, Median caps read as fezzes, Lydians a little Roman with gold shields. Used as layout reference for the frames."
+ },
+ "halys_shallows_t1": {
+  "subject": "HALYS_SHALLOWS",
+  "verdict": "reject",
+  "issues": "Good water/stones/tamarisk but a clear BLUE sky (breaks the no-blue Act I palette)."
+ },
+ "halys_shallows_b_t1": {
+  "subject": "HALYS_SHALLOWS",
+  "verdict": "canonical",
+  "issues": "Reverse angle into the low sun: red-brown water glittering over a gravel bar, tamarisk and reeds in silhouette, red-clay cut bank, poppies, wormwood, feather grass, warm sky. Reads as a side channel (narrower than the main river), which suits a duel ground."
+ },
+ "halys_shallows2_t1": {
+  "subject": "HALYS_SHALLOWS",
+  "verdict": "alt",
+  "issues": "Side-lit variant (Caravaggio beam from the left), warm sky; but the beam is a visible god-ray shaft (cliche)."
+ },
+ "room_a_t1": {
+  "subject": "ROOM",
+  "verdict": "alt",
+  "issues": "Great layout (behind the low chair, RARE EARTH and circle, Earthset on the ultrawide, Sutro Tower in fog, Yagi, saros gear); but headphones ON her head with garbled brand-like lettering, red/cyan 3D glasses instead of eclipse glasses, an OS taskbar on the vertical monitor."
+ },
+ "room_a_e1_t1": {
+  "subject": "ROOM",
+  "verdict": "alt",
+  "issues": "Edit fixed headphones (around the neck), eclipse glasses (black filters), removed the taskbar; but garbled the '1420.405 MHz' sticker and the ECLIPSE MAP label."
+ },
+ "room_a_e1p_t1": {
+  "subject": "ROOM",
+  "verdict": "canonical",
+  "issues": "Angle A (behind the chair). Local composite: room_a_e1 with the sticker and poster label pasted back from room_a_t1 (aligned by phase correlation). Remaining: monitor/poster micro-text is pseudo-text (renderer replaces all screen content)."
+ },
+ "room_b_t1": {
+  "subject": "ROOM",
+  "verdict": "alt",
+  "issues": "Angle B: correct outfit, patch, headphones round the neck; but red/cyan 3D glasses."
+ },
+ "room_b_e1_t1": {
+  "subject": "ROOM",
+  "verdict": "alt",
+  "issues": "Edit fixed the glasses; garbled the sticker to '1420.40B'."
+ },
+ "room_b_e1p_t1": {
+  "subject": "ROOM",
+  "verdict": "canonical",
+  "issues": "Angle B (three-quarter front). Local composite: room_b_e1 with the correct '1420.405 MHz' sticker pasted back from room_b_t1."
+ },
+ "room_c_t1": {
+  "subject": "ROOM",
+  "verdict": "alt",
+  "issues": "Close-up, good cel style and two-colour light; but grey eyes (sheet: dark brown), pale patch on the cheek, jacket read as a striped sweater."
+ },
+ "room_c_e1_t1": {
+  "subject": "ROOM",
+  "verdict": "canonical",
+  "issues": "Angle C (face lit by the monitor): brown eyes, clean cheek, white bomber with one orange stripe; pearl monitor key + orange lamp rim; no yellow cast."
+ }
+}

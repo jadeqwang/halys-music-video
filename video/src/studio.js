@@ -29,7 +29,7 @@ export async function start() {
   for (const s of SHOTS) {
     const b = document.createElement('button');
     b.textContent = `${s.id} ${s.cadence}`; b.title = `${s.t0.toFixed(2)}–${s.t1.toFixed(2)} s · ${s.world} · ${s.cadence} fps draw`;
-    b.onclick = () => seek(s.t0); b.dataset.id = s.id; sb.appendChild(b);
+    b.onclick = () => seekFrame(s.F0); b.dataset.id = s.id; sb.appendChild(b);
   }
 
   let want = frameAt(+(Q.get('t') || 0)), shown = -1, busy = false, ms = 0;
@@ -47,7 +47,9 @@ export async function start() {
     for (const b of sb.children) b.classList.toggle('on', fi.shot && b.dataset.id === fi.shot.id);
     if (want !== shown) draw();
   }
-  function seek(t) { t = Math.max(0, Math.min(TM.dur - 1e-3, t)); want = frameAt(t); if (song) audio.currentTime = t; draw(); }
+  function seekFrame(i) { want = Math.max(0, Math.min(Math.ceil(TM.dur * FPS) - 1, i)); if (song) audio.currentTime = want / FPS; draw(); }
+  const seek = t => seekFrame(frameAt(Math.max(0, t)));
+  // shot jumps go to the shot's first frame F0 (t0 is usually between frames; frameAt(t0) would be the frame before the cut)
   function tick() {
     if (!audio.paused) { want = frameAt(audio.currentTime); draw(); }
     requestAnimationFrame(tick);
@@ -59,10 +61,10 @@ export async function start() {
     if (e.target.tagName === 'SELECT') return;
     const cur = want / FPS, sh = frameInfo(want).shot;
     if (e.code === 'Space') { e.preventDefault(); toggle(); }
-    else if (e.code === 'ArrowRight') { e.preventDefault(); seek(e.shiftKey ? cur + 1 : (want + 1) / FPS + 1e-6); }
-    else if (e.code === 'ArrowLeft') { e.preventDefault(); seek(e.shiftKey ? cur - 1 : (want - 1) / FPS + 1e-6); }
-    else if (e.key === ']') { const n = SHOTS.filter(s => s.t0 > cur + 1e-6).sort((a, b) => a.t0 - b.t0)[0]; if (n) seek(n.t0); }
-    else if (e.key === '[') { const p = SHOTS.filter(s => s.t0 < (sh ? sh.t0 : cur) - 1e-6).sort((a, b) => b.t0 - a.t0)[0]; if (p) seek(p.t0); }
+    else if (e.code === 'ArrowRight') { e.preventDefault(); e.shiftKey ? seek(cur + 1) : seekFrame(want + 1); }
+    else if (e.code === 'ArrowLeft') { e.preventDefault(); e.shiftKey ? seek(cur - 1) : seekFrame(want - 1); }
+    else if (e.key === ']') { const n = SHOTS.filter(s => s.F0 > want).sort((a, b) => a.F0 - b.F0)[0]; if (n) seekFrame(n.F0); }
+    else if (e.key === '[') { const p = SHOTS.filter(s => s.F0 < (sh ? sh.F0 : want)).sort((a, b) => b.F0 - a.F0)[0]; if (p) seekFrame(p.F0); }
   });
   audio.onended = () => { play.textContent = '▶'; };
   scrub.value = want / FPS; draw(); tick();

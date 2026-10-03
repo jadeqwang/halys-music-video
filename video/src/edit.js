@@ -1,7 +1,9 @@
-// edit.js: the shot list. PLACEHOLDER until production/SHOTLIST.md exists: one shot per song section, cut on the
-// bar lines measured by tools/audio/ (video/data/timing.json sections). Without timing.json a rough fallback table
-// is used. Replace this file with the real edit and keep the shape: one shot() per cut, cadence from the world
-// unless a shot overrides it.
+// edit.js: the shot list. Source, in order of preference:
+//   1. video/data/shotlist.json, parsed from production/SHOTLIST.md by `python3 tools/shotlist.py` (S01..S79: times,
+//      worlds, plate ids, text cues with their times). Re-run the parser after every SHOTLIST.md change.
+//   2. video/data/timing.json sections (one shot per section, cut on the measured bar lines).
+//   3. a built-in fallback table.
+// Every shot draws with the placeholder scene until the real world scenes exist: replace `scene:` per world here.
 //
 // Cadence by world (registry.js WORLDS): BRONZE/GOLD 12 (paint boils, held 5 master frames), MARBLE 30 (held 2),
 // CORONA/ORBIT 60 (every frame), ROOM 12 ("on twos" anime timing with real holds).
@@ -9,7 +11,10 @@
 
 import { shot } from './registry.js';
 import { TM } from './time.js';
+import { loadJSON } from './assets.js';
 import './scenes/placeholder.js';
+
+const SL = await loadJSON('data/shotlist.json', { optional: true });
 
 // per section: world + placeholder title (the treatment's beat sheet); role: carved (default) | drop | verse | mono
 const LOOK = {
@@ -39,8 +44,16 @@ const FALLBACK = [['cold_open', 0, 7.18], ['intro_a', 7.18, 27.24], ['intro_b', 
   ['drop1_b', 126.21, 153.83], ['breakdown', 153.83, 160.7], ['verse2', 160.7, 174.39], ['shadow', 174.39, 181.23],
   ['thales', 181.23, 199.98], ['chorus2', 199.98, 215.29], ['drop2', 215.29, 257.68], ['outro', 257.68, 273.6]];
 
-const secs = TM.sections.length ? TM.sections.map(s => [s.id, s.t0, s.t1]) : FALLBACK;
-secs.forEach(([id, t0, t1], k) => {
+if (SL && SL.shots && SL.shots.length) {
+  SL.shots.forEach((s, k) => {
+    const last = k === SL.shots.length - 1, t1 = s.t1 ?? TM.dur;
+    shot({
+      id: s.id, t0: s.t0, t1: last ? Math.max(t1, TM.dur) : t1, world: s.world, scene: 'placeholder',
+      params: { label: `${s.worlds.join('→')} · ${s.plates.join('+') || '—'}`, cues: s.cues, worlds: s.worlds, plates: s.plates, section: s.section },
+      ...(s.world === 'room' ? { plate: { ...ROOM_PLATE, at: s.t0 }, framing: ROOM_FRAMING } : {}),
+    });
+  });
+} else (TM.sections.length ? TM.sections.map(s => [s.id, s.t0, s.t1]) : FALLBACK).forEach(([id, t0, t1], k, secs) => {
   const look = LOOK[id] || { world: 'bronze', label: id };
   const last = k === secs.length - 1;               // run the last shot to the end of the actual audio file
   shot({

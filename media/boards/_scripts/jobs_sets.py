@@ -191,3 +191,63 @@ room_edit("room_c_e1", "sets/room_c_t1.jpg",
           "Make her eyes warm dark brown exactly like on her character sheet (second image), and remove the pale "
           "triangular patch on her cheek below her eye. Make her jacket the white cropped bomber of the sheet with one "
           "orange stripe across the chest, not a striped sweater.")
+
+
+# ---------------------------------------------------------------- HALYS_WIDE take 3 (three models): backlight, real caps, less parade
+WIDE3 = " ".join([
+    "HALYS_WIDE, the master composition: a vast, symmetrical wide establishing shot, 28 May 585 BC, late afternoon about "
+    "18:00. Use the first attached image ONLY for the layout: the camera hovers about 20 m above the middle of the river "
+    "and looks straight downstream; the red-brown river enters at the bottom centre and runs almost straight to a "
+    "vanishing point at the exact horizontal centre of the horizon; directly above that point, 8 to 10 degrees up, hangs "
+    "the low sun, a bright white-gold disc softened by haze. The LEFT bank fills the left third, the RIGHT bank the right "
+    "third.",
+    "LIGHT, the most important thing: the sun is IN FRONT of the camera, so the whole scene is BACKLIT. Every soldier, "
+    "spear, horse and bush is seen against the light: outlines glow with thin gold rim light, the sides of the men facing "
+    "the camera are in soft warm shadow, and every figure throws a long dark shadow six to seven times its height that "
+    "stretches back TOWARD the camera across the grass. Golden dust hangs in the air over both armies and glows in the "
+    "backlight. The river reflects the sun as a molten gold path running down the middle of the frame.",
+    LAND,
+    "Two armies stand on OPPOSITE banks facing each other across the water, mirror images of equal size and equal "
+    "dignity, each a deep formation of hundreds of individual men in slightly varied, natural poses (some leaning on "
+    "spears, some talking, some shading their eyes), not identical clones. LEFT bank, the LYDIANS (second attached "
+    "sheet): crested bronze helmets, crimson tunics, bronze-scale corselets, round shields painted dark crimson with a "
+    "black archaic lion and a bronze rim, upright spears; long-spear cavalry on its outer wing; a gold lion on a pole as "
+    "standard. RIGHT bank, the MEDES (third attached sheet): soft, low, rounded felt caps with floppy cheek flaps in "
+    "madder red (NOT fezzes, NOT tall cylinders), saffron long-sleeved tunics, iron-scale corselets, round wicker "
+    "shields, upright spears, a separate rank of archers with short curved bows; cavalry on its outer wing; a bronze "
+    "horse figure on a pole as standard. Nobody stands in the river or on the other army's bank. No flags or banners.",
+    "Sky: broken cumulus lit gold and copper from below, a warm hazy gold and pale ochre sky with no blue at all. Only "
+    "broad-crowned trees, absolutely no pencil-thin columnar poplars or cypresses. Palette: umber, ochre, vermilion, "
+    "bronze, lead white. 24 mm lens, deep focus.",
+    PHOTO])
+for _m, _t in (("google/nano-banana-pro", "nbp"), ("openai/gpt-image-2", "gpt"), ("bytedance/seedream-5-pro", "sdr")):
+    job(f"halys_wide3_{_t}", _m, "sets", WIDE3, refs=["sets/halys_wide2_t1.jpg", "chars/lydian_e1_t1.jpg", "chars/mede_e3_t1.jpg"])
+
+
+# ---------------------------------------------------------------- HALYS_TOTALITY from the backlit master layout (two models)
+TOT = " ".join([
+    "HALYS_TOTALITY: exactly the same view, camera, river, landscape and armies as the first attached image, but a few "
+    "minutes later, at the moment of TOTAL SOLAR ECLIPSE (18:21 local time). The sun has gone out. Where it stood, low "
+    "over the river's vanishing point about 8 degrees above the west-north-west horizon, hangs a perfectly black, "
+    "hard-edged disc, blacker than the sky, ringed by a soft pearly-white corona of fine silky streamers, brightest close "
+    "to the disc and fading outward within about two disc-widths; it looks smaller, warmer (ivory, faintly apricot) and "
+    "dimmer than in modern high-sun photographs because it is seen low through the haze; two longer streamers stand "
+    "almost upright, leaning slightly to the left; two or three tiny pink-red prominences on the rim. NO rays like a "
+    "cartoon sun, no starburst, no lens flare, no crescent moon.",
+    "Jupiter shines as ONE brilliant white point above and slightly to the left of the black sun: about a quarter of the "
+    "frame height above it and about a twelfth of the frame width to its left. Only a few faint stars elsewhere.",
+    "The sky is a deep dark dome, near-black umber-violet at the top. All around the horizon burns a 360-degree band of "
+    "orange-yellow twilight glow, like a sunset in every direction at once: brightest toward the far left and far right "
+    "edges of the frame, darker directly under the black sun. Deep twilight on the ground: colours mostly gone, the red "
+    "river reflects the orange horizon glow and the pale corona as a dim sheen, figures read as silhouettes with faint "
+    "orange rim light from the horizon glow, crests and spear points barely catching it.",
+    "Both armies stand frozen on their own banks, every face turned up toward the black sun: spears and shields lowered "
+    "or grounded, some men kneeling, some shading their eyes, some pointing, horses restless; nobody fights.",
+    "The second attached image is a computed chart of this sky (schematic colours): use it only for the relative "
+    "positions of the black sun and Jupiter. No Venus, no Orion.",
+    PHOTO])
+for _m, _t in (("google/nano-banana-pro", "nbp"), ("openai/gpt-image-2", "gpt")):
+    job(f"halys_totality2_{_t}", _m, "sets", TOT, refs=["sets/halys_wide3_nbp_t1.jpg", "board:sky_chart"])
+
+# ---------------------------------------------------------------- HALYS_TOTALITY matched to the canonical wide (halys_wide3_gpt)
+job("halys_totality3_gpt", "openai/gpt-image-2", "sets", TOT, refs=["sets/halys_wide3_gpt_t1.jpg", "board:sky_chart"])

@@ -1,0 +1,1902 @@
+{
+ "source": "production/SHOTLIST.md",
+ "title": "HALYS — shot list (v1, locked to the beat grid)",
+ "shots": [
+  {
+   "id": "S01",
+   "t0": 0.0,
+   "t1": 1.45,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P02"
+   ],
+   "cues": [
+    {
+     "role": "plaque",
+     "t": 0.2,
+     "text": "28 MAY 585 BC"
+    },
+    {
+     "role": "carved",
+     "t": 0.57,
+     "text": "THE SUN WENT OUT"
+    }
+   ],
+   "section": "1 · Cold open, 0.00–7.18 (B1–4), pianissimo cello, ticking 8ths. The hook.",
+   "picture": "**THE EYE.** Totality fills about 60 % of the frame: a black disk pupil and a painted corona whose streamers ripple like iris fibres. Below it the dark battlefield (master composition at totality), Jupiter as a hard point upper-left. Not a black frame: maximum contrast on frame 0.",
+   "text": "PLAQUE 0.20 `28 MAY 585 BC` · CARVED 0.57 `THE SUN WENT OUT`",
+   "sync": "Corona already moving on frame 0"
+  },
+  {
+   "id": "S02",
+   "t0": 1.45,
+   "t1": 3.65,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P02"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": 1.89,
+     "text": "IN THE MIDDLE OF A BATTLE."
+    }
+   ],
+   "section": "1 · Cold open, 0.00–7.18 (B1–4), pianissimo cello, ticking 8ths. The hook.",
+   "picture": "The blink: a diamond-ring flash bursts on the limb (1.45–1.60), the brightest event of the opening. Hard cut to the frozen battlefield, painted dark.",
+   "text": "CARVED 1.89 `IN THE MIDDLE OF A BATTLE.`",
+   "sync": "Flash on beat 4 of B1"
+  },
+  {
+   "id": "S03",
+   "t0": 3.65,
+   "t1": 5.4,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P23"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": 3.65,
+     "text": "AND BOTH ARMIES WENT HOME."
+    }
+   ],
+   "section": "1 · Cold open, 0.00–7.18 (B1–4), pianissimo cello, ticking 8ths. The hook.",
+   "picture": "The two heroes in the shallows, weapons lowered, faces turned up. Mirrored.",
+   "text": "CARVED 3.65 `AND BOTH ARMIES WENT HOME.`",
+   "sync": ""
+  },
+  {
+   "id": "S04",
+   "t0": 5.4,
+   "t1": 7.18,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P01"
+   ],
+   "cues": [
+    {
+     "role": "plaque",
+     "t": 5.85,
+     "text": "ONE HOUR EARLIER"
+    }
+   ],
+   "section": "1 · Cold open, 0.00–7.18 (B1–4), pianissimo cello, ticking 8ths. The hook.",
+   "picture": "**Rewind**: the strokes swirl backwards and the eclipse un-happens. The Sun brightens to full gold, low in the WNW.",
+   "text": "PLAQUE 5.85 `ONE HOUR EARLIER`",
+   "sync": "Plants \"time can be scrubbed\""
+  },
+  {
+   "id": "S05",
+   "t0": 7.18,
+   "t1": 10.69,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P01"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": 7.18,
+     "text": "HALYS"
+    },
+    {
+     "role": "carved",
+     "t": 8.69,
+     "text": "JADE WANG"
+    }
+   ],
+   "section": "2 · Intro A, 7.18–27.24 (B5–15), strings and ostinato over the F♯ pedal; swell into the boom",
+   "picture": "**Title.** Master composition by day: the red river runs straight to the low golden Sun; Lydians on the left bank, Medes on the right, mirrored. Altdorfer cartouche hangs in the sky.",
+   "text": "CARVED on cartouche 7.18 `HALYS` · 8.69 `JADE WANG` (small)",
+   "sync": "Strings enter 7.18; timpani 8.69, 9.78"
+  },
+  {
+   "id": "S06",
+   "t0": 10.69,
+   "t1": 14.19,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P01"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "LYDIA"
+    },
+    {
+     "role": "carved",
+     "t": null,
+     "text": "MEDIA"
+    },
+    {
+     "role": "plaque",
+     "t": null,
+     "text": "KING ALYATTES · SARDIS"
+    },
+    {
+     "role": "plaque",
+     "t": null,
+     "text": "KING CYAXARES · ECBATANA"
+    },
+    {
+     "role": "plaque",
+     "t": null,
+     "text": "THE SIXTH YEAR OF THE WAR"
+    }
+   ],
+   "section": "2 · Intro A, 7.18–27.24 (B5–15), strings and ostinato over the F♯ pedal; swell into the boom",
+   "picture": "Slow descent toward the river. The banks are labelled in the landscape like an engraved map.",
+   "text": "CARVED `LYDIA` left / `MEDIA` right; PLAQUE under each `KING ALYATTES · SARDIS` / `KING CYAXARES · ECBATANA`; PLAQUE bottom `THE SIXTH YEAR OF THE WAR`",
+   "sync": "Labels stroke in on beats"
+  },
+  {
+   "id": "S07",
+   "t0": 14.19,
+   "t1": 17.66,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P03"
+   ],
+   "cues": [],
+   "section": "2 · Intro A, 7.18–27.24 (B5–15), strings and ostinato over the F♯ pedal; swell into the boom",
+   "picture": "**The Lydian** arms: fastening the cheek-pieces of his crested bronze helmet; the knucklebone on its cord glints at his chest. Light pool on his face; faces right.",
+   "text": "—",
+   "sync": ""
+  },
+  {
+   "id": "S08",
+   "t0": 17.66,
+   "t1": 21.15,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P04"
+   ],
+   "cues": [],
+   "section": "2 · Intro A, 7.18–27.24 (B5–15), strings and ostinato over the F♯ pedal; swell into the boom",
+   "picture": "**The Mede**, his mirror: grips his spear; a small clay horse tucked in his belt. Faces left.",
+   "text": "—",
+   "sync": ""
+  },
+  {
+   "id": "S09",
+   "t0": 21.15,
+   "t1": 25.5,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P05",
+    "P06"
+   ],
+   "cues": [
+    {
+     "role": "plaque",
+     "t": null,
+     "text": "ALYATTES · KING OF LYDIA"
+    },
+    {
+     "role": "plaque",
+     "t": null,
+     "text": "CYAXARES · KING OF THE MEDES"
+    }
+   ],
+   "section": "2 · Intro A, 7.18–27.24 (B5–15), strings and ostinato over the F♯ pedal; swell into the boom",
+   "picture": "**Diptych of the kings**, gold frame line down the centre: Alyattes (left) and Cyaxares (right), on horseback, each raising a hand.",
+   "text": "PLAQUE under each `ALYATTES · KING OF LYDIA` / `CYAXARES · KING OF THE MEDES`",
+   "sync": "Ostinato stops ≈23.3, rubato swell; the divider splits open with the swell"
+  },
+  {
+   "id": "S10",
+   "t0": 25.5,
+   "t1": 27.24,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P07"
+   ],
+   "cues": [],
+   "section": "2 · Intro A, 7.18–27.24 (B5–15), strings and ostinato over the F♯ pedal; swell into the boom",
+   "picture": "Both front lines surge into the river, low at the water's edge, slow motion.",
+   "text": "—",
+   "sync": "Crescendo into the boom"
+  },
+  {
+   "id": "S11",
+   "t0": 27.24,
+   "t1": 28.98,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P08"
+   ],
+   "cues": [],
+   "section": "3 · Intro B, 27.24–67.42 (B16–38), the boom, the build, first contact",
+   "picture": "**The clash** on the boom: shields slam; a crown of red spray explodes up into the light pool.",
+   "text": "—",
+   "sync": "2-frame warm flash on 27.24"
+  },
+  {
+   "id": "S12",
+   "t0": 28.98,
+   "t1": 32.47,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "proc."
+   ],
+   "cues": [
+    {
+     "role": "inscr",
+     "t": null,
+     "text": "\"…suddenly the day became night.\""
+    },
+    {
+     "role": "plaque",
+     "t": null,
+     "text": "HERODOTUS 1.74"
+    }
+   ],
+   "section": "3 · Intro B, 27.24–67.42 (B16–38), the boom, the build, first contact",
+   "picture": "Lull: in slow motion one arrow arcs across the low golden disk.",
+   "text": "INSCR `\"…suddenly the day became night.\"` PLAQUE `HERODOTUS 1.74`",
+   "sync": "Sub drops out (B17–18)"
+  },
+  {
+   "id": "S13",
+   "t0": 32.47,
+   "t1": 35.98,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P09"
+   ],
+   "cues": [],
+   "section": "3 · Intro B, 27.24–67.42 (B16–38), the boom, the build, first contact",
+   "picture": "Lydian cavalry, long spears lowered, charging through the shallows.",
+   "text": "—",
+   "sync": ""
+  },
+  {
+   "id": "S14",
+   "t0": 35.98,
+   "t1": 39.48,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P10"
+   ],
+   "cues": [],
+   "section": "3 · Intro B, 27.24–67.42 (B16–38), the boom, the build, first contact",
+   "picture": "Median archers loose a volley; arrows cross the sky. Disciplined, dignified, never a horde.",
+   "text": "—",
+   "sync": ""
+  },
+  {
+   "id": "S15",
+   "t0": 39.48,
+   "t1": 41.24,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P11"
+   ],
+   "cues": [],
+   "section": "3 · Intro B, 27.24–67.42 (B16–38), the boom, the build, first contact",
+   "picture": "Across the melee the Lydian and the Mede see each other (mirrored singles, cut on beat 3).",
+   "text": "—",
+   "sync": ""
+  },
+  {
+   "id": "S16",
+   "t0": 41.24,
+   "t1": 44.73,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P01"
+   ],
+   "cues": [
+    {
+     "role": "plaque",
+     "t": null,
+     "text": "THE EARLIEST EVENT IN HISTORY WE CAN DATE TO THE DAY"
+    }
+   ],
+   "section": "3 · Intro B, 27.24–67.42 (B16–38), the boom, the build, first contact",
+   "picture": "Altdorfer wide: massed armies along the river, the huge low Sun.",
+   "text": "PLAQUE `THE EARLIEST EVENT IN HISTORY WE CAN DATE TO THE DAY`",
+   "sync": "Choir swell 41.5–42.9"
+  },
+  {
+   "id": "S17",
+   "t0": 44.73,
+   "t1": 46.49,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P12"
+   ],
+   "cues": [],
+   "section": "3 · Intro B, 27.24–67.42 (B16–38), the boom, the build, first contact",
+   "picture": "First exchange: the Mede's spear thrust is turned by the Lydian's lion shield.",
+   "text": "—",
+   "sync": "Strike on a beat"
+  },
+  {
+   "id": "S18",
+   "t0": 46.49,
+   "t1": 51.72,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P01"
+   ],
+   "cues": [
+    {
+     "role": "plaque",
+     "t": null,
+     "text": "17:25 · FIRST CONTACT"
+    },
+    {
+     "role": "plaque",
+     "t": null,
+     "text": "TOTALITY IN 56:00"
+    }
+   ],
+   "section": "3 · Intro B, 27.24–67.42 (B16–38), the boom, the build, first contact",
+   "picture": "**First contact.** Tight on the low Sun: a black bite appears on its leading limb. Below, silhouettes keep fighting; nobody notices.",
+   "text": "PLAQUE `17:25 · FIRST CONTACT`; small engraved counter starts `TOTALITY IN 56:00` and runs (compressed) to `00:00` at 110.58",
+   "sync": "Bass out B27–29: the bite is the only event"
+  },
+  {
+   "id": "S19",
+   "t0": 51.72,
+   "t1": 55.22,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P12"
+   ],
+   "cues": [],
+   "section": "3 · Intro B, 27.24–67.42 (B16–38), the boom, the build, first contact",
+   "picture": "Full orchestra: the duel, strikes landing on beats.",
+   "text": "counter",
+   "sync": ""
+  },
+  {
+   "id": "S20",
+   "t0": 55.22,
+   "t1": 58.72,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P01"
+   ],
+   "cues": [],
+   "section": "3 · Intro B, 27.24–67.42 (B16–38), the boom, the build, first contact",
+   "picture": "Wide; the Sun now visibly bitten; light still golden.",
+   "text": "counter",
+   "sync": ""
+  },
+  {
+   "id": "S21",
+   "t0": 58.72,
+   "t1": 62.2,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P13"
+   ],
+   "cues": [],
+   "section": "3 · Intro B, 27.24–67.42 (B16–38), the boom, the build, first contact",
+   "picture": "The Lydian is knocked into the water; the Mede's spear comes down; he rolls clear.",
+   "text": "counter",
+   "sync": ""
+  },
+  {
+   "id": "S22",
+   "t0": 62.2,
+   "t1": 65.67,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P05",
+    "P06"
+   ],
+   "cues": [],
+   "section": "3 · Intro B, 27.24–67.42 (B16–38), the boom, the build, first contact",
+   "picture": "Diptych again: the kings shouting their men on.",
+   "text": "counter",
+   "sync": ""
+  },
+  {
+   "id": "S23",
+   "t0": 65.67,
+   "t1": 67.42,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P14"
+   ],
+   "cues": [],
+   "section": "3 · Intro B, 27.24–67.42 (B16–38), the boom, the build, first contact",
+   "picture": "One face in the chaos (the Lydian, sweat, bronze), and the frame goes still before the voice.",
+   "text": "counter",
+   "sync": "Hush into the vocal"
+  },
+  {
+   "id": "S24",
+   "t0": 67.42,
+   "t1": 74.41,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P01"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "THE RIVER HALYS,"
+    },
+    {
+     "role": "carved",
+     "t": null,
+     "text": "ON THE SIXTH YEAR OF THE WAR"
+    },
+    {
+     "role": "plaque",
+     "t": null,
+     "text": "KIZILIRMAK · \"RED RIVER\" · ANATOLIA"
+    }
+   ],
+   "section": "4 · Verse 1, 67.42–90.03 (B39–51). Big lyrics.",
+   "picture": "Master composition, Sun about 30 % covered. The cartouche descends.",
+   "text": "CARVED on cartouche, word-by-word on sung times: `THE RIVER HALYS,` / `ON THE SIXTH YEAR OF THE WAR`; PLAQUE lower-left `KIZILIRMAK · \"RED RIVER\" · ANATOLIA`",
+   "sync": "Words 67.73–72.20"
+  },
+  {
+   "id": "S25",
+   "t0": 74.41,
+   "t1": 81.36,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P15"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "LYDIANS"
+    },
+    {
+     "role": "carved",
+     "t": null,
+     "text": "MEDES"
+    },
+    {
+     "role": "carved",
+     "t": null,
+     "text": "SLEW EACH OTHER ON THE SHORE"
+    }
+   ],
+   "section": "4 · Verse 1, 67.42–90.03 (B39–51). Big lyrics.",
+   "picture": "The two heroes face off in the shallows, centred and mirrored; cut at 77.88 to the shore melee.",
+   "text": "CARVED `LYDIANS` over left · `MEDES` over right, then `SLEW EACH OTHER ON THE SHORE` across the bottom",
+   "sync": "Words 74.66–79.15"
+  },
+  {
+   "id": "S26",
+   "t0": 81.36,
+   "t1": 85.91,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P16"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "BRONZE"
+    },
+    {
+     "role": "carved",
+     "t": null,
+     "text": "SUN BURNING ON THE"
+    },
+    {
+     "role": "carved",
+     "t": null,
+     "text": "EXCHANGE-"
+    }
+   ],
+   "section": "4 · Verse 1, 67.42–90.03 (B39–51). Big lyrics.",
+   "picture": "**Bronze macro**: the low Sun burns across a convex shield and a helmet rim. **Easter egg**: at 84.38 (\"bronze\"), for 10 frames, the shield reflects a tiny figure in orange headphones holding a Yagi antenna.",
+   "text": "CARVED, `BRONZE` huge in gold leaf with a moving glint; `SUN BURNING ON THE` small above; `EXCHANGE-`",
+   "sync": "Glint sweeps on \"bronze\" 84.38"
+  },
+  {
+   "id": "S27",
+   "t0": 85.91,
+   "t1": 89.22,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P12",
+    "P17"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "-ING TURNS AND STRIKES"
+    },
+    {
+     "role": "carved",
+     "t": null,
+     "text": "WHEN LIGHT WENT STRANGE"
+    }
+   ],
+   "section": "4 · Verse 1, 67.42–90.03 (B39–51). Big lyrics.",
+   "picture": "Strikes cut on \"turns\" 86.06 and \"strikes\" 87.20. On \"when light went strange\" (87.68) a wicker shield throws a field of stretched crescent suns across the Lydian's bronze. Colour drains and goes metallic. He looks up on \"strange\" (88.69).",
+   "text": "CARVED `-ING TURNS AND STRIKES` / `WHEN LIGHT WENT STRANGE`: a dark disk passes over the letters and leaves them as crescents",
+   "sync": "Eclipse ≈0.8"
+  },
+  {
+   "id": "S28",
+   "t0": 89.22,
+   "t1": 93.0,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P18"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "A HALO IN THE SKY"
+    },
+    {
+     "role": "carved",
+     "t": null,
+     "text": "WARRIORS AWED"
+    }
+   ],
+   "section": "5 · Pre-chorus, 89.22–96.89 (B51–55), dread",
+   "picture": "Faces turn upward one after another; cut on the 91.31 boom. Jupiter appears beside the thin crescent.",
+   "text": "CARVED set **on a circle around the Sun**: `A HALO IN THE SKY` · then `WARRIORS AWED`",
+   "sync": "Eclipse 0.9→0.95"
+  },
+  {
+   "id": "S29",
+   "t0": 93.0,
+   "t1": 96.89,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P19"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "BY THE VACANT EYE OF A GOD"
+    }
+   ],
+   "section": "5 · Pre-chorus, 89.22–96.89 (B51–55), dread",
+   "picture": "XCU of the Lydian's eye, the crescent reflected. **Intrusion**: at 93.95 (\"eye\"), for 10 frames, a vector-flat orange disc slides over the painted Sun (the simulation leaking). Then the sky itself reads as an eye.",
+   "text": "CARVED small inside the pupil: `BY THE VACANT EYE OF A GOD`",
+   "sync": ""
+  },
+  {
+   "id": "S30",
+   "t0": 96.89,
+   "t1": 100.24,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P01"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "DAYLIGHT TURNED TO SHADE"
+    }
+   ],
+   "section": "6 · Chorus 1, 96.89–110.58 (B56–63), full orchestra and choir; riser from 108.0",
+   "picture": "**The darkness comes out of the sunset**: the umbra wall rushes across the hills toward camera at 18,000 km/h and swallows both armies.",
+   "text": "CARVED `DAYLIGHT TURNED TO SHADE`: the shadow passes over the letters and turns them from gold to silhouette",
+   "sync": ""
+  },
+  {
+   "id": "S31",
+   "t0": 100.24,
+   "t1": 103.64,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P20"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "EYE OF GODS ABOVE"
+    }
+   ],
+   "section": "6 · Chorus 1, 96.89–110.58 (B56–63), full orchestra and choir; riser from 108.0",
+   "picture": "The black Sun with Baily's beads and the corona emerging, over the armies. On **102.21** (biggest boom) every face turns up in unison: the formation moment.",
+   "text": "CARVED `EYE OF GODS ABOVE`",
+   "sync": "Booms 100.27, 102.21"
+  },
+  {
+   "id": "S32",
+   "t0": 103.64,
+   "t1": 105.85,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P21"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "THROW DOWN YOUR BLADE"
+    }
+   ],
+   "section": "6 · Chorus 1, 96.89–110.58 (B56–63), full orchestra and choir; riser from 108.0",
+   "picture": "The duelists stop, lower their weapons and look at each other (mirrored two-shot). A sword drops into the water on \"blade\" 104.96.",
+   "text": "CARVED `THROW DOWN YOUR BLADE`",
+   "sync": ""
+  },
+  {
+   "id": "S33",
+   "t0": 105.85,
+   "t1": 108.84,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "P22a",
+    "P22b"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "GO HOME TO THE ONES YOU LOVE"
+    }
+   ],
+   "section": "6 · Chorus 1, 96.89–110.58 (B56–63), full orchestra and choir; riser from 108.0",
+   "picture": "Diptych of hands opening: the Lydian's knucklebone, the Mede's clay horse.",
+   "text": "CARVED `GO HOME TO THE ONES YOU LOVE`",
+   "sync": ""
+  },
+  {
+   "id": "S34",
+   "t0": 108.84,
+   "t1": 110.58,
+   "world": "bronze",
+   "worlds": [
+    "bronze"
+   ],
+   "plates": [
+    "proc."
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "LOVE",
+     "t_end": 110.56
+    }
+   ],
+   "section": "6 · Chorus 1, 96.89–110.58 (B56–63), full orchestra and choir; riser from 108.0",
+   "picture": "Last light: Baily's beads, then the diamond ring. Push into the last bead, white, then the black pupil at 110.58.",
+   "text": "`LOVE` held to 110.56",
+   "sync": "Riser; counter hits `00:00`"
+  },
+  {
+   "id": "S35",
+   "t0": 110.58,
+   "t1": 112.31,
+   "world": "corona",
+   "worlds": [
+    "corona"
+   ],
+   "plates": [
+    "P01"
+   ],
+   "cues": [
+    {
+     "role": "plaque",
+     "t": 110.58,
+     "text": "\"we just went sci-fi.\" — V. Glover, Artemis II, during totality, 6 Apr 2026",
+     "t_end": 113.5
+    },
+    {
+     "role": "plaque",
+     "t": 110.58,
+     "text": "00:00",
+     "from": "S18"
+    },
+    {
+     "role": "chop",
+     "t": 110.66,
+     "text": "HALO"
+    },
+    {
+     "role": "chop",
+     "t": 110.98,
+     "text": "IN THE"
+    },
+    {
+     "role": "chop",
+     "t": 111.45,
+     "text": "SKY"
+    },
+    {
+     "role": "chop",
+     "t": 111.89,
+     "text": "SKY"
+    }
+   ],
+   "section": "7 · Drop 1, 110.58–153.83 (B64–88). Totality: CORONA, 60 fps.",
+   "picture": "**The break.** The world comes back as light: the master composition in field lines, the corona blazing.",
+   "text": "CHOP on beats `HALO` 110.66 · `IN THE` 110.98 · `SKY` 111.45 · `SKY` 111.89. On the first HALO the O is eclipsed for 3–4 frames, leaving **HAL**. PLAQUE small, lower third 110.58–113.5: `\"we just went sci-fi.\" — V. Glover, Artemis II, during totality, 6 Apr 2026`",
+   "sync": "Kick 110.575"
+  },
+  {
+   "id": "S36",
+   "t0": 112.31,
+   "t1": 117.53,
+   "world": "corona",
+   "worlds": [
+    "corona"
+   ],
+   "plates": [
+    "P14",
+    "P12",
+    "P19",
+    "P16"
+   ],
+   "cues": [
+    {
+     "role": "chop",
+     "t": null,
+     "text": "SKY"
+    }
+   ],
+   "section": "7 · Drop 1, 110.58–153.83 (B64–88). Totality: CORONA, 60 fps.",
+   "picture": "**Stutter**: a hard cut on each of the 34 stutter onsets between CORONA close-ups (faces, spear tips, the eye, shields). 2-frame inversions on stabs 112.74, 113.17, 113.61, 115.78, 116.22, 116.65, 117.09.",
+   "text": "CHOP `SKY` stutter",
+   "sync": "`chops[word=stutter]`"
+  },
+  {
+   "id": "S37",
+   "t0": 117.53,
+   "t1": 124.47,
+   "world": "corona",
+   "worlds": [
+    "corona"
+   ],
+   "plates": [
+    "P12"
+   ],
+   "cues": [
+    {
+     "role": "mono",
+     "t": null,
+     "text": "C2 · TOTALITY · 00:00:07"
+    }
+   ],
+   "section": "7 · Drop 1, 110.58–153.83 (B64–88). Totality: CORONA, 60 fps.",
+   "picture": "**The orbit**: the camera orbits the frozen duel in 3D; the painting was a world.",
+   "text": "MONO HUD corner `C2 · TOTALITY · 00:00:07` counting up",
+   "sync": "Kick pulse"
+  },
+  {
+   "id": "S38",
+   "t0": 124.47,
+   "t1": 126.21,
+   "world": "corona",
+   "worlds": [
+    "corona"
+   ],
+   "plates": [
+    "P24"
+   ],
+   "cues": [],
+   "section": "7 · Drop 1, 110.58–153.83 (B64–88). Totality: CORONA, 60 fps.",
+   "picture": "**Flammarion** (kick out, one bar): a soldier pushes his hand, then his head, through the sky; it ripples like a membrane of lines; beyond it, machinery: orbits, gears, glyphs.",
+   "text": "—",
+   "sync": "Break B72"
+  },
+  {
+   "id": "S39",
+   "t0": 126.21,
+   "t1": 133.13,
+   "world": "corona",
+   "worlds": [
+    "corona"
+   ],
+   "plates": [
+    "P01"
+   ],
+   "cues": [],
+   "section": "7 · Drop 1, 110.58–153.83 (B64–88). Totality: CORONA, 60 fps.",
+   "picture": "**The agents**: top-down, the soldiers become particles and re-form on the beat: two mirrored blocks, then a flow, then a ring around the river bend. Formation snaps on stabs 127.50, 128.80, 129.24, 130.97, 131.83, 132.69.",
+   "text": "—",
+   "sync": ""
+  },
+  {
+   "id": "S40",
+   "t0": 133.13,
+   "t1": 140.04,
+   "world": "corona",
+   "worlds": [
+    "corona"
+   ],
+   "plates": [
+    "proc."
+   ],
+   "cues": [],
+   "section": "7 · Drop 1, 110.58–153.83 (B64–88). Totality: CORONA, 60 fps.",
+   "picture": "The ground ring tightens into an eye that mirrors the sky; tilt up from the eye on the ground to the eye in the sky. At ≈138.6 the sky's eye is **her** anime eye for 2 frames.",
+   "text": "—",
+   "sync": ""
+  },
+  {
+   "id": "S41",
+   "t0": 140.04,
+   "t1": 143.49,
+   "world": "corona",
+   "worlds": [
+    "corona"
+   ],
+   "plates": [
+    "P14"
+   ],
+   "cues": [
+    {
+     "role": "chop",
+     "t": 140.45,
+     "text": "HALO"
+    },
+    {
+     "role": "chop",
+     "t": 141.35,
+     "text": "IN THE"
+    },
+    {
+     "role": "chop",
+     "t": 141.75,
+     "text": "SKY"
+    },
+    {
+     "role": "chop",
+     "t": 142.65,
+     "text": "SKY"
+    }
+   ],
+   "section": "7 · Drop 1, 110.58–153.83 (B64–88). Totality: CORONA, 60 fps.",
+   "picture": "Chop cycle 1: the corona ring **locked centre**; behind it the Lydian's face in lines looking up.",
+   "text": "CHOP `HALO` 140.45 · `IN THE` 141.35 · `SKY` 141.75 · `SKY` 142.65",
+   "sync": "K-pop lock"
+  },
+  {
+   "id": "S42",
+   "t0": 143.49,
+   "t1": 146.94,
+   "world": "corona",
+   "worlds": [
+    "corona"
+   ],
+   "plates": [
+    "P04",
+    "P19"
+   ],
+   "cues": [
+    {
+     "role": "chop",
+     "t": 143.94,
+     "text": "HALO"
+    },
+    {
+     "role": "chop",
+     "t": 144.8,
+     "text": "IN THE"
+    },
+    {
+     "role": "chop",
+     "t": 145.23,
+     "text": "SKY"
+    },
+    {
+     "role": "chop",
+     "t": 146.1,
+     "text": "SKY"
+    }
+   ],
+   "section": "7 · Drop 1, 110.58–153.83 (B64–88). Totality: CORONA, 60 fps.",
+   "picture": "Cycle 2: the Mede's face.",
+   "text": "143.94 · 144.80 · 145.23 · 146.10",
+   "sync": ""
+  },
+  {
+   "id": "S43",
+   "t0": 146.94,
+   "t1": 150.38,
+   "world": "corona",
+   "worlds": [
+    "corona"
+   ],
+   "plates": [
+    "P05",
+    "P06"
+   ],
+   "cues": [
+    {
+     "role": "chop",
+     "t": 147.34,
+     "text": "HALO"
+    },
+    {
+     "role": "chop",
+     "t": 147.94,
+     "text": "IN THE"
+    },
+    {
+     "role": "chop",
+     "t": 148.67,
+     "text": "SKY"
+    },
+    {
+     "role": "chop",
+     "t": 149.56,
+     "text": "SKY"
+    }
+   ],
+   "section": "7 · Drop 1, 110.58–153.83 (B64–88). Totality: CORONA, 60 fps.",
+   "picture": "Cycle 3: the kings, diptych in lines.",
+   "text": "147.34 · 147.94 · 148.67 · 149.56",
+   "sync": ""
+  },
+  {
+   "id": "S44",
+   "t0": 150.38,
+   "t1": 153.83,
+   "world": "corona",
+   "worlds": [
+    "corona"
+   ],
+   "plates": [
+    "P01"
+   ],
+   "cues": [
+    {
+     "role": "chop",
+     "t": 150.84,
+     "text": "HALO"
+    },
+    {
+     "role": "chop",
+     "t": 151.69,
+     "text": "IN THE"
+    },
+    {
+     "role": "chop",
+     "t": 152.12,
+     "text": "SKY"
+    },
+    {
+     "role": "chop",
+     "t": 153.03,
+     "text": "SKY"
+    }
+   ],
+   "section": "7 · Drop 1, 110.58–153.83 (B64–88). Totality: CORONA, 60 fps.",
+   "picture": "Cycle 4: the whole battlefield; on the last SKY (153.03) the ring collapses to a point.",
+   "text": "150.84 · 151.69 · 152.12 · 153.03",
+   "sync": ""
+  },
+  {
+   "id": "S45",
+   "t0": 153.83,
+   "t1": 160.7,
+   "world": "corona",
+   "worlds": [
+    "corona",
+    "marble"
+   ],
+   "plates": [
+    "P25"
+   ],
+   "cues": [],
+   "section": "8 · Breakdown, 153.83–160.70 (B89–92), piano",
+   "picture": "**Crystallise**: the lines slow and thicken into veins and the forms fill with stone. The battle is statuary. Cut closer on the 157.03 boom.",
+   "text": "—",
+   "sync": "Transition"
+  },
+  {
+   "id": "S46",
+   "t0": 160.7,
+   "t1": 164.13,
+   "world": "marble",
+   "worlds": [
+    "marble"
+   ],
+   "plates": [
+    "P25"
+   ],
+   "cues": [
+    {
+     "role": "inscr",
+     "t": null,
+     "text": "What was it like when reality suddenly broke"
+    }
+   ],
+   "section": "9 · Verse 2, 160.70–174.39 (B93–100). MARBLE, 30 fps, small type.",
+   "picture": "Drift through the frozen battle: statues mid-strike, arrows hanging, river spray frozen like glass beads.",
+   "text": "INSCR lower third `What was it like when reality suddenly broke`",
+   "sync": ""
+  },
+  {
+   "id": "S47",
+   "t0": 164.13,
+   "t1": 167.55,
+   "world": "marble",
+   "worlds": [
+    "marble"
+   ],
+   "plates": [
+    "P19",
+    "P14"
+   ],
+   "cues": [
+    {
+     "role": "inscr",
+     "t": null,
+     "text": "the silent eye, how the gods suddenly spoke"
+    }
+   ],
+   "section": "9 · Verse 2, 160.70–174.39 (B93–100). MARBLE, 30 fps, small type.",
+   "picture": "A marble face looking up at the black Sun; blank carved eyes.",
+   "text": "INSCR `the silent eye, how the gods suddenly spoke`",
+   "sync": ""
+  },
+  {
+   "id": "S48",
+   "t0": 167.55,
+   "t1": 170.73,
+   "world": "marble",
+   "worlds": [
+    "marble"
+   ],
+   "plates": [
+    "proc."
+   ],
+   "cues": [
+    {
+     "role": "inscr",
+     "t": null,
+     "text": "Birds went quiet, air suddenly cold"
+    }
+   ],
+   "section": "9 · Verse 2, 160.70–174.39 (B93–100). MARBLE, 30 fps, small type.",
+   "picture": "A flock stopped mid-air against the corona.",
+   "text": "INSCR `Birds went quiet, air suddenly cold`",
+   "sync": "Birdsong cuts on 168.32"
+  },
+  {
+   "id": "S49",
+   "t0": 170.73,
+   "t1": 174.39,
+   "world": "marble",
+   "worlds": [
+    "marble"
+   ],
+   "plates": [
+    "P25"
+   ],
+   "cues": [
+    {
+     "role": "inscr",
+     "t": null,
+     "text": "what we do next is how history unfolds"
+    }
+   ],
+   "section": "9 · Verse 2, 160.70–174.39 (B93–100). MARBLE, 30 fps, small type.",
+   "picture": "Tilt up from the statues to the sky: Jupiter, Saturn, Mars, the corona.",
+   "text": "INSCR, cut into a plinth: `what we do next is how history unfolds`",
+   "sync": ""
+  },
+  {
+   "id": "S50",
+   "t0": 174.39,
+   "t1": 178.66,
+   "world": "marble",
+   "worlds": [
+    "marble"
+   ],
+   "plates": [
+    "proc."
+   ],
+   "cues": [
+    {
+     "role": "inscr",
+     "t": null,
+     "text": "a shadow crossed the hills"
+    }
+   ],
+   "section": "10 · The shadow, 174.39–181.23 (B101–104)",
+   "picture": "**Replay** on a marble relief map of Anatolia, a strategy board: the Moon's shadow sweeps in from the WNW out of the sunset; two tiny armies at the river.",
+   "text": "INSCR `a shadow crossed the hills`",
+   "sync": ""
+  },
+  {
+   "id": "S51",
+   "t0": 178.66,
+   "t1": 181.23,
+   "world": "marble",
+   "worlds": [
+    "marble"
+   ],
+   "plates": [
+    "P26"
+   ],
+   "cues": [
+    {
+     "role": "inscr",
+     "t": null,
+     "text": "the wind picked up a chill"
+    }
+   ],
+   "section": "10 · The shadow, 174.39–181.23 (B101–104)",
+   "picture": "Wind moves banners and cloaks on frozen bodies, the only motion; dust lifts.",
+   "text": "INSCR `the wind picked up a chill`",
+   "sync": ""
+  },
+  {
+   "id": "S52",
+   "t0": 181.23,
+   "t1": 184.64,
+   "world": "marble",
+   "worlds": [
+    "marble",
+    "bronze"
+   ],
+   "plates": [
+    "P27"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "THALES"
+    },
+    {
+     "role": "carved",
+     "t": null,
+     "text": "ΘΑΛΗΣ"
+    },
+    {
+     "role": "plaque",
+     "t": null,
+     "text": "THALES OF MILETUS"
+    }
+   ],
+   "section": "11 · Thales, 181.23–199.98 (B105–115). Strings and choir climb; breath 187.65–188.55; rest 192.75–193.1.",
+   "picture": "**Thales** (about 40) walks between the statues, the only living thing, painted in colour. Shadow-stick in hand.",
+   "text": "CARVED `THALES` + Greek echo `ΘΑΛΗΣ`; PLAQUE `THALES OF MILETUS`",
+   "sync": "Name on 182.49"
+  },
+  {
+   "id": "S53",
+   "t0": 184.64,
+   "t1": 187.65,
+   "world": "marble",
+   "worlds": [
+    "marble",
+    "bronze"
+   ],
+   "plates": [
+    "P28"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "FORETOLD THE SUN WOULD GO DARK"
+    }
+   ],
+   "section": "11 · Thales, 181.23–199.98 (B105–115). Strings and choir climb; breath 187.65–188.55; rest 192.75–193.1.",
+   "picture": "Gold construction lines bloom around him: his theorem (a triangle in a circle), `SAROS · 18 Y 11 D 8 H`, an Antikythera-style gear that resolves into lines of code. At 186.4 the **forecast card** (≤ 1.3 s, generic UI): `Will the sun go dark over the Halys before sunset?` YES 3¢ → 99¢.",
+   "text": "CARVED `FORETOLD THE SUN WOULD GO DARK`",
+   "sync": "\"dark\" 186.38"
+  },
+  {
+   "id": "S54",
+   "t0": 187.65,
+   "t1": 188.51,
+   "world": "marble",
+   "worlds": [
+    "marble",
+    "bronze"
+   ],
+   "plates": [
+    "P28"
+   ],
+   "cues": [],
+   "section": "11 · Thales, 181.23–199.98 (B105–115). Strings and choir climb; breath 187.65–188.55; rest 192.75–193.1.",
+   "picture": "In the breath, he glances at camera. He knows.",
+   "text": "—",
+   "sync": ""
+  },
+  {
+   "id": "S55",
+   "t0": 188.51,
+   "t1": 193.16,
+   "world": "marble",
+   "worlds": [
+    "marble"
+   ],
+   "plates": [
+    "P20"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "WARRIORS BEHOLD …"
+    }
+   ],
+   "section": "11 · Thales, 181.23–199.98 (B105–115). Strings and choir climb; breath 187.65–188.55; rest 192.75–193.1.",
+   "picture": "Every statue gazes up; the corona's western limb begins to bead.",
+   "text": "CARVED `WARRIORS BEHOLD …`",
+   "sync": ""
+  },
+  {
+   "id": "S56",
+   "t0": 193.16,
+   "t1": 194.86,
+   "world": "marble",
+   "worlds": [
+    "marble"
+   ],
+   "plates": [
+    "proc."
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "A SUDDEN"
+    }
+   ],
+   "section": "11 · Thales, 181.23–199.98 (B105–115). Strings and choir climb; breath 187.65–188.55; rest 192.75–193.1.",
+   "picture": "Tight on the limb: Baily's beads.",
+   "text": "`A SUDDEN`",
+   "sync": ""
+  },
+  {
+   "id": "S57",
+   "t0": 194.86,
+   "t1": 199.98,
+   "world": "marble",
+   "worlds": [
+    "marble",
+    "gold"
+   ],
+   "plates": [
+    "P29"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "SPARK"
+    }
+   ],
+   "section": "11 · Thales, 181.23–199.98 (B105–115). Strings and choir climb; breath 187.65–188.55; rest 192.75–193.1.",
+   "picture": "**SPARK: the diamond ring.** The burst ripples outward and, as the light reaches them, statues turn back to flesh and paint.",
+   "text": "CARVED `SPARK` bursts and fades",
+   "sync": "Vowel held to 200.2"
+  },
+  {
+   "id": "S58",
+   "t0": 199.98,
+   "t1": 203.39,
+   "world": "gold",
+   "worlds": [
+    "gold"
+   ],
+   "plates": [
+    "P29"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "SHADOW TURNED TO DAY"
+    }
+   ],
+   "section": "12 · Final chorus, 199.98–215.29 (B116–124). GOLD, big lyrics.",
+   "picture": "The light sweeps back across the land as the umbra races away ESE. Colour returns, and both armies **roar**.",
+   "text": "CARVED `SHADOW TURNED TO DAY`: letters rise out of shadow into gold",
+   "sync": "Boom 203.60"
+  },
+  {
+   "id": "S59",
+   "t0": 203.39,
+   "t1": 207.4,
+   "world": "gold",
+   "worlds": [
+    "gold"
+   ],
+   "plates": [
+    "P30"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "SUNLIGHT FROM ABOVE"
+    }
+   ],
+   "section": "12 · Final chorus, 199.98–215.29 (B116–124). GOLD, big lyrics.",
+   "picture": "Baroque glory (Tiepolo/Rubens, not lens flare). Golden faces; laughter.",
+   "text": "CARVED `SUNLIGHT FROM ABOVE`",
+   "sync": ""
+  },
+  {
+   "id": "S60",
+   "t0": 207.4,
+   "t1": 208.7,
+   "world": "gold",
+   "worlds": [
+    "gold"
+   ],
+   "plates": [
+    "P31"
+   ],
+   "cues": [],
+   "section": "12 · Final chorus, 199.98–215.29 (B116–124). GOLD, big lyrics.",
+   "picture": "Drop-out breath: the Lydian and the Mede face to face, weapons still in hand.",
+   "text": "—",
+   "sync": "207.4–208.5 hold"
+  },
+  {
+   "id": "S61",
+   "t0": 208.7,
+   "t1": 211.88,
+   "world": "gold",
+   "worlds": [
+    "gold"
+   ],
+   "plates": [
+    "P32"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "THROW DOWN YOUR BLADE"
+    }
+   ],
+   "section": "12 · Final chorus, 199.98–215.29 (B116–124). GOLD, big lyrics.",
+   "picture": "Both armies throw their weapons into the red river, a slow-motion rain of bronze in gold light; hold on one sword sinking during the held \"blade\".",
+   "text": "CARVED `THROW DOWN YOUR BLADE`",
+   "sync": "Low end out 210.18"
+  },
+  {
+   "id": "S62",
+   "t0": 211.88,
+   "t1": 215.29,
+   "world": "gold",
+   "worlds": [
+    "gold"
+   ],
+   "plates": [
+    "P33"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "HOME TO THE ONES YOU LOVE"
+    }
+   ],
+   "section": "12 · Final chorus, 199.98–215.29 (B116–124). GOLD, big lyrics.",
+   "picture": "Beat returns: a soldier tosses his sword high; it spins up into the golden sky and slows at the apex.",
+   "text": "CARVED `HOME TO THE ONES YOU LOVE`",
+   "sync": "Riser 212.3"
+  },
+  {
+   "id": "S63",
+   "t0": 215.29,
+   "t1": 222.08,
+   "world": "orbit",
+   "worlds": [
+    "orbit"
+   ],
+   "plates": [
+    "P34"
+   ],
+   "cues": [],
+   "section": "13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.",
+   "picture": "**Swords into starships**: the spinning sword match-cuts to an unbranded stainless starship rising on a column of light.",
+   "text": "—",
+   "sync": "Kick 215.287"
+  },
+  {
+   "id": "S64",
+   "t0": 222.08,
+   "t1": 225.48,
+   "world": "orbit",
+   "worlds": [
+    "orbit"
+   ],
+   "plates": [
+    "proc."
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "C. 100 BC · ANTIKYTHERA · A BRONZE COMPUTER PREDICTS ECLIPSES"
+    }
+   ],
+   "section": "13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.",
+   "picture": "Bronze gear train; the saros dial is the ring.",
+   "text": "`C. 100 BC · ANTIKYTHERA · A BRONZE COMPUTER PREDICTS ECLIPSES`",
+   "sync": ""
+  },
+  {
+   "id": "S65",
+   "t0": 225.48,
+   "t1": 228.88,
+   "world": "orbit",
+   "worlds": [
+    "orbit"
+   ],
+   "plates": [
+    "proc."
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "1715 · LONDON · HALLEY MAPS THE MOON'S SHADOW"
+    }
+   ],
+   "section": "13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.",
+   "picture": "Halley's eclipse map; the shadow oval crossing England is the ring.",
+   "text": "`1715 · LONDON · HALLEY MAPS THE MOON'S SHADOW`",
+   "sync": ""
+  },
+  {
+   "id": "S66",
+   "t0": 228.88,
+   "t1": 232.27,
+   "world": "orbit",
+   "worlds": [
+    "orbit"
+   ],
+   "plates": [
+    "proc."
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "1919 · PRÍNCIPE · STARLIGHT BENDS. EINSTEIN WAS RIGHT."
+    }
+   ],
+   "section": "13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.",
+   "picture": "A glass plate: displaced stars around the black Sun.",
+   "text": "`1919 · PRÍNCIPE · STARLIGHT BENDS. EINSTEIN WAS RIGHT.`",
+   "sync": ""
+  },
+  {
+   "id": "S67",
+   "t0": 232.27,
+   "t1": 235.66,
+   "world": "orbit",
+   "worlds": [
+    "orbit"
+   ],
+   "plates": [
+    "P35"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "1973 · CONCORDE 001 · 74 MINUTES OF TOTALITY AT MACH 2"
+    }
+   ],
+   "section": "13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.",
+   "picture": "Concorde above the clouds, the eclipse through a round porthole.",
+   "text": "`1973 · CONCORDE 001 · 74 MINUTES OF TOTALITY AT MACH 2`",
+   "sync": ""
+  },
+  {
+   "id": "S68",
+   "t0": 235.66,
+   "t1": 239.05,
+   "world": "orbit",
+   "worlds": [
+    "orbit"
+   ],
+   "plates": [
+    "P36"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "2024 · NORTH AMERICA · 31 MILLION IN THE PATH"
+    }
+   ],
+   "section": "13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.",
+   "picture": "A crowd in eclipse glasses looking up, rhyming with the warriors at 102.21.",
+   "text": "`2024 · NORTH AMERICA · 31 MILLION IN THE PATH`",
+   "sync": ""
+  },
+  {
+   "id": "S69",
+   "t0": 239.05,
+   "t1": 242.45,
+   "world": "orbit",
+   "worlds": [
+    "orbit"
+   ],
+   "plates": [
+    "proc."
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "2026 · ARTEMIS II · TOTALITY FROM DEEP SPACE"
+    }
+   ],
+   "section": "13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.",
+   "picture": "The corona around the Moon, seen from Orion.",
+   "text": "`2026 · ARTEMIS II · TOTALITY FROM DEEP SPACE`",
+   "sync": ""
+  },
+  {
+   "id": "S70",
+   "t0": 242.45,
+   "t1": 245.83,
+   "world": "orbit",
+   "worlds": [
+    "orbit"
+   ],
+   "plates": [
+    "P37"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "2027 · LUXOR · NEXT: 6 MIN 23 S"
+    }
+   ],
+   "section": "13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.",
+   "picture": "The black Sun over Karnak's columns.",
+   "text": "`2027 · LUXOR · NEXT: 6 MIN 23 S`",
+   "sync": ""
+  },
+  {
+   "id": "S71",
+   "t0": 245.83,
+   "t1": 249.22,
+   "world": "orbit",
+   "worlds": [
+    "orbit"
+   ],
+   "plates": [
+    "proc."
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "MARS · PHOBOS · ECLIPSES ON OTHER WORLDS"
+    }
+   ],
+   "section": "13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.",
+   "picture": "Phobos, a lumpy dark potato, crossing the Sun over a Martian horizon.",
+   "text": "`MARS · PHOBOS · ECLIPSES ON OTHER WORLDS`",
+   "sync": ""
+  },
+  {
+   "id": "S72",
+   "t0": 249.22,
+   "t1": 255.99,
+   "world": "orbit",
+   "worlds": [
+    "orbit"
+   ],
+   "plates": [
+    "proc."
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "HOME"
+    }
+   ],
+   "section": "13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.",
+   "picture": "**Earthset**: the blue Earth over the grey lunar limb. **The first blue in the film.**",
+   "text": "CARVED `HOME` (small, late)",
+   "sync": "Topline soars"
+  },
+  {
+   "id": "S73",
+   "t0": 255.99,
+   "t1": 257.68,
+   "world": "orbit",
+   "worlds": [
+    "orbit"
+   ],
+   "plates": [
+    "proc."
+   ],
+   "cues": [
+    {
+     "role": "chop",
+     "t": 256.4,
+     "text": "THROW DOWN"
+    },
+    {
+     "role": "chop",
+     "t": 257.25,
+     "text": "THROW DOWN"
+    }
+   ],
+   "section": "13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.",
+   "picture": "Earth rushes at camera; the dive begins.",
+   "text": "CHOP `THROW DOWN` 256.40 · `THROW DOWN` 257.25",
+   "sync": ""
+  },
+  {
+   "id": "S74",
+   "t0": 257.68,
+   "t1": 259.36,
+   "world": "orbit",
+   "worlds": [
+    "orbit",
+    "gold"
+   ],
+   "plates": [
+    "P38"
+   ],
+   "cues": [],
+   "section": "14 · Outro, 257.68–273.60 (+ sound-design tail; B150–159)",
+   "picture": "**The dive**: through cloud to Anatolia to the Halys valley; lines condense into paint as we land.",
+   "text": "—",
+   "sync": "Hit 257.67"
+  },
+  {
+   "id": "S75",
+   "t0": 259.36,
+   "t1": 260.62,
+   "world": "gold",
+   "worlds": [
+    "gold"
+   ],
+   "plates": [
+    "P38"
+   ],
+   "cues": [
+    {
+     "role": "chop",
+     "t": 259.77,
+     "text": "THROW DOWN"
+    }
+   ],
+   "section": "14 · Outro, 257.68–273.60 (+ sound-design tail; B150–159)",
+   "picture": "Both armies raise their blades high in unison (formation pose).",
+   "text": "CHOP `THROW DOWN` 259.77",
+   "sync": "Hit 259.35"
+  },
+  {
+   "id": "S76",
+   "t0": 260.62,
+   "t1": 262.72,
+   "world": "gold",
+   "worlds": [
+    "gold"
+   ],
+   "plates": [
+    "P38"
+   ],
+   "cues": [
+    {
+     "role": "chop",
+     "t": 260.62,
+     "text": "BLADE"
+    }
+   ],
+   "section": "14 · Outro, 257.68–273.60 (+ sound-design tail; B150–159)",
+   "picture": "**BLADE**: every blade slams down at once. One straggler's lands late, on the 261.05 hit, and he shrugs.",
+   "text": "CHOP `BLADE` 260.62",
+   "sync": "Hits 260.62, 261.05"
+  },
+  {
+   "id": "S77",
+   "t0": 262.72,
+   "t1": 266.12,
+   "world": "gold",
+   "worlds": [
+    "gold",
+    "orbit",
+    "room"
+   ],
+   "plates": [
+    "proc."
+   ],
+   "cues": [],
+   "section": "14 · Outro, 257.68–273.60 (+ sound-design tail; B150–159)",
+   "picture": "**Pull-back** on the boom: up out of the valley, through sky, Earth (blue) with the umbra dot over Anatolia, past the Moon, into a monitor bezel.",
+   "text": "—",
+   "sync": "Boom 262.72; held \"throw down\""
+  },
+  {
+   "id": "S78",
+   "t0": 266.12,
+   "t1": 270.01,
+   "world": "room",
+   "worlds": [
+    "room"
+   ],
+   "plates": [
+    "P39",
+    "P40"
+   ],
+   "cues": [],
+   "section": "14 · Outro, 257.68–273.60 (+ sound-design tail; B150–159)",
+   "picture": "**The room.** The blue RARE EARTH circle on her back rhymes with the planet. The ticking build is her keystrokes: `git commit -am \"fix(halys): schedule eclipse to end war (#585)\"`. On the final hits (266.99–269.8) she spins the chair.",
+   "text": "MONO terminal (ROOM.md)",
+   "sync": ""
+  },
+  {
+   "id": "S79",
+   "t0": 270.01,
+   "t1": null,
+   "world": "room",
+   "worlds": [
+    "room"
+   ],
+   "plates": [
+    "P41"
+   ],
+   "cues": [
+    {
+     "role": "carved",
+     "t": null,
+     "text": "HALYS"
+    },
+    {
+     "role": "carved",
+     "t": null,
+     "text": "JADE WANG"
+    },
+    {
+     "role": "plaque",
+     "t": null,
+     "text": "NEXT TOTALITY · 2027-08-02 · LUXOR · 6M23S"
+    }
+   ],
+   "section": "14 · Outro, 257.68–273.60 (+ sound-design tail; B150–159)",
+   "picture": "**The wink** on the final stark chord: her eyelid crosses her iris with the Moon's curved edge. Hold, decay, freeze. End card.",
+   "text": "CARVED `HALYS` · `JADE WANG`; PLAQUE `NEXT TOTALITY · 2027-08-02 · LUXOR · 6M23S`",
+   "sync": "Chord 270.04"
+  }
+ ]
+}

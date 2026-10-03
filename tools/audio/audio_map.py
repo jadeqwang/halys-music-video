@@ -190,6 +190,9 @@ the bar grid and short-window Whisper passes, not by template matching. *high* =
 * Pipeline (`tools/audio/`): `separate.sh` (stems) → `madmom_beats.py` → `analyze.py` (grid, bars, events, curves) →
   `whisper_cf.py` (Cloudflare Whisper passes, logged in `media/genlog.jsonl`) → `align_lyrics.py` (true words, onset
   snapping, chops) → `build_outputs.py` (timing.json) → `audio_map.py` (this file) → `overview_plot.py`.
+* Sound design (the "updated sound" mp3): `sfx_gen.py` (ElevenLabs sources) → `sound_design.py` (cues, freeze ending,
+  loudness match → `release/Halys_sound_design.mp3`, `media/stems/halys_sd_master.wav`) → `sound_design_doc.py`
+  (`production/SOUND_DESIGN.md`). `timing.json` → `durExt`, `sound_design{{}}` carry its duration and cue times.
 * Stems used: MDX-Net Kim_Vocal_2 vocals/instrumental + UVR KARA_2 lead/backing split (clean enough for every
   measurement here; the interrupted BS-Roformer re-separation was not needed).
 """

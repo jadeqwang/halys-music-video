@@ -14,7 +14,7 @@ REFBOARDS["rubens"] = [(P + "met_437536_rubens_wolf-and-fox-hunt_c1616.jpg", Non
 NOTXT = "No text, letters or watermark anywhere in the image."
 WIDE = "sets/halys_wide2_t1.jpg"          # the master composition (set sheet), used as a layout reference
 LYD = "chars/lydian_e1_t1.jpg"
-MED = "chars/mede_e2_t1.jpg"
+MED = "chars/mede_e3_t1.jpg"
 
 
 def frame(fid, models, prompt, refs=(), **params):
@@ -147,3 +147,33 @@ F8 = (
     "line-weight variation, flat cel colours with one hard-edged shadow tone, no airbrushed gradients, no glow-shaded "
     "skin, no Ghibli-soft painting, no yellow or sepia cast. " + NOTXT)
 frame("f8_room", [NBP, GPT], F8, refs=["Pasted image.png"])
+
+
+# ---------------------------------------------------------------- fix passes
+job("f8_room_gpt_e1", GPT, "frames",
+    "Edit this anime frame. Keep the same girl, face, pose, wink, outfit, room, composition and the clean flat cel style "
+    "exactly. Three changes only: (1) the round black patch on the upper part of her left sleeve becomes a WHITE round "
+    "patch with a thin black border, reading '1420' above 'MHz' in clean black sans-serif letters, exactly like the patch "
+    "on the attached character sheet (second image); (2) make the expression more mischievous: the corner of her mouth "
+    "lifts a little higher on one side into a sly, knowing half-smile, and the eyebrow over her open eye arches slightly; "
+    "(3) light her face and hair from the left with the cool pearl-white glow of the monitor (a crisp cel highlight shape "
+    "on the left side of her face, hair and jacket), while the warm orange desk-lamp rim light stays on the right edge of "
+    "her hair. No other text anywhere.", refs=["frames/f8_room_gpt_t1.jpg", "Pasted image.png"])
+job("f5_marble_nbp_e1", NBP, "frames",
+    "Edit this painted frame. Keep the composition, the statues, Thales, the black sun and the painting style. Changes: "
+    "(1) the night sky becomes near-black warm umber with a hint of deep violet-brown at the top: NO blue anywhere in the "
+    "sky, the land or the water; the only light comes from the pearly corona around the black sun and the orange "
+    "twilight glow along the whole horizon; (2) the river reflects only that orange glow and the pale corona; (3) the "
+    "white marble Lydian warrior statue fighting in the centre-left wears a carved marble scale corselet over a "
+    "knee-length tunic instead of a bare muscled chest; (4) remove the two small light dots at the far upper left and put "
+    "ONE brilliant white point (the planet Jupiter) in the sky above and slightly to the left of the black sun. The "
+    "statues' eyes stay blank carved stone. No text.", refs=["frames/f5_marble_nbp_t1.jpg"])
+
+job("f4_corona_gpt_e1", GPT, "frames",
+    "Edit this field-line visualisation. Keep everything exactly as it is (the black sun, the corona field lines, the "
+    "river, the hills, trees, the LEFT army, the line style and the colours: pearl white and signal orange on navy-black) "
+    "except the army on the RIGHT bank: it must be the MEDES, not a copy of the left army. Redraw the right-bank soldiers, "
+    "in the same luminous line style and the same mirrored formation, as Median spearmen and archers: soft, low, rounded "
+    "felt caps with small cheek flaps (no helmets, no crests), round wicker shields drawn as fine basket-weave line "
+    "patterns, long-sleeved knee-length tunics, upright spears, and in the front rank archers holding short double-curved "
+    "bows; keep the bronze horse standard and the riders on the right. No text.", refs=["frames/f4_corona_gpt_t1.jpg"])

@@ -171,7 +171,7 @@ function hashSources() {
   const walk = d => { for (const f of readdirSync(d, { withFileTypes: true }).sort((x, y) => x.name.localeCompare(y.name))) {
     const p = join(d, f.name); if (f.isDirectory()) walk(p); else { h.update(p); h.update(readFileSync(p)); } } };
   walk('src');
-  for (const f of ['studio.html', 'data/timing.json', 'plates/index.json']) if (existsSync(f)) { h.update(f); h.update(readFileSync(f)); }
+  for (const f of ['studio.html', 'data/timing.json', 'data/shotlist.json', 'plates/index.json']) if (existsSync(f)) { h.update(f); h.update(readFileSync(f)); }
   return h.digest('hex').slice(0, 10);
 }
 
@@ -183,7 +183,11 @@ try {
     if (args.list) {
       console.log(`${'shot'.padEnd(16)} ${'t0'.padStart(8)} ${'t1'.padStart(8)}  ${'dur'.padStart(6)}  frames        draw   world   scene        plate`);
       for (const s of shots) console.log(`${s.id.padEnd(16)} ${s.t0.toFixed(2).padStart(8)} ${s.t1.toFixed(2).padStart(8)}  ${(s.t1 - s.t0).toFixed(2).padStart(6)}  ${String(s.F0).padStart(5)}-${String(s.F1 - 1).padEnd(6)} ${String(s.cadence).padStart(3)} fps  ${s.world.padEnd(7)} ${s.scene.padEnd(12)} ${s.plate || ''}`);
-      console.log(`${info.frames} master frames at ${info.FPS} fps (${info.dur.toFixed(3)} s), ${info.W}x${info.H}; timing.json ${info.timing ? 'loaded' : 'MISSING (constant 140 BPM grid)'}; plates: ${info.plates.join(', ') || 'none'}`);
+      const nd = new Set(await page.evaluate(n => window.HALYS.keys(0, n - 1), info.frames)).size;
+      const byCad = {}; for (const s of shots) byCad[s.cadence] = (byCad[s.cadence] || 0) + (s.F1 - s.F0) / info.FPS;
+      console.log(`${shots.length} shots, ${info.frames} master frames at ${info.FPS} fps (${info.dur.toFixed(3)} s), ${info.W}x${info.H}; ${nd} unique drawings ` +
+        `(${(100 * nd / info.frames).toFixed(0)} %; the rest are held); seconds per cadence: ${Object.entries(byCad).map(([c, t]) => `${c} fps ${t.toFixed(1)} s`).join(', ')}`);
+      console.log(`timing.json ${info.timing ? 'loaded' : 'MISSING (constant 140 BPM grid)'}; plates: ${info.plates.join(', ') || 'none'}`);
       if (info.gaps.length) console.log(`gaps (black): ${info.gaps.map(([a, b]) => `${a.toFixed(2)}-${b.toFixed(2)}`).join(', ')}`);
       for (const w of info.warnings || []) console.log('warning: ' + w);
       if (args.out) { mkdirSync(dirname(args.out), { recursive: true }); writeFileSync(args.out, JSON.stringify(shots.map(s => [s.id, s.t0, s.t1, s.cadence, s.world]))); console.log('wrote ' + args.out); }
@@ -252,7 +256,7 @@ try {
       tasks.push({ key, idx });
     }
     if (count.moved) console.log(`${count.moved} frames hold a drawing the edit no longer puts there: redrawing them`);
-    if (count.old) console.log(`${count.old} frames were drawn from older sources (src/, timing.json or plates changed): ${args.stale ? 'redrawing them (--stale)' : 'KEPT; pass --stale to redraw them, or --force for everything in the range'}`);
+    if (count.old) console.log(`${count.old} frames were drawn from older sources (src/, data/*.json or the plate index changed): ${args.stale ? 'redrawing them (--stale)' : 'KEPT; pass --stale to redraw them, or --force for everything in the range'}`);
     if (count.legacy) console.log(`${count.legacy} frames have no ledger entry (drawn before keys.json existed): ${args.stale ? 'redrawing them (--stale)' : 'KEPT; pass --stale to redraw them'}`);
     const nFrames = last - first + 1, todoFrames = tasks.reduce((s, t) => s + t.idx.length, 0);
     console.log(`${FRAMES_DIR}: frames ${first}-${last} (${nFrames}) at ${W}x${H}@${FPS}: ${groups.size} drawings; ${tasks.length} to render (${todoFrames} frames), ` +

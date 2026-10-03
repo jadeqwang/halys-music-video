@@ -78,13 +78,13 @@ async function renderAny(spec) {
   const M = MATERIALS[spec.material];
   if (!M) throw new Error('unknown material ' + spec.material);
   const P = await loadPlate(spec.plate, { src: spec.src, analysis: spec.analysisDir });
-  const cfg = config(spec.material, spec.plate, spec.params);
+  const cfg = config(spec.material, spec.shot || spec.plate, spec.params);
   const t = spec.t ?? 0;
   const F = getAnalysis(P, spec.cam, cfg.aw ?? 960, cfg.analysis || {});
   const t0 = performance.now();
   // under a synthetic camera, stroke layouts are anchored to the plate (layout space = full-frame analysis px)
   const anchor = spec.anchor ? { ox: F.win[0] * F.aw, oy: F.win[1] * F.ah, s: F.win[2] } : null;
-  const stats = await M.render(glw, F, cfg, { t, plate: P, cam: spec.cam, anchor, frame: spec.frame ?? 0 }) || {};
+  const stats = await M.render(glw, F, cfg, { t, plate: P, cam: spec.cam, anchor, frame: spec.frame ?? 0, temporal: spec.temporal || null }) || {};
   glw.finish();
   const tr = performance.now() - t0;
   const url = glw.canvas.toDataURL(spec.format || 'image/jpeg', spec.quality ?? .9);
@@ -99,15 +99,29 @@ export const CLIPS = {
   // plate so strokes boil (re-jitter by `boil`) instead of swimming or strobing
   bronze_boil: { plate: 'a_duel', material: 'bronze', fps: 24, frames: 48, hold: 2,
     spec: t => ({ cam: { cx: .5, cy: .48, zoom: 1 + .045 * ease(t / 2) }, anchor: true }) },
-  // CORONA on ones: phase flow along the lines, a kick on each beat (120 bpm here), a ±11° orbit around the duel
+  // CORONA on ones: phase flow along the lines, a kick on each beat (120 bpm here), a ±11° orbit around the duel; the kick
+  // also thickens lines and pushes everything outward from the sun; the third kick is a brass stab (2 inverted frames)
   corona_flow: { plate: 'a_duel', material: 'corona', fps: 24, frames: 48, hold: 1,
-    spec: t => ({ params: { yaw: -11 + 22 * ease(t / 2), pitch: 2.5 * Math.sin(t * Math.PI / 2), kick: kickEnv(t, [.25, .75, 1.25, 1.75]), overscan: 1.07 } }) },
+    spec: t => ({ params: { yaw: -11 + 22 * ease(t / 2), pitch: 2.5 * Math.sin(t * Math.PI / 2), kick: kickEnv(t, [.25, .75, 1.25, 1.75]), invert: t >= 1.25 - 1e-6 && t < 1.25 + 2 / 24 - 1e-6 ? 1 : 0, overscan: 1.07 } }) },
+  // CORONA on a real video plate (Seedance test clip, 48 frames): temporal coherence via flow-advected seeds
+  corona_seedance: { material: 'corona', fps: 24, frames: 48, hold: 1, video: 'seedance', temporal: true,
+    spec: t => ({ params: { kick: kickEnv(t, [.5, 1, 1.5]) * .7 } }) },
+  corona_seedance_naive: { material: 'corona', fps: 24, frames: 48, hold: 1, video: 'seedance', temporal: false,
+    spec: t => ({ params: { kick: kickEnv(t, [.5, 1, 1.5]) * .7 } }) },
 };
+// per-frame plate of a video clip (frames, analysis and flow written by analysis/seedance_prep.py)
+function videoFrame(c, name, i) {
+  const n = String(i + 1).padStart(3, '0'), id = c.video;
+  return { plate: `${id}_f${n}`, shot: id, src: `media/lookdev/inputs/${id}/f${n}.jpg`, analysisDir: `media/lookdev/analysis/${id}/f${n}`,
+    temporal: c.temporal ? { key: name, frame: i, flowUrl: i > 0 ? `${ROOT}media/lookdev/analysis/${id}/flow_${n}.bin` : null, flowSize: [480, 270] } : null };
+}
 window.clipInfo = name => { const c = CLIPS[name]; return { fps: c.fps, frames: c.frames, hold: c.hold }; };
 window.clipDrawKey = (name, i) => Math.floor(i / CLIPS[name].hold);
-window.renderClipFrame = (name, i, q = .9) => {
+window.renderClipFrame = (name, i, q = .9, over = {}) => {
   const c = CLIPS[name], tDraw = Math.floor(i / c.hold) * c.hold / c.fps;
-  return renderAny({ plate: c.plate, material: c.material, t: tDraw, quality: q, ...c.spec(tDraw) });
+  const base = c.video ? videoFrame(c, name, Math.floor(i / c.hold) * c.hold) : { plate: c.plate };
+  const sp = c.spec(tDraw);
+  return renderAny({ ...base, material: c.material, t: tDraw, quality: q, ...sp, params: { ...(sp.params || {}), ...over } });
 };
 
 window.renderStill = spec => renderAny(spec);

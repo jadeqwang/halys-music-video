@@ -151,7 +151,7 @@ with field lines · **INSCR** = Cormorant Garamond italic, small · **MONO** = J
 | S72 | 249.22–255.99 | ORBIT | proc. | **Earthset**: the blue Earth over the grey lunar limb. **The first blue in the film.** | CARVED `HOME` (small, late) | Topline soars |
 | S73 | 255.99–257.68 | ORBIT | proc. | Earth rushes at camera; the dive begins. | CHOP `THROW DOWN` 256.40 · `THROW DOWN` 257.25 | |
 
-## 14 · Outro, 257.68–273.60 (+ sound-design tail; B150–159)
+## 14 · Outro, 257.68–281.0 (B150–159 + the sound-design tail: frozen chord, room tone, keys, ting; audio ends 279.60)
 
 | Shot | Time | World | Plate | Picture | Text | Sync / FX |
 |---|---|---|---|---|---|---|
@@ -159,8 +159,10 @@ with field lines · **INSCR** = Cormorant Garamond italic, small · **MONO** = J
 | S75 | 259.36–260.62 | GOLD | P38 | Both armies raise their blades high in unison (formation pose). | CHOP `THROW DOWN` 259.77 | Hit 259.35 |
 | S76 | 260.62–262.72 | GOLD | P38 | **BLADE**: every blade slams down at once. One straggler's lands late, on the 261.05 hit, and he shrugs. | CHOP `BLADE` 260.62 | Hits 260.62, 261.05 |
 | S77 | 262.72–266.12 | GOLD→ORBIT→INK | proc. | **Pull-back** on the boom: up out of the valley, through sky, Earth (blue) with the umbra dot over Anatolia, past the Moon, into a monitor bezel. | — | Boom 262.72; held "throw down" |
-| S78 | 266.12–270.01 | INK | P39, P40 | **The room.** The blue RARE EARTH circle on her back rhymes with the planet. The ticking build is her keystrokes: `git commit -am "fix(halys): schedule eclipse to end war (#585)"`. On the final hits (266.99–269.8) she spins the chair. | MONO terminal (ROOM.md) | |
-| S79 | 270.01–end | INK | P41 | **The wink** on the final stark chord: her eyelid crosses her iris with the Moon's curved edge. Hold, decay, freeze. End card. | CARVED `HALYS` · `JADE WANG`; PLAQUE `NEXT TOTALITY · 2027-08-02 · LUXOR · 6M23S` | Chord 270.04 |
+| S78 | 266.12–270.04 | INK | P39 | **The room**, from behind her chair: the blue RARE EARTH circle on her back rhymes with the planet we just left. The ticking build is the terminal scrolling, one line per tick; on the side monitor the ΔT map's totality band slides north onto the Halys. | MONO terminal (ROOM.md) | Ticks 266.1–269.8 |
+| S79 | 270.04–273.40 | INK | P40 | **On the final stark chord she spins the chair to camera**: her face is the stinger. Deadpan eye contact while the frozen chord rings. | — | Chord 270.04, freeze from 271.6 |
+| S80 | 273.40–276.95 | INK | P41 | Still holding our gaze, she types blind (keys 273.45, 274.05, 274.95); behind her the terminal prints `[main 585ec1a] fix(halys): schedule eclipse to end war (#585)`. | MONO | Key clicks from the sound design |
+| S81 | 276.95–281.0 | INK | P41 | **The wink**, on the ting: her eyelid crosses her iris with the Moon's curved edge. Hold 0.6 s, cut to black, end card (video runs ~1.4 s past the audio in silence). | CARVED `HALYS` · `JADE WANG`; PLAQUE `NEXT TOTALITY · …` (per FACTCHECK.md) | Ting 276.95; audio ends 279.60 |
 
 ---
 
@@ -210,8 +212,8 @@ Generate 2 takes of hero plates; keep the best.
 | P37 | S70 | Karnak temple columns at dusk under a darkening sky | — | 242.45–246.5 | 4 |
 | P38 | S74–76 | Both armies raise blades high together, then drop them at once; one soldier drops his late and shrugs | armies | 257.68–262.7 | 5 |
 | P39 | S78 | Anime: from behind her chair at the monitors, typing; RARE EARTH circle on her back | Jade, ROOM | 266.12–270.1 | 4 |
-| P40 | S78 | Anime: she spins the chair to face camera | Jade, ROOM | 268.3–272.3 | 4 |
-| P41 | S79 | Anime: close-up, mischievous smile, a wink | Jade, ROOM | 269.0–273.6 | 5 |
+| P40 | S79 | Anime: she spins the chair to face camera, then holds a deadpan stare | Jade, ROOM | 268.3–273.4 | 5 |
+| P41 | S80–81 | Anime: close-up, deadpan stare, types without looking, then a mischievous smile and a wink | Jade, ROOM | 273.4–279.6 (use the sound-design master) | 6 |
 
 Procedural (no plate): the sun and every eclipse state, Altdorfer sky, crescents, umbra, corona, particles and formations, eyes, relief map, birds,
 history-cascade graphics (Antikythera, Halley, Eddington, Artemis, Phobos), Earth, Moon, the pull-back, the terminal, all type and HUD.

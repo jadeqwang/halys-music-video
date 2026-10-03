@@ -45,7 +45,7 @@ function layer(n) { // pooled output-size canvases, cleared on request
 function resetCtx(c) {
   c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = 1; c.globalCompositeOperation = 'source-over'; c.filter = 'none';
   c.shadowBlur = 0; c.shadowColor = 'rgba(0,0,0,0)'; c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'low';
-  c.fontStretch = 'normal'; c.textAlign = 'start'; c.textBaseline = 'alphabetic'; c.lineCap = 'butt'; c.lineJoin = 'miter'; c.setLineDash([]);
+  c.fontStretch = 'normal'; c.letterSpacing = '0px'; c.textAlign = 'start'; c.textBaseline = 'alphabetic'; c.lineCap = 'butt'; c.lineJoin = 'miter'; c.setLineDash([]);
 }
 
 function buildContext(fi, target = g) {

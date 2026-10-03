@@ -499,3 +499,114 @@ edit("med_archer3_e1", "chars/med_archer3_t1.jpg",
      "side of the figure, next to the bow); the short sword in its scabbard must hang along his RIGHT thigh, on the "
      "opposite side (in the front view: the left side of the figure, below his empty hand). In the back view the gorytos "
      "is on the left side of the figure and the sword on the right side.")
+
+# ------------------------------------------------------------------ akinakes, round 4: gpt-image-2 edits (better instruction following)
+GPT = "openai/gpt-image-2"
+AKI_GPT_KING = (
+    "Edit this photographic character turnaround sheet. Correct one costume error: this Median king must wear his short "
+    "sword (akinakes) on his RIGHT thigh, which is the side OPPOSITE the hand holding the bow. In the first figure (front "
+    "view, far left) the bow is held on the right side of the figure, so remove the sword and scabbard from beside the "
+    "bow and draw the same sword in its scabbard hanging vertically along the outside of the thigh on the LEFT side of "
+    "the figure, below his empty hand, tied to the thigh with a thong. Do the same in the second figure (three-quarter "
+    "view). In the fourth figure (back view) the sword hangs along the thigh on the RIGHT side of the figure. Keep the "
+    "bow in his hand exactly as it is in every view." + KEEP)
+job("cyaxares2_g1", GPT, "chars", AKI_GPT_KING, refs=["chars/cyaxares2_t1.jpg"])
+job("astyages2_g1", GPT, "chars", AKI_GPT_KING.replace("Median king", "Median prince"), refs=["chars/astyages2_e1_t1.jpg"])
+job("med_archer3_g1", GPT, "chars",
+    "Edit this photographic character turnaround sheet. Correct one costume error: the tooled-leather gorytos (bow-case "
+    "and quiver full of arrows) and the short sword are on the wrong sides. The gorytos must hang at his LEFT hip, on the "
+    "SAME side as the hand holding the bow; the short sword in its scabbard must hang along his RIGHT thigh, on the "
+    "opposite side. So in the first figure (front view) and second figure (three-quarter view): move the gorytos to the "
+    "right side of the figure next to the bow, and move the sword to the left side of the figure below his empty hand. "
+    "In the fourth figure (back view): the gorytos is on the left side of the figure and the sword on the right side. "
+    "Keep the bow in his hand exactly as it is." + KEEP, refs=["chars/med_archer3_t1.jpg"])
+
+# ------------------------------------------------------------------ Thales age-down (~40), keep identity
+edit("thales_e2", "chars/thales_e1_t1.jpg",
+     "Make him look about 40 years old instead of about 48, in every view and in the head close-up: a smoother forehead "
+     "with only faint lines, lighter crow's feet, darker brown hair with just a few grey strands at the temples, and a "
+     "dark brown beard with only a few grey threads. Keep his exact face shape, nose, eyes, knowing half-smile, natural "
+     "skin texture with visible pores (no airbrushing, no plastic skin), hair knotted at the nape, costume and props.")
+
+# ------------------------------------------------------------------ Median cavalryman (the mirror of the Lydian rider), + horse
+MCAV_BODY = (
+    "A MEDIAN CAVALRYMAN of about 30, ancient Iranian, an upright, superb horseman, about 178 cm, lean and long-legged. "
+    "Light-brown weathered skin; a broad face with high cheekbones, a straight strong nose, deep-set dark eyes, a thin "
+    "white scar on his chin, a short curled black beard; calm, attentive, dignified. Dark hair bunched in curls at the "
+    "nape. "
+    "Costume, exactly: (1) a soft madder-red felt hood (bashlyk) with a rounded top and long side lappets, one lappet "
+    "loosely wrapped across his chin against the dust so the face above the beard is visible; (2) a long-sleeved, "
+    "knee-length saffron wool tunic belted at the waist, with a narrow red-brown woven border; (3) over the tunic a "
+    "corselet of small bronze scales; (4) an ochre wool kandys (long-sleeved coat) tied on over the shoulders by its empty "
+    "sleeves knotted across the chest; (5) close dark-brown wool trousers; (6) soft leather ankle boots tied with thongs; "
+    "(7) two javelins with iron heads held upright in one hand; (8) a decorated leather gorytos (bow-case and quiver "
+    "with a short double-curved bow and reed arrows) at his left hip; (9) an akinakes short sword in its scabbard tied "
+    "to his right thigh. "
+    "Bearing: noble, individual, never a villain; no fluted Persian crown, no turban, no long robe, no black clothing, no "
+    "curved sword, no fur hat, no lamellar armour."
+)
+job("med_cav_rider", NBP, "chars", sheet(
+    "top, a head-and-shoulders close-up portrait of the same man in three-quarter view, the hood lappet pulled down off "
+    "his chin; bottom, a close-up of his hand holding the two javelins, showing the iron heads.",
+    MCAV_BODY,
+    "The attached image is a board of museum references: a relief of a man in Median dress (rounded cap, curls at the "
+    "nape, curled beard, belted tunic), an Assyrian-era relief of a Median groom, and a relief of a servant wearing the "
+    "soft hood. Use them only for the hood, hair, beard and garment cut; do not copy their style: the result must look "
+    "like a real photograph of a real man."), refs=["board:med_sp"])
+REFBOARDS_HORSE = None
+job("med_cav_horse", NBP, "chars", HORSE_SHEET + (
+    "The rider is the Median cavalryman from the first reference image (same face, same madder-red hood, saffron tunic, "
+    "bronze-scale corselet, ochre kandys tied on, dark trousers, gorytos at the left hip), sitting upright with long legs "
+    "hanging straight down and bare of any stirrups, holding the two javelins upright in one hand and the reins in the "
+    "other. The horse: a big, powerful Nisaean bay stallion of about 15 hands with a strongly arched neck, a glossy "
+    "dark-brown coat with black mane and tail; his FORELOCK is gathered and tied up in a topknot between the ears, his "
+    "mane is trimmed short and stands upright, and his TAIL is knotted (tied up in a club-shaped knot) - the Median "
+    "fashion; unshod hooves. Tack, exactly: a patterned woollen saddlecloth in saffron and madder red with a woven border, "
+    "held by a girth and a breast-strap; NO saddle tree, NO stirrups, NO horseshoes; a leather bridle with a bronze bit "
+    "whose cheekpieces are cast as small standing horses (like the second reference image), single reins. " +
+    SKIN.replace("five fingers. The same person", "five fingers. The same rider and horse") + " " + PERIOD + " " + NOTEXT +
+    " The second attached image shows an Iranian bronze horse bit with horse-shaped cheekpieces of the 8th-7th century "
+    "BC (tack reference only); the third shows Assyrian-era horses and a Median groom for the horse type."),
+    refs=["chars/med_cav_rider_t1.jpg", "median_persian_scythian/met_324669_iran_horse-bit-horse-cheekpieces_8th-7thC_BC.jpg",
+          "median_persian_scythian/met_322895_khorsabad_tribute-groom-fleece-cloak-horses_c715BC.jpg"])
+
+edit("med_cav_horse_e1", "chars/med_cav_horse_t1.jpg",
+     "The rider must NOT be barefoot: give him soft dark-brown leather ankle boots wrapped and tied with thongs at the "
+     "ankle on both feet, in all three views (like the boots on the rider's own character sheet).")
+
+THALES_BODY2 = THALES_BODY.replace(
+    "THALES OF MILETUS, an Ionian Greek natural philosopher aged about 42 (NOT an old sage): lean and wiry, long-limbed, "
+    "sun-weathered, about 180 cm, a walker and sailor. A narrow, intelligent face, crow's feet from squinting at the sky, "
+    "a dry, knowing half-smile; dark brown hair with the first grey at the temples, worn long and knotted at the nape, "
+    "held by a plain cloth fillet; a short, neat, pointed beard with a few grey threads and a shaved upper lip (archaic "
+    "fashion); ink-stained fingertips. ",
+    "THALES OF MILETUS, an Ionian Greek natural philosopher, a man of 38 to 40 in his prime (NOT old, NOT a sage with "
+    "white or grey hair): lean and wiry, long-limbed, sun-tanned, about 180 cm, a walker and sailor. A narrow, "
+    "intelligent, youthful face with firm skin and only faint laugh lines at the eyes, a dry, knowing half-smile; thick "
+    "DARK BROWN hair with no grey at all, worn long and knotted at the nape, held by a plain undyed cloth fillet tied "
+    "around the head; a short, neat, pointed DARK BROWN beard with no grey and a shaved upper lip (archaic fashion); "
+    "ink-stained fingertips. ")
+job("thales2", NBP, "chars", sheet(
+    "top, a head-and-shoulders close-up portrait of the same man in three-quarter view, a dry knowing half-smile; "
+    "bottom, a still life of his props on the grey floor: a polished bronze bowl filled with water, an open wax-tablet "
+    "diptych with neat rows of tally marks (short vertical strokes grouped in fives, no letters) and a bronze stylus, a "
+    "knotted cord, and a few counting pebbles.",
+    THALES_BODY2, THALES_REFS), refs=["board:thales", "board:thales_mood"])
+
+THALES_ARCHAIC = (
+    "Make him look like an ARCHAIC IONIAN GREEK of c. 585 BC rather than a generic bearded man with loose hair: (1) gather "
+    "all his long hair back off his shoulders and tie it in a knot at the nape of his neck, held by the cloth fillet "
+    "around his head (no loose hair hanging over the shoulders or chest, in every view and in the head close-up); "
+    "(2) SHAVE HIS UPPER LIP completely: no moustache at all, keeping only the short pointed dark beard on the chin and "
+    "jaw, the archaic Greek fashion; (3) close the chiton's sleeves along each upper arm with a row of four small bronze "
+    "pins. Keep his face, age (about 40), dark hair colour, knowing half-smile, natural skin texture, costume colours, "
+    "props, poses, layout and lighting exactly the same.")
+edit("thales2_e1", "chars/thales2_t1.jpg", THALES_ARCHAIC)
+job("thales2_g1", "openai/gpt-image-2", "chars", "Edit this photographic character turnaround sheet. " + THALES_ARCHAIC +
+    " No text, labels or numbers anywhere.", refs=["chars/thales2_t1.jpg"])
+job("med_cav_horse_g1", "openai/gpt-image-2", "chars",
+    "Edit this photographic turnaround sheet of a horseman. The rider is barefoot, which is wrong: put soft dark-brown "
+    "leather ankle boots, wrapped and tied with thongs, on the RIDER's two feet only, in all three views. The HORSE's "
+    "four hooves and legs must stay exactly as they are: bare, natural, unshod hooves with nothing on them. Keep "
+    "everything else exactly the same (rider, horse, tack, saddlecloth, poses, layout, grey backdrop, lighting). No text.",
+    refs=["chars/med_cav_horse_t1.jpg"])

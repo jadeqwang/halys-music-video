@@ -133,8 +133,9 @@ def build_input(job):
     model = job["model"]
     prompt = job["prompt"].strip()
     refs = [resolve_ref(r) for r in job.get("refs", [])]
-    uris = [cfai.image_ref(p, max_side=2048) for p in refs]
     p = dict(job.get("params") or {})
+    ref_max = p.get("ref_max") or (1280 if (model == "openai/gpt-image-2" and len(refs) > 1) else 2048)
+    uris = [cfai.image_ref(r, max_side=ref_max) for r in refs]
     if model == "google/nano-banana-pro":
         inp = {"prompt": prompt, "aspect_ratio": p.get("aspect_ratio", "16:9"), "image_size": p.get("image_size", "2K"),
                "output_format": "jpg"}
@@ -309,6 +310,62 @@ def finish_jpg_img(im, dst, max_side=MAX_SIDE, max_kb=MAX_KB):
     tmp = SCRATCH / "_tmp_contact.png"
     im.save(tmp)
     return finish_jpg(tmp, dst, max_side, max_kb)
+
+
+
+# ------------------------------------------------------------------ BOARDS.md
+SUBJECT_ORDER = ["THE LYDIAN", "THE MEDE", "LYDIAN CAVALRYMAN", "MEDIAN ARCHER", "MEDIAN CAVALRYMAN", "THALES", "ALYATTES",
+                 "CYAXARES", "ARYENIS", "ASTYAGES", "LABYNETUS (mediator)", "SYENNESIS (mediator)",
+                 "HALYS_WIDE", "HALYS_TOTALITY", "HALYS_SHALLOWS", "ROOM",
+                 "F1 THE EYE", "F2 BRONZE", "F3 BRONZE CLOSE", "F4 CORONA", "F5 MARBLE", "F6 GOLD", "F7 ORBIT", "F8 ROOM"]
+FOLDER_TITLE = {"chars": "Character turnaround sheets (photoreal)", "sets": "Set sheets", "frames": "Concept style frames"}
+
+
+def index(canon=None, header=""):
+    """production/BOARDS.md from manifest.jsonl + verdicts.json (+ canonical copies map)."""
+    V = verdicts()
+    rows = manifest()
+    canon = canon or {}
+    by_subj = {}
+    for m in rows:
+        v = V.get(m["name"], {})
+        subj = v.get("subject", "UNREVIEWED")
+        by_subj.setdefault((m["folder"], subj), []).append((m, v))
+    lines = [header.rstrip(), ""]
+    for folder in ("chars", "sets", "frames"):
+        lines += [f"## {FOLDER_TITLE[folder]}", ""]
+        subjects = sorted({s for (f, s) in by_subj if f == folder},
+                          key=lambda s: SUBJECT_ORDER.index(s) if s in SUBJECT_ORDER else 99)
+        for subj in subjects:
+            items = by_subj[(folder, subj)]
+            cn = [m["name"] for m, v in items if v.get("verdict") == "canonical"]
+            lines.append(f"### {subj}")
+            lines.append("")
+            if subj in canon:
+                lines.append(f"**Canonical:** `{canon[subj]}` (from `media/boards/{folder}/{cn[0]}.jpg`)" if cn else
+                             f"**Canonical:** `{canon[subj]}`")
+                lines.append("")
+            elif cn:
+                lines.append("**Chosen:** " + ", ".join(f"`media/boards/{folder}/{c}.jpg`" for c in cn))
+                lines.append("")
+            lines.append("| file | model | refs attached | verdict | issues / notes |")
+            lines.append("|---|---|---|---|---|")
+            for m, v in items:
+                refs = ", ".join(f"`{r}`" for r in (m.get("refs") or [])) or "none"
+                f = m["file"].replace("media/boards/", "")
+                lines.append(f"| [`{f}`](../{m['file']}) | {m['model'].split('/')[-1]} | {refs} | "
+                             f"**{v.get('verdict', 'unreviewed')}** | {v.get('issues', '').replace('|', '/')} |")
+            lines.append("")
+            lines.append("<details><summary>Prompts</summary>")
+            lines.append("")
+            for m, v in items:
+                pr = m["prompt"].replace("\n", " ")
+                lines.append(f"- **{m['name']}** ({m['model']}, {m.get('raw_size', ['?', '?'])[0]}x"
+                             f"{m.get('raw_size', ['?', '?'])[1]} raw, {m.get('secs', 0)} s, ~${m.get('est_cost_usd') or 0:.3f}): {pr}")
+            lines.append("")
+            lines.append("</details>")
+            lines.append("")
+    return "\n".join(lines) + "\n"
 
 
 def main(argv):

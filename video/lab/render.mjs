@@ -75,7 +75,7 @@ try {
       // drawings held on twos (or more) are rendered once and repeated
       const key = await page.evaluate(([n, i]) => window.clipDrawKey(n, i), [args.clip, i]);
       if (key !== heldKey) {
-        const r = await page.evaluate(([n, i, q]) => window.renderClipFrame(n, i, q), [args.clip, i, Q]);
+        const r = await page.evaluate(([n, i, q, o]) => window.renderClipFrame(n, i, q, o), [args.clip, i, Q, set]);
         held = b64(r.url); heldKey = key; ms.push(r.ms);
         if (args.dump) { mkdirSync(join(OUT, 'frames_' + args.clip), { recursive: true }); writeFileSync(join(OUT, 'frames_' + args.clip, `f${String(i).padStart(3, '0')}.jpg`), held); }
       }

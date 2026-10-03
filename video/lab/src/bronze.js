@@ -38,7 +38,7 @@ export const DEFAULTS = {
   // brushes (screen px radius), grid factor, threshold, stroke lengths (control points), turn limit, colour blur
   brushes: [26, 14, 8, 4.4, 2.4], fg: [1.45, 1.3, 1.15, 1.05, 1.0], T: [0, .055, .06, .07, .075],
   minLen: [2, 2, 2, 1, 1], maxLen: [6, 6, 5, 4, 3], step: [1.05, 1.0, .95, .85, .8], fc: .45, maxTurn: .38, fs: .5,
-  jitter: .8, boil: .3, colorJit: .055, endBlend: .15, focusGain: .7, darkRaise: 1.3, midGate: .2, fineGate: .3, smoothRef: 1,
+  jitter: .8, boil: .3, colorJit: .055, endBlend: .15, focusGain: .7, darkRaise: 1.3, midGate: .15, fineGate: .2, smoothRef: 1,
   // paint body and finish
   thinDark: .05, thick: .34, thickHi: .55, impasto: .55, spec: .18, weave: 1, crack: .25, varnish: .85, vignette: .35,
   accents: 1, accentThick: 1.5, eyes: [], eyeStrokes: 1, ground: [.09, .065, .045], seed: 7,
@@ -186,8 +186,8 @@ export function strokes(F, ref, cfg, drawIdx = 0, anchor = null, eyeMask = null)
       if (li > 0 && sum / n <= T) continue;
       // economy: small brushes only where they matter. Mid-small: inside the light or on structural edges; finest: only
       // structural edges in the light (and never inside the eyes: those are painted with a few deliberate strokes)
-      if (li === nL - 2 && (Math.max(p * .45, eImp[ii] * Math.max(p, f)) < cfg.midGate || ey > .5)) continue;
-      if (li === nL - 1 && (eImp[ii] * Math.max(p, f * .8) < cfg.fineGate || ey > .3)) continue;
+      if (li === nL - 2 && Math.max(p * .45, eImp[ii] * Math.max(p, f)) < cfg.midGate) continue;
+      if (li === nL - 1 && (eImp[ii] * Math.max(p, f) < cfg.fineGate * (1 - .45 * f) || ey > .3)) continue;
       const sx = li === 0 ? clamp(gx, 0, aw - 1) : bi % aw, sy = li === 0 ? clamp(gy, 0, ah - 1) : Math.floor(bi / aw);
       const st = traceStroke(F, J, sx, sy, Ra, rb, gb, bb, cR, cG, cB, painted, cfg, li, hash4(cx, cy, li, seed + 11), rid);
       const k = hash4(cx, cy, li, boilSeed + 5), cj = (k - .5) * 2 * cfg.colorJit, hj = (hash4(cx, cy, li, boilSeed + 9) - .5) * cfg.colorJit;
@@ -199,7 +199,9 @@ export function strokes(F, ref, cfg, drawIdx = 0, anchor = null, eyeMask = null)
       // paint body: thin in the darks, loaded in the lights, lead white piles up (impasto) inside the pool
       const thick = (lerp(cfg.thinDark, cfg.thick, sstep(.12, .55, lum)) * lerp(.45, 1, p) + cfg.thickHi * sstep(.55, .88, lum) * p) * lerp(1.1, .8, li / (nL - 1));
       const eb = cfg.endBlend;
-      layer.push({ pts: st.pts.map(([x, y]) => [x * S, y * S]), apts: st.pts, ra: Ra, r: Rs * (.9 + .2 * hash4(cx, cy, li, seed + 13)), c0, c1: [lerp(c0[0], c1e[0], eb), lerp(c0[1], c1e[1], eb), lerp(c0[2], c1e[2], eb)], a: .96 + .04 * k, thick: Math.min(.95, thick), seed: hash4(cx, cy, li, seed + 17), layer: li });
+      // a first-layer stroke stopped short by a boundary becomes a broader dab, so the ground never shows through in holes
+      const rr = Rs * (.9 + .2 * hash4(cx, cy, li, seed + 13)) * (li === 0 && st.pts.length <= 2 ? 1.45 : 1);
+      layer.push({ pts: st.pts.map(([x, y]) => [x * S, y * S]), apts: st.pts, ra: Ra, r: rr, c0, c1: [lerp(c0[0], c1e[0], eb), lerp(c0[1], c1e[1], eb), lerp(c0[2], c1e[2], eb)], a: .96 + .04 * k, thick: Math.min(.95, thick), seed: hash4(cx, cy, li, seed + 17), layer: li });
     }
     shuffle(layer, seed * 31 + li);
     for (const s of layer) paintVirtual(s, F, cR, cG, cB, painted);
@@ -298,8 +300,8 @@ function accents(F, ref, cfg, drawIdx) {
       continue;
     }
     // (3) water sparkle near the light: small round loaded dabs
-    if (p < .6 && L > .78 && lc > .07 && F.mag[i] / (8 * Math.max(lc, 1e-3)) < .6 && h < .35 * cfg.accents) {
-      const reachOk = ref.pool[i] > .08 || (ref.fig && ref.fig[i] > .3);
+    if (p < .6 && L > .78 && lc > .07 && ref.L[i] > .3 && F.mag[i] / (8 * Math.max(lc, 1e-3)) < .6 && h < .35 * cfg.accents) {
+      const reachOk = ref.pool[i] > .3 || (ref.fig && ref.fig[i] > .3);
       if (reachOk) push(x, y, 1, 0, .6, 1.2 + h, lead, T * .8, hash3(x, y, seed + 6));
     }
   }
@@ -330,35 +332,40 @@ function eyeMaskOf(F, eyes) {
   return m;
 }
 function eyeStrokes(F, cfg, eyes, drawIdx) {
-  const S = W / F.aw, out = [], Lb = blur(F.L, F.aw, F.ah, 1.2), bs = drawIdx * 7919;
-  const hx = h => hexRgb(BRONZE_PALETTE[h]), lead = hx('leadWhite'), umber = hx('rawUmber'), burnt = hx('burntUmber'), black = hx('boneBlack'), sienna = hx('burntSienna');
+  const S = W / F.aw, out = [], bs = drawIdx * 7919, P = palette(), Lp = blur(F.L, F.aw, F.ah, 1.5);
+  const hx = h => hexRgb(BRONZE_PALETTE[h]), lead = hx('leadWhite'), umber = hx('rawUmber'), burnt = hx('burntUmber'), black = hx('boneBlack');
   const mix = (a, b, t) => [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
   const add = (pts, r, c0, c1, thick, a = .97, sd = .5) => out.push({ pts: pts.map(([x, y]) => [x * S, y * S]), apts: pts, ra: r / S, r, c0, c1: c1 || c0, a, thick, seed: sd, layer: 10 });
   eyes.forEach((e, k) => {
     const w = e.w, dir = e.dir, up0 = [dir[1], -dir[0]], up = up0[1] < 0 ? up0 : [-up0[0], -up0[1]];
-    // iris = darkest point near the eye centre; catchlight = brightest point near the iris
-    let ix = e.x, iy = e.y, lmin = 9;
-    for (let y = Math.round(e.y - w * .3); y <= e.y + w * .3; y++) for (let x = Math.round(e.x - w * .4); x <= e.x + w * .4; x++) {
-      const L = Lb[clamp(y, 0, F.ah - 1) * F.aw + clamp(x, 0, F.aw - 1)]; if (L < lmin) { lmin = L; ix = x; iy = y; }
+    // anchor on the catchlight: the strongest small specular peak near the detected eye sits on the cornea (detectors
+    // put the eye point anywhere from the pupil to the lower lid; darkness finds lid creases, not irises)
+    let cx = -1, cy = -1, best = .04;
+    for (let y = Math.max(2, Math.round(e.y - w * .75)); y <= Math.min(F.ah - 3, e.y + w * .45); y++) for (let x = Math.max(2, Math.round(e.x - w * .6)); x <= Math.min(F.aw - 3, e.x + w * .6); x++) {
+      const i = y * F.aw + x, pk = F.L[i] - Lp[i];
+      if (F.L[i] > .42 && pk > best) { best = pk; cx = x; cy = y; }
     }
-    let cx = ix, cy = iy, lmax = -1;
-    for (let y = Math.round(iy - w * .2); y <= iy + w * .2; y++) for (let x = Math.round(ix - w * .2); x <= ix + w * .2; x++) {
-      const L = F.L[clamp(y, 0, F.ah - 1) * F.aw + clamp(x, 0, F.aw - 1)]; if (L > lmax) { lmax = L; cx = x; cy = y; }
+    if (cx < 0) return;                                                     // no catchlight: leave the eye to the brushes
+    const ri = w * .17, ix = cx - up[0] * ri * .25, iy = cy - up[1] * ri * .25;   // catchlights sit in the iris's upper half
+    // iris colour: the most chromatic third of the disc (the pigment, not shadowed sclera or lashes), intensified a little
+    const cand = [];
+    for (let y = Math.round(iy - ri); y <= iy + ri; y++) for (let x = Math.round(ix - ri); x <= ix + ri; x++) {
+      const d = Math.hypot(x - ix, y - iy) / ri, i = clamp(y, 0, F.ah - 1) * F.aw + clamp(x, 0, F.aw - 1);
+      if (d < .25 || d > .9 || F.L[i] > .7) continue;
+      const o = srgb2oklab(F.R[i], F.G[i], F.B[i]); cand.push([Math.hypot(o[1], o[2]), o]);
     }
-    const P = (t, h) => [e.x + dir[0] * t * w * .55 + up[0] * h * w, e.y + dir[1] * t * w * .55 + up[1] * h * w];
-    const jit = (q) => (hash3(k, q, cfg.seed + bs) - .5) * .06 * w;
-    // whites (greyed, never pure), then the iris over them
-    const white = mix(mix(lead, umber, .38), [0.72, 0.6, 0.5], .25);
-    add([P(-.75, .02), P(-.3, .06)], w * .1 * S, white, null, .3, .85, .11);
-    add([P(.3, .06), P(.75, .02)], w * .1 * S, mix(white, umber, .15), null, .3, .85, .13);
-    const irisC = mix(mix(burnt, umber, .5), black, .25);
-    add([[ix - up[0] * w * .1 + jit(1), iy - up[1] * w * .1], [ix + up[0] * w * .1, iy + up[1] * w * .1 + jit(2)]], w * .2 * S, irisC, mix(irisC, black, .4), .45, .98, .17);
-    // upper lid: a confident dark arc; lower lid: a touch of sienna
-    const lid = []; for (let t = -1; t <= 1.001; t += .25) lid.push(P(t, .2 * (1 - t * t) + .1 + (t > 0 ? .02 : 0)));
-    add(lid, w * .075 * S, mix(black, burnt, .35), mix(black, umber, .3), .5, .95, .19);
-    add([P(-.45, -.16), P(.5, -.14)], w * .04 * S, mix(sienna, umber, .4), null, .25, .6, .23);
-    // the catchlight: one loaded dab of lead white
-    add([[cx - .3, cy], [cx + .3, cy]], Math.max(1.4, w * .055 * S), lead, lead, 1.6, .99, .29);
+    if (cand.length < 4) return;
+    cand.sort((a, b) => b[0] - a[0]);
+    let L0 = 0, a0 = 0, b0 = 0; const nTop = Math.max(2, Math.floor(cand.length / 3));
+    for (let q = 0; q < nTop; q++) { L0 += cand[q][1][0]; a0 += cand[q][1][1]; b0 += cand[q][1][2]; }
+    const ic = oklab2srgb(L0 / nTop * .92, a0 / nTop * 1.25, b0 / nTop * 1.25);
+    const irisC = P.map(ic[0], ic[1], ic[2], [0, 0, 0]), pupil = mix(black, umber, .3);
+    const jit = q => (hash3(k, q, cfg.seed + bs) - .5) * .03 * w;
+    add([[ix - up[0] * ri * .3 + jit(1), iy - up[1] * ri * .3], [ix + up[0] * ri * .3, iy + up[1] * ri * .3 + jit(2)]], ri * .85 * S, irisC, mix(irisC, umber, .35), .45, .95, .17);
+    add([[ix - .15, iy], [ix + .15, iy]], ri * .36 * S, pupil, pupil, .4, .92, .18);
+    const lid = []; for (let t = -1; t <= 1.001; t += .25) { const hh = ri * (1.0 - .45 * t * t); lid.push([ix + dir[0] * t * w * .38 + up[0] * hh, iy + dir[1] * t * w * .38 + up[1] * hh]); }
+    add(lid, Math.max(1.3, w * .042 * S), mix(black, burnt, .4), mix(umber, burnt, .5), .4, .78, .19);
+    add([[cx - .25, cy], [cx + .25, cy]], Math.max(1.4, w * .042 * S), lead, lead, 1.6, .99, .29);
   });
   return out;
 }
@@ -409,7 +416,8 @@ export function skyField(F, cfg, mask) {
     const st = Math.min(9, d * .5), toward = dens(x - dx / d * st, y - dy / d * st);
     const lit = clamp((cl - toward * (1 - .7 * near0)) * 2.5) * cl;
     const hz = clamp(y / Math.max(hzY, 1));
-    const glow = Math.exp(-dn / (glowR * .3)) * .5 + Math.exp(-dn / glowR) * .38;
+    const irr = 1 + .45 * (fbm(Math.cos(Math.atan2(dy, dx)) * 2.3 + 5, Math.sin(Math.atan2(dy, dx)) * 2.3 + 9, seed + 41, 3) - .5) * 2;
+    const glow = (Math.exp(-dn / (glowR * .3)) * .5 + Math.exp(-dn / (glowR * irr)) * .38) * (1 + .25 * sunWarmth(cfg));
     const near = Math.exp(-dn / (glowR * 1.7));
     const phi = Math.atan2(dy, dx), ray = 1 + rays * Math.sin(phi * 37 + 2 * Math.sin(phi * 5)) * sstep(.5, 2, d / sg.sr) * Math.exp(-dn / .5);
     const Lgap = (lerp(zen, hor, Math.pow(hz, 1.4)) + glow * (1 - .6 * e)) * ray;
@@ -464,44 +472,42 @@ function withSky(F, ref, cfg) {
   return { F: F2, ref: { ...ref, R, G, B, L, pool, focus, sky: mask }, sky: { mask, sun: sg } };
 }
 
-// The sun painted directly: one loaded dab and rings of lead white for the disc, dark arcs centred on the moon for the
-// bite (clipped to the disc: a crisp limb, because the bite is the film's countdown clock), a ring of short tangential
-// Naples strokes that hands the disc over to the sky's glow. Everything is clipped to the sky (the land occludes the sun).
+// Around the sun, painted strokes do what an airbrush would do badly: a few loose tangential strokes and a few broken
+// radial ones (tapered, Naples into ochre, golden-orange when the sun is low) bleed the disc into the sky's glow. The disc
+// itself and the bite are drawn exactly by SUN_FS in paint(). Everything is clipped to the sky (the land occludes the sun).
+export function sunWarmth(cfg) { const alt = cfg.sun?.alt ?? 30; return 1 - sstep(4, 32, alt); }   // totality at the Halys: ~9° up
 function sunStrokes(F, cfg, sky, drawIdx) {
   if (!sky || !cfg.sun) return [];
   const S = W / F.aw, sg = sky.sun, out = [], seed = (cfg.seed | 0) * 97 + 5, bs = seed + drawIdx * 7919;
-  const cx = sg.sx * S, cy = sg.sy * S, r = sg.sr * S, mx = sg.mx * S, my = sg.my * S, mr = sg.mr * S, e = sg.e;
-  const lead = hexRgb(BRONZE_PALETTE.leadWhite), naples = hexRgb(BRONZE_PALETTE.naples), ochre = hexRgb(BRONZE_PALETTE.yellowOchre);
-  const umber = hexRgb(BRONZE_PALETTE.rawUmber), black = hexRgb(BRONZE_PALETTE.boneBlack);
+  const cx = sg.sx * S, cy = sg.sy * S, r = sg.sr * S, mx = sg.mx * S, my = sg.my * S, mr = sg.mr * S, e = sg.e, warm = sunWarmth(cfg);
+  const hx = h => hexRgb(BRONZE_PALETTE[h]), lead = hx('leadWhite'), naples = hx('naples'), ochre = hx('yellowOchre'), verm = hx('vermilion');
+  const mix = (a, b, t) => [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
+  const gold = mix(naples, verm, .28 * warm), inner = mix(lead, naples, .35 + .4 * warm), outer = mix(ochre, verm, .22 * warm);
   const metal = (c, k) => { const m = .2126 * c[0] + .7152 * c[1] + .0722 * c[2]; return [lerp(c[0], m, k), lerp(c[1], m, k), lerp(c[2], m * 1.02, k)]; };
   const inSky = (x, y) => { const ax = clamp(Math.round(x / S), 0, F.aw - 1), ay = clamp(Math.round(y / S), 0, F.ah - 1); return sky.mask[ay * F.aw + ax] > .5; };
   const inMoon = (x, y) => e > .005 && Math.hypot(x - mx, y - my) < mr;
   const add = (pts, w, c0, c1, a, thick, sd) => out.push({ pts, r: w, c0, c1, a, thick, seed: sd, layer: 8 });
-  // polyline arcs around (ox, oy), split wherever `inside` fails
-  const arcs = (ox, oy, rads, inside, colAt, wB, thick, tag, o = {}) => {
-    rads.forEach((rad, k) => {
-      const n = Math.max(3, Math.round(TAU * rad / Math.max(8, wB * (o.seg ?? 4))));
-      for (let j = 0; j < n; j++) {
-        if (o.skip && hash4(k, j, tag, seed + 3) < o.skip) continue;
-        const a0 = (j + hash4(k, j, tag, seed) * .3 + (hash4(k, j, tag, bs) - .5) * .15) / n * TAU, span = TAU / n * (o.span ?? 1.2);
-        let run = [];
-        const flush = () => { if (run.length >= 2) add(run, wB * (.9 + .2 * hash4(k, j, tag + 1, seed)), colAt(rad), colAt(rad), o.a ?? .97, thick, hash4(k, j, tag + 2, seed)); run = []; };
-        for (let q = 0; q <= 6; q++) {
-          const a = a0 + span * q / 6, x = ox + Math.cos(a) * rad, y = oy + Math.sin(a) * rad;
-          if (inside(x, y)) run.push([x, y]); else flush();
-        }
-        flush();
-      }
-    });
-  };
-  const dim = 1 - .45 * e * e;
-  // glow: a few loose Naples strokes around the limb, following the vortex (tangential, random lengths, low alpha)
-  for (let j = 0; j < 14; j++) {
-    const a0 = hash4(j, 1, seed, 0) * TAU, rad = r * (1.1 + .5 * hash4(j, 2, seed, 0)), span = (.25 + .35 * hash4(j, 3, seed, 0)) * (1 + .1 * (hash4(j, 3, bs, 0) - .5));
-    const pts = []; for (let q = 0; q <= 5; q++) { const a = a0 + span * q / 5, rr = rad * (1 + .06 * q / 5); const x = cx + Math.cos(a) * rr, y = cy + Math.sin(a) * rr; if (!inSky(x, y) || inMoon(x, y)) break; pts.push([x, y]); }
-    if (pts.length >= 2 && e < .7) add(pts, Math.max(2, r * (.07 + .05 * hash4(j, 4, seed, 0))), metal(naples, e * .8).map(v => v * dim), metal(ochre, e * .8).map(v => v * dim), .5 * (1 - e / .7), .4, hash4(j, 5, seed, 0));
+  const fade = Math.max(0, 1 - e / .75), dim = 1 - .45 * e * e;
+  if (fade <= 0) return out;
+  // loose tangential strokes in the glow (random radii and spans: never rings)
+  for (let j = 0; j < 16; j++) {
+    const a0 = hash4(j, 1, seed, 0) * TAU, rad = r * (1.08 + .7 * Math.pow(hash4(j, 2, seed, 0), 1.5)), span = (.18 + .4 * hash4(j, 3, seed, 0)) * (1 + .1 * (hash4(j, 3, bs, 0) - .5));
+    const pts = []; for (let q = 0; q <= 5; q++) { const a = a0 + span * q / 5, rr = rad * (1 + .08 * (q / 5) * (hash4(j, 9, seed, 0) - .5)); const x = cx + Math.cos(a) * rr, y = cy + Math.sin(a) * rr; if (!inSky(x, y) || inMoon(x, y)) break; pts.push([x, y]); }
+    const t = (rad / r - 1) / .8;
+    if (pts.length >= 2) add(pts, Math.max(2, r * (.06 + .06 * hash4(j, 4, seed, 0))), metal(mix(inner, gold, t), e * .8).map(v => v * dim), metal(mix(gold, outer, t), e * .8).map(v => v * dim), (.55 + .3 * hash4(j, 6, seed, 0)) * fade, .45, hash4(j, 5, seed, 0));
   }
-  // the disc and the bite are drawn exactly by SUN_FS in paint() (a crisp limb: the bite is the film's countdown clock)
+  // broken radial strokes from the limb into the sky, two or three pieces each, tapering
+  for (let j = 0; j < 11; j++) {
+    const ang = (j + hash4(j, 11, seed, 0) * .8) / 11 * TAU, len = r * (.6 + 1.3 * hash4(j, 12, seed, 0) + .12 * (hash4(j, 12, bs, 0) - .5));
+    let rr = r * (1.02 + .06 * hash4(j, 13, seed, 0)); const pieces = 2 + Math.floor(hash4(j, 14, seed, 0) * 2);
+    for (let q = 0; q < pieces && rr < r + len; q++) {
+      const segL = len / pieces * (.55 + .35 * hash4(j, 15 + q, seed, 0)), pts = [];
+      for (let u = 0; u <= 3; u++) { const rad = rr + segL * u / 3, aa = ang + .04 * Math.sin(u + j); const x = cx + Math.cos(aa) * rad, y = cy + Math.sin(aa) * rad; if (!inSky(x, y) || inMoon(x, y)) break; pts.push([x, y]); }
+      const t = (rr - r) / len;
+      if (pts.length >= 2) add(pts, Math.max(1.8, r * (.07 - .03 * t)), metal(mix(inner, gold, t), e * .8).map(v => v * dim), metal(mix(gold, outer, t + .3), e * .8).map(v => v * dim), (.7 - .3 * t) * fade, .5 * (1 - t), hash4(j, 16 + q, seed, 0));
+      rr += segL * (1.25 + .4 * hash4(j, 20 + q, seed, 0));
+    }
+  }
   return out;
 }
 
@@ -532,10 +538,10 @@ void main() {
   float rag = (texture(uNoise, vec2(s / max(hw, 1.0) * 0.022 + seed * 5.1, v > 0.0 ? 0.31 : 0.77)).a - 0.5) * 0.16;
   float cover = 1.0 - smoothstep(1.0 - 1.3 / hw + rag, 1.0 + rag, r);
   // dry brush: the load runs out toward the tail, some bristle tracks skip (wide strokes only)
-  float dry = smoothstep(mix(0.5, 0.85, fract(seed * 13.7)), 1.3, u) * smoothstep(2.5, 7.0, hw);
-  cover *= 1.0 - dry * smoothstep(0.32, 0.62, 1.0 - br);
+  float dry = smoothstep(mix(0.42, 0.8, fract(seed * 13.7)), 1.2, u) * smoothstep(2.5, 7.0, hw);
+  cover *= 1.0 - dry * smoothstep(0.3, 0.6, 1.0 - br);
   float a = cover * vCol.a;
-  vec3 col = vCol.rgb * (0.955 + 0.09 * br);
+  vec3 col = vCol.rgb * (0.91 + 0.18 * br);                               // visible bristle tracks
   oCol = vec4(col * a, a);
   // paint height: loaded at the head, bristle grooves, a slight ridge where the brush edge pushed paint aside
   float load = mix(1.0, 0.6, u);
@@ -580,6 +586,8 @@ void main() {
   vec3 Hv = normalize(Ld + vec3(0, 0, 1));
   float sp = pow(max(dot(N, Hv), 0.0), 40.0) * uSpec * smoothstep(0.2, 0.6, h0) * (0.2 + smoothstep(0.03, 0.4, lum));
   lin += sp * vec3(1.0, 0.93, 0.8);
+  // where the paint is thin (the darks) the canvas weave shows through as texture
+  lin *= 1.0 - uWeave * 0.1 * (weave(p) - 0.55) * (1.0 - smoothstep(0.02, 0.22, h0));
   // craquelure: an irregular cell network, mostly in the darks
   vec2 wq = p + 14.0 * vec2(fbm(p * 0.006), fbm(p * 0.006 + 9.2));
   float d1 = voronoiEdge(wq / 38.0), d2 = voronoiEdge(wq / 12.0 + 3.1);
@@ -599,15 +607,15 @@ void main() {
   o = vec4(outc, 1.0);
 }`;
 
-// The sun's disc and the moon's bite, drawn exactly (antialiased circles) with a painted surface: concentric brush
-// streaks, a lead-white core going to Naples at the limb, thick paint (impasto) on the disc, a thinner flat dark bite.
-// Clipped by the sky mask, so hills and figures occlude it. Writes colour + height like a stroke (premultiplied).
+// The sun's disc and the moon's bite, drawn exactly (antialiased circles): a flat, blazing disk (lead white core, Naples
+// to golden-orange toward the limb, warmer when the sun is low), the paint only faintly mottled by a few broad brush
+// marks (no rings), thick impasto; the bite flat and dark. Clipped by the sky mask, so hills and figures occlude it.
 const SUN_FS = `#version 300 es
 precision highp float;
 in vec2 vUv;
-uniform vec2 uRes; uniform vec4 uSun; uniform vec3 uMoon; uniform float uBoil, uMetal;
+uniform vec2 uRes; uniform vec4 uSun; uniform vec3 uMoon; uniform float uBoil, uMetal, uWarm, uBlaze;
 uniform sampler2D uSky, uNoise;
-uniform vec3 uLead, uNaples, uDark;
+uniform vec3 uLead, uNaples, uGold, uDark;
 layout(location = 0) out vec4 oCol;
 layout(location = 1) out vec4 oHgt;
 void main() {
@@ -615,22 +623,22 @@ void main() {
   vec2 q = p - uSun.xy; float d = length(q), r = uSun.z, e = uSun.w;
   if (d > r + 3.0) { oCol = vec4(0); oHgt = vec4(0); return; }
   float ang = atan(q.y, q.x);
-  // a painted limb: about a pixel of wobble
-  float wob = (texture(uNoise, vec2(ang * 0.35 + uBoil * 0.13, 0.5)).a - 0.5) * 1.6;
+  float wob = (texture(uNoise, vec2(ang * 0.35 + uBoil * 0.13, 0.5)).a - 0.5) * 1.6;      // a painted limb
   float disc = 1.0 - smoothstep(r - 0.8 + wob, r + 0.8 + wob, d);
   float m = length(p - uMoon.xy);
   float bite = e > 0.004 ? 1.0 - smoothstep(uMoon.z - 0.8, uMoon.z + 0.8, m) : 0.0;
   float sky = texture(uSky, vUv).r;
   float a = disc * smoothstep(0.35, 0.65, sky);
-  // concentric strokes: bands of radius, streaks along the angle
-  float band = floor(d / max(2.5, r * 0.17));
-  float st = texture(uNoise, vec2(ang * d * 0.0005 + band * 0.271 + uBoil * 0.071, d * 0.0075 + band * 0.113)).r;
-  vec3 c = mix(uLead, uNaples, smoothstep(0.62 * r, r, d) * 0.8) * (0.95 + 0.1 * st);
+  vec2 un = q / r;
+  float marks = texture(uNoise, un * vec2(0.22, 0.07) + vec2(0.31, uBoil * 0.017)).r * 0.65 + texture(uNoise, un * 0.12 + 0.7).g * 0.35;
+  vec3 core = mix(uLead, uNaples, 0.18 * uWarm);
+  vec3 limb = mix(uNaples, uGold, 0.25 + 0.55 * uWarm);
+  vec3 c = mix(core, limb, smoothstep(0.5 * r, 1.02 * r, d)) * (0.975 + 0.05 * marks) * uBlaze;   // blazing: above lead white
   float lum = dot(c, vec3(0.2126, 0.7152, 0.0722));
   c = mix(c, vec3(lum) * vec3(0.98, 1.0, 1.02), uMetal * 0.5);
   float mb = texture(uNoise, vec2(m * 0.01 + uBoil * 0.05, ang * 0.2)).g;
   c = mix(c, uDark * (0.92 + 0.16 * mb), bite);
-  float h = mix(0.85 + 0.25 * (st - 0.5) + 0.15 * smoothstep(0.8 * r, r, d), 0.3, bite);
+  float h = mix(1.05 + 0.15 * (marks - 0.5), 0.3, bite);
   oCol = vec4(c * a, a);
   oHgt = vec4(h * a, 0.0, 0.0, a);
 }`;
@@ -665,7 +673,7 @@ export function strokeMesh(list) {
     for (let k = 0; k < full.length; k++) {
       const a = full[Math.max(0, k - 1)], b = full[Math.min(full.length - 1, k + 1)], tn = tan(a, b), nx = -tn[1], ny = tn[0];
       const u = clamp(sArr[k] / Math.max(Lc, 1));
-      const prof = (.93 + .07 * Math.sin(Math.min(1, u * 1.3) * Math.PI)) * (1 - .2 * sstep(.6, 1, u));
+      const prof = (.55 + .45 * sstep(0, .16, u)) * (1 - .72 * sstep(.5, 1, u));   // lands a little narrow, lifts off to a point
       const hw = s.r * prof, ext = hw + 1.5;
       const cc = [lerp(s.c0[0], s.c1[0], u), lerp(s.c0[1], s.c1[1], u), lerp(s.c0[2], s.c1[2], u)];
       for (const sd of [-1, 1]) {
@@ -702,7 +710,8 @@ export function paint(glw, list, cfg, sun = null) {
     const umb = hx('rawUmber'), blk = hx('boneBlack');
     glw.pass(SUN_FS, {
       uSun: [sun.cx, sun.cy, sun.r, sun.e], uMoon: [sun.mx, sun.my, sun.mr], uBoil: sun.boil, uMetal: cfg.metal ?? 0, uSky: skyT, uNoise: NOISE,
-      uLead: hx('leadWhite'), uNaples: hx('naples'), uDark: [umb[0] * .5 + blk[0] * .5, umb[1] * .5 + blk[1] * .5, umb[2] * .5 + blk[2] * .5]
+      uLead: hx('leadWhite'), uNaples: hx('naples'), uDark: [umb[0] * .5 + blk[0] * .5, umb[1] * .5 + blk[1] * .5, umb[2] * .5 + blk[2] * .5],
+      uGold: [0, 1, 2].map(k => lerp(hx('naples')[k], hx('vermilion')[k], .3)), uWarm: sunWarmth(cfg), uBlaze: cfg.blaze ?? 1.45
     }, TGT, 'premult');
     glw.deleteTexture(skyT);
   }
@@ -749,9 +758,11 @@ export async function render(glw, F, cfg0, ctx) {
   }
   t0 = performance.now();
   const drawIdx = Math.floor((ctx.t ?? 0) * cfg.drawFps + 1e-6);    // on twos: a new drawing 12 times a second
-  const list = strokes(base.F, base.ref, cfg, drawIdx, ctx.anchor || null);
+  const eyes = cfg.eyeStrokes ? eyeGeometry(F, cfg) : [];
+  const list = strokes(base.F, base.ref, cfg, drawIdx, ctx.anchor || null, eyeMaskOf(F, eyes));
   const per = list.perLayer;
   list.push(...sunStrokes(base.F, cfg, base.sky, drawIdx));
+  if (eyes.length) list.push(...eyeStrokes(F, cfg, eyes, drawIdx));
   ms.strokes = Math.round(performance.now() - t0);
   t0 = performance.now();
   let sun = null;
