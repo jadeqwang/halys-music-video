@@ -96,10 +96,11 @@ export function thalesDiagrams(g, W, H, t, o = {}) {
   items.push([poly(circlePts(GX, GY, Rg * .16, 0, TAU, 32), 1.0), sstep(t2 + .7, t2 + 1.0, t)]);
   // leader lines from the teeth to the code rows (the gear resolving into code)
   const rows = ['saros = 6585.32  # days', 'for k in range(-3, 4):', '    t = t0 + k * saros', '    if eclipse(t, halys):', '        mark(t)'];
-  const right = o.codeAt === 'right', cx0 = right ? GX + Rg * 1.9 : GX - Rg * 2.9, cy0 = right ? GY - Rg * .95 : GY + Rg * 1.45, lh = .028 * s;
+  const right = o.codeAt === 'right', cx0 = right ? GX + Rg * 1.9 : GX - Rg * 5.2, cy0 = GY - Rg * .95, lh = .028 * s;
   rows.forEach((_, j) => {
-    const a = grot + (right ? (-.35 + j * .17) : (.6 + j * .22)) * Math.PI, sx = GX + Math.cos(a) * Rg * 1.09, sy = GY + Math.sin(a) * Rg * 1.09;
-    items.push([poly([[sx, sy], [lerp(sx, cx0 - .01 * s, .5), cy0 + j * lh - .006 * s], [cx0 - .008 * s, cy0 + j * lh - .006 * s]], .8), sstep(t2 + 1.1 + j * .12, t2 + 1.5 + j * .12, t)]);
+    const a = grot + (right ? (-.35 + j * .17) : (1.35 - j * .17)) * Math.PI, sx = GX + Math.cos(a) * Rg * 1.09, sy = GY + Math.sin(a) * Rg * 1.09;
+    const ex = right ? cx0 - .008 * s : cx0 + .19 * s;
+    items.push([poly([[sx, sy], [lerp(sx, ex, .5), cy0 + j * lh - .006 * s], [ex, cy0 + j * lh - .006 * s]], .8), sstep(t2 + 1.1 + j * .12, t2 + 1.5 + j * .12, t)]);
   });
   // draw: lines first, into a layer that his matte cuts (lines pass behind him), then the lettering
   gildLines(g, items, u, { alpha: dim * (o.alpha ?? 1) });

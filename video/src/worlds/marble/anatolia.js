@@ -59,7 +59,7 @@ function heightGrid(n = 640) {
     // plateau rising from the coast; Pontic range along the north coast, Taurus along the south
     let h = .12 + .1 * sstep(0, .06, d);
     const north = sstep(.62, .3, v), south = sstep(.55, .85, v);
-    h += .3 * Math.exp(-Math.pow((d - .03) / .022, 2)) * (north * .9 + south * 1.0) * (.6 + .8 * fbm(u * 18, v * 18, 7, 3));
+    h += .3 * Math.exp(-Math.pow((d - .035) / .03, 2)) * (north * .9 + south * 1.0) * (.55 + .9 * fbm(u * 18, v * 18, 7, 3));
     h += .06 * (fbm(u * 9, v * 9, 3, 4) - .5) + .04 * (fbm(u * 40, v * 40, 5, 2) - .5);
     for (const [pu, pv, ph, pr] of pk) { const r = Math.hypot((u - pu) * 1, (v - pv) * BOARD_AR * KX) / pr; h += ph * .35 * Math.exp(-r * r * 3.5); }
     // the river carved in: a groove that widens toward the sea
@@ -82,7 +82,7 @@ export function boardRay(cam, aw, ah) {
   // board space: x east (u * BOARD_AR), y north (-v), z up; the camera sits back from the target along -forward
   const tx = cam.u * BOARD_AR, ty = -cam.v;
   const fwd = [Math.sin(yaw) * Math.cos(pitch), Math.cos(yaw) * Math.cos(pitch), -Math.sin(pitch)];
-  const right = [Math.cos(yaw), -Math.sin(yaw), 0], up = [fwd[1] * right[2] - fwd[2] * right[1], fwd[2] * right[0] - fwd[0] * right[2], fwd[0] * right[1] - fwd[1] * right[0]];
+  const right = [Math.cos(yaw), -Math.sin(yaw), 0], up = [right[1] * fwd[2] - right[2] * fwd[1], right[2] * fwd[0] - right[0] * fwd[2], right[0] * fwd[1] - right[1] * fwd[0]];
   const eye = [tx - fwd[0] * cam.dist, ty - fwd[1] * cam.dist, -fwd[2] * cam.dist];
   return (x, y) => {                                  // pixel -> board (u, v) on the z = 0 plane, or null (sky)
     const sx = (x / aw - .5) * (aw / ah), sy = -(y / ah - .5);
@@ -97,7 +97,7 @@ export function boardToScreen(cam, aw, ah) {
   const yaw = cam.yaw * Math.PI / 180, pitch = cam.pitch * Math.PI / 180, f = .5 / Math.tan(cam.fov * Math.PI / 360);
   const tx = cam.u * BOARD_AR, ty = -cam.v;
   const fwd = [Math.sin(yaw) * Math.cos(pitch), Math.cos(yaw) * Math.cos(pitch), -Math.sin(pitch)];
-  const right = [Math.cos(yaw), -Math.sin(yaw), 0], up = [fwd[1] * right[2] - fwd[2] * right[1], fwd[2] * right[0] - fwd[0] * right[2], fwd[0] * right[1] - fwd[1] * right[0]];
+  const right = [Math.cos(yaw), -Math.sin(yaw), 0], up = [right[1] * fwd[2] - right[2] * fwd[1], right[2] * fwd[0] - right[0] * fwd[2], right[0] * fwd[1] - right[1] * fwd[0]];
   const eye = [tx - fwd[0] * cam.dist, ty - fwd[1] * cam.dist, -fwd[2] * cam.dist];
   return (u, v, z = 0) => {
     const p = [u * BOARD_AR - eye[0], -v - eye[1], z - eye[2]];
@@ -122,7 +122,7 @@ export function mapSource(f, o = {}) {
   const [aw, ah] = analysisSize(f.W, f.H), N = aw * ah, S = f.W / aw;
   const G = heightGrid(o.res ?? 640), { n, m } = G, cam = o.cam, ray = boardRay(cam, aw, ah);
   const R = new Float32Array(N), Gc = new Float32Array(N), B = new Float32Array(N), depth = new Float32Array(N), matte = new Float32Array(N), sky = new Float32Array(N), mx = new Float32Array(N), my = new Float32Array(N);
-  const key = (() => { const k = [-.45, -.5, .74], l = Math.hypot(...k); return k.map(c => c / l); })();
+  const key = (() => { const k = [-.55, .45, .62], l = Math.hypot(...k); return k.map(c => c / l); })();   // from the north-west, raking
   const west = [-.92, .1, .28];                          // the sunset glow rakes in from the west edge of the board
   const sh = o.shadow || null;
   const eps = 1 / n;
@@ -134,18 +134,19 @@ export function mapSource(f, o = {}) {
     const edge = Math.min(u + .08, 1.08 - u, v + .1, 1.12 - v), onBoard = u > 0 && u < 1 && v > 0 && v < 1;
     const h = onBoard ? gs(G.H, n, m, u, v) : -.02;
     const hx = onBoard ? (gs(G.H, n, m, u + eps, v) - gs(G.H, n, m, u - eps, v)) / (2 * eps) : 0, hy = onBoard ? (gs(G.H, n, m, u, v + eps) - gs(G.H, n, m, u, v - eps)) / (2 * eps) : 0;
-    const rel = o.relief ?? 2.2;
+    const rel = o.relief ?? 3.2;
     let nx = -hx * rel * .06, ny = hy * rel * .06, nz = 1; const nl = Math.hypot(nx, ny, nz); nx /= nl; ny /= nl; nz /= nl;   // board space: x east, y north
     const land = onBoard ? gs(G.land, n, m, u, v) : 0, riv = onBoard ? gs(G.river, n, m, u, v) : 0, lake = onBoard ? gs(G.lake, n, m, u, v) : 0;
     // marble: land a warm white, the sea a polished darker grey-violet slab, the rim dark
-    let alb = lerp(.2, .88, land) * (1 - .55 * riv) * (1 + .05 * (vnoise(u * 160, v * 160, 3) - .5));
+    let alb = lerp(.2, .8, land) * (1 - .6 * riv) * (1 + .06 * (vnoise(u * 160, v * 160, 3) - .5));
     alb = lerp(alb, .7, lake * .6);
     const veins = Math.abs(Math.sin((u * 3.1 + v * 1.7) * 22 + 3 * fbm(u * 6, v * 6, 9, 3))); alb *= 1 - .18 * (1 - sstep(0, .045, veins)) * land;
-    const kd = clamp(nx * key[0] + ny * -key[1] + nz * key[2]);
+    const kd = clamp(nx * key[0] + ny * key[1] + nz * key[2]);
     const kw = clamp(nx * west[0] + ny * west[1] + nz * west[2]) * sstep(.85, .1, u) * .9;    // the glow from the western (sunset) edge
-    let r = alb * (.05 + .9 * kd) * .86 + kw * .8 * alb + .6 * Math.pow(1 - nz, 2) * land * .4;
-    let g = alb * (.05 + .9 * kd) * .9 + kw * .42 * alb + .3 * Math.pow(1 - nz, 2) * land * .4;
-    let b = alb * (.07 + .9 * kd) * 1.0 + kw * .16 * alb + .12 * Math.pow(1 - nz, 2) * land * .4;
+    const tint = land > .5 ? [1.0, .97, .92] : [.86, .9, 1.0];
+    let r = alb * (.06 + .95 * kd) * .9 * tint[0] + kw * .85 * alb;
+    let g = alb * (.06 + .95 * kd) * .9 * tint[1] + kw * .45 * alb;
+    let b = alb * (.08 + .95 * kd) * .9 * tint[2] + kw * .16 * alb;
     // specular sheen on the polished sea
     if (!land && onBoard) { const s = Math.pow(clamp(1 - Math.abs(u - .25) * 2) * clamp(1 - Math.abs(v - .45) * 2), 3) * .25; r += s; g += s * .9; b += s * .85; }
     if (!onBoard) { const k = sstep(-.08, 0, Math.min(u, v)) * sstep(1.08, 1, u) * sstep(1.12, 1, v); r = g = b = .04 + .08 * k; r += .06 * sstep(.3, -.08, u); }

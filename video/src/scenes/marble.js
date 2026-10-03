@@ -219,7 +219,8 @@ scene('S50', async f => {
   const t = f.t, k = seg(t, 174.39, 178.66);
   // the camera drifts over the board toward the bend; the umbra crosses from the WNW (sunset edge) to the ESE
   const [bu, bv] = toBoard(...BATTLE);
-  const cam = { u: lerp(.5, bu, smooth(k)), v: lerp(.6, bv + .02, smooth(k)), dist: lerp(1.75, 1.0, smooth(k)), pitch: lerp(47, 52, k), yaw: lerp(-6, -2, k), fov: 38 };
+  let cam = { u: lerp(.5, bu, smooth(k)), v: lerp(.5, bv + .02, smooth(k)), dist: lerp(2.05, 1.2, smooth(k)), pitch: lerp(64, 56, smooth(k)), yaw: lerp(0, -5, k), fov: 38 };
+  const MC = new URLSearchParams(location.search).get('mapcam'); if (MC) cam = { ...cam, ...JSON.parse(MC) };
   const p = seg(t, 174.7, 178.5), ang = 23 * Math.PI / 180;
   const along = lerp(-.62, .62, p);                      // board units along the track, 0 = over the armies
   const shadow = { u: bu + along * Math.cos(ang) / 1.91, v: bv + along * Math.sin(ang) - .004, a: .16, b: .055, ang };
@@ -328,7 +329,7 @@ async function s53(f, dim) {
   await paintStone(f, st, { stars: { toScreen: camScreen(f, cam), n: 120, k: .7 }, paint: { palette: SPARK_PAL }, statueDetail: .9 });
   // the diagrams, behind him (his matte cuts them)
   const L = f.layer(7);
-  thalesDiagrams(L.g, f.W, f.H, f.t, { dial: [.845, .58], dialR: .15, theorem: [.2, .31], gear: [.12, .86], codeAt: 'right', t0: 183.45, dim });
+  thalesDiagrams(L.g, f.W, f.H, f.t, { dial: [.845, .56], dialR: .145, theorem: [.2, .31], gear: [.905, .86], codeAt: 'left', t0: 183.45, dim });
   cutMatte(L, TM, st.aw, st.ah, f);
   const g = f.g; g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(L.c, 0, 0); g.restore();
 }
@@ -365,9 +366,9 @@ scene('S56', async f => {
   const cx = .17 - .01 * k, cy = .02 - .01 * k;
   const off = lerp(.05, eclipse.K - 1 + .002, Math.pow(k, 1.3));
   const src = skySource(f, { sun: { x: cx, y: cy, r: rS } });
-  const st = stoneSource(f, src, { sky: false, horizonY: 1.6, statue: { mode: 'matte', matte: 0 }, sun: { x: cx, y: cy, r: rS }, coronaGlow: .9 });
+  const st = stoneSource(f, src, { sky: false, horizonY: 1.6, statue: { mode: 'matte', matte: 0 }, sun: { x: cx, y: cy, r: rS }, coronaGlow: .5, coronaFall: 9 });
   await paintStone(f, st, { sun: totalSun(cx, cy, rS, { off, beads: 1.2 + 1.5 * k, beadSeed: 9, limb: [1.6 + 1.2 * k, 3.2, 1, Math.PI / 3] }),
-    corona: coronaFor(t, { k: .42, scale: .22, iris: 0, streamers: [], prominences: [[1.05 + .35, .03, .05], [.65 + .35, .022, .035], [1.65 + .35, .025, .042]], tilt: .35 }),
+    corona: coronaFor(t, { k: .3, scale: .12, iris: 0, streamers: [], prominences: [[1.05 + .35, .03, .05], [.65 + .35, .022, .035], [1.65 + .35, .025, .042]], tilt: .35 }),
     stars: { toScreen: (u, v) => [u * W, v * H], n: 40, k: .5 }, groundFlow: false, cutIn: false, statueDetail: 0 });
   f.type.light = { dir: [.85, -.5], elev: .35, color: '#fff6e0', intensity: 1.05 };
 });

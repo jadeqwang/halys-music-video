@@ -22,7 +22,7 @@ export const EGRESS_DIR = [-.5, -.866];                    // sun centre -> moon
 export function goldOff(t) {
   if (t <= C3) return eclipse.K - 1;
   const s = t - C3;
-  return eclipse.K - 1 + .022 * s + .19 * (1 - Math.exp(-s / 2.2)) + .013 * s * s * .1;
+  return eclipse.K - 1 + .55 * (1 - Math.exp(-s / 1.6)) + .03 * s;
 }
 
 export const GOLD_PAINT = {

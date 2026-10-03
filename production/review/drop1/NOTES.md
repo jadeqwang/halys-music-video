@@ -1,15 +1,15 @@
 # Drop 1 (S35-S45a) review notes: the line engine
 
 Renders of `video/src/scenes/drop1.js` over the line engine `video/src/worlds/line/` (API: its README.md).
-Frames: `video/out/frames_drop1/` (1920x1080@60, `node render.mjs --frames=108:156 --workers=3 --dir=out/frames_drop1`).
+Frames: `video/out/frames_drop1/` (1920x1080@60, `nice -n 10 node render.mjs --frames=110.58:157.03 --workers=1 --dir=out/frames_drop1`).
 
 ## Files here
 
 | file | what |
 |---|---|
-| `drop1_r<N>_108-126.mp4` | hand-off (S34, brush) -> the break -> stutter montage -> orbit -> Flammarion, with the song (720p review encode) |
-| `drop1_r<N>_126-156.mp4` | agents -> eye + tilt -> the four chop cycles -> collapse -> S45 widening |
-| `drop1_r<N>_sheet.jpg` | contact sheet (44 frames) |
+| `drop1_r5_108-126.mp4` | hand-off (S34, brush) -> the break -> stutter montage -> orbit -> Flammarion, with the song (720p review encode) |
+| `drop1_r5_126-157.mp4` | agents -> eye + tilt -> the four chop cycles -> collapse -> S45 widening to the 157.03 hand-off |
+| `drop1_r5_sheet.jpg` | contact sheet (46 frames); `drop1_r1_sheet.jpg` is the round-1 sheet the director's notes were written on |
 | `temporal_P04_transport_vs_naive.mp4` | left: the temporal engine on plate P04 (references + flow transport + crossfade); right: naive per-frame tracing |
 | `beatcheck.py` | measures cuts / inversions / kick pulses in rendered frames against timing.json |
 | `contact.py`, `encode_review.sh`, `make_standins.py` | sheet, review encode, temporary stand-ins from plate takes |
@@ -83,3 +83,40 @@ master frame (sub-frame flow transport) and line ends fade over a reference inte
 
 * S35/S36 pass `f.type.sun` (the drop's eclipse position) so the CHOP fill radiates from the corona (type NOTES request).
 * S45: wider, crisper strokes at the hand-off (width x5.6, glow off, no softening).
+
+## Round 5 (director's notes on drop1_r1_sheet; every plate analysed with mattes and depth)
+
+Rendered 110.58-157.03 once (`--workers=1`, `nice -n 10`): 2787 frames in 1472 s = **0.53 s per frame** effective
+(engine + type layer + JPEG, load 6-8); S39-S40 re-rendered after the snap fix, 829 frames in 209 s (0.25 s/frame).
+
+1. **S36 reactions read.** 19 segments; Lydian and Median reactions alternate 9 : 9 plus one shot with both (the rearing
+   Lydian horse and the Mede calming his); the shot scale changes on every cut (CU face -> MS kneeling -> XCU eye -> wide
+   rear -> MS amulet -> CU -> wide prostration -> ...), the wides on the longer segments; each framed with the face or
+   gesture in the centre-to-upper area, and its box goes to the type layer as `f.type.avoid` (the hollow stutter SKY
+   takes the clear third). Close-ups use a sparser face trace (FACE_TRACE).
+2. **Agents.** Every agent was being drawn at x0.23 size (the top-down camera's depth scaled the widths: sub-pixel
+   points): that, not the count, made them faint. Now 2 x 2600 crisp points with tiny spear ticks along their facing
+   (sharp: they never bloom), formation 0 = P01's armies lifted to the ground plane, hard snaps (0.16 s, overshoot) whose
+   first frame is the stab's frame, half-frame trails only while flying, particle bands instead of lattices, bold outlines
+   for the ring and the eye.
+3. **Hierarchy.** Corona brightest (ring layer 1.25 vs plate 0.5 behind the CHOP words; corona gain up); fewer, brighter
+   subject lines (steeper tone curve, wider spacing); sparse dim backgrounds; the sky field thins with distance; behind
+   the giant words the faces are contours plus a few lit lines (CHOP_TRACE); S38's membrane thinned and the machinery
+   dimmed so it supports the hand.
+4. **S35** per chop on the real plates: HALO P01 (eclipse on the plate's own sun), IN THE P42, SKY P44, SKY P43.
+
+Engine changes behind it: subject exposure (`analysis.autoGain`: the matte region's p90 -> 0.85; the per-take gain left
+P44, P05/P06, P24 dim); matte contours from the matte's 0.5 iso-line (soft half-resolution mattes seen through a zoomed
+window lost most of their silhouette to the old gradient threshold) without the plate's padded edge;
+`contourFloor` / `contourToneK`.
+
+Beat sync (beatcheck.py, 108-156 s, final frames):
+* shot cuts 11/11 on the event frame; S36 cut list 18/18 within 1 frame (94 % on it)
+* S36 stab inversions 7/7 on the stab frame, all 2 frames long
+* S39 formation snaps 6/6: the flight starts on the stab frame (diff 21-56x median there, 0.1-1x on the frame before)
+* kick pulses (77 kicks): 96 % peak on the kick frame, 97 % within one frame
+
+Critique: close-up faces still read as engraved flow lines (the features are not drawn as crisply as the silhouettes);
+P19b (the Mede's eye) has no usable matte, so that XCU is texture without a contour; S38's tear opens beside the hand,
+because P24 is a reach, not a push-through; S44's spear ticks are busy behind HALO; the first snap (P01 positions ->
+blocks) is a long flight, so it streaks more than the others.

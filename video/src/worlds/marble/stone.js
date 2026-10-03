@@ -280,7 +280,7 @@ export function stoneSource(f, src, opts = {}) {
   const outR = new Float32Array(N), outG = new Float32Array(N), outB = new Float32Array(N);
   const sky = [0, 0, 0], lab = [0, 0, 0], rgb = [0, 0, 0];
   const [dLo, dHi] = o.detailClamp;
-  const corona = sun && o.corona !== false ? { x: sun.x * aw, y: sun.y * ah, R: (sun.r * aw) * 1.066, k: o.coronaGlow ?? .55 } : null;
+  const corona = sun && o.corona !== false ? { x: sun.x * aw, y: sun.y * ah, R: (sun.r * aw) * 1.066, k: o.coronaGlow ?? .55, fall: o.coronaFall ?? 2.5 } : null;
   for (let y = 0; y < ah; y++) for (let x = 0; x < aw; x++) {
     const i = y * aw + x, m = M[i], s = S[i], gd = Gd[i];
     let r = 0, g = 0, b = 0;
@@ -373,7 +373,7 @@ export function stoneSource(f, src, opts = {}) {
         const dx = x - corona.x, dy = y - corona.y, cr = Math.hypot(dx, dy);
         if (cr > corona.R * .98) {
           const ca = Math.atan2(dy, dx), fib = .7 + .6 * vnoise(ca * 11 + 3, Math.log(cr / corona.R) * 5, 61);
-          const k = corona.k * Math.pow(corona.R / cr, 2.5) * fib;
+          const k = corona.k * Math.pow(corona.R / cr, corona.fall) * fib;
           sr += .82 * k; sg += .84 * k; sb += .86 * k;
         }
       }

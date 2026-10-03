@@ -106,7 +106,8 @@ call `drawCrystallise` for 153.83-157.03.
 * Video plates: one analysis + trace per reference (every 4 plate frames = 10 master frames), plus flow transport
   (~10-20 ms); the reference chain from the shot's start costs 20-45 s per worker per shot under load, amortised over
   the shot's frames.
-* Drop 1 review renders (108-156 s, 2880 frames, 3 workers, load 15-80): 0.34-0.78 s per frame effective.
+* Drop 1 review renders: 110.58-157.03 s (2787 frames, all on real video plates) in 1472 s with ONE worker at load
+  6-8 = 0.53 s per frame (engine + type layer + JPEG); the procedural S39-S40 at 0.25 s per frame.
 * GPU notes (SwiftShader): bilinear RGBA16F fetches at full resolution cost ~35 ms each at load 10, so the post pass
   reads the line target with texelFetch and the glow is computed at quarter/eighth resolution and combined there.
 

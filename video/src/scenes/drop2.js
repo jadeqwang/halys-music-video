@@ -281,7 +281,7 @@ async function paintP38(f, t, tp) {
 const P38_SRC = { plate: 'P38', standin: 'armies' };
 const P38_TRACE = { contourW: [1.2, 2.4], contourB: 1.8, innerB: .95, innerHi: .16, lightDir: [-.5, -.8], dsepMin: 3, dsepMax: 9, bgSepMin: 14, bgSepMax: 26, bgGain: .35,
   sky: { horizonY: .43, below: .45, useDepth: false }, horizon: 1, horizonBand: .02, armies: 1, armyMask: [[[0, .43], [1, .43], [1, .6], [0, .6]]], tick: [4, 9],
-  river: [[0, .6], [1, .6], [1, .675], [0, .675]], riverFlow: { x: -2, y: .64, k: 3 }, riverB: 1.0, minLen: 20 };
+  minLen: 20 };
 let LOD = null;
 async function diveLods(f) {
   const D = await import('../worlds/orbit/dive.js');
@@ -338,8 +338,8 @@ scene('S74', async f => {
 // S78's first frame (her room), so the cut at 266.12 is invisible. The end framing is room.js's roomHandoff().
 export const S77_T0 = 262.724, S77_T1 = 266.124;
 shotOverride('S77', { cadence: 60 });
-const S77P = { globe: [1.42, 2.72], moon: [1.85, 2.72], bezel: [2.62, 3.3], room: [3.14, 3.37] };
-const UMBRA = { ll: [33.9, 38.4], r: 2.9, pen: 9.8 };       // where the room's sim draws it
+const S77P = { globe: [1.36, 2.72], moon: [1.85, 2.72], bezel: [2.62, 3.3], room: [3.14, 3.37] };
+const UMBRA = { ll: [33.9, 38.4], r: 3.2, pen: 9.8, k: 1.15 };   // where the room's sim draws it
 let _moonRef = null;
 scene('S77', async f => {
   const W = f.W, H = f.H, s = H / 1080, t = f.t, tau = t - S77_T0, cx = W / 2, cy = H / 2;
@@ -350,7 +350,7 @@ scene('S77', async f => {
   const plateK = sstep(0, .08, tau) * (1 - sstep(.4, .54, tau));
   const gu = clamp((tau - .34) / (.8 - .34)), ge = easeInOut(gu), groundK = sstep(.3, .44, tau) * (1 - sstep(.76, .84, tau));
   const mu = clamp((tau - .78) / (1.5 - .78)), S = Math.exp(lerp(Math.log(DIVE.S1), Math.log(DIVE.S0), Math.pow(mu, 1.3)));
-  const mapK = sstep(.74, .84, tau) * (1 - sstep(1.4, 1.52, tau));
+  const mapK = sstep(.74, .84, tau) * (1 - sstep(1.34, 1.42, tau));
   const gk = clamp((tau - S77P.globe[0]) / (S77P.globe[1] - S77P.globe[0])), globeK = sstep(S77P.globe[0], S77P.globe[0] + .1, tau);
   const bz = clamp((tau - S77P.bezel[0]) / (S77P.bezel[1] - S77P.bezel[0])), be = easeInOut(bz);
   const roomK = sstep(S77P.room[0], S77P.room[1], tau);
@@ -367,7 +367,7 @@ scene('S77', async f => {
   }
   if (mapK > .01) { const w = lodW(S); for (const [k, key] of [['A', 'dive-A'], ['B', 'dive-B'], ['C', 'dive-C']]) if (w[k] > .01) layers.push({ mesh: staticMesh(f, key, () => L[k]), u: { ...mapU(S, rot, cx, cy), uBright: w[k] * mapK, uPulse: 0 } }); }
   // up through the cloud deck (layers shrinking past the camera)
-  [1.2, 1.32, 1.44].forEach((ti, i) => {
+  [1.22, 1.33, 1.44].forEach((ti, i) => {
     const d = tau - ti, env = sstep(-.22, -.04, d) * (1 - sstep(.06, .24, d)); if (env <= .01) return;
     const sc = .85 * W * Math.exp(-4.8 * d + 1.0), r0 = .3 * i - .25 * tau, c = Math.cos(r0) * sc, sn = Math.sin(r0) * sc;
     layers.push({ mesh: staticMesh(f, 'cloud-' + i, () => L.clouds[i]), u: { ...affineU(c, sn, -sn, c, cx, cy), uBright: 1.4 * env, uPulse: .3 } });
@@ -433,4 +433,67 @@ scene('S77', async f => {
     }
   }
   steer(f, { kick: 0 });
+});
+
+// ================================================================ S63: swords into starships
+// The kick (215.287): S62's sword, spinning at its apex (video/data/sword_handoff.json: {x, y} frame fractions of the
+// blade's centre, angle = the blade's direction hilt -> point in degrees clockwise from straight up, len = blade length
+// as a fraction of the frame height, spin deg/s; until it exists: frame centre, 30 deg) match-cuts to the starship in
+// lines at the same place and angle; it rights itself onto its pad by the next kick and rises on a column of light.
+// P34 1:1 from the kick (lift-off at plate ~3.4 s lands on the downbeat 218.677). Fierce: every kick pumps the exhaust
+// (length, brightness, Mach diamonds, a pulse running down the column) and the line thickness.
+export const S63_T0 = 215.287, S63_T1 = 222.077;
+// rocket axis per 2 plate frames (source uv x 1000): [axis x, nose y, engine exit y] (production/review/drop2: measured)
+const P34_AXIS = [497,146,876,497,146,876,497,146,876,497,146,876,497,146,876,497,146,876,497,146,874,497,146,874,498,144,874,498,144,874,498,144,872,497,144,872,497,144,870,497,143,868,497,141,868,497,141,867,496,139,865,496,137,863,496,137,861,496,135,859,496,133,857,496,133,856,496,133,854,497,132,852,497,132,848,497,130,846,497,128,843,497,126,839,497,122,835,497,122,830,497,120,826,498,118,822,498,118,820,498,117,815,498,115,811,498,113,806,498,111,800,498,107,794,498,106,787,499,100,778,499,98,770,499,96,767,499,93,757,499,91,752,499,91,748,499,91,739,499,91,737,499,91,732,499,91,726,499,93,722,499,96,718,500,100,715,500,104,711,500,107,706,501,111,702,501,115,694,501,118,691,501,122,685,501,128,680,502,132,676,502,137,670,502,141,663,502,146,656,502,148,648,503,152,641,503,156,630,504,156,620,504,156,609,504,156,598,505,156,585,506,157,576,507,159,565,507,165,557,509,170,550,509,176,543,510,180,533,511,182,524,512,187,515,512,189,507,514,189,494,515,189,485,515,189,474,516,189,463,516,187,452,516,187,446];
+function p34Axis(tp) {
+  const n = P34_AXIS.length / 3, x = clamp(tp * 12, 0, n - 1), i = Math.min(n - 2, Math.floor(x)), k = x - i, g = j => lerp(P34_AXIS[i * 3 + j], P34_AXIS[(i + 1) * 3 + j], k) / 1000;
+  return { x: g(0), nose: g(1), eng: g(2) };
+}
+let SWORD = null;
+async function swordHandoff() {
+  if (SWORD) return SWORD;
+  const { loadJSON } = await import('../assets.js');
+  const j = await loadJSON('data/sword_handoff.json', { optional: true });
+  return (SWORD = { x: .5, y: .5, angle: 30, len: .32, spin: 0, ...(j || {}) });
+}
+const P34_TRACE = { contourW: [1.3, 2.6], contourB: 1.75, innerB: 1.05, innerHi: .13, innerLo: .055, lightDir: [-.6, -.8], dsepMin: 2.6, dsepMax: 8.5, bgSepMin: 14, bgSepMax: 28, bgGain: .32,
+  subjBright: [.35, 1.1], rim: 1, sky: { maxDepth: .04, soft: .03, below: .95 }, horizon: 1, horizonBand: .02, minLen: 18 };
+// the column of light under the engines (analysis px; s grows away from the engine so pulses run down the column)
+function exhaustLines(ex, ey, bottom, s, kick, t, ignite) {
+  const out = [], N = 30, L = Math.max(20, (bottom - ey) * (.55 + .45 * ignite) * (1 + .18 * kick)), w0 = 5.5 * s, spread = .16;
+  for (let j = 0; j < N; j++) {
+    const u = (j / (N - 1) - .5) * 2, core = 1 - u * u, pts = [];
+    for (let k = 0; k <= 26; k++) {
+      const d = L * Math.pow(k / 26, 1.15), wob = 1.2 * s * Math.sin(d / (9 * s) + j * 1.7 + t * 9) * (d / L);
+      pts.push([ex + u * (w0 + d * spread) + wob, ey + d, (.35 + 1.15 * core) * (1 + .9 * kick) * (1 - sstep(.45, 1, d / L)) * (.5 + .5 * ignite)]);
+    }
+    out.push(mkLine(pts, { w: .8 + .7 * core + .6 * kick, o: pts.map((p, k) => lerp(.05, .75, k / 26)), spd: 2.6 + .8 * core, phase: j * .9 }));
+  }
+  for (let m = 0; m < 5; m++) {                         // Mach diamonds, pulsing on the kick
+    const yc = ey + (7 + m * 13 * (1 + .1 * kick)) * s, r = (5.5 - m * .8) * s * (1 + .25 * kick), b = (1.6 - .25 * m) * (1 + 1.2 * kick) * ignite;
+    out.push(mkLine([[ex, yc - r * 1.5], [ex + r * .7, yc], [ex, yc + r * 1.5], [ex - r * .7, yc], [ex, yc - r * 1.5]], { b, w: 1.1, o: .2, flags: FL.NOFADE }));
+  }
+  return out.filter(Boolean);
+}
+scene('S63', async f => {
+  const W = f.W, H = f.H, s = H / 1080, t = f.t, tp = Math.max(0, t - S63_T0), sw = await swordHandoff();
+  const kick = audio.kickEnv(t, .12), aw = Math.round(960 * Math.max(W, H) / 1920), ah = Math.round(aw / (W / H)), S = W / aw;
+  const ax = p34Axis(tp), piv = [ax.x * aw, (ax.nose + ax.eng) / 2 * ah];
+  // the match cut: at the sword's place and angle, upright by the second kick
+  const k2 = snap(audio.kickTimes().find(k => k > S63_T0 + .1) || S63_T0 + .43), u = clamp((t - S63_T0) / (k2 - S63_T0)), e = easeInOut(u);
+  const th0 = (sw.angle + (sw.spin || 0) * (t - S63_T0) * (1 - u)) * Math.PI / 180, th = th0 * (1 - e);
+  const zoom = lerp(1.16, 1, easeOut(u)), off = [(sw.x * W - piv[0] * S) / S * (1 - e), (sw.y * H - piv[1] * S) / S * (1 - e)];
+  const X = placeU(piv[0], piv[1], th, zoom, off[0], off[1]);
+  const plateU = { uXf0: X.uXf0, uXf1: X.uXf1 };
+  // the column of light: ignition builds over the first bar, every kick pumps it
+  const ignite = .35 + .65 * sstep(0, 1.6, tp), bottom = Math.max(ax.eng * ah + 40 * s, tp < 3.3 ? .9 * ah : ah + 60);
+  const exh = exhaustLines(piv[0], ax.eng * ah, bottom, aw / 960, kick, t, ignite);
+  const engS = [(X.uXf0[0] * piv[0] + X.uXf0[1] * ax.eng * ah + X.uXf0[2]) * S, (X.uXf1[0] * piv[0] + X.uXf1[1] * ax.eng * ah + X.uXf1[2]) * S];
+  const flash = .1 * Math.exp(-(t - snap(S63_T0)) / .03);
+  await drawLines(f, {
+    src: { plate: 'P34', standin: 'master' }, tp, chainFrom: 0, trace: P34_TRACE, corona: false, plateU,
+    layers: [{ lines: exh, u: { uXf0: X.uXf0, uXf1: X.uXf1, uS: S, uOff: [0, 0], uT: audio.flowPhase(t) * 2.2, uPulse: .75, uKick: kick, uPush: [engS[0], engS[1], 10 * kick * s, 260 * s] } }],
+    kick, kickWidth: 1.35, kickPush: 20, pushCenter: engS, phase: audio.flowPhase(t) * 1.15, flash, disk: false, look: { glow: [.25, .1] },
+  });
+  steer(f, { kick, field: { center: engS } });
 });

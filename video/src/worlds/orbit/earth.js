@@ -286,7 +286,7 @@ export function earthLines(V, o = {}) {
         const lit = limb * wgt * shade(V, px, py, pz);
         B0.push((.06 + 1.3 * cd * cd) * (.08 + .92 * day) * lit);
         B1.push(.3 * (1 - cd) * (1 - ld) * day * lit);
-        B2.push(.1 * (1 - cd) * ld * (.3 + .7 * day) * lit);
+        B2.push(.05 * (1 - cd) * ld * (.3 + .7 * day) * lit);
         P.push([sx, sy, 0]);
         last = [sx, sy];
       }
@@ -373,7 +373,7 @@ void main() {
   float sd = dot(q, uSun), day = smoothstep(-.1, .16, sd);
   float L = smoothstep(.35, .65, landAt(p));
   vec3 ocean = mix(vec3(.03, .16, .46), vec3(.075, .33, .78), pow(mu, .55));
-  vec3 land = vec3(.085, .066, .045);
+  vec3 land = vec3(.06, .048, .034);
   vec3 dayc = mix(ocean, land, L);
   dayc += vec3(.2, .45, .95) * pow(1. - mu, 4.) * .35 * uHaze;         // limb haze
   vec3 nightc = mix(vec3(.012, .03, .075), vec3(.01, .01, .012), L) * uNight;
