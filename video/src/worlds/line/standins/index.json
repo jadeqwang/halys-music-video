@@ -284,5 +284,93 @@
   "w": 1920,
   "h": 1080,
   "faces": []
+ },
+ "r42kneel": {
+  "w": 1280,
+  "h": 720,
+  "faces": [],
+  "from": "media/plates/P42/take2.mp4 @ 0.95 s",
+  "plate": "P42",
+  "note": "Lydian sinks to his knees, arms raised (S35 IN THE)"
+ },
+ "r42eyes": {
+  "w": 1280,
+  "h": 720,
+  "faces": [],
+  "from": "media/plates/P42/take2.mp4 @ 2.84 s",
+  "plate": "P42",
+  "note": "Lydian covers his eyes; the kneeler prays"
+ },
+ "r42spin": {
+  "w": 1280,
+  "h": 720,
+  "faces": [],
+  "from": "media/plates/P42/take2.mp4 @ 2.21 s",
+  "plate": "P42",
+  "note": "Lydian spun round, staring"
+ },
+ "r43pros": {
+  "w": 1280,
+  "h": 720,
+  "faces": [],
+  "from": "media/plates/P43/take2.mp4 @ 1.58 s",
+  "plate": "P43",
+  "note": "Mede prostrate, forehead to the stones; amulet prayer (S35 second SKY)"
+ },
+ "r43arm": {
+  "w": 1280,
+  "h": 720,
+  "faces": [],
+  "from": "media/plates/P43/take2.mp4 @ 4.73 s",
+  "plate": "P43",
+  "note": "Mede grabs his neighbour's arm"
+ },
+ "r43bow": {
+  "w": 1280,
+  "h": 720,
+  "faces": [],
+  "from": "media/plates/P43/take2.mp4 @ 3.47 s",
+  "plate": "P43",
+  "note": "the archer has let his bow fall"
+ },
+ "r44rear": {
+  "w": 1280,
+  "h": 720,
+  "faces": [],
+  "from": "media/plates/P44/take1.mp4 @ 1.58 s",
+  "plate": "P44",
+  "note": "the Lydian rider's horse rears (S35 first SKY)"
+ },
+ "r44calm": {
+  "w": 1280,
+  "h": 720,
+  "faces": [],
+  "from": "media/plates/P44/take1.mp4 @ 2.84 s",
+  "plate": "P44",
+  "note": "the Median rider calms his horse"
+ },
+ "r45lyd": {
+  "w": 1280,
+  "h": 720,
+  "faces": [],
+  "from": "media/plates/P45/take1.mp4 @ 0.32 s",
+  "plate": "P45",
+  "note": "the Lydian looks around wildly"
+ },
+ "r45lydup": {
+  "w": 1280,
+  "h": 720,
+  "faces": [],
+  "from": "media/plates/P45/take1.mp4 @ 1.58 s",
+  "plate": "P45",
+  "note": "the Lydian looks up"
+ },
+ "r45mede": {
+  "w": 1280,
+  "h": 720,
+  "faces": [],
+  "from": "media/plates/P45/take1.mp4 @ 2.21 s",
+  "plate": "P45",
+  "note": "the Mede whips his head round"
  }
 }

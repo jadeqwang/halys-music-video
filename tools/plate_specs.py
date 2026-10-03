@@ -296,7 +296,7 @@ PLATES = {
 
     "P12": dict(
         duration=8, takes=2, refs=["LYD", "MED", "SHALLOWS"], audio=a(44.73), t_song=[44.73, 52.73],
-        shots="S17, S19, S27, S36, S37",
+        shots="S17, S19, S27 (S36/S37 moved to P42-P46 in the 02:43 shot list)",
         sync=[[46.06, "beat: first thrust turned by the lion shield (plate 1.33)"], [47.563, "stab (plate 2.83)"],
               [48.912, "stab (plate 4.18)"], [49.533, "stab (plate 4.80)"], [50.633, "stab + timpani (plate 5.90)"],
               [51.484, "stab (plate 6.75)"]],
@@ -351,7 +351,7 @@ PLATES = {
         notes="Face-off centred and mirrored (LYDIANS over left, MEDES over right), then the shore melee after the cut."),
 
     "P16": dict(
-        duration=5, refs=["LYD"], audio=a(81.36), t_song=[81.36, 86.36], shots="S26, S36",
+        duration=5, refs=["LYD"], audio=a(81.36), t_song=[81.36, 86.36], shots="S26",
         sync=[[82.65, "'burning' (plate 1.29)"], [84.38, "'bronze': the glint sweeps (plate 3.02)"]],
         prompt=("Extreme close-up macro shot of polished, convex bronze armour from reference image 1: the camera glides slowly "
                 "across the curved, polished bronze rim of the round Lydian shield (crimson paint with a black lion inside the "
@@ -707,6 +707,85 @@ PLATES = {
         notes="Audio = sound-design master 273.4-279.4 so the wink sits near the 276.95 ting (plate 3.55)."),
 }
 
+# ---------------------------------------------------------------- Drop 1 reactions (director's addition, 2026-10-03: SHOTLIST P42-P46)
+# S35-S37: at totality the warriors react with shock, horror and prayer. Equal numbers of Lydian and Median reactions;
+# readable dusk (the renderer applies the eclipse). Kicks of the drop (plate time from t0 = 110.58): 0.00, 0.43, 0.86, 1.29,
+# 1.73, 2.16, 2.60, 3.03, 3.47, 3.90, 4.34, 4.77. S35 cuts: IN THE 110.98 (the Lydian kneeling, P42), SKY 111.455 (the rearing
+# horse, P44), SKY 111.89 (the prostrate Mede, P43), so those actions come first in their plates.
+PLATES.update({
+    "P42": dict(
+        duration=5, takes=2, refs=["LYD"], audio=a(110.58), t_song=[110.58, 115.58], shots="S35, S36",
+        sync=[[110.98, "IN THE: the kneeling man's arms go up (S35 cut)"], [111.435, "kick: the spin round"],
+              [111.865, "kick: eyes covered"], [112.305, "kick: the spear drops"]],
+        prompt=(f"{DUSK} In the knee-deep red-brown shallows of a river, four Lydian infantrymen dressed like reference image 1 "
+                "(crested bronze helmets pushed up so the faces show, long braids, crimson tunics, bronze scale corselets, round "
+                "crimson shields with a black lion, spears) stand a few metres apart, each clearly separate, staring up at the sky "
+                "that has just gone dark. They react in shock and prayer one after another, each on a drum hit of the reference "
+                "audio: at 0.4 s the second man from the left sinks to his knees in the water and raises both arms high to the sky, "
+                "palms open and turned up, praying; at 0.9 s the man on the far left spins round, staring wildly in every direction "
+                "in terror; at 1.3 s the third man throws his forearm over his eyes and turns his face away; at 1.7 s the spear "
+                "slips from the fourth man's hand and splashes into the water as he stares up, mouth open. Then they hold these "
+                "poses, trembling, to the end. Medium-wide shot, full figures, the group turned three-quarters toward frame right, "
+                f"the far bank dark behind them. Camera static. {REAL} {NOSING} {SHEET_ONLY} {PERIOD} {NOTXT}"),
+        notes="Lydian reactions: kneeling Greek prayer (arms up, palms up), spin in terror, eyes covered, spear dropped."),
+    "P43": dict(
+        duration=5, takes=2, refs=["MED", "MED_ARCH"], audio=a(110.58), t_song=[110.58, 115.58], shots="S35, S36",
+        sync=[[111.89, "SKY: the prostration (S35 cut)"], [111.435, "kick: the amulet prayer"],
+              [111.865, "kick: the bow falls"], [112.305, "kick: grabs his neighbour's arm"]],
+        prompt=(f"{DUSK} In the shallows of a red-brown river, beside a low gravel bar, four Median soldiers stand a few metres "
+                "apart, each clearly separate: three spearmen dressed like reference image 1 (soft red felt caps with ear flaps, "
+                "black curly beards, long-sleeved ochre tunics, iron scale corselets, round wicker shields, short sword on the right "
+                "thigh) and an archer dressed like reference image 2 (undyed felt hood, ochre tunic, sheepskin cloak, short composite "
+                "bow). All stare up at the sky that has just gone dark, then react one after another, each on a drum hit of the "
+                "reference audio: at 0.4 s the man on the far right drops to his knees on the gravel bar and prostrates himself, "
+                "pressing his forehead down to the river stones, arms stretched forward; at 0.9 s the second man clutches a small "
+                "amulet hanging on a cord at his chest with both hands and prays silently, eyes on the sky; at 1.3 s the archer lets "
+                "his bow fall from his hand into the water; at 1.7 s the fourth man grabs his neighbour's arm in fear. Then they hold, "
+                "trembling, to the end. Medium-wide shot, full figures, the group turned three-quarters toward frame left (the mirror "
+                f"of a matching shot of the Lydians), the far bank dark behind them. Camera static. {REAL} {NOSING} {SHEET_ONLY} "
+                f"{PERIOD} {NOTXT}"),
+        notes="Median mirror of P42: proskynesis, amulet prayer, the archer drops his bow, grabs his neighbour's arm."),
+    "P44": dict(
+        duration=5, refs=["LYD_CAV_H", "MED_CAV_H"], audio=a(110.58), t_song=[110.58, 115.58], shots="S35, S36",
+        sync=[[111.455, "SKY: the horse rears (S35 cut)"]],
+        prompt=(f"{DUSK} Medium-wide shot on a riverbank. In the foreground a Lydian cavalryman like the rider in reference image "
+                "1 (open-faced crested bronze helmet, crimson tunic, bronze scale corselet, ochre cloak) sits bareback on a chestnut "
+                "horse with a crimson and ochre saddlecloth and bronze bridle fittings, NO stirrups: at 0.4 s the horse rears up high "
+                "on its hind legs in panic, front hooves pawing the air, eyes wide, and the rider leans forward gripping the mane and "
+                "reins, fighting to hold it; it drops back down and rears again at 2.6 s. Behind them, clearly visible, a Median rider "
+                "like reference image 2 (red felt hood, ochre tunic, bay horse with a topknot, cropped upright mane and patterned "
+                "saddlecloth, no stirrups) swings down from his horse at 1.0 s and, standing at its head, pulls the horse's head gently "
+                "against his chest, stroking its face to calm it. Manes and tails fly. Correct horse anatomy, four legs each. Camera "
+                f"static. {REAL} {SHEET_ONLY} {PERIOD} {NOTXT}"),
+        notes="Horses: the Lydian rearing-horse beat and its Median mirror (RESEARCH 3.5/3.7)."),
+    "P45": dict(
+        duration=5, refs=["LYD", "MED", "ALYATTES", "CYAXARES"], audio=a(112.31), t_song=[112.31, 117.31], shots="S36",
+        sync=[[112.31, "stutter montage starts"]],
+        prompt=("Four tight face close-ups joined by hard cuts at 1.25, 2.5 and 3.75 seconds, all in the readable dusk light of a "
+                "total eclipse: dim twilight, a warm orange glow from the horizon on one side of the face, a black background, every "
+                "face sharp and clearly readable. Shot 1 (0-1.25 s): the Lydian from reference image 1 (crested bronze helmet pushed "
+                "up, long braids, short beard) looks around wildly, eyes darting, breathing fast, then stares up at the sky. Shot 2 "
+                "(1.25-2.5 s): the Mede from reference image 2 (red felt cap with ear flaps, black curly beard) whips his head round, "
+                "eyes wide, then looks up. Shot 3 (2.5-3.75 s): Alyattes, king of Lydia, from reference image 3 (long grey-streaked "
+                "hair, gold fillet, full beard, purple mantle) in shock, mouth open, looking up. Shot 4 (3.75-5 s): Cyaxares, king of "
+                "the Medes, from reference image 4 (grey curled beard, madder-red felt cap with a gold band) in shock, eyes wide, "
+                f"looking up. Each face fills most of the frame. {REAL} {NOSING} {SHEET_ONLY} {NOTXT}"),
+        notes="Four faces for the S36 stutter montage: Lydian, Mede, Alyattes, Cyaxares (cuts at 1.25/2.5/3.75 s)."),
+    "P46": dict(
+        duration=8, takes=2, refs=["LYD", "MED", "LYD_CAV_H"], audio=a(117.53), t_song=[117.53, 125.53], shots="S37",
+        sync=[[117.53, "orbit starts"], [124.475, "kick out (one-bar break)"]],
+        prompt=("Frozen time during a total solar eclipse: a Baroque sculpture group of warriors on a riverbank, every figure "
+                f"completely motionless, like statues. At the centre {LYD_S.format(n=1)} and {MED_S.format(n=2)} are stopped "
+                "mid-strike, spears crossed, both faces turned up to the sky. Around them, frozen: two men kneeling with both arms "
+                "raised to the sky, palms up (one Lydian, one Mede); a Mede prostrate with his forehead on the river stones; a Lydian "
+                "pointing up at the sky, mouth open in a shout; a Mede covering his eyes with his forearm; and behind them a Lydian "
+                "rider like reference image 3 holding his horse frozen on its hind legs in a rear. Nothing moves at all: no breathing, "
+                "no cloth, no hair, no water. Only the camera moves: one slow, smooth orbit of about 30 degrees around the group from "
+                f"left to right over the 8 seconds, at chest height, every figure staying in frame. {DUSK} Photoreal live-action "
+                f"bullet-time, crisp, no motion blur. {SHEET_ONLY} {PERIOD} {NOTXT}"),
+        notes="S37 orbit plate (replaces P12 + depth): a frozen reaction tableau, ~30 degree orbit; clean depth matters."),
+})
+
 # ---------------------------------------------------------------- retakes (first-pass review, 2026-10-03)
 # Each override keeps the first-pass prompt in `prompt_v1` and says what went wrong in `retake_note`; every take's
 # take<N>.json snapshots the exact spec it was generated from. Reviews: media/plates/<id>/review.json.
@@ -857,6 +936,26 @@ RETAKES = {
 for _k, _v in RETAKES.items():
     PLATES[_k]["prompt_v1"] = PLATES[_k]["prompt"]
     PLATES[_k]["refs_v1"] = PLATES[_k].get("refs")
+    PLATES[_k].update(_v)
+
+RETAKES2 = {
+    "P46": dict(
+        retake_note="takes 1-2: the reactions were unbalanced (take 1 mostly Lydian, take 2 mostly Median kneelers) and take 2 "
+                    "drew a large bright corona; v2 spells out a 4+4 left-to-right layout and an empty sky",
+        prompt=("Frozen time during a total solar eclipse: a Baroque sculpture group of eight warriors on a stony riverbank, every "
+                "figure completely motionless like a statue, arranged from left to right: (1) a Lydian kneeling with both arms "
+                "raised to the sky, palms up; (2) a Mede kneeling with both arms raised to the sky, palms up; (3) at the centre "
+                f"{LYD_S.format(n=1)} and (4) {MED_S.format(n=2)}, stopped mid-strike with their spears crossed, both faces turned "
+                "up to the sky; (5) a Mede prostrate with his forehead on the river stones; (6) a Lydian pointing up at the sky, "
+                "mouth open in a shout; (7) a Mede covering his eyes with his forearm; (8) behind them, a Lydian rider like reference "
+                "image 3 holding his horse frozen in a rear. Four Lydians (crested bronze helmets, crimson tunics) and four Medes "
+                "(red felt caps, ochre tunics), equal in size and dignity. Nothing moves at all: no breathing, no cloth, no hair, no "
+                "water. The sky is empty and dark: no sun, no moon. Only the camera moves: one slow, smooth orbit of about 30 degrees "
+                f"around the group from left to right over the 8 seconds, at chest height, every figure staying in frame. {DUSK} "
+                f"Photoreal live-action bullet-time, crisp, no motion blur. {SHEET_ONLY} {PERIOD} {NOTXT}")),
+}
+for _k, _v in RETAKES2.items():
+    PLATES[_k]["prompt_v1"] = PLATES[_k]["prompt"]
     PLATES[_k].update(_v)
 
 # Every photoreal identity sheet trips Seedance's real-person filter (InputImageSensitiveContentDetected.PrivacyInformation,

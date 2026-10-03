@@ -4,13 +4,13 @@
 // Timing rule: a word gilds in on the drawing that contains its sung onset (at 12 fps up to one drawing early, which is
 // what subtitle practice asks for: 2-4 frames ahead of the syllable); chops slam on the exact master frame.
 
-import { FACE, C, LIGHT, applyFont, textWidth, glyphX, breakLines, layoutLines, fitBlock, byAspect, smartQuotes, ease, measure } from './style.js';
+import { FACE, C, LIGHT, applyFont, textWidth, glyphX, breakLines, layoutLines, byAspect, smartQuotes, ease, measure } from './style.js';
 import { gild } from './gild.js';
 import { chopWord, chopFit, chopEcho, halDisk } from './chop.js';
 import { drawCartouche } from './cartouche.js';
 import { drawTerminal } from './terminal.js';
-import { clamp, lerp, smooth, strSeed, hash, hash2, kf, mixHex, rgba, TAU } from '../core.js';
-import { beatPos, pulse, TM } from '../time.js';
+import { clamp, lerp, smooth, strSeed, hash, hash2, kf, mixHex, TAU } from '../core.js';
+import { beatPos, pulse } from '../time.js';
 
 // ---------------------------------------------------------------- shared
 const WORLD_LIGHT = { bronze: 'bronze', gold: 'gold', marble: 'marble', corona: 'corona', orbit: 'orbit', room: 'end' };

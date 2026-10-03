@@ -37,6 +37,7 @@ const KEYS = {
   S24: { P01: [[67.42, 3.0], [74.41, 9.99]] }, S30: { P01: [[96.89, 11.0], [100.24, 14.35]] },
   S19: { P12: [[51.72, 4.5], [55.22, 8.0]] }, S27: { P12: [[85.91, 2.0], [87.68, 3.77]] }, S18: { P12: [[46.49, 1.5], [51.72, 6.73]] },
   S22: { P05: [[62.2, 2.5], [65.67, 5.97]], P06: [[62.2, 2.5], [65.67, 5.97]] },
+  S15: { P11: [[39.48, .5], [40.357, 1.6], [40.358, 3.3], [41.24, 4.4]] },   // the plate itself cuts from the Lydian to the Mede
   S31: { P20: [[100.24, 0], [102.21, 2.0], [103.64, 3.4]] },
 };
 // resolvePlate with this act's plate timing
@@ -323,7 +324,7 @@ scene('S12', async f => {
   await bronze(f, src, {
     lightDir: [0, -1], pool: [{ x: .5, y: .92, rx: .5, ry: .12, feather: .8, k: .6 }], poolMatte: 0, crushFloor: .12,
     sky: SKY(t, { horizonY: BIGSUN.hz, glowR: .32, glow: 1.1, drama: .25, cover: .6, vortex: .35, twist: .6, haze: .4, fire: .6 }),
-    sun: { x: BIGSUN.x, y: BIGSUN.y, r: BIGSUN.r, alt: 6, off: 2.4, glowStrokes: .5 },
+    sun: { x: BIGSUN.x, y: BIGSUN.y, r: BIGSUN.r, alt: 6, off: 2.4 },
     overStrokes: ({ pal }) => PR.arrowStrokes({ x: px, y: py, ang, len: W * .16, pal, smear: W * .02 }),
     accents: 0, T: [0, .06, .07, .1, .12],
   });
@@ -356,11 +357,14 @@ scene('S14', async f => {
   });
 });
 scene('S15', async f => {
-  const second = f.t >= 40.358;                        // cut on beat 3: the Lydian sees the Mede, then the Mede sees him
-  const src = second
-    ? await rp(f, 'P11', { id: 'a_duel', cam: { cx: .6, cy: .3, zoom: 2.5 } }, { cx: .72, cy: .45, zoom: 1.6 })
-    : await rp(f, 'P11', { id: 'a_duel', cam: { cx: .41, cy: .29, zoom: 2.5 } }, { cx: .28, cy: .45, zoom: 1.6 });
-  await bronze(f, src, { lightDir: second ? [-.8, -.6] : [.8, -.6], pool: [{ x: second ? .58 : .42, y: .45, rx: .18, ry: .45, feather: .7, k: 1 }], poolMatte: .5, envDim: .55, faceMin: .3, crushFloor: .09 });
+  const second = f.t >= 40.358, real = hasPlate('P11');   // cut on beat 3: the Lydian sees the Mede, then the Mede sees him
+  const src = real
+    ? await rp(f, 'P11', null, k => ({ cx: second ? .58 : .42, cy: .45, zoom: 1.06 + .03 * k }))
+    : second ? await rp(f, 'P11', { id: 'a_duel', cam: { cx: .6, cy: .3, zoom: 2.5 } }, null) : await rp(f, 'P11', { id: 'a_duel', cam: { cx: .41, cy: .29, zoom: 2.5 } }, null);
+  await bronze(f, src, real ? {
+    lightDir: second ? [-.7, -.7] : [.7, -.7], pool: facePools(src, { body: .45, fallback: [{ x: second ? .58 : .42, y: .35, rx: .14, ry: .3, feather: .7, k: 1, fig: true }] }),
+    poolFromLight: { k: .7, bg: .25 }, poolMatte: .3, envDim: .6, faceMin: .3, crushFloor: .08, rim: .8,
+  } : { lightDir: second ? [-.8, -.6] : [.8, -.6], pool: [{ x: second ? .58 : .42, y: .45, rx: .18, ry: .45, feather: .7, k: 1 }], poolMatte: .5, envDim: .55, faceMin: .3, crushFloor: .09 });
 });
 
 // ---------------------------------------------------------------- S17 / S19 / S21: the duel
@@ -455,18 +459,39 @@ scene('S27', async f => {
     await bronze(f, src, { ...DUEL_LIGHT, poolBound: null });
     return;
   }
-  // a wicker shield throws a field of stretched crescent suns across the Lydian's bronze; he looks up on "strange"
-  const k = seg(t, 87.68, 89.22);
-  const src = await rp(f, 'P17', { id: 'b_face', cam: { cx: .6, cy: .42, zoom: 1.12 + .04 * k } }, { cx: .5, cy: .45, zoom: 1.04 + .04 * k });
-  const e = E(t);
-  const cf = PR.crescentField(src.aw, src.ah, { mag: e.m, stretch: 1.6, ang: -.5, size: src.aw * .009, density: .8, seed: 21, region: src.matte, offset: [k * src.aw * .02, 0] });
+  // a wicker shield throws a field of crescent suns across the Lydian's bronze; he looks up on "strange"
+  const k = seg(t, 87.68, 89.22), real = hasPlate('P17'), e = E(t);
+  const src = await rp(f, 'P17', { id: 'b_face', cam: { cx: .6, cy: .42, zoom: 1.12 + .04 * k } }, { cx: .45, cy: .5, zoom: 1.12 + .05 * k });
+  // where the crescents land: specks of the plate's own dappled light on the figure (local maxima), else a field
+  const aw = src.aw, ah = src.ah, specks = [];
+  if (real) {
+    const L = new Float32Array(aw * ah); for (let i = 0; i < aw * ah; i++) L[i] = .2126 * src.R[i] + .7152 * src.G[i] + .0722 * src.B[i];
+    for (let y = 4; y < ah - 4; y += 2) for (let x = 4; x < aw - 4; x += 2) {
+      const i = y * aw + x, v = L[i]; if (v < .55) continue;
+      let mx = true; for (let j = -3; j <= 3 && mx; j++) for (let q = -3; q <= 3; q++) if (L[i + j * aw + q] > v) { mx = false; break; }
+      if (mx && (!src.depth || src.depth[i] > .25)) specks.push([x, y, v]);
+    }
+    specks.sort((a, b) => b[2] - a[2]); specks.length = Math.min(specks.length, 70);
+  }
+  // soft crescent light on the figure (round-bodied: his bronze faces the sun), drifting a little as the shield moves
+  const fig = src.matte || (src.depth ? src.depth.map(v => sstep(.3, .5, v)) : null);
+  const cf = PR.crescentField(aw, ah, { mag: e.m, stretch: 1.25, ang: -.45, size: aw * .013, density: .55, spacing: 3.2, seed: 21, region: fig, offset: [k * aw * .03, -k * ah * .02] });
+  const S2 = f.W / aw;
   await bronze(f, src, {
-    lightDir: [-.75, -.66], pool: [{ x: .56, y: .45, rx: .18, ry: .45, rot: -.25, feather: .7, k: .45 }], poolMatte: .3, poolBound: { x: .6, y: .45, rx: .3, ry: .6, feather: .5 },
-    lightField: cf.light, faceMin: .5, crushFloor: .085, brushes: [24, 13, 7.5, 4.2, 2.4],
-    strokes: ({ S, pal }) => PR.crescentStrokes(cf.dabs, S, pal, { metal: e.eL, k: .8 }),
+    lightDir: [.6, -.8], lightPoint: real ? [.85, .05] : null,
+    pool: real ? [...facePools(src, { body: .4, kFace: .7 }), { x: .45, y: .55, rx: .2, ry: .4, feather: .7, k: .5, fig: true }] : [{ x: .56, y: .45, rx: .18, ry: .45, rot: -.25, feather: .7, k: .45 }],
+    poolFromLight: real ? { k: .5, bg: .2 } : null, poolMatte: .25, envDim: .6, faceMin: .3, crushFloor: .075, rim: .7, lightField: cf.light.map(v => v * .85),
+    strokes: ({ pal }) => {
+      // the brightest specks of the plate's own dappled light, repainted as crisp crescents (bright edge at 7 o'clock:
+      // pinhole images are flipped)
+      const col = [.88, .86, .8], out = [];
+      specks.slice(0, 26).forEach(([x, y, v], j) => out.push(...PR.crescentStrokes2(x * S2, y * S2, f.H * (.011 + .008 * hashS(j)), e.m, Math.PI * .75, { color: col, stretch: 1.1, stretchAng: -.4, a: .8, thick: .8, key: 3 + j * .01, seed: hashS(j + 7) })));
+      return out;
+    },
   });
   f.type.disk = { k: seg(t, 87.68, 88.9) };
 });
+const hashS = j => { let n = (j * 2654435761) >>> 0; n ^= n >>> 15; n = Math.imul(n, 2246822519) >>> 0; n ^= n >>> 13; return (n >>> 0) / 4294967296; };
 
 // ---------------------------------------------------------------- S28: faces turn upward; cut on the 91.31 boom to the sky
 scene('S28', async f => {
@@ -489,23 +514,25 @@ scene('S28', async f => {
 });
 
 // ---------------------------------------------------------------- S29: the eye, the crescent reflected · the intrusion · the sky as an eye
-const EYEXCU = { cx: .5165, cy: .335, zoom: 4.2 };    // b_face's (image-left) eye
+const EYEXCU = { cx: .5165, cy: .335, zoom: 4.2 };    // b_face's (image-left) eye (stand-in)
 async function s29Eye(f, k) {
-  const src = await rp(f, 'P19', { id: 'b_face', cam: { ...EYEXCU, zoom: EYEXCU.zoom + .25 * k } }, { cx: .5, cy: .45, zoom: 1.04 + .04 * k });
-  const W = f.W, H = f.H, rc = { x: .515 * W, y: .43 * H, r: .03 * H };     // the crescent reflected on the cornea
+  const real = hasPlate('P19');
+  // P19: the eye in extreme close-up; we push toward the iris so the pupil holds the inscription
+  const pc = { cx: .44, cy: .5, zoom: 1.12 + .22 * k };
+  const src = await rp(f, 'P19', { id: 'b_face', cam: { ...EYEXCU, zoom: EYEXCU.zoom + .25 * k } }, pc);
+  const W = f.W, H = f.H;
+  // the pupil on screen: P19's iris centre (about uv .405, .51) through the camera
+  const pu = real ? [(.405 - pc.cx) * pc.zoom + .5, (.51 - pc.cy) * pc.zoom + .5] : [.515, .43];
+  const rp2 = real ? .055 * pc.zoom : .03;
+  const rc = { x: pu[0] * W, y: pu[1] * H, r: rp2 * H * .55 };                 // the crescent reflected over the pupil
   await bronze(f, src, {
-    lightDir: [.6, -.8], pool: [{ x: .5, y: .45, rx: .35, ry: .4, feather: .7, k: .85 }], poolMatte: .2, crushFloor: .08, faceMin: null, eyeStrokes: 0,
-    brushes: [22, 12, 7, 4, 2.2],
-    overStrokes: ({ pal }) => {
-      const lead = pal.tube('leadWhite'), out = [];
-      for (let j = 0; j < 7; j++) {                   // a thin bright crescent (horns down-right), a few loaded touches
-        const a0 = Math.PI * .95 + j * .16, a1 = a0 + .14;
-        out.push({ pts: [[rc.x + Math.cos(a0) * rc.r, rc.y + Math.sin(a0) * rc.r], [rc.x + Math.cos(a1) * rc.r, rc.y + Math.sin(a1) * rc.r]], r: Math.max(1.2, rc.r * .16 * Math.sin(Math.PI * (j + .5) / 7)), c0: lead, c1: lead, a: .95, thick: 1.2, seed: .3 + j * .1, key: j, layer: 12, taper: .3 });
-      }
-      return out;
-    },
+    lightDir: [-.8, -.4], pool: real ? [{ x: pu[0], y: pu[1], rx: .34, ry: .5, feather: .8, k: 1, fig: true }, { x: pu[0] - .12, y: pu[1] - .3, rx: .4, ry: .28, feather: .8, k: .7, fig: true }]
+      : [{ x: .5, y: .45, rx: .35, ry: .4, feather: .7, k: .85 }],
+    poolFromLight: real ? { k: .8, bg: 1, matte: false } : null, poolMatte: 0, matteFromDepth: null, crushFloor: .085, faceMin: null, eyeStrokes: 0, envDim: .8,
+    brushes: [22, 12, 7, 4, 2.2], focus: [{ x: pu[0], y: pu[1], rx: .09, ry: .16, k: 1 }],
+    overStrokes: ({ pal }) => PR.crescentStrokes2(rc.x, rc.y, rc.r, E(f.t).m, -Math.PI * .66, { color: [.97, .94, .86], a: .95, thick: 1.1 }),
   });
-  return rc;
+  return { ...rc, pupil: { x: rc.x, y: rc.y, r: rp2 * H } };
 }
 shotOverride('S29', { t1: 93.95 });
 shot({ id: 'S29b', t0: 93.95 + 10 / 60, t1: 96.89, world: 'bronze', cadence: 12, scene: 'S29', parent: 'S29', params: { label: 'S29 (after the intrusion)' } });
@@ -513,7 +540,7 @@ scene('S29', async f => {
   const t = f.t;
   if (t < 95.0) {
     const rc = await s29Eye(f, seg(t, 93.0, 95.0));
-    f.type.pupil = { x: rc.x, y: rc.y, r: f.H * .2 };
+    f.type.pupil = rc.pupil;
     return;
   }
   // the sky itself reads as an eye: the thin crescent around the dark disk, the glow an iris, the umber dome its socket

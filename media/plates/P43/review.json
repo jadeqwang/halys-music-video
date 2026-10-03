@@ -1,0 +1,114 @@
+{
+ "plate": "P43",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "Four Medes on the gravel bank at dusk; still until ~2.2 s, then the far-right man prostrates (forehead down by ~4.1 s).",
+   "costume": "Correct (caps, ochre, iron scales, wicker shields; the hooded archer).",
+   "identity": "Consistent.",
+   "artefacts": "Other three reactions not readable; late.",
+   "notes": "Alternate.",
+   "sync": [
+    {
+     "song_t": 111.89,
+     "event": "SKY: the prostration (S35 cut)",
+     "expected_plate_t": 1.31,
+     "measured_plate_t": 1.042,
+     "offset_s": -0.268,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 111.435,
+     "event": "kick: the amulet prayer",
+     "expected_plate_t": 0.855,
+     "measured_plate_t": 1.042,
+     "offset_s": 0.187,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 111.865,
+     "event": "kick: the bow falls",
+     "expected_plate_t": 1.285,
+     "measured_plate_t": 1.042,
+     "offset_s": -0.243,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 112.305,
+     "event": "kick: grabs his neighbour's arm",
+     "expected_plate_t": 1.725,
+     "measured_plate_t": 2.208,
+     "offset_s": 0.483,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P43/take1.review.jpg",
+   "contact": "media/plates/P43/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T02:55:33"
+  },
+  "2": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S35/S36 delivered (mirror of P42): four Medes by a gravel bar at dusk: the far-right man drops to his knees and prostrates, forehead on the river stones (~1.1 s); the second clasps his hands at his chest over an amulet and prays (~1.8 s); the hooded archer's bow splashes into the water (~3.5 s); the third grabs his neighbour's arm (~4.3 s).",
+   "costume": "Red caps, black beards, ochre tunics, iron scales, wicker shields; archer hood, sheepskin, bow.",
+   "identity": "Consistent with mede.jpg / median_archer.jpg.",
+   "artefacts": "The amulet itself is small; arm grab is subtle.",
+   "notes": "For S35's last SKY (111.89) use the prostration at plate ~1.1.",
+   "sync": [
+    {
+     "song_t": 111.89,
+     "event": "SKY: the prostration (S35 cut)",
+     "expected_plate_t": 1.31,
+     "measured_plate_t": 1.1,
+     "offset_s": -0.21,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 111.435,
+     "event": "kick: the amulet prayer",
+     "expected_plate_t": 0.855,
+     "measured_plate_t": 1.8,
+     "offset_s": 0.945,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 111.865,
+     "event": "kick: the bow falls",
+     "expected_plate_t": 1.285,
+     "measured_plate_t": 3.5,
+     "offset_s": 2.215,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 112.305,
+     "event": "kick: grabs his neighbour's arm",
+     "expected_plate_t": 1.725,
+     "measured_plate_t": 4.3,
+     "offset_s": 2.575,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P43/take2.review.jpg",
+   "contact": "media/plates/P43/take2.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T02:55:33"
+  }
+ },
+ "shots": "S35, S36",
+ "t_song": [
+  110.58,
+  115.58
+ ],
+ "audio_t0": 110.58,
+ "chosen": 2,
+ "chosen_why": "All four reactions in order, proskynesis first (take 1 has only a late prostration).",
+ "t_chosen": "2026-10-03T02:55:33"
+}

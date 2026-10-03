@@ -1,0 +1,114 @@
+{
+ "plate": "P42",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "Four Lydians in the shallows at dusk; static for ~2.5 s, then the kneeling prayer (~3.5 s), eyes covered (~4.1 s) and the spear splashing down (~4.6 s).",
+   "costume": "Correct.",
+   "identity": "Consistent.",
+   "artefacts": "Reactions bunched into the last 2 s; no clear spin.",
+   "notes": "Alternate.",
+   "sync": [
+    {
+     "song_t": 110.98,
+     "event": "IN THE: the kneeling man's arms go up (S35 cut)",
+     "expected_plate_t": 0.4,
+     "measured_plate_t": 0.083,
+     "offset_s": -0.317,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 111.435,
+     "event": "kick: the spin round",
+     "expected_plate_t": 0.855,
+     "measured_plate_t": 1.292,
+     "offset_s": 0.437,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 111.865,
+     "event": "kick: eyes covered",
+     "expected_plate_t": 1.285,
+     "measured_plate_t": 1.292,
+     "offset_s": 0.007,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 112.305,
+     "event": "kick: the spear drops",
+     "expected_plate_t": 1.725,
+     "measured_plate_t": 1.292,
+     "offset_s": -0.433,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P42/take1.review.jpg",
+   "contact": "media/plates/P42/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T02:55:33"
+  },
+  "2": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S35/S36 delivered: four Lydians knee-deep at dusk, each reaction readable and separate: the second man sinks to his knees with both arms up, palms open (Greek prayer, arms up ~1.0 s, splash 1.3 s); the foreground man spins round staring in terror (~1.6 s); the third throws his forearm over his eyes (~2.9 s); the fourth's spear falls into the water (~4.5 s).",
+   "costume": "Crested helmets, braids, scales, crimson, lion shields.",
+   "identity": "Consistent with lydian.jpg.",
+   "artefacts": "Reactions spread over the whole plate rather than on consecutive kicks.",
+   "notes": "For S35's IN THE (110.98) use the kneel at plate ~1.0.",
+   "sync": [
+    {
+     "song_t": 110.98,
+     "event": "IN THE: the kneeling man's arms go up (S35 cut)",
+     "expected_plate_t": 0.4,
+     "measured_plate_t": 1.0,
+     "offset_s": 0.6,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 111.435,
+     "event": "kick: the spin round",
+     "expected_plate_t": 0.855,
+     "measured_plate_t": 1.6,
+     "offset_s": 0.745,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 111.865,
+     "event": "kick: eyes covered",
+     "expected_plate_t": 1.285,
+     "measured_plate_t": 2.9,
+     "offset_s": 1.615,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 112.305,
+     "event": "kick: the spear drops",
+     "expected_plate_t": 1.725,
+     "measured_plate_t": 4.5,
+     "offset_s": 2.775,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P42/take2.review.jpg",
+   "contact": "media/plates/P42/take2.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T02:55:33"
+  }
+ },
+ "shots": "S35, S36",
+ "t_song": [
+  110.58,
+  115.58
+ ],
+ "audio_t0": 110.58,
+ "chosen": 2,
+ "chosen_why": "All four reactions, in order, the kneeling prayer first (take 1 bunches them into the last 2 s).",
+ "t_chosen": "2026-10-03T02:55:33"
+}

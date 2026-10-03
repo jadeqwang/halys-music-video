@@ -1,0 +1,42 @@
+{
+ "plate": "P45",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S36 delivered: four tight dusk close-ups with hard cuts at 1.79, 3.08 and 4.38 s: the Lydian looks around wildly then up (0-1.79); the Mede whips round then looks up (1.79-3.08); Alyattes in shock looking up (3.08-4.38); Cyaxares eyes wide looking up (4.38-5.04).",
+   "costume": "Helmet + braids; red cap + beard; Alyattes' fillet and purple; Cyaxares' madder cap with gold band.",
+   "identity": "All four match their sheets.",
+   "artefacts": "Cuts later than asked (1.25/2.5/3.75); Cyaxares' shot is short (0.66 s).",
+   "notes": "Segment the plate at the cuts for the stutter montage.",
+   "sync": [
+    {
+     "song_t": 112.31,
+     "event": "stutter montage starts",
+     "expected_plate_t": 0.0,
+     "measured_plate_t": 0.417,
+     "offset_s": 0.417,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [
+    4.375
+   ],
+   "sheet": "media/plates/P45/take1.review.jpg",
+   "contact": "media/plates/P45/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T02:55:34"
+  }
+ },
+ "shots": "S36",
+ "t_song": [
+  112.31,
+  117.31
+ ],
+ "audio_t0": 112.31,
+ "chosen": 1,
+ "chosen_why": "Only take; four readable faces.",
+ "t_chosen": "2026-10-03T02:55:34"
+}

@@ -141,8 +141,8 @@
  },
  "P11": {
   "n": 121,
-  "mattes": 24,
-  "depth": 0,
+  "mattes": 61,
+  "depth": 61,
   "fields": 121,
   "fps": 24,
   "w": 960,
@@ -154,6 +154,34 @@
   "gain": 1.788
  },
  "P17": {
+  "n": 97,
+  "mattes": 49,
+  "depth": 49,
+  "fields": 97,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "src_w": 1280,
+  "src_h": 720,
+  "dur": 4.042,
+  "gain": 1.608
+ },
+ "P19b": {
+  "n": 97,
+  "mattes": 4,
+  "depth": 0,
+  "fields": 97,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "src_w": 1280,
+  "src_h": 720,
+  "dur": 4.042,
+  "gain": 1.627
+ },
+ "P22b": {
   "n": 97,
   "mattes": 0,
   "depth": 0,

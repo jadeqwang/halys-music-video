@@ -16,8 +16,8 @@ import { loadImage, loadJSON, LRU } from '../../assets.js';
 import { analyze, windowPixels, windowField, blur } from './analysis.js';
 
 export const STANDIN_URL = new URL('./standins/', import.meta.url).href;
-let STANDINS = null;
-export async function standinIndex() { return STANDINS ||= (await loadJSON(STANDIN_URL + 'index.json', { optional: true })) || {}; }
+const STANDINS = (await loadJSON(STANDIN_URL + 'index.json', { optional: true })) || {};   // sizes, faces, provenance
+export async function standinIndex() { return STANDINS; }
 
 // which source a spec uses right now
 export function resolve(spec) {
@@ -25,7 +25,7 @@ export function resolve(spec) {
     const P = PLATES[spec.plate];
     return { kind: 'plate', id: spec.plate, w: P.w || 960, h: P.h || 540, fps: P.fps || 24, n: P.n, win: spec.win || { cx: .5, cy: .5, zoom: 1 }, P };
   }
-  if (spec.standin) return { kind: 'standin', id: spec.standin, w: 1920, h: 1080, fps: 0, n: 1, win: spec.standinWin || spec.win || { cx: .5, cy: .5, zoom: 1 } };
+  if (spec.standin) { const S = STANDINS[spec.standin] || {}; return { kind: 'standin', id: spec.standin, w: S.w || 1920, h: S.h || 1080, fps: 0, n: 1, win: spec.standinWin || spec.win || { cx: .5, cy: .5, zoom: 1 } }; }
   return { kind: 'none', id: 'none', w: 1920, h: 1080, fps: 0, n: 1, win: { cx: .5, cy: .5, zoom: 1 } };
 }
 

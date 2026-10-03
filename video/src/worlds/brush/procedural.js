@@ -174,3 +174,32 @@ export function horizonSkyMask(o = {}) {
     return m;
   };
 }
+
+// ---------------------------------------------------------------- a crescent sun as paint
+// The bright crescent left of a sun of radius R (px) at magnitude mag, its bright side toward angle `ang` (rad, screen),
+// as two strokes from its thick middle out to each horn; `stretch` elongates it along `stretchAng` (pinhole images on
+// the ground stretch 4-6x along the shadow). Returns strokes in screen px.
+export function crescentStrokes2(cx, cy, R, mag, ang, o = {}) {
+  const k = 1.066, d = (1 + k - 2 * Math.min(.985, Math.max(.05, mag))) * R, kr = k * R;   // moon offset (toward the dark side)
+  const mx = -Math.cos(ang) * d, my = -Math.sin(ang) * d;                                     // moon centre relative to the sun's
+  const st = o.stretch ?? 1, sa = o.stretchAng ?? 0, cs = Math.cos(sa), sn = Math.sin(sa);
+  const tf = (x, y) => { const u = x * cs + y * sn, v = -x * sn + y * cs; const u2 = u * st; return [cx + u2 * cs - v * sn, cy + u2 * sn + v * cs]; };
+  // along a ray from the sun's centre at angle th: the moon's near edge distance (or R if the ray misses the moon)
+  const inner = th => {
+    const ux = Math.cos(th), uy = Math.sin(th), b = ux * mx + uy * my, c = mx * mx + my * my - kr * kr, disc = b * b - c;
+    if (disc < 0) return 0;                                        // the ray misses the moon: bright to the centre
+    const t2 = b + Math.sqrt(disc);                                // the moon's far edge along the ray
+    return Math.min(R, Math.max(0, t2));
+  };
+  // horn angle: where inner() reaches R
+  let lo = 0, hi = Math.PI;
+  for (let it = 0; it < 20; it++) { const m2 = (lo + hi) / 2; if (inner(ang + m2) < R * .999) lo = m2; else hi = m2; }
+  const Th = lo, out = [], col = o.color || [.92, .88, .78], th0 = R - inner(ang);
+  if (th0 < .3) return out;
+  for (const sgn of [1, -1]) {
+    const pts = [];
+    for (let q = 0; q <= 6; q++) { const th = ang + sgn * Th * q / 6, ri = inner(th), rm = (R + ri) / 2; pts.push(tf(Math.cos(th) * rm, Math.sin(th) * rm)); }
+    out.push({ pts, r: Math.max(.6, th0 * .5 * (st > 1.5 ? 1 : 1)), c0: col, c1: col, a: o.a ?? .9, thick: o.thick ?? .7, seed: o.seed ?? .3, key: (o.key ?? 0) + (sgn > 0 ? 0 : .5), layer: 12, taper: .95, maxSeg: 10 });
+  }
+  return out;
+}

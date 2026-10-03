@@ -81,7 +81,7 @@ with field lines · **INSCR** = Cormorant Garamond italic, small · **MONO** = J
 
 | Shot | Time | World | Plate | Picture | Text | Sync / FX |
 |---|---|---|---|---|---|---|
-| S35 | 110.58–112.31 | CORONA | P01, P42–P44 | **The break, and the whole battlefield reacts.** The world comes back as light (master composition in field lines, corona blazing) and the armies ripple like a wave: spear ticks tilt and fall as men drop to their knees, others scatter. One chop-cut per word: HALO on the master, IN THE on a Lydian sinking to his knees arms raised (P42), SKY on a rearing horse (P44), SKY on a Mede prostrate (P43). | CHOP on beats `HALO` 110.66 · `IN THE` 110.98 · `SKY` 111.45 · `SKY` 111.89. On the first HALO the O is eclipsed for 3–4 frames, leaving **HAL**. PLAQUE small, lower third 110.58–113.5: `"We just went sci-fi." — V. Glover, Artemis II, during totality, 6 Apr 2026` | Kick 110.575; type needs readable space, so keep the busiest action off the word block |
+| S35 | 110.58–112.31 | CORONA | P01, P42–P44 | **The break, and the whole battlefield reacts.** The world comes back as light (master composition in field lines, corona blazing) and the armies ripple like a wave: spear ticks tilt and fall as men drop to their knees, others scatter. One chop-cut per word: HALO on the master, IN THE on a Lydian sinking to his knees arms raised (P42), SKY on a rearing horse (P44), SKY on a Mede prostrate (P43). | CHOP on beats `HALO` 110.66 · `IN THE` 110.98 · `SKY` 111.45 · `SKY` 111.89. On the first HALO the O is eclipsed for 3–4 frames, leaving **HAL**. PLAQUE small, lower third 110.58–114.2, two lines: `"We just went sci-fi."` / `VICTOR GLOVER · ARTEMIS II · DURING TOTALITY · 2026` | Kick 110.575; type needs readable space, so keep the busiest action off the word block |
 | S36 | 112.31–117.53 | CORONA | P42–P45, P14, P19 | **The "WTF" montage**: a hard cut on the stutter onsets, every cut a different human reaction to the sky going out. A Mede whips his head round, eyes wide. A Lydian falls to his knees, arms up, palms open (Greek prayer). A Mede presses his forehead to the river stones (proskynesis). An archer lets his bow drop. A rider's horse rears. Someone covers his eyes. Two enemies grab each other's arms. Someone points up, shouting. Alyattes' face. Cyaxares' face. A young soldier clutches an amulet. Bar 65 (8ths): cut on every onset; bars 66–67 (16ths): cut every 2 onsets. 2-frame inversions on stabs 112.74, 113.17, 113.61, 115.78, 116.22, 116.65, 117.09. | CHOP `SKY` stutter | `chops[word=stutter]`; equal numbers of Lydian and Median reactions |
 | S37 | 117.53–124.47 | CORONA | P46 + depth | **The orbit** around a frozen reaction tableau, a Baroque sculpture group drawn in light. The two duelists at its centre stopped mid-strike, faces up; around them men kneeling with raised arms, one prostrate, one pointing, one covering his eyes, a rider holding a rearing horse. The painting was a world. | MONO HUD corner `C2 · TOTALITY · 00:00:07` counting up | Kick pulse |
 | S38 | 124.47–126.21 | CORONA | P24 | **Flammarion** (kick out, one bar): a soldier pushes his hand, then his head, through the sky; it ripples like a membrane of lines; beyond it, machinery: orbits, gears, glyphs. | — | Break B72 |
@@ -118,8 +118,8 @@ with field lines · **INSCR** = Cormorant Garamond italic, small · **MONO** = J
 
 | Shot | Time | World | Plate | Picture | Text | Sync / FX |
 |---|---|---|---|---|---|---|
-| S52 | 181.23–184.64 | MARBLE + BRONZE figure | P27 | **Thales** (about 40) walks between the statues, the only living thing, painted in colour. Shadow-stick in hand. | CARVED `THALES` + Greek echo `ΘΑΛΗΣ`; PLAQUE `THALES OF MILETUS` | Name on 182.49 |
-| S53 | 184.64–187.65 | same | P28 | Gold construction lines bloom around him: his theorem (a triangle in a circle), `SAROS · 18 Y 11 D 8 H`, an Antikythera-style gear that resolves into lines of code. At 186.4 the **forecast card** (≤ 1.3 s, generic UI): `Will the sun go dark over the Halys before sunset?` YES 3¢ → 99¢. | CARVED `FORETOLD THE SUN WOULD GO DARK` | "dark" 186.38 |
+| S52 | 181.23–183.34 | MARBLE + BRONZE figure | P27 | **Thales** (about 40) walks between the statues, the only living thing, painted in colour. Shadow-stick in hand. | CARVED `THALES` + Greek echo `ΘΑΛΗΣ`; PLAQUE `THALES OF MILETUS` | Name on 182.49 |
+| S53 | 183.34–187.65 | same | P28 | Gold construction lines bloom around him: his theorem (a triangle in a circle), `SAROS · 18 Y 11 D 8 H`, an Antikythera-style gear that resolves into lines of code. At 186.4 the **forecast card** (≤ 1.3 s, generic UI): `Will the sun go dark over the Halys before sunset?` YES 3¢ → 99¢. | CARVED `FORETOLD THE SUN WOULD GO DARK` | "dark" 186.38 |
 | S54 | 187.65–188.51 | same | P28 | In the breath, he glances at camera. He knows. | — | |
 | S55 | 188.51–193.16 | MARBLE | P20 | Every statue gazes up; the corona's western limb begins to bead. | CARVED `WARRIORS BEHOLD …` | |
 | S56 | 193.16–194.86 | MARBLE | proc. | Tight on the limb: Baily's beads. | `A SUDDEN` | |
@@ -132,22 +132,22 @@ with field lines · **INSCR** = Cormorant Garamond italic, small · **MONO** = J
 | S58 | 199.98–203.39 | GOLD | P29 | The light sweeps back across the land as the umbra races away ESE. Colour returns, and both armies **roar**. | CARVED `SHADOW TURNED TO DAY`: letters rise out of shadow into gold | Boom 203.60 |
 | S59 | 203.39–207.40 | GOLD | P30 | Baroque glory (Tiepolo/Rubens, not lens flare). Golden faces; laughter. | CARVED `SUNLIGHT FROM ABOVE` | |
 | S60 | 207.40–208.70 | GOLD | P31 | Drop-out breath: the Lydian and the Mede face to face, weapons still in hand. | — | 207.4–208.5 hold |
-| S61 | 208.70–211.88 | GOLD | P32 | Both armies throw their weapons into the red river, a slow-motion rain of bronze in gold light; hold on one sword sinking during the held "blade". | CARVED `THROW DOWN YOUR BLADE` | Low end out 210.18 |
-| S62 | 211.88–215.29 | GOLD | P33 | Beat returns: a soldier tosses his sword high; it spins up into the golden sky and slows at the apex. | CARVED `HOME TO THE ONES YOU LOVE` | Riser 212.3 |
+| S61 | 208.70–211.44 | GOLD | P32 | Both armies throw their weapons into the red river, a slow-motion rain of bronze in gold light; hold on one sword sinking during the held "blade". | CARVED `THROW DOWN YOUR BLADE` | Low end out 210.18 |
+| S62 | 211.44–215.29 | GOLD | P33 | On "Home" a soldier swings his arm back and, as the beat returns (211.88), tosses his sword high; it spins up into the golden sky and slows at the apex. | CARVED `HOME TO THE ONES YOU LOVE` | Riser 212.3 |
 
 ## 13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.
 
-| Shot | Time | World | Plate | Picture | Text (PLAQUE, year · place · fact; verify all) | Sync / FX |
+| Shot | Time | World | Plate | Picture | Text (PLAQUE, two lines: YEAR · PLACE larger / FACT smaller; verified in FACTCHECK.md) | Sync / FX |
 |---|---|---|---|---|---|---|
 | S63 | 215.29–222.08 | ORBIT | P34 | **Swords into starships**: the spinning sword match-cuts to an unbranded stainless starship rising on a column of light. | — | Kick 215.287 |
-| S64 | 222.08–225.48 | ORBIT | proc. | Bronze gear train; the saros dial is the ring. | `2ND–1ST C. BC · ANTIKYTHERA · A BRONZE COMPUTER PREDICTS ECLIPSES` | |
-| S65 | 225.48–228.88 | ORBIT | proc. | Halley's eclipse map; the shadow oval crossing England is the ring. | `1715 · LONDON · HALLEY MAPS THE MOON'S SHADOW` | |
-| S66 | 228.88–232.27 | ORBIT | proc. | A glass plate: displaced stars around the black Sun. | `1919 · PRÍNCIPE & SOBRAL · STARLIGHT BENDS. EINSTEIN WAS RIGHT.` | |
-| S67 | 232.27–235.66 | ORBIT | P35 | Concorde above the clouds, the eclipse through a round porthole. | `1973 · CONCORDE 001 · 74 MINUTES OF TOTALITY AT MACH 2` | |
-| S68 | 235.66–239.05 | ORBIT | P36 | A crowd in eclipse glasses looking up, rhyming with the warriors at 102.21. | `2024 · USA · 31.6 MILLION LIVE IN THE PATH` | |
-| S69 | 239.05–242.45 | ORBIT | proc. | The corona around the Moon, seen from Orion. | `2026 · ARTEMIS II · TOTALITY FROM DEEP SPACE` | |
-| S70 | 242.45–245.83 | ORBIT | P37 | Looking straight up between Karnak's columns at a black Sun almost overhead (82° up at midday): darkness at noon, the opposite of 585 BC's sunset. | `2027 · NEAR LUXOR · NEXT: 6 MIN 23 S` | |
-| S71 | 245.83–249.22 | ORBIT | proc. | Phobos, a lumpy dark potato, crossing the Sun over a Martian horizon. | `MARS · PHOBOS · ECLIPSES ON OTHER WORLDS` | |
+| S64 | 222.08–225.48 | ORBIT | proc. | Bronze gear train; the saros dial is the ring. | `2ND–1ST C. BC · ANTIKYTHERA` / `BRONZE GEARS PREDICT ECLIPSES` | |
+| S65 | 225.48–228.88 | ORBIT | proc. | Halley's eclipse map; the shadow oval crossing England is the ring. | `1715 · LONDON` / `HALLEY MAPS THE MOON'S SHADOW` | |
+| S66 | 228.88–232.27 | ORBIT | proc. | A glass plate: displaced stars around the black Sun. | `1919 · PRÍNCIPE & SOBRAL` / `LIGHT BENDS. EINSTEIN WAS RIGHT.` | |
+| S67 | 232.27–235.66 | ORBIT | P35 | Concorde above the clouds, the eclipse through a round porthole. | `1973 · CONCORDE 001` / `74 MINUTES OF TOTALITY AT MACH 2` | |
+| S68 | 235.66–239.05 | ORBIT | P36 | A crowd in eclipse glasses looking up, rhyming with the warriors at 102.21. | `2024 · USA` / `31.6 MILLION LIVE IN THE PATH` | |
+| S69 | 239.05–242.45 | ORBIT | proc. | The corona around the Moon, seen from Orion. | `2026 · ARTEMIS II` / `TOTALITY FROM DEEP SPACE` | |
+| S70 | 242.45–245.83 | ORBIT | P37 | Looking straight up between Karnak's columns at a black Sun almost overhead (82° up at midday): darkness at noon, the opposite of 585 BC's sunset. | `2027 · NEAR LUXOR` / `NEXT: 6 MIN 23 S` | |
+| S71 | 245.83–249.22 | ORBIT | proc. | Phobos, a lumpy dark potato, crossing the Sun over a Martian horizon. | `MARS · PHOBOS` / `ECLIPSES ON OTHER WORLDS` | |
 | S72 | 249.22–255.99 | ORBIT | proc. | **Earthset**: the blue Earth over the grey lunar limb. **The first blue in the film.** | CARVED `HOME` (small, late) | Topline soars |
 | S73 | 255.99–257.68 | ORBIT | proc. | Earth rushes at camera; the dive begins. | CHOP `THROW DOWN` 256.40 · `THROW DOWN` 257.25 | |
 
@@ -162,11 +162,6 @@ with field lines · **INSCR** = Cormorant Garamond italic, small · **MONO** = J
 | S78 | 266.12–270.04 | INK | P39 | **The room**, from behind her chair: the blue RARE EARTH circle on her back rhymes with the planet we just left. The ticking build is the terminal scrolling, one line per tick; on the side monitor the ΔT map's totality band slides north onto the Halys. | MONO terminal (ROOM.md) | Ticks 266.1–269.8 |
 | S79 | 270.04–273.40 | INK | P40 | **On the final stark chord she spins the chair to camera**: her face is the stinger. Deadpan eye contact while the frozen chord rings. | — | Chord 270.04, freeze from 271.6 |
 | S80 | 273.40–276.95 | INK | P41 | Still holding our gaze, she types blind (keys 273.45, 274.05, 274.95); behind her the terminal prints `[main 585ec1a] fix(halys): schedule eclipse to end war (#585)`. | MONO | Key clicks from the sound design |
-| P42 | S35–S36 | REACTIONS, Lydians: a group of Lydian infantry in the shallows at dusk as the sky goes dark. One spins round staring everywhere in terror; one sinks to his knees raising both arms to the sky, palms up; one covers his eyes; one lets his spear fall. Reactions land on the kicks. | Lydian, armies | 110.58–115.6 | 5 |
-| P43 | S35–S36 | REACTIONS, Medes (the mirror): one prostrates with his forehead to the river stones; one clutches an amulet and prays; an archer lets his bow fall; one grabs his neighbour's arm. Reactions land on the kicks. | Mede, archer, armies | 110.58–115.6 | 5 |
-| P44 | S35–S36 | HORSES: a Lydian cavalryman's horse rears in panic while he fights to hold it; behind, a Median rider dismounts and calms his horse's head against his chest. | cavalry both sides | 110.58–115.6 | 5 |
-| P45 | S36 | FACES: tight close-ups, a Lydian and a Mede looking around wildly, eyes darting, breathing fast, then up; plus Alyattes and Cyaxares in shock. | heroes, kings | 112.31–117.5 | 5 |
-| P46 | S37 | FROZEN TABLEAU, camera orbit: everyone completely still like statues. At the centre the two duelists stopped mid-strike, faces turned up; around them men kneeling with raised arms, one prostrate, one pointing at the sky, one covering his eyes, a rider holding a rearing horse. The camera slowly orbits about 30°. | heroes, armies, cavalry | 117.53–125.5 | 8 |
 | S81 | 276.95–281.0 | INK | P41 | **The wink**, on the ting: her eyelid crosses her iris with the Moon's curved edge. Hold 0.6 s, cut to black, end card (video runs ~1.4 s past the audio in silence). | CARVED `HALYS` · `JADE WANG`; PLAQUE `NEXT TOTALITY · 2027-08-02 · NEAR LUXOR · 6M23S` | Ting 276.95; audio ends 279.60 |
 
 ---
@@ -219,6 +214,11 @@ Generate 2 takes of hero plates; keep the best.
 | P39 | S78 | Anime: from behind her chair at the monitors, typing; RARE EARTH circle on her back | Jade, ROOM | 266.12–270.1 | 4 |
 | P40 | S79 | Anime: she spins the chair to face camera, then holds a deadpan stare | Jade, ROOM | 268.3–273.4 | 5 |
 | P41 | S80–81 | Anime: close-up, deadpan stare, types without looking, then a mischievous smile and a wink | Jade, ROOM | 273.4–279.6 (use the sound-design master) | 6 |
+| P42 | S35–S36 | REACTIONS, Lydians: a group of Lydian infantry in the shallows at dusk as the sky goes dark. One spins round staring everywhere in terror; one sinks to his knees raising both arms to the sky, palms up; one covers his eyes; one lets his spear fall. Reactions land on the kicks. | Lydian, armies | 110.58–115.6 | 5 |
+| P43 | S35–S36 | REACTIONS, Medes (the mirror): one prostrates with his forehead to the river stones; one clutches an amulet and prays; an archer lets his bow fall; one grabs his neighbour's arm. Reactions land on the kicks. | Mede, archer, armies | 110.58–115.6 | 5 |
+| P44 | S35–S36 | HORSES: a Lydian cavalryman's horse rears in panic while he fights to hold it; behind, a Median rider dismounts and calms his horse's head against his chest. | cavalry both sides | 110.58–115.6 | 5 |
+| P45 | S36 | FACES: tight close-ups, a Lydian and a Mede looking around wildly, eyes darting, breathing fast, then up; plus Alyattes and Cyaxares in shock. | heroes, kings | 112.31–117.5 | 5 |
+| P46 | S37 | FROZEN TABLEAU, camera orbit: everyone completely still like statues. At the centre the two duelists stopped mid-strike, faces turned up; around them men kneeling with raised arms, one prostrate, one pointing at the sky, one covering his eyes, a rider holding a rearing horse. The camera slowly orbits about 30°. | heroes, armies, cavalry | 117.53–125.5 | 8 |
 
 Procedural (no plate): the sun and every eclipse state, Altdorfer sky, crescents, umbra, corona, particles and formations, eyes, relief map, birds,
 history-cascade graphics (Antikythera, Halley, Eddington, Artemis, Phobos), Earth, Moon, the pull-back, the terminal, all type and HUD.
@@ -227,3 +227,6 @@ history-cascade graphics (Antikythera, Halley, Eddington, Artemis, Phobos), Eart
 
 Glover quote wording and date · "earliest event … dated to the day" phrasing (RESEARCH §7) · Herodotus 1.74 translation · 17:25 first contact (RESEARCH §1.4)
 · Antikythera date · Halley 1715 map · Eddington 1919 · Concorde 001, 74 min · 2024 "31 million in the path" · Artemis II wording · Luxor 6 m 23 s · Phobos transit.
+
+
+Note: sung words may linger up to ~1.5 s past a cut (e.g., "chill" into S52, LOVE over the starship at 215.29); text never appears before its sung start.

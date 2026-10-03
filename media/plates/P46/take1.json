@@ -1,0 +1,69 @@
+{
+ "plate": "P46",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 285.5,
+ "est_cost_usd": 1.8496,
+ "duration_s": 8.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 117.53,
+   "dur": 8.0,
+   "file": "media/plates/P46/audio_song_0117.53_8.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 8,
+  "takes": 2,
+  "refs": [
+   "LYD",
+   "MED",
+   "LYD_CAV_H"
+  ],
+  "audio": {
+   "t0": 117.53,
+   "src": "song"
+  },
+  "t_song": [
+   117.53,
+   125.53
+  ],
+  "shots": "S37",
+  "sync": [
+   [
+    117.53,
+    "orbit starts"
+   ],
+   [
+    124.475,
+    "kick out (one-bar break)"
+   ]
+  ],
+  "prompt": "Frozen time during a total solar eclipse: a Baroque sculpture group of warriors on a riverbank, every figure completely motionless, like statues. At the centre the Lydian from reference image 1 (crested bronze helmet pushed up, braids, short beard, crimson tunic, bronze scale corselet, crimson lion shield) and the Mede from reference image 2 (red felt cap, black curly beard, long-sleeved ochre tunic, iron scale corselet, wicker shield, short sword on his RIGHT thigh) are stopped mid-strike, spears crossed, both faces turned up to the sky. Around them, frozen: two men kneeling with both arms raised to the sky, palms up (one Lydian, one Mede); a Mede prostrate with his forehead on the river stones; a Lydian pointing up at the sky, mouth open in a shout; a Mede covering his eyes with his forearm; and behind them a Lydian rider like reference image 3 holding his horse frozen on its hind legs in a rear. Nothing moves at all: no breathing, no cloth, no hair, no water. Only the camera moves: one slow, smooth orbit of about 30 degrees around the group from left to right over the 8 seconds, at chest height, every figure staying in frame. Readable dusk light of a total eclipse: dim, even twilight, an orange glow low along the horizon, every face and costume still clearly readable. No fog, no smoke. Photoreal live-action bullet-time, crisp, no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "notes": "S37 orbit plate (replaces P12 + depth): a frozen reaction tableau, ~30 degree orbit; clean depth matters.",
+  "avatar": true
+ },
+ "request": {
+  "prompt": "Frozen time during a total solar eclipse: a Baroque sculpture group of warriors on a riverbank, every figure completely motionless, like statues. At the centre the Lydian from reference image 1 (crested bronze helmet pushed up, braids, short beard, crimson tunic, bronze scale corselet, crimson lion shield) and the Mede from reference image 2 (red felt cap, black curly beard, long-sleeved ochre tunic, iron scale corselet, wicker shield, short sword on his RIGHT thigh) are stopped mid-strike, spears crossed, both faces turned up to the sky. Around them, frozen: two men kneeling with both arms raised to the sky, palms up (one Lydian, one Mede); a Mede prostrate with his forehead on the river stones; a Lydian pointing up at the sky, mouth open in a shout; a Mede covering his eyes with his forearm; and behind them a Lydian rider like reference image 3 holding his horse frozen on its hind legs in a rear. Nothing moves at all: no breathing, no cloth, no hair, no water. Only the camera moves: one slow, smooth orbit of about 30 degrees around the group from left to right over the 8 seconds, at chest height, every figure staying in frame. Readable dusk light of a total eclipse: dim, even twilight, an orange glow low along the horizon, every face and costume still clearly readable. No fog, no smoke. Photoreal live-action bullet-time, crisp, no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "duration": 8,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(582 KB)",
+   "data:image/jpeg;base64...(557 KB)",
+   "data:image/jpeg;base64...(520 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(255 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T02:49:14"
+}

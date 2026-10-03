@@ -15,7 +15,7 @@
 
 import { loadImage, loadJSON, pixels } from '../../assets.js';
 import { PLATES, plateTime, plateFrameIndex, plateMeta } from '../../plates.js';
-import { clamp, lerp, LRU, resample, sampleField, makeCanvas, kf, linear } from './util.js';
+import { clamp, lerp, sstep, LRU, resample, sampleField, makeCanvas, kf, linear, blur, blurFast } from './util.js';
 
 export const STANDINS = {
   a_duel: { img: '/media/lookdev/inputs/a_duel.jpg', depth: '/media/lookdev/analysis/a_duel/depth.png', matte: '/media/lookdev/analysis/a_duel/matte.png', faces: '/media/lookdev/analysis/a_duel/faces.json' },
@@ -166,6 +166,13 @@ async function mapField(id, kind, f, w, h) {         // one channel (or two for 
   _maps.set(key, out);
   return out;
 }
+// the flow, lightly smoothed (DIS flow is noisy in flat regions; noise would random-walk the seeds)
+const _sflow = new WeakMap();
+function smoothFlow(vf, ch) {
+  let c = _sflow.get(vf); if (!c) { c = {}; _sflow.set(vf, c); }
+  if (!c[ch]) c[ch] = blur(vf[ch], vf.w, vf.h, 1.2);
+  return c[ch];
+}
 // material map M_k (plate px at map resolution -> plate px of frame k0), composed from the plate's forward flow
 const _matCache = new LRU(8);
 async function composeMat(id, k0, k) {
@@ -181,13 +188,33 @@ async function composeMat(id, k0, k) {
   if (!M) M = ident();
   const dir = k > k0 ? 1 : -1;
   for (let j = start; j !== k; j += dir) {
-    // forward step j -> j+1: M_{j+1}(p) = M_j(p - v_j(p)); backward step j -> j-1: M_{j-1}(p) = M_j(p + v_{j-1}(p))
+    // step j -> j + dir. Forward: the point at p in frame j+1 came from p + b(p), b the backward flow (j+1 -> j), found
+    // from the forward flow v (j -> j+1) by fixed-point iteration b = -v(p + b) (sampling v at the destination would
+    // hand moving objects the background's motion and smear them). Backward (j -> j-1): the point at p in frame j-1
+    // went to p + v_{j-1}(p) in frame j, which is a direct lookup.
     const vf = await mapField(id, 'v', dir > 0 ? j : j - 1, 0, 0);
+    const fx = vf ? smoothFlow(vf, 'fx') : null, fy = vf ? smoothFlow(vf, 'fy') : null;
     const nx = new Float32Array(N), ny = new Float32Array(N);
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-      const i = y * w + x, vx = vf ? vf.fx[i] : 0, vy = vf ? vf.fy[i] : 0;
-      const sx = x - dir * vx, sy = y - dir * vy;
-      nx[i] = sampleField(M.mx, w, h, sx, sy); ny[i] = sampleField(M.my, w, h, sx, sy);
+      const i = y * w + x;
+      let ox = 0, oy = 0;
+      if (fx) {
+        if (dir > 0) {
+          let bx = -fx[i], by = -fy[i];
+          for (let it = 0; it < 3; it++) { const qx = x + bx, qy = y + by; bx = -sampleField(fx, w, h, qx, qy); by = -sampleField(fy, w, h, qx, qy); }
+          ox = bx; oy = by;
+        } else { ox = fx[i]; oy = fy[i]; }
+      }
+      nx[i] = sampleField(M.mx, w, h, x + ox, y + oy); ny[i] = sampleField(M.my, w, h, x + ox, y + oy);
+    }
+    // regularise: smooth the displacement field (rigid and smooth motion survive; the steep stretch that occlusions and
+    // disocclusions leave behind is healed), and let static regions relax back toward identity
+    const dx = new Float32Array(N), dy = new Float32Array(N);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const i = y * w + x; dx[i] = nx[i] - (x + .5) * s; dy[i] = ny[i] - (y + .5) * s; }
+    const sx2 = blurFast(dx, w, h, 10), sy2 = blurFast(dy, w, h, 10);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const i = y * w + x, sp = fx ? Math.hypot(fx[i], fy[i]) : 0, relax = 1 - .15 * (1 - sstep(.3, 1.5, sp));
+      nx[i] = (x + .5) * s + (.5 * dx[i] + .5 * sx2[i]) * relax; ny[i] = (y + .5) * s + (.5 * dy[i] + .5 * sy2[i]) * relax;
     }
     M = { mx: nx, my: ny };
   }

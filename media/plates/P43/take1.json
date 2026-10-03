@@ -1,0 +1,75 @@
+{
+ "plate": "P43",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 265.9,
+ "est_cost_usd": 1.156,
+ "duration_s": 5.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 110.58,
+   "dur": 5.0,
+   "file": "media/plates/P43/audio_song_0110.58_5.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 5,
+  "takes": 2,
+  "refs": [
+   "MED",
+   "MED_ARCH"
+  ],
+  "audio": {
+   "t0": 110.58,
+   "src": "song"
+  },
+  "t_song": [
+   110.58,
+   115.58
+  ],
+  "shots": "S35, S36",
+  "sync": [
+   [
+    111.89,
+    "SKY: the prostration (S35 cut)"
+   ],
+   [
+    111.435,
+    "kick: the amulet prayer"
+   ],
+   [
+    111.865,
+    "kick: the bow falls"
+   ],
+   [
+    112.305,
+    "kick: grabs his neighbour's arm"
+   ]
+  ],
+  "prompt": "Readable dusk light of a total eclipse: dim, even twilight, an orange glow low along the horizon, every face and costume still clearly readable. No fog, no smoke. In the shallows of a red-brown river, beside a low gravel bar, four Median soldiers stand a few metres apart, each clearly separate: three spearmen dressed like reference image 1 (soft red felt caps with ear flaps, black curly beards, long-sleeved ochre tunics, iron scale corselets, round wicker shields, short sword on the right thigh) and an archer dressed like reference image 2 (undyed felt hood, ochre tunic, sheepskin cloak, short composite bow). All stare up at the sky that has just gone dark, then react one after another, each on a drum hit of the reference audio: at 0.4 s the man on the far right drops to his knees on the gravel bar and prostrates himself, pressing his forehead down to the river stones, arms stretched forward; at 0.9 s the second man clutches a small amulet hanging on a cord at his chest with both hands and prays silently, eyes on the sky; at 1.3 s the archer lets his bow fall from his hand into the water; at 1.7 s the fourth man grabs his neighbour's arm in fear. Then they hold, trembling, to the end. Medium-wide shot, full figures, the group turned three-quarters toward frame left (the mirror of a matching shot of the Lydians), the far bank dark behind them. Camera static. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "notes": "Median mirror of P42: proskynesis, amulet prayer, the archer drops his bow, grabs his neighbour's arm.",
+  "avatar": true
+ },
+ "request": {
+  "prompt": "Readable dusk light of a total eclipse: dim, even twilight, an orange glow low along the horizon, every face and costume still clearly readable. No fog, no smoke. In the shallows of a red-brown river, beside a low gravel bar, four Median soldiers stand a few metres apart, each clearly separate: three spearmen dressed like reference image 1 (soft red felt caps with ear flaps, black curly beards, long-sleeved ochre tunics, iron scale corselets, round wicker shields, short sword on the right thigh) and an archer dressed like reference image 2 (undyed felt hood, ochre tunic, sheepskin cloak, short composite bow). All stare up at the sky that has just gone dark, then react one after another, each on a drum hit of the reference audio: at 0.4 s the man on the far right drops to his knees on the gravel bar and prostrates himself, pressing his forehead down to the river stones, arms stretched forward; at 0.9 s the second man clutches a small amulet hanging on a cord at his chest with both hands and prays silently, eyes on the sky; at 1.3 s the archer lets his bow fall from his hand into the water; at 1.7 s the fourth man grabs his neighbour's arm in fear. Then they hold, trembling, to the end. Medium-wide shot, full figures, the group turned three-quarters toward frame left (the mirror of a matching shot of the Lydians), the far bank dark behind them. Camera static. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(557 KB)",
+   "data:image/jpeg;base64...(710 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(161 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T02:48:54"
+}

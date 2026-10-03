@@ -70,7 +70,7 @@ async function reference(f, src, k, start, R, opts, build) {
       await advect(src.plate, prev.meta, xy, k - R, k);
       seeds = prev.seeds.map((s, i) => ({ id: s.id, age: s.age, x: xy[i * 2], y: xy[i * 2 + 1] }));
     }
-    const F = await sourceFields(src, k / opts.fps + 1e-4, opts.aw ?? 960, f.W / f.H, opts.analysis || {});
+    const F = await sourceFields(src, k / opts.fps + 1e-4, opts.aw ?? Math.round(960 * Math.max(f.W, f.H) / 1920), f.W / f.H, opts.analysis || {});
     const state = { nextId: seeds ? Math.max(1, ...seeds.map(s => s.id)) + 1 : 1 };
     const res = build(F, seeds, state);
     res.seeds = res.stream.map(L => ({ id: L.id, x: L.x0, y: L.y0, age: L.age ?? 0 })).sort((a, b) => b.age - a.age || a.id - b.id);

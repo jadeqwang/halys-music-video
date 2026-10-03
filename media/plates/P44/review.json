@@ -1,0 +1,40 @@
+{
+ "plate": "P44",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S35/S36 delivered: at dusk on the bank the Lydian rider's chestnut rears high on its hind legs (~0.9 s, right on the S35 'SKY' 111.455) while he grips the reins; behind, the Median rider stands at his bay's head holding it against his chest to calm it.",
+   "costume": "Crested helmet, crimson, ochre cloak, saddlecloth, no stirrups; Median hood and ochre tunic, topknot horse.",
+   "identity": "Consistent with the cavalry sheets.",
+   "artefacts": "The Mede is already dismounted at the start (no swing-down).",
+   "notes": "Rear lands +0.04 s on 111.455.",
+   "sync": [
+    {
+     "song_t": 111.455,
+     "event": "SKY: the horse rears (S35 cut)",
+     "expected_plate_t": 0.875,
+     "measured_plate_t": 0.92,
+     "offset_s": 0.045,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P44/take1.review.jpg",
+   "contact": "media/plates/P44/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T02:55:34"
+  }
+ },
+ "shots": "S35, S36",
+ "t_song": [
+  110.58,
+  115.58
+ ],
+ "audio_t0": 110.58,
+ "chosen": 1,
+ "chosen_why": "Only take; both horse beats read.",
+ "t_chosen": "2026-10-03T02:55:34"
+}

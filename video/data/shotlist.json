@@ -812,9 +812,14 @@
    "cues": [
     {
      "role": "plaque",
+     "t": null,
+     "text": "VICTOR GLOVER · ARTEMIS II · DURING TOTALITY · 2026"
+    },
+    {
+     "role": "plaque",
      "t": 110.58,
-     "text": "\"We just went sci-fi.\" — V. Glover, Artemis II, during totality, 6 Apr 2026",
-     "t_end": 113.5
+     "text": "\"We just went sci-fi.\"",
+     "t_end": 114.2
     },
     {
      "role": "plaque",
@@ -845,7 +850,7 @@
    ],
    "section": "7 · Drop 1, 110.58–153.83 (B64–88). Totality: CORONA, 60 fps.",
    "picture": "**The break, and the whole battlefield reacts.** The world comes back as light (master composition in field lines, corona blazing) and the armies ripple like a wave: spear ticks tilt and fall as men drop to their knees, others scatter. One chop-cut per word: HALO on the master, IN THE on a Lydian sinking to his knees arms raised (P42), SKY on a rearing horse (P44), SKY on a Mede prostrate (P43).",
-   "text": "CHOP on beats `HALO` 110.66 · `IN THE` 110.98 · `SKY` 111.45 · `SKY` 111.89. On the first HALO the O is eclipsed for 3–4 frames, leaving **HAL**. PLAQUE small, lower third 110.58–113.5: `\"We just went sci-fi.\" — V. Glover, Artemis II, during totality, 6 Apr 2026`",
+   "text": "CHOP on beats `HALO` 110.66 · `IN THE` 110.98 · `SKY` 111.45 · `SKY` 111.89. On the first HALO the O is eclipsed for 3–4 frames, leaving **HAL**. PLAQUE small, lower third 110.58–114.2, two lines: `\"We just went sci-fi.\"` / `VICTOR GLOVER · ARTEMIS II · DURING TOTALITY · 2026`",
    "sync": "Kick 110.575; type needs readable space, so keep the busiest action off the word block"
   },
   {
@@ -1262,7 +1267,7 @@
   {
    "id": "S52",
    "t0": 181.23,
-   "t1": 184.64,
+   "t1": 183.34,
    "world": "marble",
    "worlds": [
     "marble",
@@ -1295,7 +1300,7 @@
   },
   {
    "id": "S53",
-   "t0": 184.64,
+   "t0": 183.34,
    "t1": 187.65,
    "world": "marble",
    "worlds": [
@@ -1471,7 +1476,7 @@
   {
    "id": "S61",
    "t0": 208.7,
-   "t1": 211.88,
+   "t1": 211.44,
    "world": "gold",
    "worlds": [
     "gold"
@@ -1493,7 +1498,7 @@
   },
   {
    "id": "S62",
-   "t0": 211.88,
+   "t0": 211.44,
    "t1": 215.29,
    "world": "gold",
    "worlds": [
@@ -1510,7 +1515,7 @@
     }
    ],
    "section": "12 · Final chorus, 199.98–215.29 (B116–124). GOLD, big lyrics.",
-   "picture": "Beat returns: a soldier tosses his sword high; it spins up into the golden sky and slows at the apex.",
+   "picture": "On \"Home\" a soldier swings his arm back and, as the beat returns (211.88), tosses his sword high; it spins up into the golden sky and slows at the apex.",
    "text": "CARVED `HOME TO THE ONES YOU LOVE`",
    "sync": "Riser 212.3"
   },
@@ -1546,12 +1551,17 @@
     {
      "role": "carved",
      "t": null,
-     "text": "2ND–1ST C. BC · ANTIKYTHERA · A BRONZE COMPUTER PREDICTS ECLIPSES"
+     "text": "2ND–1ST C. BC · ANTIKYTHERA"
+    },
+    {
+     "role": "carved",
+     "t": null,
+     "text": "BRONZE GEARS PREDICT ECLIPSES"
     }
    ],
    "section": "13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.",
    "picture": "Bronze gear train; the saros dial is the ring.",
-   "text": "`2ND–1ST C. BC · ANTIKYTHERA · A BRONZE COMPUTER PREDICTS ECLIPSES`",
+   "text": "`2ND–1ST C. BC · ANTIKYTHERA` / `BRONZE GEARS PREDICT ECLIPSES`",
    "sync": ""
   },
   {
@@ -1569,12 +1579,17 @@
     {
      "role": "carved",
      "t": null,
-     "text": "1715 · LONDON · HALLEY MAPS THE MOON'S SHADOW"
+     "text": "1715 · LONDON"
+    },
+    {
+     "role": "carved",
+     "t": null,
+     "text": "HALLEY MAPS THE MOON'S SHADOW"
     }
    ],
    "section": "13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.",
    "picture": "Halley's eclipse map; the shadow oval crossing England is the ring.",
-   "text": "`1715 · LONDON · HALLEY MAPS THE MOON'S SHADOW`",
+   "text": "`1715 · LONDON` / `HALLEY MAPS THE MOON'S SHADOW`",
    "sync": ""
   },
   {
@@ -1592,12 +1607,17 @@
     {
      "role": "carved",
      "t": null,
-     "text": "1919 · PRÍNCIPE & SOBRAL · STARLIGHT BENDS. EINSTEIN WAS RIGHT."
+     "text": "1919 · PRÍNCIPE & SOBRAL"
+    },
+    {
+     "role": "carved",
+     "t": null,
+     "text": "LIGHT BENDS. EINSTEIN WAS RIGHT."
     }
    ],
    "section": "13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.",
    "picture": "A glass plate: displaced stars around the black Sun.",
-   "text": "`1919 · PRÍNCIPE & SOBRAL · STARLIGHT BENDS. EINSTEIN WAS RIGHT.`",
+   "text": "`1919 · PRÍNCIPE & SOBRAL` / `LIGHT BENDS. EINSTEIN WAS RIGHT.`",
    "sync": ""
   },
   {
@@ -1615,12 +1635,17 @@
     {
      "role": "carved",
      "t": null,
-     "text": "1973 · CONCORDE 001 · 74 MINUTES OF TOTALITY AT MACH 2"
+     "text": "1973 · CONCORDE 001"
+    },
+    {
+     "role": "carved",
+     "t": null,
+     "text": "74 MINUTES OF TOTALITY AT MACH 2"
     }
    ],
    "section": "13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.",
    "picture": "Concorde above the clouds, the eclipse through a round porthole.",
-   "text": "`1973 · CONCORDE 001 · 74 MINUTES OF TOTALITY AT MACH 2`",
+   "text": "`1973 · CONCORDE 001` / `74 MINUTES OF TOTALITY AT MACH 2`",
    "sync": ""
   },
   {
@@ -1638,12 +1663,17 @@
     {
      "role": "carved",
      "t": null,
-     "text": "2024 · USA · 31.6 MILLION LIVE IN THE PATH"
+     "text": "2024 · USA"
+    },
+    {
+     "role": "carved",
+     "t": null,
+     "text": "31.6 MILLION LIVE IN THE PATH"
     }
    ],
    "section": "13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.",
    "picture": "A crowd in eclipse glasses looking up, rhyming with the warriors at 102.21.",
-   "text": "`2024 · USA · 31.6 MILLION LIVE IN THE PATH`",
+   "text": "`2024 · USA` / `31.6 MILLION LIVE IN THE PATH`",
    "sync": ""
   },
   {
@@ -1661,12 +1691,17 @@
     {
      "role": "carved",
      "t": null,
-     "text": "2026 · ARTEMIS II · TOTALITY FROM DEEP SPACE"
+     "text": "2026 · ARTEMIS II"
+    },
+    {
+     "role": "carved",
+     "t": null,
+     "text": "TOTALITY FROM DEEP SPACE"
     }
    ],
    "section": "13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.",
    "picture": "The corona around the Moon, seen from Orion.",
-   "text": "`2026 · ARTEMIS II · TOTALITY FROM DEEP SPACE`",
+   "text": "`2026 · ARTEMIS II` / `TOTALITY FROM DEEP SPACE`",
    "sync": ""
   },
   {
@@ -1684,12 +1719,17 @@
     {
      "role": "carved",
      "t": null,
-     "text": "2027 · NEAR LUXOR · NEXT: 6 MIN 23 S"
+     "text": "2027 · NEAR LUXOR"
+    },
+    {
+     "role": "carved",
+     "t": null,
+     "text": "NEXT: 6 MIN 23 S"
     }
    ],
    "section": "13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.",
    "picture": "Looking straight up between Karnak's columns at a black Sun almost overhead (82° up at midday): darkness at noon, the opposite of 585 BC's sunset.",
-   "text": "`2027 · NEAR LUXOR · NEXT: 6 MIN 23 S`",
+   "text": "`2027 · NEAR LUXOR` / `NEXT: 6 MIN 23 S`",
    "sync": ""
   },
   {
@@ -1707,12 +1747,17 @@
     {
      "role": "carved",
      "t": null,
-     "text": "MARS · PHOBOS · ECLIPSES ON OTHER WORLDS"
+     "text": "MARS · PHOBOS"
+    },
+    {
+     "role": "carved",
+     "t": null,
+     "text": "ECLIPSES ON OTHER WORLDS"
     }
    ],
    "section": "13 · Drop 2, 215.29–257.68 (B125–149). ORBIT: wordless counter-melody; history cascades with the ring locked centre.",
    "picture": "Phobos, a lumpy dark potato, crossing the Sun over a Martian horizon.",
-   "text": "`MARS · PHOBOS · ECLIPSES ON OTHER WORLDS`",
+   "text": "`MARS · PHOBOS` / `ECLIPSES ON OTHER WORLDS`",
    "sync": ""
   },
   {

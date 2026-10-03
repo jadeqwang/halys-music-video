@@ -135,13 +135,13 @@
    "reviewed": "2026-10-03T02:03:23"
   }
  },
- "shots": "S17, S19, S27, S36, S37",
+ "shots": "S17, S19, S27 (S36/S37 moved to P42-P46 in the 02:43 shot list)",
  "t_song": [
   44.73,
   52.73
  ],
  "audio_t0": 44.73,
  "chosen": 1,
- "chosen_why": "Clean, symmetric, equal-size exchanges with sharp stops (the first exchange, S17, is clean) and the best geometry for the S37 depth orbit; take 2 has nicer side light but its first exchange is a motion-blurred shield across the lens and the figures are unequal.",
- "t_chosen": "2026-10-03T02:23:03"
+ "chosen_why": "Clean, symmetric, equal-size exchanges with sharp stops; its first exchange (S17: the thrust turned by the lion shield) is clean, whereas take 2's is a motion-blurred shield across the lens and its figures are unequal. Take 2 has nicer side light (alternate for S19/S27). (S37's orbit now uses P46.)",
+ "t_chosen": "2026-10-03T02:45:21"
 }

@@ -1,0 +1,73 @@
+{
+ "plate": "P42",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 236.2,
+ "est_cost_usd": 1.156,
+ "duration_s": 5.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 110.58,
+   "dur": 5.0,
+   "file": "media/plates/P42/audio_song_0110.58_5.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 5,
+  "takes": 2,
+  "refs": [
+   "LYD"
+  ],
+  "audio": {
+   "t0": 110.58,
+   "src": "song"
+  },
+  "t_song": [
+   110.58,
+   115.58
+  ],
+  "shots": "S35, S36",
+  "sync": [
+   [
+    110.98,
+    "IN THE: the kneeling man's arms go up (S35 cut)"
+   ],
+   [
+    111.435,
+    "kick: the spin round"
+   ],
+   [
+    111.865,
+    "kick: eyes covered"
+   ],
+   [
+    112.305,
+    "kick: the spear drops"
+   ]
+  ],
+  "prompt": "Readable dusk light of a total eclipse: dim, even twilight, an orange glow low along the horizon, every face and costume still clearly readable. No fog, no smoke. In the knee-deep red-brown shallows of a river, four Lydian infantrymen dressed like reference image 1 (crested bronze helmets pushed up so the faces show, long braids, crimson tunics, bronze scale corselets, round crimson shields with a black lion, spears) stand a few metres apart, each clearly separate, staring up at the sky that has just gone dark. They react in shock and prayer one after another, each on a drum hit of the reference audio: at 0.4 s the second man from the left sinks to his knees in the water and raises both arms high to the sky, palms open and turned up, praying; at 0.9 s the man on the far left spins round, staring wildly in every direction in terror; at 1.3 s the third man throws his forearm over his eyes and turns his face away; at 1.7 s the spear slips from the fourth man's hand and splashes into the water as he stares up, mouth open. Then they hold these poses, trembling, to the end. Medium-wide shot, full figures, the group turned three-quarters toward frame right, the far bank dark behind them. Camera static. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "notes": "Lydian reactions: kneeling Greek prayer (arms up, palms up), spin in terror, eyes covered, spear dropped.",
+  "avatar": true
+ },
+ "request": {
+  "prompt": "Readable dusk light of a total eclipse: dim, even twilight, an orange glow low along the horizon, every face and costume still clearly readable. No fog, no smoke. In the knee-deep red-brown shallows of a river, four Lydian infantrymen dressed like reference image 1 (crested bronze helmets pushed up so the faces show, long braids, crimson tunics, bronze scale corselets, round crimson shields with a black lion, spears) stand a few metres apart, each clearly separate, staring up at the sky that has just gone dark. They react in shock and prayer one after another, each on a drum hit of the reference audio: at 0.4 s the second man from the left sinks to his knees in the water and raises both arms high to the sky, palms open and turned up, praying; at 0.9 s the man on the far left spins round, staring wildly in every direction in terror; at 1.3 s the third man throws his forearm over his eyes and turns his face away; at 1.7 s the spear slips from the fourth man's hand and splashes into the water as he stares up, mouth open. Then they hold these poses, trembling, to the end. Medium-wide shot, full figures, the group turned three-quarters toward frame right, the far bank dark behind them. Camera static. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(582 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(161 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T02:48:24"
+}

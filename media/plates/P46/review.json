@@ -1,0 +1,79 @@
+{
+ "plate": "P46",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "Frozen reaction tableau on a stony bank at dusk with a visible ~25-30 degree orbit: a Lydian kneeling in prayer, a kneeling Mede with a spear, the Lydian mid-thrust, a prostrate Mede, a Lydian rider on a rearing horse, a Lydian raising an arm.",
+   "costume": "Correct.",
+   "identity": "Consistent.",
+   "artefacts": "Reactions skew Lydian; the duel at the centre does not read as two duelists faces-up; a low sun appears on the horizon at the end.",
+   "notes": "Alternate (largest orbit).",
+   "sync": [
+    {
+     "song_t": 117.53,
+     "event": "orbit starts",
+     "expected_plate_t": 0.0,
+     "measured_plate_t": 0.542,
+     "offset_s": 0.542,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 124.475,
+     "event": "kick out (one-bar break)",
+     "expected_plate_t": 6.945,
+     "measured_plate_t": 6.917,
+     "offset_s": -0.028,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P46/take1.review.jpg",
+   "contact": "media/plates/P46/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.8496,
+   "job": null,
+   "reviewed": "2026-10-03T02:55:34"
+  },
+  "2": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "Frozen tableau: a Mede kneeling arms up, the duelists with crossed spears at the centre, a Lydian rider on a rearing horse, a prostrate Mede, a Mede covering his eyes; orbit ~10-15 degrees.",
+   "costume": "Correct.",
+   "identity": "Consistent.",
+   "artefacts": "Reactions skew Median (Lydian kneeler and pointer missing); a large bright black-sun corona is drawn at the top centre.",
+   "notes": "Alternate (best match of the listed elements).",
+   "sync": [
+    {
+     "song_t": 117.53,
+     "event": "orbit starts",
+     "expected_plate_t": 0.0,
+     "measured_plate_t": 0.083,
+     "offset_s": 0.083,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    },
+    {
+     "song_t": 124.475,
+     "event": "kick out (one-bar break)",
+     "expected_plate_t": 6.945,
+     "measured_plate_t": 7.25,
+     "offset_s": 0.305,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P46/take2.review.jpg",
+   "contact": "media/plates/P46/take2.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.8496,
+   "job": null,
+   "reviewed": "2026-10-03T02:55:34"
+  }
+ },
+ "shots": "S37",
+ "t_song": [
+  117.53,
+  125.53
+ ],
+ "audio_t0": 117.53
+}

@@ -1,0 +1,62 @@
+{
+ "plate": "P44",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 178.6,
+ "est_cost_usd": 1.156,
+ "duration_s": 5.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 110.58,
+   "dur": 5.0,
+   "file": "media/plates/P44/audio_song_0110.58_5.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 5,
+  "refs": [
+   "LYD_CAV_H",
+   "MED_CAV_H"
+  ],
+  "audio": {
+   "t0": 110.58,
+   "src": "song"
+  },
+  "t_song": [
+   110.58,
+   115.58
+  ],
+  "shots": "S35, S36",
+  "sync": [
+   [
+    111.455,
+    "SKY: the horse rears (S35 cut)"
+   ]
+  ],
+  "prompt": "Readable dusk light of a total eclipse: dim, even twilight, an orange glow low along the horizon, every face and costume still clearly readable. No fog, no smoke. Medium-wide shot on a riverbank. In the foreground a Lydian cavalryman like the rider in reference image 1 (open-faced crested bronze helmet, crimson tunic, bronze scale corselet, ochre cloak) sits bareback on a chestnut horse with a crimson and ochre saddlecloth and bronze bridle fittings, NO stirrups: at 0.4 s the horse rears up high on its hind legs in panic, front hooves pawing the air, eyes wide, and the rider leans forward gripping the mane and reins, fighting to hold it; it drops back down and rears again at 2.6 s. Behind them, clearly visible, a Median rider like reference image 2 (red felt hood, ochre tunic, bay horse with a topknot, cropped upright mane and patterned saddlecloth, no stirrups) swings down from his horse at 1.0 s and, standing at its head, pulls the horse's head gently against his chest, stroking its face to calm it. Manes and tails fly. Correct horse anatomy, four legs each. Camera static. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "notes": "Horses: the Lydian rearing-horse beat and its Median mirror (RESEARCH 3.5/3.7).",
+  "avatar": true
+ },
+ "request": {
+  "prompt": "Readable dusk light of a total eclipse: dim, even twilight, an orange glow low along the horizon, every face and costume still clearly readable. No fog, no smoke. Medium-wide shot on a riverbank. In the foreground a Lydian cavalryman like the rider in reference image 1 (open-faced crested bronze helmet, crimson tunic, bronze scale corselet, ochre cloak) sits bareback on a chestnut horse with a crimson and ochre saddlecloth and bronze bridle fittings, NO stirrups: at 0.4 s the horse rears up high on its hind legs in panic, front hooves pawing the air, eyes wide, and the rider leans forward gripping the mane and reins, fighting to hold it; it drops back down and rears again at 2.6 s. Behind them, clearly visible, a Median rider like reference image 2 (red felt hood, ochre tunic, bay horse with a topknot, cropped upright mane and patterned saddlecloth, no stirrups) swings down from his horse at 1.0 s and, standing at its head, pulls the horse's head gently against his chest, stroking its face to calm it. Manes and tails fly. Correct horse anatomy, four legs each. Camera static. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(520 KB)",
+   "data:image/jpeg;base64...(329 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(161 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T02:47:26"
+}

@@ -13,7 +13,7 @@
 
 import { lineGL, lin } from './gpu.js';
 import { sourceFields, resolve } from './source.js';
-import { TRACE_DEFAULTS, prepFields, traceLines, decorate, contourLines, armyTicks, liftDepth } from './trace.js';
+import { TRACE_DEFAULTS, prepFields, traceLines, decorate, contourLines, armyTicks, tickLines, liftDepth } from './trace.js';
 import { coronaLines, skyField } from './corona.js';
 import { videoLines } from './temporal.js';
 import { samp } from './analysis.js';
@@ -33,7 +33,8 @@ const colorsOf = p => ({ pearl: lin(p.pearl), orange: lin(p.orange), red: lin(p.
 const LINES = new LRU(24);            // CPU line sets of still plates (by key)
 const MESHES = new Map();             // GPU meshes (by key), trimmed by hand so buffers are freed
 const MESH_MAX = 18;
-const LOG = new URLSearchParams(location.search).has('linelog') || true;
+const LOG = true;                                 // build logs (page console, render.mjs --verbose)
+const PROF = () => !!globalThis.LINEPROF;          // per-frame GPU profile (forces syncs: debugging only)
 function meshCached(gl, key, build) {
   if (MESHES.has(key)) { const m = MESHES.get(key); MESHES.delete(key); MESHES.set(key, m); return m; }
   const m = gl.mesh(build());
@@ -70,10 +71,8 @@ export function project(u, x, y, d) {
 // opts.skyField: false | skyField opts; opts.aw: analysis width (default 960); opts.analysis: analyze() options
 const cfgKey = opts => stable({ t: opts.trace, c: opts.corona, s: opts.skyField, a: opts.analysis, aw: opts.aw });
 export async function plateLines(f, src, opts = {}, tp = opts.tp ?? 0) {
-  const W = f.W, H = f.H, aspect = W / H, aw = opts.aw ?? 960;
-  if (LOG) console.log('[line] fields ' + (src.standin || src.plate));
+  const W = f.W, H = f.H, aspect = W / H, aw = opts.aw ?? Math.round(960 * Math.max(W, H) / 1920);
   const F = await sourceFields(src, tp, aw, aspect, opts.analysis || {});
-  if (LOG) console.log('[line] fields ok ' + F.ms);
   const key = 'P|' + F.key + '|' + W + 'x' + H + '|' + cfgKey(opts);
   let L = LINES.get(key);
   if (!L) { const t0 = performance.now(); L = buildPlate(F, opts, W, H); L.ms = Math.round(performance.now() - t0); L.key = key; LINES.set(key, L); if (LOG) console.log(`[line] build ${F.id} ${L.ms} ms`, JSON.stringify(L.counts), 'analysis', F.ms); }
@@ -82,12 +81,13 @@ export async function plateLines(f, src, opts = {}, tp = opts.tp ?? 0) {
 export function buildPlate(F, opts, W, H, seeds = null, state = null) {
   const S = W / F.aw;
   const c = { ...TRACE_DEFAULTS, ...(opts.trace || {}), S };
-  const T0 = performance.now(), lg = m => LOG && console.log('[line] ' + m + ' ' + Math.round(performance.now() - T0));
+  const T0 = performance.now(), lg = m => PROF() && console.log('[line] ' + m + ' ' + Math.round(performance.now() - T0));
   const f = prepFields(F, c); lg('prep');
   f.Db = liftDepth(F, c); lg('lift');
   const stream = c.stream === false ? [] : decorate(F, f, traceLines(F, f, c, seeds, state), c); lg('stream ' + stream.length);
   const cont = contourLines(F, f, c); lg('contours ' + cont.length);
-  const ticks = armyTicks(F, f, c); lg('ticks');
+  const tickDesc = armyTicks(F, f, c); lg('ticks');
+  const ticks = tickLines(tickDesc);
   const vis = c.sky ? (x, y) => x >= 0 && y >= 0 && x < F.aw - 1 && y < F.ah - 1 && samp(F, f.sky, x, y) > .5 : null;
   let cor = [], sky = [];
   if (f.sun && opts.corona !== false) cor = coronaLines(f.sun, { ...(opts.corona || {}), scale: S, visible: vis });
@@ -103,7 +103,7 @@ export function buildPlate(F, opts, W, H, seeds = null, state = null) {
   }
   const lines = [...stream, ...cont, ...ticks, ...cor, ...sky];
   let nv = 0; for (const l of lines) nv += l.n;
-  return { lines, stream, meta: { S, off: [0, 0], aw: F.aw, ah: F.ah, sun: f.sun, pivot, kind: F.kind, id: F.id, frame: F.frame }, counts: { stream: stream.length, contour: cont.length, ticks: ticks.length / 2, corona: cor.length, sky: sky.length, verts: nv } };
+  return { lines, stream, tickDesc, noTicks: [...stream, ...cont, ...cor, ...sky], F, f, meta: { S, off: [0, 0], aw: F.aw, ah: F.ah, sun: f.sun, pivot, kind: F.kind, id: F.id, frame: F.frame }, counts: { stream: stream.length, contour: cont.length, ticks: tickDesc.length, corona: cor.length, sky: sky.length, verts: nv } };
 }
 
 // the corona alone as a static mesh in sun units (centre 0, radius 1), placed per frame with ringU(cx, cy, R):
@@ -141,22 +141,39 @@ export async function drawLines(f, opts = {}) {
   };
   const layers = [], tmp = [];
   let sunS = null, meta = null, plateU = null;
-  if (opts.src) {
-    const r = resolve(opts.src);
-    let mesh;
-    if (r.kind === 'plate' && r.n > 1 && opts.freeze == null && opts.temporal !== false) {
-      const V = await videoLines(f, opts.src, opts.tp ?? 0, { ...opts, cfgKey: cfgKey(opts) }, (F, seeds, state) => buildPlate(F, opts, W, H, seeds, state));
-      meta = V.meta; mesh = gl.mesh(V.lines, { dynamic: true }); tmp.push(mesh);
+  // plate layers: opts.src (one, full frame) or opts.plates = [{ src, rect: [x, y, w, h] (frame fractions), tp, freeze,
+  // trace, corona, skyField, analysis, cam, tickFx, ... }] (diptychs, split screens); per-plate keys override opts
+  const plates = opts.plates || (opts.src ? [opts] : []);
+  for (const pl of plates) {
+    const po = pl === opts ? opts : { ...opts, ...pl, plates: undefined, layers: undefined };
+    const rect = po.rect || [0, 0, 1, 1], RW = Math.round(rect[2] * W), RH = Math.round(rect[3] * H);
+    const fv = { W: RW, H: RH, rect };
+    const r = resolve(po.src), extra = [...(po.plateExtra || [])];
+    let mesh, P = null;
+    if (r.kind === 'plate' && r.n > 1 && po.freeze == null && po.temporal !== false) {
+      const V = await videoLines(fv, po.src, po.tp ?? 0, { ...po, cfgKey: cfgKey(po) }, (F, seeds, state) => buildPlate(F, po, RW, RH, seeds, state));
+      meta = { ...V.meta }; mesh = gl.mesh(V.lines, { dynamic: true }); tmp.push(mesh);
     } else {
-      const P = await plateLines(f, opts.src, opts, opts.freeze ?? opts.tp ?? 0);
-      meta = P.meta; mesh = meshCached(gl, P.key, () => P.lines);
+      P = await plateLines(fv, po.src, po, po.freeze ?? po.tp ?? 0);
+      meta = { ...P.meta };
+      if (po.tickFx && P.tickDesc.length) {        // spear ticks animated per frame (waves, kneeling, scattering)
+        mesh = meshCached(gl, P.key + '|nt', () => P.noTicks);
+        const tm = gl.mesh(tickLines(P.tickDesc, po.tickFx), { dynamic: true }); tmp.push(tm);
+        extra.push(tm);
+      } else mesh = meshCached(gl, P.key, () => P.lines);
     }
-    plateU = { ...camUniforms(W, H, meta, opts.cam || {}) };
-    if (meta.sun) { const p = project(plateU, meta.sun.x, meta.sun.y, -1); sunS = [p[0], p[1], meta.sun.r * meta.S * plateU.uOver * (plateU.uCam[0] / plateU.uCam[0])]; }
-    const pc = opts.pushCenter || (sunS ? [sunS[0], sunS[1]] : [W / 2, H / 2]);
-    plateU.uPush = [pc[0], pc[1], (opts.kickPush ?? 26) * s1080 * kick + (opts.push || 0) * s1080, (opts.pushFall ?? 500) * s1080];
-    if (opts.reveal) { plateU.uReveal = [opts.reveal.x, opts.reveal.y, opts.reveal.r, opts.reveal.ramp ?? 60 * s1080]; plateU.uReveal2 = [opts.reveal.boost || 0, opts.reveal.ramp ?? 60 * s1080]; }
-    layers.push({ meshes: [mesh, ...(opts.plateExtra || [])], u: { ...base, ...plateU, ...(opts.plateU || {}) } });
+    meta.off = [rect[0] * W, rect[1] * H];
+    const cam = { ...(po.cam || {}) };
+    if (!cam.center) cam.center = [(rect[0] + rect[2] / 2) * W, (rect[1] + rect[3] / 2) * H];
+    const u = { ...camUniforms(W, H, meta, cam) };
+    let sun = null;
+    if (meta.sun) { const p = project(u, meta.sun.x, meta.sun.y, -1); sun = [p[0], p[1], meta.sun.r * meta.S * u.uOver]; }
+    const pc = po.pushCenter || (sun ? [sun[0], sun[1]] : [W / 2, H / 2]);
+    u.uPush = [pc[0], pc[1], (po.kickPush ?? 26) * s1080 * kick + (po.push || 0) * s1080, (po.pushFall ?? 500) * s1080];
+    if (po.reveal) { u.uReveal = [po.reveal.x, po.reveal.y, po.reveal.r, po.reveal.ramp ?? 60 * s1080]; u.uReveal2 = [po.reveal.boost || 0, po.reveal.ramp ?? 60 * s1080]; }
+    layers.push({ meshes: [mesh, ...extra], u: { ...base, ...u, ...(po.plateU || {}) } });
+    if (!sunS && sun) sunS = sun;
+    if (!plateU) plateU = u;
   }
   for (const Ly of opts.layers || []) {
     if (!Ly) continue;
@@ -168,7 +185,7 @@ export async function drawLines(f, opts = {}) {
   let disk = null;
   if (opts.disk === 'sun' || (opts.disk == null && sunS && opts.corona !== false)) disk = sunS ? { x: sunS[0], y: sunS[1], r: sunS[2] } : null;
   else if (opts.disk) disk = opts.disk;
-  const tR = performance.now(); gl.profile = LOG;
+  const tR = performance.now(); gl.profile = PROF();
   const canvas = gl.render(layers, {
     colors: colorsOf({ ...PALETTE, ...(opts.palette || {}) }), glow: look.glow, exposure: look.exposure, vignette: look.vignette, fade: look.fade,
     invert: !!opts.invert, disk, ring: opts.ring || null, flash: opts.flash || 0, soft: look.soft || 0,
@@ -178,7 +195,7 @@ export async function drawLines(f, opts = {}) {
   const g = f.g;
   g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
   g.drawImage(canvas, 0, 0, W, H); g.restore();
-  if (LOG) { g.getImageData(0, 0, 1, 1); console.log('[line] frame', JSON.stringify({ pre: Math.round(tR - t0), ...gl.prof, compose: Math.round(performance.now() - t2), total: Math.round(performance.now() - t0) })); }
+  if (PROF()) { g.getImageData(0, 0, 1, 1); console.log('[line] frame', JSON.stringify({ pre: Math.round(tR - t0), ...gl.prof, compose: Math.round(performance.now() - t2), total: Math.round(performance.now() - t0) })); }
   return { sun: sunS, plate: meta, u: plateU, ms: Math.round(performance.now() - t0) };
 }
 

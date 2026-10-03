@@ -66,9 +66,31 @@ function polyMask(F, poly, feather = 2) {
   return blur(m, aw, ah, feather);
 }
 
+// ---------------------------------------------------------------- source uv -> analysis-window uv
+// Every geometric trace option (sky.horizonY/below, sun, river, riverFlow, armyMask, pool, calm, flowBias) is given in
+// SOURCE uv (the plate's own frame), so it stays put when a shot re-frames the plate (zoom, 4:5, a diptych half).
+export function winMap(F) {
+  if (!F.win || !F.srcW) return { x: u => u, y: v => v, sx: 1, sy: 1 };
+  const [x0, y0, w, h] = F.win, sx = F.srcW / w, sy = F.srcH / h, m = F.mirror;
+  return { x: u => { const a = (u * F.srcW - x0) / w; return m ? 1 - a : a; }, y: v => (v * F.srcH - y0) / h, sx, sy };
+}
+function mapCfg(F, cfg) {
+  const M = winMap(F), P = pts => pts.map(([u, v]) => [M.x(u), M.y(v)]), E = e => ({ ...e, x: M.x(e.x), y: M.y(e.y), rx: e.rx * M.sx, ry: e.ry * M.sy });
+  const c = { ...cfg };
+  if (cfg.sky) c.sky = { ...cfg.sky, horizonY: cfg.sky.horizonY != null ? M.y(cfg.sky.horizonY) : null, below: M.y(cfg.sky.below ?? .5) };
+  if (cfg.sun) c.sun = { ...cfg.sun, x: M.x(cfg.sun.x), y: M.y(cfg.sun.y), r: cfg.sun.r * M.sx };
+  if (cfg.river) c.river = P(cfg.river);
+  if (cfg.riverFlow) c.riverFlow = { ...cfg.riverFlow, x: M.x(cfg.riverFlow.x), y: M.y(cfg.riverFlow.y) };
+  if (cfg.armyMask) c.armyMask = cfg.armyMask.map(P);
+  if (cfg.pool) c.pool = cfg.pool.map(E);
+  if (cfg.calm) c.calm = cfg.calm.map(E);
+  if (cfg.flowBias) c.flowBias = cfg.flowBias.map(E);
+  return c;
+}
+
 // ---------------------------------------------------------------- fields that shape the lines
-export function prepFields(F, cfg) {
-  const { aw, ah, N } = F;
+export function prepFields(F, cfg0) {
+  const { aw, ah, N } = F, cfg = mapCfg(F, cfg0);
   const sky = cfg.sky ? skyMask(F, cfg.sky) : new Float32Array(N);
   const M = F.M ? blur(F.M, aw, ah, .7) : new Float32Array(N);
   let subj = new Float32Array(N);
@@ -166,8 +188,10 @@ function dirAt(F, f, x, y, out) {
 export function traceLines(F, f, cfg, seeds = null, state = null) {
   const { aw, ah } = F, cell = cfg.dsepMin, gw = Math.ceil(aw / cell) + 1, gh = Math.ceil(ah / cell) + 1;
   const head = new Int32Array(gw * gh).fill(-1);
-  let cap = 1 << 16, PX = new Float32Array(cap), PY = new Float32Array(cap), PL = new Int32Array(cap), PI = new Int32Array(cap), NX = new Int32Array(cap), np = 0;
-  const grow2 = () => { cap *= 2; const a = new Float32Array(cap); a.set(PX); PX = a; const b = new Float32Array(cap); b.set(PY); PY = b; const c = new Int32Array(cap); c.set(PL); PL = c; const d = new Int32Array(cap); d.set(PI); PI = d; const e = new Int32Array(cap); e.set(NX); NX = e; };
+  // the spatial grid: per point x, y, line, index, next-in-cell and its CELL (stored: recomputing it from the float32
+  // copy of x, y can pick the neighbouring cell at a boundary and corrupt the lists)
+  let cap = 1 << 16, PX = new Float32Array(cap), PY = new Float32Array(cap), PL = new Int32Array(cap), PI = new Int32Array(cap), NX = new Int32Array(cap), PC = new Int32Array(cap), np = 0;
+  const grow2 = () => { cap *= 2; const re = (A, T) => { const n = new T(cap); n.set(A); return n; }; PX = re(PX, Float32Array); PY = re(PY, Float32Array); PL = re(PL, Int32Array); PI = re(PI, Int32Array); NX = re(NX, Int32Array); PC = re(PC, Int32Array); };
   const lines = [], v = [0, 0], v2 = [0, 0];
   const sepAt = (x, y) => samp(F, f.sep, x, y), okAt = (x, y) => samp(F, f.ok, x, y) > .5;
   const D = F.D, sun = f.sun;
@@ -179,8 +203,7 @@ export function traceLines(F, f, cfg, seeds = null, state = null) {
     }
     return false;
   };
-  let nanHits = 0;
-  const insert = (x, y, lid, idx) => { if (!(x >= 0 && y >= 0 && x < aw && y < ah)) { if (nanHits++ < 3) console.log('[line] bad insert', x, y, lid, idx); return; } if (np >= cap) grow2(); const c = Math.floor(y / cell) * gw + Math.floor(x / cell); PX[np] = x; PY[np] = y; PL[np] = lid; PI[np] = idx; NX[np] = head[c]; head[c] = np; np++; };
+  const insert = (x, y, lid, idx) => { if (np >= cap) grow2(); const c = Math.floor(y / cell) * gw + Math.floor(x / cell); PX[np] = x; PY[np] = y; PL[np] = lid; PI[np] = idx; PC[np] = c; NX[np] = head[c]; head[c] = np; np++; };
   let nextId = state ? state.nextId : 1;
   const maxLines = cfg.maxLines ?? 12000;
   const grow = (x0, y0, id) => {
@@ -216,7 +239,7 @@ export function traceLines(F, f, cfg, seeds = null, state = null) {
     }
     const n = 1 + (branches[0].length + branches[1].length) / 2;
     if (n * cfg.step < cfg.minLen) {
-      for (let p = np - 1; p >= start; p--) { const c = Math.floor(PY[p] / cell) * gw + Math.floor(PX[p] / cell); head[c] = NX[p]; }
+      for (let p = np - 1; p >= start; p--) head[PC[p]] = NX[p];
       np = start;
       return null;
     }
@@ -341,14 +364,16 @@ export function contourLines(F, f, cfg) {
   return out;
 }
 
-// crowds: each figure a crisp spear tick with a bright tip, at the plate's figure positions
+// crowds: each figure a crisp spear tick with a bright tip, at the plate's figure positions (local brightness peaks
+// inside the army mask). armyTicks returns DESCRIPTORS ({x, y, ex, ey, len, near, b, bt, w, wt, o, ot, d, ph}, analysis
+// px); tickLines(desc, fx) turns them into lines, optionally animated per tick: fx(desc, i) -> {dx, dy, lean, lenK, bK}.
 export function armyTicks(F, f, cfg) {
   if (!f.army) return [];
   const { aw, ah } = F, S = cfg.S, Lb = blur(F.L, aw, ah, 1.4), out = [], taken = new Uint8Array(aw * ah);
   const cand = [];
   for (let y = 2; y < ah - 2; y++) for (let x = 2; x < aw - 2; x++) {
     const i = y * aw + x; if (f.army[i] < .35) continue;
-    const c = F.L[i] - Lb[i]; if (c < .02) continue;          // bright peaks: helmets, spear points, faces catching light
+    const c = F.L[i] - Lb[i]; if (c < .02) continue;
     let mx = true; for (let j = -1; j <= 1 && mx; j++) for (let k = -1; k <= 1; k++) if ((j || k) && F.L[i + j * aw + k] - Lb[i + j * aw + k] > c) { mx = false; break; }
     if (mx) cand.push([c, x, y]);
   }
@@ -358,15 +383,21 @@ export function armyTicks(F, f, cfg) {
     const dep = F.D ? F.D[i] : .5, near = sstep(.05, .5, dep), rad = Math.round(lerp(cfg.tickMin, cfg.tickMin * 2.5, near));
     for (let j = -rad; j <= rad; j++) for (let k = -rad; k <= rad; k++) { const q = (y + j) * aw + x + k; if (q >= 0 && q < taken.length) taken[q] = 1; }
     const len = lerp(cfg.tick[0], cfg.tick[1], near) / S, lean = (hash3(x, y, cfg.seed) - .5) * .14 + (cfg.tickLean || 0);
-    const ex = Math.sin(lean) * len, ey = -Math.cos(lean) * len;
-    const tone = clamp(F.T[i] * 1.3), red = F.R[i] - Math.max(F.G[i], F.B[i]) > .16 ? .55 : 0, bb = (.55 + .5 * tone) * (cfg.tickGain ?? 1);
-    const dd = f.Db ? f.Db[i] : .5, ph = hash3(x, y, cfg.seed + 5) * TAU;
-    const mkL = (pts, b, w, flags, o) => {
-      const n = pts.length, xy = new Float32Array(n * 2); pts.forEach((p, k) => { xy[k * 2] = p[0]; xy[k * 2 + 1] = p[1]; });
-      out.push({ xy, n, b: new Float32Array(n).fill(b), o: new Float32Array(n).fill(o), d: new Float32Array(n).fill(dd), s: new Float32Array(n), w: new Float32Array(n).fill(w), len: 1, dir: 1, phase: ph, spd: 2 + 3 * hash3(x, y, 6), flags, id: 0 });
-    };
-    mkL([[x - ex * .35, y - ey * .35], [x + ex * .65, y + ey * .65]], bb, lerp(.6, 1.0, near), FL.SHARP | FL.TICK, red);
-    mkL([[x + ex * .65, y + ey * .65], [x + ex * .66, y + ey * .66]], (1.5 + .5 * tone) * (cfg.tickGain ?? 1), lerp(1.1, 1.8, near), FL.SHARP | FL.TIP, red ? 1 : .35 * (cfg.tipOrange ?? 1));
+    const tone = clamp(F.T[i] * 1.3), red = F.R[i] - Math.max(F.G[i], F.B[i]) > .16 ? .55 : 0;
+    out.push({ x, y, len, lean, near, b: (.55 + .5 * tone) * (cfg.tickGain ?? 1), bt: (1.5 + .5 * tone) * (cfg.tickGain ?? 1), w: lerp(.6, 1.0, near), wt: lerp(1.1, 1.8, near),
+      o: red, ot: red ? 1 : .35 * (cfg.tipOrange ?? 1), d: f.Db ? f.Db[i] : .5, ph: hash3(x, y, cfg.seed + 5) * TAU, spd: 2 + 3 * hash3(x, y, 6), id: out.length });
+  }
+  return out;
+}
+export function tickLines(desc, fx = null) {
+  const out = [];
+  for (let i = 0; i < desc.length; i++) {
+    const T = desc[i], A = fx ? fx(T, i) : null; if (A === false) continue;
+    const lean = T.lean + (A ? A.lean || 0 : 0), len = T.len * (A ? A.lenK ?? 1 : 1), bK = A ? A.bK ?? 1 : 1;
+    const x = T.x + (A ? A.dx || 0 : 0), y = T.y + (A ? A.dy || 0 : 0), ex = Math.sin(lean) * len, ey = -Math.cos(lean) * len;
+    const mk = (pts, b, w, flags, o) => { const n = 2, xy = new Float32Array([pts[0][0], pts[0][1], pts[1][0], pts[1][1]]); out.push({ xy, n, b: new Float32Array(n).fill(b), o: new Float32Array(n).fill(o), d: new Float32Array(n).fill(T.d), s: new Float32Array(n), w: new Float32Array(n).fill(w), len: 1, dir: 1, phase: T.ph, spd: T.spd, flags, id: 0 }); };
+    mk([[x - ex * .35, y - ey * .35], [x + ex * .65, y + ey * .65]], T.b * bK, T.w, FL.SHARP | FL.TICK, T.o);
+    mk([[x + ex * .65, y + ey * .65], [x + ex * .66, y + ey * .66]], T.bt * bK * (A ? A.tipK ?? 1 : 1), T.wt, FL.SHARP | FL.TIP, T.ot);
   }
   return out;
 }
