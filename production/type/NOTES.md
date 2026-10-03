@@ -9,10 +9,10 @@ Look in this folder first:
 | file | what |
 |---|---|
 | `contact_16x9.jpg`, `contact_4x5.jpg` | every text event at its key frame (62 frames), 1920×1080 and 1080×1350, over dark stand-ins |
-| `test_00.0-10.0s_hook_title.mp4` | the hook at title size (date plaque, THE SUN WENT OUT over the eye, the two large beats, the rewind) and the Altdorfer cartouche title, with the song |
+| `test_00.0-10.0s_hook_title.mp4` | the hook at title size (date plaque, THE SUN WENT OUT under the eye across the lower corona, the two large beats, the rewind) and the Altdorfer cartouche title, with the song |
 | `test_84.0-97.0s_bronze_strange_halo_eye.mp4` | BRONZE and its glint, EXCHANGING whole on the sung "exchange-", the letters eclipsed to crescents, A HALO IN THE SKY on its circle, the pupil |
-| `test_110.4-118.0s_halo_hal_sky_stutter.mp4` | LOVE backlit, the counter at 00:00, HALO with the HAL frames, IN THE, SKY, SKY, the stutter and inversions, the two-line Glover caption, the HUD |
-| `test_140.0-147.0s_chop_cycle.mp4` | chop cycles 1–2 with the ring locked centre (unchanged by the revision, not re-rendered) |
+| `test_110.4-118.0s_halo_hal_sky_stutter.mp4` | LOVE backlit, the counter at 00:00, the light chops HALO (with the HAL frames), IN THE, SKY, SKY, the hollow half-size stutter on alternate cuts (top while the two-line Glover caption is up, then alternating), the inversions, the HUD |
+| `test_140.0-147.0s_chop_cycle.mp4` | chop cycles 1–2 with the ring locked centre, light letters with the disk through them |
 | `still_103.7s.jpg`, `still_106.0s.jpg`, `stills_S32_S33.jpg` | the director's check frames (16:9), and a sheet of S32/S33 at 103.7, 105.7, 106.0, 109.6 and 110.4 s in 16:9 and 4:5: at 103.7 and 106.0 the lines have only just started (THROW at 103.64, GO at 105.85), so the sheet adds the frames where each line is complete |
 
 The backgrounds in the sheets and tests are **stand-ins** (the look-dev stills, graded dark, plus a crude eclipse/pupil
@@ -76,7 +76,7 @@ anything missing falls back to the track's defaults (which is how the sheets wer
 | `f.type.` | used by | meaning (px are output canvas pixels) |
 |---|---|---|
 | `light = {dir:[x,y], elev, color, intensity, cool}` | all CARVED | `dir` points **toward** the light (screen, y down, same as the look-dev `lightDir`); `elev` 0..1 is the sine of the elevation (0.42 = raking); `cool` 0..1 swaps gold for the cooler leaf seen under corona light |
-| `sun = {x, y, r}` | S28 ring, all CHOP | the eclipse disk. S28's legend runs at 2.75 r around it. CHOP streamers radiate from its centre and stop at its limb |
+| `sun = {x, y, r}` | S01 title, S28 ring, all CHOP | the eclipse disk. S01's title composes under it (below the limb, or across the lower corona when the eye is large). S28's legend runs at 3 r around it. CHOP streamers radiate from its centre and stop at its limb |
 | `field = {center:[x,y], r}` | CHOP | overrides `sun` for the streamers only |
 | `pupil = {x, y, r}` | S29 | the lines are fitted to the circle's chords |
 | `front = {p}` or `{y}` | S30, S58 | the shadow front across the type block: `p` 0..1 progress, or `y` the front's screen y |
@@ -86,7 +86,8 @@ anything missing falls back to the track's defaults (which is how the sheets wer
 | `invert`, `kick` | CHOP | force an inversion frame / the kick pulse (default: `invertAt` and the beat grid) |
 | `screen = {main:[TL,TR,BR,BL], side:[...]}` | S78–S80 | monitor quads (projective warp); rows follow the quad's aspect |
 | `plinth = {x, y, w, h, draw}` | S49 | the plinth's front face (x is its centre; fractions of the frame); `draw: false` when the scene paints the stone |
-| `place = {[eventId]: {x, y, align, valign, maxW, size}}` | CARVED/PLAQUE | layout override (fractions of the frame; `size` in design px) |
+| `place = {[eventId]: {x, y, align, valign, maxW, size}}` | CARVED/PLAQUE, CHOP | layout override (fractions of the frame; `size` in design px). For a chop, `{x, y}` is the word's centre; for S36's stutter `size` scales the full chop (default 0.5) |
+| `avoid = [{x, y, w, h}, ...]` | S36 | boxes to keep clear (fractions of the frame, top-left x, y): the reaction faces. The stutter SKY takes the upper or lower third with less overlap |
 | `hide = [eventId]`, `manual` | all | skip events / skip the main.js call |
 
 ---
@@ -143,15 +144,23 @@ the quote (Cinzel 600, 40 design px) over the smaller attribution (27 px), centr
 
 **CHOP** (`chop.js`). Archivo 900 at width 125, one word across the safe width. Multi-word chops (THROW DOWN) stack
 when one line would be smaller than 20 % of the frame height.
-* The fill is the corona's streamers: radial lines from the eclipse centre. They split by octaves, so the spacing stays
-  between about 6.3 and 12.6 px (at 1080), and they stop at the Moon's limb, so the black disk shows through the letters. Pearl
-  `#f3efe6` on navy-black, with a crisp signal-orange `#f08a2a` rim. Brightness varies with angle like real streamers,
-  and a pulse runs outward on each beat.
+* The letters are light: the word is the brightest thing on screen after the corona. The fill is the corona's
+  streamers, dense radial lines in bright pearl `#f3efe6` from the eclipse centre, lighting 64 % of each letter
+  (lines about 4 px, gaps about 2 px at 1080; the letter interior averages ≈ 0.57 luminance against pearl's 0.94).
+  The rays split by octaves so the lit fraction stays constant at every radius. The gaps are navy-black at 55 %
+  opacity, so the line art shows faintly through. The rim is a crisp signal-orange `#f08a2a`; there is no bloom.
+  Brightness varies a little with angle like real streamers. A pulse runs outward on each beat and the lines
+  thicken on the kick. The rays stop at the Moon's limb, so the dark disk shows through the letters; with no disk,
+  the convergence point is a flat fill (no moiré).
 * Slam: 1.16 → 1.05 → 1.01 → 1.0 over the first three frames, with a fading orange outline echo.
-* Stutter (S36): SKY re-slams where the picture cuts (SHOTLIST rev. e899de3): every stutter onset in bar 65, every
-  second one from bar 66 (18 re-slams). Each is a 1.075 re-slam with a small jump from a fixed pattern, and the two
-  previous positions show as fading outlines.
-* Inversion: pearl fill and navy lines for two frames on the seven stabs.
+* Stutter (S36, 112.31–117.53): the montage exists to show the faces, so SKY shows only on alternate picture cuts
+  (the cuts are the shot start plus the 18 onsets; the first cut is clean, so 9 appearances, 2.7 s of 5.2 s). It is
+  hollow: the orange outline with faint pearl lines (36 % opacity, no navy, no dark halo). It is half the S35 size,
+  in the upper or lower third: at `f.type.place['S36.stutter']` if given, else the third clear of `f.type.avoid`
+  boxes and of the Glover caption (so it sits top until 114.2), else alternating bottom and top. Each appearance
+  re-slams (1.075) with a short orange echo and a small sideways jump. Bar 64's HALO / IN THE / SKY / SKY (S35) and
+  the cycles S41–S44 stay full size.
+* Inversion: on the seven stabs, two frames of the negative, opaque navy lines on pearl.
 * HAL: on frames 0–3 of the first HALO, a true-black disk the width of the O, with a thin pearl limb.
 
 **INSCR**: Cormorant Garamond italic 500 in warm white. 16:9 at 7.2 % of frame height (cap height 4.5 %); portrait by
@@ -168,7 +177,7 @@ look, no logo.
 
 | event | what it does | scene parameters | default when the scene passes nothing |
 |---|---|---|---|
-| S01 title | THE SUN WENT OUT as a title over the eye: one or two balanced lines, cap height up to 13 % of the frame height (≈ 12.9 % as set, two lines), the visible letters spanning ~70 % of the safe width, centred on the eclipse; `28 MAY 585 BC` a small plaque above. Holds through the S02 flash to 1.89 | `sun` (the eye) | eye at (0.5, 0.45 H), portrait (0.5, 0.42 H) |
+| S01 title | THE SUN WENT OUT at title size: two balanced lines, cap height up to 13 % of the frame height (≈ 12.9 % as set), the visible letters spanning ~70 % of the safe width, centred under the eye. It composes just below the eye's lower limb when that fits, otherwise bottom-aligned in the safe area, across the lower corona. With the 60 % eye in 16:9 (r = 0.3 H) the first line crosses the lower disk and the second the lower corona; in 4:5 and 9:16 it sits wholly below the eye. It never sits on the pupil's centre. `28 MAY 585 BC` is a small plaque at the top. Holds through the S02 flash to 1.89 | `sun` (the eye: `{x, y, r}`) | eye at (0.5, 0.45 H) r 0.3 H, portrait (0.5, 0.42 H) r 0.3 W |
 | S02, S03 beats | each line its own large beat, bottom-centred, cap height 8.5 % of the frame height; S03 rewinds out with S04 | — | — |
 | S05, S24 cartouche | painted tablet hangs on a cord from above the frame; slab thickness, brushwork, craquelure, fillet, iron ring, tasselled pendant. HALYS / JADE WANG on cue; S24 is lowered in (1.1 s, settling bounce), its words gilding on the sung onsets | `light` | 16:9 top centre (34 % / 50 % of the width); portrait 80 % / 90 % |
 | S06 map | LYDIA / MEDIA laid flat on the banks (squashed, leaning to the vanishing point), outline engraved in, then gilded, on beats 1–2; sub-labels beat 3; foot label beat 4; slow drift with the descent | `light` | 16:9 centred on each bank; portrait side-aligned and staggered in depth |
@@ -260,8 +269,8 @@ Other text notes:
   hanging indent; the main pane hard-wraps at 92 columns like a real terminal.
 * **Collisions to watch** once the real scenes land: the counter (top right) against anything tall on the right in
   S24–S34, the S53 card against Thales's construction lines and the lingering Thales block, and S35's caption under
-  the slams. In S35/S36 the scene should pass `f.type.sun` (the real drop-1 corona sits upper centre); otherwise the
-  streamers radiate from frame centre. S01 should pass `f.type.sun` too, so the title centres on the painted eye.
+  the slams (S36's stutter keeps clear of it on its own). In S35/S36 the scene should pass `f.type.sun` (the real drop-1 corona sits upper centre); otherwise the
+  streamers radiate from frame centre. S01 should pass `f.type.sun` too, so the title composes under the painted eye.
 
 ---
 

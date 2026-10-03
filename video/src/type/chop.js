@@ -1,13 +1,17 @@
 // chop.js: CHOP, the drop words. Archivo at weight 900 and width 125 (expanded black), one word filling the safe width,
-// letters filled with dense field lines in pearl on navy-black, crisp edges, a signal-orange rim.
+// letters filled with dense, bright pearl field lines (64 % of each letter lit) over half-transparent navy-black, so the
+// word is the brightest thing after the corona and the picture shows faintly through; crisp edges, a signal-orange rim.
+// `hollow: true` (S36's stutter): the orange outline with a faint pearl line fill and nothing else.
 //
-// The fill is a field, not a texture: isolines of a stream function psi = |p - centre| / spacing, warped by slow noise,
-// in SCREEN coordinates around the corona's centre (f.type.field.center, else the sun, else the frame centre). So the
-// lines are concentric halos around the eclipse, continuous from letter to letter and from word to word across cuts,
-// and they drift outward (phase) with a push on every kick. Line width is constant in pixels (fwidth), so they stay
-// crisp at any size; the slam scales the letterforms in the shader, not the lines.
+// The fill is a field, not a texture: the corona's streamers, radial lines from its centre in SCREEN coordinates
+// (f.type.field.center, else the sun, else the frame centre), warped by slow noise and splitting by octaves so the
+// spacing stays even. So the lines are continuous from letter to letter and from word to word across cuts; they stop
+// at the Moon's limb (the disk shows through the letters), a pulse runs outward on each beat and the lines thicken on
+// the kick. Line spacing is fixed in screen pixels (x L.u), so the lines stay crisp at any size; the slam scales the
+// letterforms in the shader, not the lines.
 //
-//   chopWord(g, f, { word, cx, cy, px, scale, invert, opacity, center, kick, t, palette, rim })
+//   chopWord(g, f, { word, fit, cx, cy, scale, invert, opacity, center, disk, kick, t, palette, rim, hollow, duty,
+//                     lineAlpha, gapAlpha, halo, rimScale, spacing })
 
 import { tgl, rgb01 } from './tgl.js';
 import { FACE, applyFont, textWidth, C } from './style.js';
@@ -17,10 +21,13 @@ import { clamp } from '../core.js';
 const FRAG = `
 uniform sampler2D uP;
 uniform vec2 uSize, uOrigin, uCenter, uPivot;
-uniform float uN0, uR0, uLineW, uTime, uInvert, uScale, uWarp, uHalo, uOpacity, uRimOn, uPulseR, uPulse, uDisk;
+uniform float uN0, uR0, uDuty, uTime, uInvert, uScale, uWarp, uHalo, uOpacity, uRimOn, uPulseR, uPulse, uDisk, uKick;
+uniform float uLineA, uGapA;
 uniform vec3 uPearl, uNavy, uOrange;
 const float TAU = 6.2831853;
-float ray(float psi, float fw, float w) { float f = fract(psi); return 1. - smoothstep(w * .5 - .55, w * .5 + .55, min(f, 1. - f) / fw); }
+// coverage of a family of rays at integer psi, w wide (in psi units, i.e. a fraction of the period), antialiased over
+// one pixel (fw = psi per pixel)
+float rays(float psi, float w, float fw) { float f = fract(psi), d = min(f, 1. - f); return 1. - smoothstep(.5 * w - .5 * fw, .5 * w + .5 * fw, d); }
 void main() {
   vec2 px = tc() * uSize;
   vec2 q = uPivot + (px - uPivot) / uScale;
@@ -28,27 +35,39 @@ void main() {
   if (P.r < .004 && P.b < .004) { o = vec4(0.); return; }                    // empty: most of the block
   float aa = max(fwidth(P.r), 2e-3) * .7;
   float fill = smoothstep(.5 - aa, .5 + aa, P.r);
-  vec3 bg = mix(uNavy, uPearl, uInvert), fg = mix(uPearl, uNavy, uInvert);
   float ha = (1. - fill) * P.b * uHalo * (1. - .7 * uInvert) * uOpacity;
   if (fill < .002) { o = vec4(uNavy * ha, ha); return; }                       // outside the letters: the dark halo only
   float rim = fill * smoothstep(.4, .6, P.g) * uRimOn;
-  // streamers of the corona: radial lines from its centre, splitting by octaves so the spacing stays within [s, 2s]
+  // streamers of the corona: radial lines from its centre. They split by octaves so the spacing stays within [s, 1.4 s]:
+  // the primary rays narrow while the new half-phase rays widen from nothing, so the lit fraction (uDuty) never changes
+  // and the letters keep one brightness at every radius
   vec2 d = uOrigin + px - uCenter;
   float r = max(length(d), 1.), th = atan(d.y, d.x);
   vec2 cs = vec2(cos(th), sin(th));
   th += uWarp * .045 * (fbm2(cs * 2.2 + vec2(r / 900., -uTime * .12)) - .5);
   float k = log2(max(r / uR0, 1.)), fl = floor(k), fr = fract(k);
   float Na = uN0 * exp2(fl), psi = th * Na / TAU, fw = Na / (TAU * r);
-  float line = max(ray(psi, fw, uLineW), ray(psi + .5, fw, uLineW) * smoothstep(.1, .9, fr));
-  float bri = .55 + .45 * fbm2(cs * 5. + 3.1) + uPulse * exp(-pow((r - uPulseR) / (60. + .15 * uPulseR), 2.));
-  // the Moon: no streamers inside its limb (the black disk shows through the letters), the brightest light just outside it
+  float pz = uPulse * exp(-pow((r - uPulseR) / (60. + .15 * uPulseR), 2.));  // the beat pulse running outward
+  float duty = clamp(uDuty + .08 * uKick + .14 * pz, 0., .9), tw = smoothstep(.1, .9, fr);
+  float line = max(rays(psi, duty * (1. - .5 * tw), fw), rays(psi + .5, duty * .5 * tw, fw));
+  float bri = .88 + .12 * fbm2(cs * 5. + 3.1);
+  // where the rays converge (no disk) the pattern would moire: it fades to a flat fill of the same brightness
+  if (uDisk <= 0.) line = mix(duty, line, smoothstep(.8 * uR0, 2.5 * uR0, r));
+  // the Moon: no streamers inside its limb (the dark disk shows through the letters), a bright limb just outside it
   float dsk = smoothstep(uDisk - 1., uDisk + 1., r);
-  line *= dsk * (uDisk > 0. ? 1. : smoothstep(.8 * uR0, 2.5 * uR0, r)); bri *= 1. + .8 * exp(-(r - uDisk) / (.25 * uDisk + 1.)) * dsk * step(1., uDisk);
-  line = max(line, (1. - smoothstep(.0, 1.4, abs(r - uDisk - 1.))) * .9 * step(1., uDisk));
-  vec3 col = mix(bg, fg, clamp(line * bri, 0., 1.));
-  col = mix(col, uOrange, rim);
+  line *= mix(1., dsk, step(1., uDisk));
+  line = max(line, (1. - smoothstep(.0, 1.4, abs(r - uDisk - 1.))) * step(1., uDisk));
+  float Lc = clamp(line * bri, 0., 1.);
+  // normal: bright pearl lines over half-transparent navy gaps (the picture shows faintly through). Inverted frames are
+  // the negative and opaque: navy lines on pearl
+  vec3 cLine = mix(uPearl, uNavy, uInvert), cGap = mix(uNavy, uPearl, uInvert);
+  float aLine = uLineA, aGap = mix(uGapA, 1., uInvert * step(.01, uGapA));
+  vec3 pm = cLine * aLine * Lc + cGap * aGap * (1. - Lc);
+  float ai = aLine * Lc + aGap * (1. - Lc);
+  pm = mix(pm, uOrange, rim); ai = mix(ai, 1., rim);                        // the crisp orange rim on top
   float a = fill * uOpacity;
-  o = vec4(col * a + uNavy * ha * (1. - a), a + ha * (1. - a));
+  pm *= a; ai *= a;
+  o = vec4(pm + uNavy * ha * (1. - ai), ai + ha * (1. - ai));
 }`;
 
 const _packs = new LRU(24);
@@ -109,7 +128,8 @@ export function chopWord(g, f, o) {
   const bw = ex - ox, bh = ey - oy;
   if (bw < 4 || bh < 4) return null;
   // the pack holds the UNSCALED word centred at (cx, cy) in block coordinates
-  const rimW = Math.max(1.6, .013 * px) * (o.rimScale ?? 1);
+  const hollow = !!o.hollow;
+  const rimW = Math.max(1.6, .013 * px) * (o.rimScale ?? (hollow ? 1.35 : 1));
   const key = JSON.stringify([lines, +px.toFixed(2), bw, bh, +(cx - ox).toFixed(2), +(cy - oy).toFixed(2), +rimW.toFixed(2)]);
   let P = _packs.get(key);
   if (!P) P = _packs.set(key, buildPack(lines, px, lead, bw, bh, cx - ox, cy - oy, rimW));
@@ -120,9 +140,10 @@ export function chopWord(g, f, o) {
   const u = L.u, kick = o.kick || 0;
   G.draw(prog, {
     uP: { tex: 0 }, uSize: [bw, bh], uOrigin: [ox, oy], uCenter: center, uPivot: [cx - ox, cy - oy],
-    uN0: 2 * Math.round(Math.PI * 40 / (o.spacing ?? 5.6)), uR0: 40 * u, uLineW: Math.max(1, (1.3 + .5 * kick) * u), uTime: o.t ?? 0,
+    uN0: 2 * Math.round(Math.PI * 40 / (o.spacing ?? 5.6)), uR0: 40 * u, uDuty: o.duty ?? (hollow ? .42 : .64), uKick: kick, uTime: o.t ?? 0,
     uPulseR: o.pulseR ?? 0, uPulse: o.pulse ?? 0, uDisk: o.disk ?? 0,
-    uInvert: o.invert ? 1 : 0, uScale: scale, uWarp: o.warp ?? 1, uHalo: o.halo ?? .78, uOpacity: o.opacity ?? 1, uRimOn: o.rim === false ? 0 : 1,
+    uLineA: o.lineAlpha ?? (hollow ? .36 : .97), uGapA: o.gapAlpha ?? (hollow ? 0 : .55),
+    uInvert: o.invert ? 1 : 0, uScale: scale, uWarp: o.warp ?? 1, uHalo: o.halo ?? (hollow ? 0 : .78), uOpacity: o.opacity ?? 1, uRimOn: o.rim === false ? 0 : 1,
     uPearl: rgb01(pal.pearl || C.pearl), uNavy: rgb01(pal.navy || C.navyBlack), uOrange: rgb01(pal.orange || C.orange),
   });
   g.drawImage(G.canvas, ox, oy);

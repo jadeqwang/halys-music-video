@@ -143,5 +143,7 @@ export function drawChains(g, chains, view, u, colors, opts = {}) {
     const tl = c.kind === 'sil' ? 7 * u : Math.max(3, 9 * u);
     ribbonPath(byCol.get(col), c.pts, view, c.kind === 'sil' ? taper(w, tl, .35) : taper(w, tl, .1), c.closed);
   }
-  for (const [col, p] of byCol) { g.fillStyle = col; g.fill(p, 'nonzero'); }
+  // hair strands first (they are tone inside the black, not outline): every ink line draws over them
+  const order = [...byCol.keys()].sort((a, b) => (b === colors.strand) - (a === colors.strand));
+  for (const col of order) { g.fillStyle = col; g.fill(byCol.get(col), 'nonzero'); }
 }

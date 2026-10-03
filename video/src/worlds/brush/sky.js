@@ -139,12 +139,18 @@ export function skyField(F, mask, sk0, sun, P, t = 0) {
     // drama: deepen the clear sky away from the sun so the tongues of fire read against umber (f2_bronze)
     const far = 1 - near0;
     L *= 1 - drama * .45 * far * (1 - cl) * (1 - hz * .6);
-    // totality: a 360-degree sunset band on the horizon under a dark dome, brightest away from the sun's azimuth
+    // eclipse drain: chroma falls, a cool steel tint creeps in (before the band and the corona light, which keep theirs)
+    const chroma = 1 - .72 * e;
+    a *= chroma; b = b * chroma - .006 * e;
+    // totality: a luminous 360-degree sunset band on the horizon under the dark dome, brightest away from the sun's
+    // azimuth: orange at the line, gold above it, fading into the violet-umber dome
     if (sk.ring > 0) {
-      const band = Math.exp(-Math.pow((hzY - y) / (ah * (.035 + .05 * sk.ring)), 2)) * sk.ring;
-      const az = .65 + .35 * sstep(.05, .45, Math.abs(x - sx) / aw);
-      const k = band * az;
-      L = lerp(L, .62, k * .85); a = lerp(a, verm[1] * .8, k); b = lerp(b, (ochre[2] + verm[2]) * .5, k);
+      const dyb = (hzY - y) / ah, band = Math.exp(-Math.pow(dyb / (.03 + .045 * sk.ring), 2)) * Math.min(1, sk.ring);
+      const az = .7 + .3 * sstep(.05, .45, Math.abs(x - sx) / aw);
+      const k = clamp(band * az * (sk.ring > 1 ? 1 + .25 * (sk.ring - 1) : 1));
+      const hot = Math.exp(-Math.pow(dyb / .018, 2));                  // the hot line right on the horizon
+      L = lerp(L, .66 + .14 * hot, k * .92);
+      a = lerp(a, lerp(ochre[1], verm[1], .55 + .25 * hot) * .95, k); b = lerp(b, lerp(naples[2], ochre[2], .5 + .4 * hot), k);
     }
     // the corona's light on the sky (a base for the painted fibres): pearl, falling off fast from the limb, fibrous
     if (sk.corona && sk.corona.k > 0) {
@@ -156,9 +162,6 @@ export function skyField(F, mask, sk0, sun, P, t = 0) {
       }
     }
     if (sk.haze > 0) { const hk = sk.haze * Math.pow(hz, 2); L = lerp(L, .55, hk * .5); a = lerp(a, naples[1], hk * .5); b = lerp(b, naples[2], hk * .5); }
-    // eclipse drain: chroma falls, a cool steel tint creeps in
-    const chroma = 1 - .72 * e;
-    a *= chroma; b = b * chroma - .006 * e;
     L = clamp(L, .03, .98);
     lab2rgb(L, a, b, rgb);
     P.map(rgb[0], rgb[1], rgb[2], cA);

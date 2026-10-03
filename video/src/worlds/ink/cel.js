@@ -59,6 +59,31 @@ function inEllipse(e, u, v) {
   const dx = du / e.rx, dy = dv / e.ry; return dx * dx + dy * dy <= 1;
 }
 
+// a zone is a plate-normalised ellipse {cx, cy, rx, ry, rot?} or a polygon {poly: [[u, v], ...]}
+function inPolyN(P, u, v) {
+  let c = false;
+  for (let i = 0, j = P.length - 1; i < P.length; j = i++) { const [xi, yi] = P[i], [xj, yj] = P[j]; if ((yi > v) !== (yj > v) && u < (xj - xi) * (v - yi) / (yj - yi) + xi) c = !c; }
+  return c;
+}
+const inZone = (z, u, v) => z.poly ? inPolyN(z.poly, u, v) : inEllipse(z, u, v);
+function zoneBox(z, W, H) {
+  if (z.poly) { let x0 = 1, x1 = 0, y0 = 1, y1 = 0; for (const [u, v] of z.poly) { x0 = Math.min(x0, u); x1 = Math.max(x1, u); y0 = Math.min(y0, v); y1 = Math.max(y1, v); }
+    return [Math.max(0, Math.floor(x0 * W)), Math.min(W - 1, Math.ceil(x1 * W)), Math.max(0, Math.floor(y0 * H)), Math.min(H - 1, Math.ceil(y1 * H))]; }
+  return [Math.max(0, Math.floor((z.cx - z.rx * 1.5) * W)), Math.min(W - 1, Math.ceil((z.cx + z.rx * 1.5) * W)), Math.max(0, Math.floor((z.cy - z.ry * 1.5) * H)), Math.min(H - 1, Math.ceil((z.cy + z.ry * 1.5) * H))];
+}
+// split chains where they enter a polygon zone (keeps the parts outside, drops runs shorter than minLen)
+function clipChains(chains, zones, W, H, minLen = 4) {
+  const polys = zones.filter(z => z.poly); if (!polys.length) return chains;
+  const out = [];
+  for (const ch of chains) {
+    let run = [];
+    const flush = () => { if (run.length >= minLen) out.push({ ...ch, pts: run }); run = []; };
+    for (const p of ch.pts) { if (polys.some(z => inPolyN(z.poly, p[0] / W, p[1] / H))) flush(); else run.push(p); }
+    flush();
+  }
+  return out;
+}
+
 // eye regions from the face landmarks (setup-normalised): ellipse around each eye's upper/lower lid polylines
 export function eyeRegions(faces, W, H) {
   const out = [];
@@ -190,12 +215,17 @@ export function analyzeCel(inp, cfg0 = {}) {
   mat = cleanSmall(mat, W, H, cfg.minArea, NMAT);
   for (let i = 0; i < N; i++) if (!inside[i]) mat[i] = 0; else if (!mat[i]) mat[i] = ID.black;
   sheenRegions(mat, W, H, cfg.sheenMax);
-  // decal zones: painted flat (the lettering is drawn as type on top: decals.js)
+  // decal zones: painted flat (the lettering is drawn as type on top: decals.js). A zone with `from` converts only those
+  // materials (the hair cut above the back circle: hair and the plate's blue become jacket, the jacket keeps its shading)
+  const forced = new Uint8Array(N);
   for (const z of cfg.clear || []) {
-    const id = ID[z.mat] || ID.jacket;
-    const x0 = Math.max(0, Math.floor((z.cx - z.rx * 1.5) * W)), x1 = Math.min(W - 1, Math.ceil((z.cx + z.rx * 1.5) * W));
-    const y0 = Math.max(0, Math.floor((z.cy - z.ry * 1.5) * H)), y1 = Math.min(H - 1, Math.ceil((z.cy + z.ry * 1.5) * H));
-    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) { const i = y * W + x; if (inside[i] && inEllipse(z, x / W, y / H)) mat[i] = id; }
+    const id = ID[z.mat] || ID.jacket, from = z.from ? z.from.map(n => ID[n]) : null;
+    const [x0, x1, y0, y1] = zoneBox(z, W, H);
+    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
+      const i = y * W + x; if (!inside[i] || !inZone(z, x / W, y / H)) continue;
+      if (from && !(from.includes(mat[i]) || (mat[i] === 250 && from.includes(ID.black)))) continue;
+      mat[i] = id; forced[i] = 1;
+    }
   }
   const sheen = new Uint8Array(N); for (let i = 0; i < N; i++) if (mat[i] === 250) { mat[i] = ID.black; sheen[i] = 1; }
   // 5. one shadow tone per material
@@ -216,7 +246,8 @@ export function analyzeCel(inp, cfg0 = {}) {
   }
   for (const z of cfg.clear || []) {
     const id = ID[z.mat] || ID.jacket;
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const i = y * W + x; if (mat[i] === id && inEllipse(z, x / W, y / H)) lab[i] = label(id, false); }
+    const [x0, x1, y0, y1] = zoneBox(z, W, H);
+    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) { const i = y * W + x; if (mat[i] === id && (z.from ? forced[i] : inZone(z, x / W, y / H))) lab[i] = label(id, false); }
   }
   // the small face (face.js draws its features): flat skin inside the face oval, the eye zones cleared to skin
   if (cfg.flatFace && eyes.length && cfg.faces !== false) {
@@ -234,7 +265,7 @@ export function analyzeCel(inp, cfg0 = {}) {
   for (let i = 0; i < N; i++) if (!inside[i]) labS[i] = 0;
   const t1 = performance.now();
   // 6. line art
-  const chains = lineArt(inp, cfg, { L, R, alpha, inside, mat, labS, eyes, W, H });
+  const chains = clipChains(lineArt(inp, cfg, { L, R, alpha, inside, mat, labS, eyes, W, H, g1, g2 }), cfg.clear || [], W, H);
   return { W, H, lab: labS, mat, alpha, chains, eyes, Ls, R, stats: { ms: Math.round(performance.now() - t0), msFill: Math.round(t1 - t0), chains: chains.length } };
 }
 
@@ -303,7 +334,7 @@ function lineArt(inp, cfg, F) {
     const mid = pts[pts.length >> 1], mi = Math.round(mid[1]) * W + Math.round(mid[0]);
     const eye = eyes.find(ey => inEllipse({ ...ey, rx: ey.rx * 1.15, ry: ey.ry * 1.25 }, mid[0] / W, mid[1] / H));
     if (len < cfg.lineMin && !eye) continue;
-    if ((cfg.clear || []).some(z => inEllipse({ ...z, rx: z.rx * 1.15, ry: z.ry * 1.25 }, mid[0] / W, mid[1] / H))) continue;
+    if ((cfg.clear || []).some(z => !z.poly && inEllipse({ ...z, rx: z.rx * 1.15, ry: z.ry * 1.25 }, mid[0] / W, mid[1] / H))) continue;
     if (cfg.flatFace && eye) continue;
     // strength = mean ridge response
     let s = 0; for (const [x, y] of pts) s += R[Math.round(y) * W + Math.round(x)] || 0; s /= pts.length;
@@ -314,6 +345,29 @@ function lineArt(inp, cfg, F) {
     // colour trace: a line with skin on both sides (nose, cheek) is a darker skin, not black
     const lb = labS[mi], skinBoth = sideIs(labS, W, H, pts, ID.skin);
     chains.push({ pts, kind: eye ? 'eye' : 'int', w, s, col: skinBoth && !eye ? 'skin' : 'ink', len });
+  }
+  // hair strands: bright ridges inside the hair (the plate's highlight strokes), drawn as thin sheen-tone lines so the
+  // black mass reads as hair, not a hole
+  if (cfg.strands !== false && F.g1) {
+    const Rb = new Float32Array(N), g1 = F.g1, g2 = F.g2, matF = F.mat;
+    for (let i = 0; i < N; i++) Rb[i] = matF[i] === ID.black && inside[i] ? Math.max(0, g1[i] - g2[i]) : 0;
+    const hiS = cfg.strandHi ?? .035, loS = cfg.strandLo ?? .02, kp = new Uint8Array(N), st = [];
+    for (let i = 0; i < N; i++) if (Rb[i] > hiS) { kp[i] = 1; st.push(i); }
+    while (st.length) {
+      const i = st.pop(), x = i % W, y = (i / W) | 0;
+      for (let j = -1; j <= 1; j++) for (let k = -1; k <= 1; k++) {
+        const xx = x + k, yy = y + j; if (xx < 0 || yy < 0 || xx >= W || yy >= H) continue;
+        const q = yy * W + xx; if (!kp[q] && Rb[q] > loS) { kp[q] = 1; st.push(q); }
+      }
+    }
+    thin(kp, W, H);
+    for (const ch of traceSkeleton(kp, W, H, 3)) {
+      let len = 0; for (let k = 1; k < ch.pts.length; k++) len += Math.hypot(ch.pts[k][0] - ch.pts[k - 1][0], ch.pts[k][1] - ch.pts[k - 1][1]);
+      if (len < (cfg.strandMin ?? 14)) continue;
+      const mid = ch.pts[ch.pts.length >> 1];
+      if (eyes.some(ey => inEllipse({ ...ey, rx: ey.rx * 1.3, ry: ey.ry * 1.4 }, mid[0] / W, mid[1] / H))) continue;   // not the lashes
+      chains.push({ pts: smoothPts(resample(ch.pts, 1), 1.4, false), kind: 'strand', w: cfg.strandW ?? 1.1, col: 'strand', len });
+    }
   }
   return chains;
 }

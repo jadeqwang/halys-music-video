@@ -77,7 +77,7 @@ export function drawCel(g, res, view, u, opts = {}) {
     const cg = c.getContext('2d');
     const pal = opts.pal || LABEL_HEX;
     res.packed = drawFills(cg, res.lab, res.W, res.H, pal, LABEL_ALPHA, view, { packed: res.packed });
-    if (opts.lines !== false) drawChains(cg, res.chains, view, u, { ink: opts.ink || LINE, skin: opts.skin || LINE_SKIN }, { wScale: opts.wScale || 1 });
+    if (opts.lines !== false) drawChains(cg, res.chains, view, u, { ink: opts.ink || LINE, skin: opts.skin || LINE_SKIN, strand: opts.strand || '#30343e' }, { wScale: opts.wScale || 1 });
     if (opts.after) opts.after(cg);
     _layers.set(key, c);
   }

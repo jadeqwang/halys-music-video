@@ -130,18 +130,26 @@ export function coronaStrokes(o) {
   };
   // fibres undulate a little (12 drawings a second): the iris breathing, never tentacles
   const rip = (j, r, amp) => amp * Math.sin(r / R * 5 + t * (1.4 + .6 * h(j, 71)) + h(j, 72) * TAU) * Math.min(1, (r / R - 1) * 1.5);
-  const outerR = 1 + (.5 + .45 * iris);                       // where the iris ends (in moon radii)
+  const outerR = o.reach ?? (1 + (.5 + .45 * iris));         // where the iris ends (in moon radii)
+  const gold = mixc(naples, ochre, .55), silver = mixc(lead, umber, .18);
   // 1. the fibrous body: broad, semi-transparent radial strokes in pearl, Naples and ash, crypts between bundles
   const nF = Math.round((380 + 1400 * iris) * Math.min(2.2, R / 60) * sc);
   for (let j = 0; j < nF; j++) {
-    const phi0 = h(j, 1) * TAU, q2 = Math.pow(h(j, 2), 1.6), r0 = R * (1.0 + .012 * h(j, 3));
-    const len = R * (.12 + (outerR - 1.05) * q2);
+    const phi0 = h(j, 1) * TAU, q2 = Math.pow(h(j, 2), iris > .5 ? 2.1 : 1.6), r0 = R * (1.0 + .012 * h(j, 3));   // a ragged outer edge, never a donut
+    // the iris breathes: each fibre's reach swells and settles on its own slow phase (alive from the first frame)
+    const breath = 1 + (o.breath ?? (iris > .5 ? .07 : 0)) * Math.sin(t * (1.1 + .5 * h(j, 73)) + h(j, 74) * TAU);
+    const len = R * (.12 + (outerR - 1.05) * q2) * breath;
     const bundle = .5 + .5 * Math.sin(phi0 * 19 + 2.2 * Math.sin(phi0 * 4 + seed));      // bundles and crypts
-    const crypt = iris > .3 && bundle < .22 ? .45 : 1;
-    const b = (.55 + .5 * h(j, 5)) * (1 - .45 * q2) * crypt * k;
-    const tone = h(j, 9), cA = tone < .55 ? pearl : tone < .85 ? warmT : ash;
+    if (iris > .5 && bundle < .2 && h(j, 75) < .6) continue;      // crypts: gaps between the bundles (fewer fibres, never dark ones)
+    const crypt = iris <= .5 && iris > .3 && bundle < .22 ? .45 : 1;
+    const b = (.62 + .45 * h(j, 5)) * (1 - .35 * q2) * crypt * k;
+    const tone = h(j, 9);
+    // the eye: pearl at the limb, gold through the middle of the iris, cool silver at the tips (a radial gradient
+    // along every fibre); the plain corona keeps its pearl / Naples / ash mix
+    const cA = iris > .5 ? (tone < .7 ? mixc(lead, naples, .25) : gold) : tone < .55 ? pearl : tone < .85 ? warmT : ash;
+    const cB = iris > .5 ? (q2 > .45 ? mixc(silver, lead, .3) : gold) : mixc(cA, umber, .4);
     polar(q => { const r = r0 + len * q; return [r, phi0 + rip(j, r, .05 * (h(j, 4) - .5)) + .03 * Math.sin(q * 3 + h(j, 6) * 6)]; }, 5,
-      Math.max(.9, R * (.012 + .022 * h(j, 7)) * (1 + .5 * iris)), b, cA, mixc(cA, umber, .4), .45, h(j, 8), .85, .32 + .38 * h(j, 10));
+      Math.max(.9, R * (.012 + .022 * h(j, 7)) * (1 + .5 * iris)), b, cA, cB, .45, h(j, 8), .85, .32 + .38 * h(j, 10));
   }
   // 2. the collarette: a bright, warm, broken ring of short strokes close to the limb
   const nC = Math.round(140 * Math.min(3, R / 40) * sc);
@@ -151,7 +159,7 @@ export function coronaStrokes(o) {
   }
   // 3. streamers: a few long soft brushes along the solar-minimum wings, faint; very few on the eye
   const streamers = o.streamers || [[.12, 2.2, .45, 1], [3.02, 1.9, .4, .85], [3.8, 1.2, .26, .5], [-.8, 1.5, .3, .55]];
-  const nS = Math.round((iris > .5 ? 6 : 18) * sc * Math.min(2, R / 50));
+  const nS = Math.round((iris > .5 ? 14 : 18) * sc * Math.min(2, R / 50));
   streamers.forEach(([da, len, ws, bs], si) => {
     const ph = tilt + da;
     for (let m = 0; m < nS; m++) {
@@ -180,9 +188,9 @@ export function coronaStrokes(o) {
     }
   });
   // 7. the iris's darker limbal ring (the eye): a broken ring of umber strokes at the fibres' outer edge
-  if (iris > .3) for (let j = 0; j < 200; j++) {
-    const a0 = h(j, 41) * TAU, rr = R * (outerR + .02 + .08 * (h(j, 42) - .5));
-    polar(q => [rr + R * .04 * Math.sin(q * 3), a0 + .1 * q], 3, Math.max(1, R * .035), .6 * iris, bumber, umber, .3, h(j, 43), .6, .55);
+  if (iris > .3 && !o.noLimbal) for (let j = 0; j < 120; j++) {
+    const a0 = h(j, 41) * TAU, rr = R * (outerR * (.8 + .25 * h(j, 42)));
+    polar(q => [rr + R * .04 * Math.sin(q * 3), a0 + .1 * q], 3, Math.max(1, R * .03), .22 * iris, bumber, umber, .3, h(j, 43), .6, .4);
   }
   return out;
 }

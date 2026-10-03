@@ -12,6 +12,7 @@ import { drawCartouche } from './cartouche.js';
 import { drawTerminal } from './terminal.js';
 import { clamp, lerp, smooth, strSeed, hash, hash2, kf, mixHex, TAU } from '../core.js';
 import { beatPos, pulse } from '../time.js';
+import TRACK from './track.gen.js';
 
 // ---------------------------------------------------------------- shared
 const WORLD_LIGHT = { bronze: 'bronze', gold: 'gold', marble: 'marble', corona: 'corona', orbit: 'orbit', room: 'end' };
@@ -52,22 +53,27 @@ function eyeOf(f) {
   const L = f.L, T = f.type || {};
   return T.sun ? { x: T.sun.x, y: T.sun.y, r: T.sun.r } : { x: L.cx, y: (L.portrait ? .42 : .45) * L.H, r: (L.portrait ? .3 * L.W : .3 * L.H) };
 }
-// the hook title: centred over the eye, one or two balanced lines. The longest line's advance width (tracking included)
-// is 86 % of the safe width, so its visible letters span ~70 % (portrait: 92 % / ~80 %); never taller than a 13 % cap
+// the hook title: one or two balanced lines. The longest line's advance width (tracking included) is 86 % of the safe
+// width, so its visible letters span ~70 % (portrait: 92 % / ~80 %); never taller than a 13 % cap. It composes under
+// the eye (f.type.sun, the painted totality): just below the lower limb when it fits, otherwise bottom-aligned in the
+// safe area, across the lower corona and limb (the 60 % eye in 16:9), so it never sits on the pupil's centre.
 function titleLayout(e, f) {
-  const L = f.L, face = FACE.carved, it = e.items[0], words = it.text.split(' '), eye = eyeOf(f);
-  const key = `${e.id}|title|${L.W}x${L.H}|${eye.x}|${eye.y}`;
+  const L = f.L, S = L.safe, face = FACE.carved, it = e.items[0], words = it.text.split(' '), eye = eyeOf(f);
+  const key = `${e.id}|title|${L.W}x${L.H}|${eye.x}|${eye.y}|${eye.r}`;
   if (_lay.has(key)) return _lay.get(key);
-  const fill = (L.portrait ? .92 : .86) * L.safe.w, capMax = (L.portrait ? .1 * L.W : .13 * L.H) / face.cap;
+  const fill = (L.portrait ? .92 : .86) * S.w, capMax = (L.portrait ? .1 * L.W : .13 * L.H) / face.cap;
   let best = null;
   for (const n of [1, 2]) {
     const lines = n === 1 ? [words] : breakLines(words, face, 100, textWidth(face, 100, words.join(' ')) * .6, 2);
     if (lines.length !== n) continue;
     const w1 = Math.max(...lines.map(ws => textWidth(face, 1, ws.join(' '))));
     const px = Math.min(capMax, fill / w1);
-    if (!best || px > best.px) best = { lines, px };
+    if (!best || px > best.px) best = { lines, px, w: w1 * Math.min(capMax, fill / w1) };
   }
-  const lay = layoutLines(best.lines, face, best.px, { x: eye.x, y: eye.y, align: 'center', valign: 'middle', lead: 1.08 });
+  const lead = 1.08, hB = face.cap * best.px + (best.lines.length - 1) * best.px * lead;
+  const yTop = Math.min(eye.y + eye.r + .035 * L.H, S.y + S.h - .012 * L.H - hB);
+  const x = clamp(eye.x, S.x + best.w / 2, S.x + S.w - best.w / 2);
+  const lay = layoutLines(best.lines, face, best.px, { x, y: yTop, align: 'center', valign: 'top', lead });
   lay.words.forEach(w => { w.item = 0; w.itemObj = it; w.wi = 0; });
   let k = 0; lay.words.forEach(w => { w.wi = k++; });
   lay.lines = best.lines.map(ws => ({ ii: 0, ws }));
@@ -344,42 +350,89 @@ function fitFor(L, word) { const k = `${L.W}x${L.H}|${word}`; if (!chopFits.has(
 function chopPulse(t, L) { const b = beatPos(t), fb = b - Math.floor(b); return { pulseR: fb * 1.1 * L.vmax, pulse: .7 * Math.exp(-fb * 3) }; }
 function chop(g, f, e, t) {
   const L = f.L, T = f.type || {}, fps = 60;
+  if (e.stutter) return stutter(g, f, e, t);
   let cur = -1;
   e.items.forEach((it, k) => { if (t >= it.t - 1e-6) cur = k; });
-  if (cur < 0 && !e.stutter) return;
-  const it = e.items[Math.max(cur, 0)], word = it.text, fit = fitFor(L, word);
-  const center = T.field && T.field.center || (T.sun ? [T.sun.x, T.sun.y] : [L.cx, L.cy]);
-  const disk = T.field && T.field.r != null ? T.field.r : T.sun ? T.sun.r : e.ring ? .16 * L.vmin : 0;   // S41-S44: the ring locked centre
-  let onset = cur >= 0 ? it.t : -1e9, k = -1;
-  if (e.stutter) e.onsets.forEach((s, i) => { if (t >= s - 1e-6) { onset = s; k = i; } });
-  const fr = Math.round((t - onset) * fps);
-  let scale = 1, dx = 0, dy = 0;
-  if (e.stutter && k >= 0) {
-    scale = fr <= 0 ? 1.075 : fr === 1 ? 1.025 : 1;
-    const pat = [0, 1, -1, .5, -.5, 1.5, -1.5, 0];
-    dx = pat[k % pat.length] * .011 * L.W; dy = pat[(k + 3) % pat.length] * .006 * L.H;
-  } else if (fr >= 0 && fr < 3) scale = [1.16, 1.05, 1.01][fr];
-  const invert = !!(T.invert ?? (e.invert && e.invert.some(s => t >= s - 1e-6 && t < s + 2 / fps - 1e-6)));
+  if (cur < 0) return;
+  const it = e.items[cur], word = it.text, fit = fitFor(L, word);
+  const { center, disk } = chopField(T, e, L);
+  const fr = Math.round((t - it.t) * fps);
+  const scale = fr >= 0 && fr < 3 ? [1.16, 1.05, 1.01][fr] : 1;
+  const invert = invertNow(T, e, t, fps);
   const kick = clamp(T.kick ?? pulse(t, 10));
-  const cx = L.cx + dx, cy = (T.chopY ?? L.cy) + dy;
-  // stutter echoes: the two previous positions as fading outlines
-  if (e.stutter && k >= 1) for (let j = 1; j <= 2 && k - j >= 0; j++) {
-    const pat = [0, 1, -1, .5, -.5, 1.5, -1.5, 0], kk = k - j, age = (t - e.onsets[kk]) * fps;
-    chopEcho(g, L, fit, L.cx + pat[kk % pat.length] * .011 * L.W, cy - dy + pat[(kk + 3) % pat.length] * .006 * L.H, 1 + .035 * j, (.5 / j) * clamp(1 - age / 14), invert ? C.navyBlack : C.orange);
-  }
-  if (!e.stutter && fr >= 0 && fr < 6) chopEcho(g, L, fit, cx, cy, 1 + .05 + .03 * fr, .55 * (1 - fr / 6));
+  const pl = T.place && T.place[e.id];
+  const cx = pl && pl.x != null ? pl.x * L.W : L.cx, cy = pl && pl.y != null ? pl.y * L.H : (T.chopY ?? L.cy);
+  if (fr >= 0 && fr < 6) chopEcho(g, L, fit, cx, cy, 1 + .05 + .03 * fr, .55 * (1 - fr / 6));
   const res = chopWord(g, f, { word, fit, cx, cy, scale, invert, center, disk, kick, t, spacing: 6.4, ...chopPulse(t, L), opacity: 1 });
   // HAL: on the first HALO the O is eclipsed for four frames
   if (it.hal && fr >= 0 && fr < 4 && !(T.disk && T.disk.hal === false)) halDisk(g, L, res, word, fr / 3, scale);
 }
+function chopField(T, e, L) {
+  const center = T.field && T.field.center || (T.sun ? [T.sun.x, T.sun.y] : [L.cx, L.cy]);
+  const disk = T.field && T.field.r != null ? T.field.r : T.sun ? T.sun.r : e.ring ? .16 * L.vmin : 0;   // S41-S44: the ring locked centre
+  return { center, disk };
+}
+const invertNow = (T, e, t, fps) => !!(T.invert ?? (e.invert && e.invert.some(s => t >= s - 1e-6 && t < s + 2 / fps - 1e-6)));
+
+// S36, the stutter. The montage exists to show the faces, so SKY shows on alternate picture cuts only (the shot's first
+// cut is clean), hollow (orange outline, faint pearl lines), half size, in the upper or lower third away from the
+// subject. Where: f.type.place[id] = {x, y[, size]} (fractions of the frame; size = scale of the full chop, default
+// 0.5), else whichever third is clear of f.type.avoid = [{x, y, w, h}, ...] (fractions: the faces), else alternating
+// bottom / top. Each appearance re-slams with a short orange echo.
+const STUTTER_SIZE = .5;
+function stutterSpot(f, e, L, fit, vis, t) {
+  const T = f.type || {}, pl = T.place && T.place[e.id], S = L.safe, face = FACE.chop;
+  const avoid = [...(T.avoid || [])];
+  for (const q of TRACK.events) {                  // the Glover caption (to 114.2) is a box to keep clear too
+    if (q.fx !== 'quote' || t < q.t0 - 1e-6 || t >= q.t1 - 1e-6 || (T.hide || []).includes(q.id)) continue;
+    const G = quoteGeom(L, q.items.find(i => i.key === 'who')), y0 = G.y1 - FACE.plaqueBold.cap * G.px - .015 * L.H;
+    avoid.push({ x: S.x / L.W, y: y0 / L.H, w: S.w / L.W, h: (G.yb + .015 * L.H - y0) / L.H });
+  }
+  const size = pl && pl.size != null ? pl.size : STUTTER_SIZE;
+  const px = fit.px * size, n = fit.lines.length, hB = face.cap * px + (n - 1) * px * fit.lead;
+  const wB = Math.max(...fit.lines.map(ws => textWidth(face, px, ws.join(' '))));
+  if (pl && pl.x != null && pl.y != null) return { cx: pl.x * L.W, cy: pl.y * L.H, size };
+  const top = Math.max(S.y + .55 * hB, L.H / 6), bottom = Math.min(S.y + S.h - .55 * hB, 5 * L.H / 6);
+  const cx = pl && pl.x != null ? pl.x * L.W : L.cx;
+  const overlap = cy => avoid.reduce((a, b) => {
+    const ix = Math.min(cx + wB / 2, (b.x + b.w) * L.W) - Math.max(cx - wB / 2, b.x * L.W);
+    const iy = Math.min(cy + hB / 2, (b.y + b.h) * L.H) - Math.max(cy - hB / 2, b.y * L.H);
+    return a + Math.max(0, ix) * Math.max(0, iy);
+  }, 0);
+  const ot = overlap(top), ob = overlap(bottom);
+  const cy = ot < ob ? top : ob < ot ? bottom : vis % 2 ? top : bottom;
+  return { cx, cy, size };
+}
+function stutter(g, f, e, t) {
+  const L = f.L, T = f.type || {}, fps = 60;
+  const cuts = [e.t0, ...e.onsets];
+  let ci = -1;
+  cuts.forEach((s, i) => { if (t >= s - 1e-6) ci = i; });
+  if (ci < 1 || ci % 2 === 0) return;
+  const vis = (ci - 1) / 2, fr = Math.round((t - cuts[ci]) * fps);
+  const it = e.items[0], word = it.text, full = fitFor(L, word);
+  const spot = stutterSpot(f, e, L, full, vis, t);
+  const fit = { ...full, px: full.px * spot.size };
+  const pat = [0, 1, -1, .5, -.5, 1.5, -1.5, 0];
+  const cx = spot.cx + pat[vis % pat.length] * .02 * L.W * spot.size, cy = spot.cy;
+  const scale = fr <= 0 ? 1.075 : fr === 1 ? 1.025 : 1;
+  const invert = invertNow(T, e, t, fps), kick = clamp(T.kick ?? pulse(t, 10));
+  const { center, disk } = chopField(T, e, L);
+  if (fr >= 0 && fr < 6) chopEcho(g, L, fit, cx, cy, 1.05 + .03 * fr, .5 * (1 - fr / 6), invert ? C.navyBlack : C.orange);
+  chopWord(g, f, { word, fit, cx, cy, scale, invert, center, disk, kick, t, spacing: 6.4, ...chopPulse(t, L), hollow: true });
+}
 
 // ---------------------------------------------------------------- the Glover caption (S35): quote over attribution
-function quote(g, f, e, t) {
-  const L = f.L, q = e.items.find(i => i.key === 'q'), who = e.items.find(i => i.key === 'who');
-  const px = 40 * u(L), px2 = 27 * u(L), out = 1 - smooth(clamp((t - (e.t1 - .18)) / .18));
-  const yb = L.portrait ? .905 * L.H : .915 * L.H;
+function quoteGeom(L, who) {
+  const px = 40 * u(L), px2 = 27 * u(L), yb = L.portrait ? .905 * L.H : .915 * L.H;
   const lines2 = breakGroups(who.text, FACE.plaque, px2, L.safe.w, 3);
   const lh2 = px2 * 1.6, y1 = yb - (lines2.length - 1) * lh2 - 1.25 * px - .35 * px2;
+  return { px, px2, yb, y1, lines2, lh2 };
+}
+function quote(g, f, e, t) {
+  const L = f.L, q = e.items.find(i => i.key === 'q'), who = e.items.find(i => i.key === 'who');
+  const out = 1 - smooth(clamp((t - (e.t1 - .18)) / .18));
+  const { px, px2, yb, y1, lines2, lh2 } = quoteGeom(L, who);
   drawLabel(g, f, q.text, { x: L.cx, y: y1, align: 'center', px, face: FACE.plaqueBold, t0: q.t, t, alpha: out, color: C.pearl, stagger: .008 });
   lines2.forEach((ws, i) => drawLabel(g, f, ws.join(' '), { x: L.cx, y: yb - (lines2.length - 1 - i) * lh2, align: 'center', px: px2, t0: who.t + .12, t, alpha: out * .92, color: C.pearl, stagger: .004 }));
 }

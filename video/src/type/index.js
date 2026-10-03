@@ -10,14 +10,15 @@
 //
 // A scene steers the type through f.type (all optional; anything missing falls back to the track's defaults):
 //   f.type.light   = { dir: [x, y] toward the light (screen, y down), elev 0..1, color '#hex', intensity, cool 0..1 }
-//   f.type.sun     = { x, y, r }      eclipse disk in px (S28 ring text, CHOP field centre)
+//   f.type.sun     = { x, y, r }      eclipse disk in px (S01 title composes under it, S28 ring text, CHOP field centre)
 //   f.type.pupil   = { x, y, r }      S29
 //   f.type.front   = { p 0..1 } | { y px }   S30 / S58 shadow front across the type block
 //   f.type.disk    = { k 0..1 }       S27 eclipse of the letters (progress), S35 HAL override
 //   f.type.magnitude, f.type.flash, f.type.backlit, f.type.invert, f.type.kick
 //   f.type.screen  = { main: [[x,y] x4], side: [[x,y] x4] }   terminal quads (S78-S80)
 //   f.type.plinth  = { quad: [[x,y] x4], draw: false }        S49 (draw: false when the scene paints the plinth)
-//   f.type.place   = { [eventId]: { x, y, align, maxW, size } } layout overrides (fractions of the frame)
+//   f.type.place   = { [eventId]: { x, y, align, maxW, size } } layout overrides (fractions of the frame; chops: x, y = centre)
+//   f.type.avoid   = [{ x, y, w, h }, ...]  boxes to keep clear (fractions): S36's stutter SKY takes the clearer third
 //   f.type.hide    = [eventId, ...]   f.type.manual = true (the scene calls drawText itself, e.g. under a foreground)
 
 import TRACK from './track.gen.js';

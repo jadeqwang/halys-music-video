@@ -16,7 +16,7 @@ export function eclipseCfg(cfg) {
     pool: (cfg.pool || []).map(p => ({ ...p, feather: (p.feather ?? .5) * (1 - .55 * e) })),
     satIn: cfg.satIn * (1 - .6 * e), satOut: cfg.satOut * (1 - .55 * e),
     // eclipseLift / eclipseCrush: how far the lights dim and the darks sink at totality (lower for lit figure plates)
-    liftIn: cfg.liftIn * (1 - (cfg.eclipseLift ?? .38) * e * e), crushFloor: cfg.crushFloor * (1 - (cfg.eclipseCrush ?? .5) * e), contrastIn: cfg.contrastIn * (1 + .3 * e),
+    liftIn: cfg.liftIn * (1 - (cfg.eclipseLift ?? .38) * e * e), crushFloor: cfg.crushFloor * (1 - (cfg.eclipseCrush ?? .5) * e), contrastIn: cfg.contrastIn * (1 + (cfg.eclipseContrast ?? .3) * e),
     warmIn: cfg.warmIn * (1 - .7 * e), crush: cfg.crush * (1 - .4 * e),
     metal: (cfg.metal ?? 0) + (cfg.metalK ?? .62) * e * e,
   };

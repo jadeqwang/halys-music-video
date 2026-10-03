@@ -9,8 +9,10 @@
 //                            bronze shield (S26's easter egg)
 //   horizonCanvas(o)         a draw(g, aw, ah) for canvasSource: low hills, haze and a distant river under a sky
 //                            region the engine replaces (S12, S18, S34)
+//   crowdStrokes(src, o)     Altdorfer's troops over a painted army: upright spears with lit tips, helmet and shield
+//                            glints, a few animal standards on poles, placed from the plate's figures (depth relief)
 
-import { clamp, lerp, sstep, hash3, hash4, TAU, fbm, mix3 } from './util.js';
+import { clamp, lerp, sstep, hash3, hash4, TAU, fbm, mix3, blurFast } from './util.js';
 
 const T = (pal, n) => pal.tube(n) || [.5, .5, .5];
 
@@ -212,6 +214,73 @@ export function crescentStrokes2(cx, cy, R, mag, ang, o = {}) {
     const pts = [];
     for (let q = 0; q <= 6; q++) { const th = ang + sgn * Th * q / 6, ri = inner(th), rm = (R + ri) / 2; pts.push(tf(Math.cos(th) * rm, Math.sin(th) * rm)); }
     out.push({ pts, r: Math.max(.6, th0 * .5 * (st > 1.5 ? 1 : 1)), c0: col, c1: col, a: o.a ?? .9, thick: o.thick ?? .7, seed: o.seed ?? .3, key: (o.key ?? 0) + (sgn > 0 ? 0 : .5), layer: 12, taper: .95, maxSeg: 10 });
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------- crowds (the wides)
+// Figures are where the plate's depth stands out of the ground plane (soldiers in ranks); one candidate per material
+// cell (so the spears ride with the content and never swim), thinned by perspective so a near soldier gets one spear and
+// a far rank a dense picket. o: {W, H, pal, horizonY, vanishX, river (half-width at the frame foot, uv), maxV, cell,
+// seed, drawIdx, light: 0..1, standards: [{u, v, kind: 'lion'|'horse', h}]}
+export function crowdStrokes(src, o) {
+  const { aw, ah, R, G, B, depth, mat } = src, out = [];
+  if (!depth || !mat) return out;
+  const W = o.W, H = o.H, S = W / aw, pal = o.pal, seed = o.seed ?? 7, u1 = H / 1080;
+  const hz = o.horizonY ?? .33, vx = o.vanishX ?? .5, river = o.river ?? .16, maxV = o.maxV ?? .8, cell = (o.cell ?? 8) * u1, light = o.light ?? 1;
+  const T = n => pal.tube(n) || [.5, .5, .5];
+  const shaft = mix3(T('rawUmber'), T('boneBlack'), .45), tip = mix3(T('leadWhite'), T('naples'), .45), glint = mix3(T('leadWhite'), T('naples'), .2);
+  const bronze = mix3(T('naples'), T('yellowOchre'), .55), dark = mix3(T('burntUmber'), T('boneBlack'), .6);
+  const Db = blurFast(depth, aw, ah, 5);
+  const best = new Map();
+  const y0 = Math.max(1, Math.ceil(hz * ah) + 1), y1 = Math.min(ah - 2, Math.floor(maxV * ah));
+  for (let y = y0; y <= y1; y++) {
+    const v = y / ah, p = clamp((v - hz) / (1 - hz)), rw = .012 + river * p;
+    for (let x = 1; x < aw - 1; x++) {
+      const uu = x / aw; if (Math.abs(uu - vx) < rw) continue;                    // not on the river
+      const i = y * aw + x, bump = depth[i] - Db[i];
+      if (bump < (o.bump ?? .004)) continue;                                      // a figure stands out of the ground
+      const mx = mat.mx[i] / cell, my = mat.my[i] / cell, cx = Math.floor(mx), cy = Math.floor(my);
+      const jx = hash3(cx, cy, seed), jy = hash3(cy, cx, seed + 3), d = (mx - cx - jx) ** 2 + (my - cy - jy) ** 2;
+      const key = cx * 100003 + cy, b = best.get(key);
+      if (!b || d < b.d) best.set(key, { d, x, y, i, cx, cy, p, bump });
+    }
+  }
+  const di = o.drawIdx || 0, lean0 = o.lean ?? 0;
+  for (const c of best.values()) {
+    const { x, y, i, cx, cy, p } = c, h1 = hash3(cx, cy, seed + 11), h2 = hash3(cx, cy, seed + 13);
+    const fh = H * (.014 + .26 * Math.pow(p, 1.2));                               // the figure's height here (layout px)
+    const keep = Math.min(1, Math.pow((cell * 1.4) / (fh * .32), 2));                   // ~one candidate per soldier
+    if (h1 > keep) continue;
+    const L = .2126 * R[i] + .7152 * G[i] + .0722 * B[i];
+    const px = x * S, py = y * S, boil = .012 * (hash4(cx, cy, di, seed) - .5);
+    // the spear: upright (a slight lean, never in step), its lit tip catching the low sun
+    if (h2 < (o.spears ?? .85)) {
+      const lean = lean0 + .05 * (hash3(cx, cy, seed + 17) - .5) + boil, len = fh * (1.05 + .45 * hash3(cx, cy, seed + 19));
+      const bx = px + (h2 - .5) * fh * .1, by = py - fh * .25, tx = bx + Math.sin(lean) * len, ty = by - Math.cos(lean) * len;
+      const w = Math.max(.55 * u1, fh * .009), q = .84;
+      out.push({ pts: [[bx, by], [lerp(bx, tx, q), lerp(by, ty, q)]], r: w, c0: shaft, c1: shaft, a: .78, thick: .3, seed: h1, key: 3 + h1 * 1e-3, layer: 11, taper: .15 });
+      out.push({ pts: [[lerp(bx, tx, q), lerp(by, ty, q)], [tx, ty]], r: w * 1.15, c0: tip, c1: tip, a: .55 + .4 * light, thick: .45, seed: h2, key: 3.5 + h2 * 1e-3, layer: 12, taper: .5 });
+    }
+    // helmet glint on the head, a shield's rim catching the light lower down (the lit side of the ranks)
+    const g = hash3(cx, cy, seed + 23);
+    if (g < .55 + .35 * clamp(L * 2 - .3)) {
+      const r = Math.max(.7 * u1, fh * .028);
+      out.push({ pts: [[px - r * .6, py - fh * .02], [px + r * .6, py - fh * .03]], r, c0: glint, c1: bronze, a: .6 + .35 * light, thick: .6, seed: g, key: 4 + g * 1e-3, layer: 12, taper: .3 });
+    }
+    if (g > .7 && p > .08) {
+      const r = Math.max(.8 * u1, fh * .06), sx = px + (g - .85) * fh * .3, sy = py + fh * .2;
+      out.push({ pts: [[sx - r * .9, sy - r * .5], [sx, sy - r], [sx + r * .9, sy - r * .5]], r: Math.max(.6 * u1, r * .18), c0: bronze, c1: glint, a: .6 * light + .2, thick: .5, seed: g * 7, key: 4.5 + g * 1e-3, layer: 12, taper: .4 });
+    }
+  }
+  // animal standards: a lion over the Lydians, a horse over the Medes, gilt on dark poles above the ranks
+  for (const [k, sd] of (o.standards || []).entries()) {
+    const h = sd.h * H, x0 = sd.u * W, yb = sd.v * H, yt = yb - h, a = sd.kind === 'horse' ? 1 : 0;
+    out.push({ pts: [[x0, yb], [x0, yt]], r: Math.max(.8 * u1, h * .018), c0: dark, c1: dark, a: .9, thick: .35, seed: k + .1, key: 5 + k * 1e-3, layer: 11, taper: .1 });
+    const s = h * .22, bx = x0, by = yt - s * .2, col = bronze, w = Math.max(.9 * u1, s * .16);
+    const shape = a ? [[[-.5, 0], [.45, 0]], [[.35, 0], [.6, -.45]], [[.6, -.45], [.8, -.38]], [[-.45, 0], [-.55, .4]], [[.35, 0], [.4, .42]], [[-.5, -.05], [-.75, .15]]]   // horse
+      : [[[-.5, 0], [.4, 0]], [[.4, 0], [.55, -.25]], [[.32, -.12], [.62, -.08]], [[-.45, 0], [-.5, .38]], [[.3, 0], [.35, .38]], [[-.5, -.02], [-.8, -.3]]];   // lion
+    for (const [j, seg] of shape.entries()) out.push({ pts: seg.map(([sx, sy]) => [bx + sx * s, by + sy * s]), r: w * (j === 0 ? 1.6 : 1), c0: col, c1: mix3(col, dark, .3), a: .92, thick: .5, seed: k * 10 + j, key: 6 + k * .01 + j * 1e-4, layer: 12, taper: .2 });
   }
   return out;
 }

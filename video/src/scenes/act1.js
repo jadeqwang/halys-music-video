@@ -73,6 +73,10 @@ function SKY(t, o = {}) {
   return { vortex: .22, twist: 1.45, arms: 3, cover: .55, glow: 1, drama: .6, fire: .9, glowR: .2, zenith: .16, gapHi: .74, horizon: .7,
     night: e.night * .92, ring: e.ring, ...o };
 }
+// totality (the 12 Aug 2026 sunset totalities): a luminous orange band all round the horizon, a pearly corona-lit dome
+// darkening to deep violet-umber (never black), Jupiter; on the land: silhouettes rim-lit by the band, structured darks
+const TOTALITY_SKY = { night: .8, ring: 1.35, glow: 0, drama: .2, fire: .2, zenith: .28 };
+const TOTALITY = { metalK: .2, eclipseLift: .1, eclipseCrush: .25, eclipseContrast: 0, darkVar: .085, satOut: .62, contrastIn: 1.1 };
 // the sun: position (frame uv), radius (fraction of width); the moon from the eclipse clock unless scripted
 function SUN(t, o = {}) {
   const e = E(t);
@@ -192,7 +196,9 @@ const wideOpts = (t, L, o = {}) => ({
 // ---------------------------------------------------------------- S01 THE EYE · S02 the blink · the battlefield at totality
 // The eclipse fills ~60 % of the frame: a black pupil, an iris of painted corona fibres that ripple, a broken ring of
 // madder-pink prominences, Jupiter a hard point upper left; the dark battlefield (master composition at totality) below.
-const EYE = { x: .5, y: .4, rMoon: .118 };              // moon radius as a fraction of frame HEIGHT
+// THE EYE is the hook: the black disk ~30 % of the frame height, its iris of corona fibres filling the upper ~60 % of the
+// frame (to ~2.3 moon radii, streamers beyond), the horizon band low under it; the hook title composes below it
+const EYE = { x: .5, y: .31, rMoon: .15 };              // moon radius as a fraction of frame HEIGHT
 async function eyeFrame(f, o = {}) {
   const t = f.t, W = f.W, H = f.H, hzTarget = .79;
   const real = hasPlate('P02');
@@ -201,23 +207,24 @@ async function eyeFrame(f, o = {}) {
   const rSun = EYE.rMoon * H / eclipse.K / W;
   return bronze(f, src, {
     eclipse: 1, pool: [{ x: .5, y: .86, rx: .5, ry: .08, feather: .9, k: .55 }, { x: .5, y: .93, rx: .05, ry: .12, feather: .8, k: .75, fig: true }], poolMatte: 0, envDim: .7, lightDir: [0, -1],
-    metalK: .3, plateKeep: real ? .45 : 0,
-    sky: SKY(t, { maxDepth: real ? .02 : .012, soft: .02, below: hzTarget + .03, horizonY: hzTarget, horizonLine: [[0, hzTarget], [1, hzTarget]], ignoreMatte: true, night: .96, ring: 1, glow: 0, drama: .2, cover: .62, fire: .2 }),
+    ...TOTALITY, metalK: .12, plateKeep: real ? .55 : 0,
+    sky: SKY(t, { maxDepth: real ? .02 : .012, soft: .02, below: hzTarget + .03, horizonY: hzTarget, horizonLine: [[0, hzTarget], [1, hzTarget]], ignoreMatte: true, ...TOTALITY_SKY, cover: .32, clouds: .6 }),
     sun: { x: EYE.x, y: EYE.y, r: rSun, off: o.off ?? 0, moonVis: 1, limb: [1.6 + (o.ring || 0) * 2, 2.2, 1, -Math.PI * .66], ring: o.ring || 0,
       ringAng: -Math.PI * .66, jupiter: { x: .2, y: .14 }, vis: 0 },
-    corona: { k: o.corona ?? 1, iris: 1, scale: 1.25, tilt: -.35, t },
+    corona: { k: o.corona ?? 1, iris: 1, scale: 1.35, tilt: -.35 + .03 * t, reach: 2.3, glow: 1.1, fall: 1.9, noLimbal: true, t },
     crushFloor: .08, crush: .25, satOut: .5, accents: .2, crack: .3, T: [0, .07, .08, .1, .12], midGate: .3, fineGate: .4,
     exposure: o.exposure ?? 1, ...o.extra,
   });
 }
-scene('S01', async f => { await eyeFrame(f); f.type.sun = { x: f.W * EYE.x, y: f.H * EYE.y, r: f.H * EYE.rMoon }; });
+const eyeGeo = f => ({ x: f.W * EYE.x, y: f.H * EYE.y, r: f.H * EYE.rMoon });
+scene('S01', async f => { await eyeFrame(f); f.type.sun = eyeGeo(f); f.type.pupil = eyeGeo(f); });
 
 // the blink (1.45-1.60, 60 fps insert): a diamond ring bursts on the limb at 11 o'clock, the brightest event of the opening
 shot({ id: 'S02f', t0: 1.45, t1: 1.60, world: 'bronze', cadence: 60, scene: 'S02f', parent: 'S02', params: { label: 'S02 diamond-ring blink' } });
 scene('S02f', async f => {
   const k = seg(f.t, 1.45, 1.60), burst = Math.pow(Math.sin(Math.PI * clamp(k * 1.15)), .7);
   await eyeFrame(f, { ring: 3.2 * burst + .2, off: .07, exposure: 1 + .5 * burst, corona: 1 - .4 * burst, extra: { drawIdx: Math.round(1.45 * 12) } });
-  f.type.flash = burst;
+  f.type.flash = burst; f.type.sun = eyeGeo(f); f.type.pupil = eyeGeo(f);
 });
 // the frozen battlefield at totality (1.60-3.65): the master composition painted dark, the black sun at the vanishing point
 shotOverride('S02', { t0: 1.60 });
@@ -226,10 +233,10 @@ scene('S02', async f => {
   const L = await wideLook(f, cam, { plate });
   const src = await wideSource(f, cam, plate);
   await bronze(f, src, wideOpts(t, L, {
-    sunR: .022, ppd: 17, sky: { night: .93, ring: 1.2, glow: 0, drama: .25, fire: .25, ignoreMatte: true },   // P02's matte is its black sun
+    sunR: .024, ppd: 17, sky: { ...TOTALITY_SKY, ignoreMatte: true },   // P02's matte is its black sun
     sun: { off: 0, moonVis: 1, limb: [1.4, 1.6, .6, -Math.PI * .66], beads: false },
-    extra: { eclipse: 1, corona: { k: 1, iris: .15, scale: 1.3, glow: 1 }, crushFloor: .07, envDim: .6, pool: L.pools.map(p => ({ ...p, k: p.k * .8, fig: true })),
-      metalK: .3, ...(L.real ? { plateKeep: .65, keepDim: 1, exposure: 1.5 } : {}) },
+    extra: { eclipse: 1, corona: { k: 1, iris: .15, scale: 1.4, glow: 1.3 }, crushFloor: .06, envDim: .75, pool: L.pools.map(p => ({ ...p, k: p.k * .85, fig: true })),
+      ...TOTALITY, lightPoint: [L.sun[0], L.hz], rim: .9, ...(L.real ? { plateKeep: .7, keepDim: 1, exposure: 1.2 } : {}) },
   }));
 });
 
@@ -241,7 +248,9 @@ scene('S03', async f => {
     // the two heroes stand lit by the 360-degree sunset (the plate's own light), the land beyond falls to umber
     await bronze(f, src, plateLook(src, { lightDir: [0, -1], keep: .55, keepDim: .9, fromLight: .5, poolMatte: .3, rim: .9, body: 0,
       pool: [{ x: .31, y: .45, rx: .12, ry: .52, feather: .6, k: .9, fig: true }, { x: .64, y: .45, rx: .12, ry: .52, feather: .6, k: .9, fig: true }],
-      extra: { eclipse: 1, eclipseLift: .12, eclipseCrush: .3, lightColor: '#dcd6ca', crush: .2, groundFlow: { y0: .45, k: .7 } } }));
+      extra: { eclipse: 1, ...TOTALITY, lightPoint: [.5, .37], lightColor: '#dcd6ca', crush: .2, groundFlow: { y0: .45, k: .7 },
+        // the 360-degree band glows behind them (painted sky above the plate's horizon; the matte keeps the figures)
+        sky: SKY(f.t, { ...TOTALITY_SKY, horizonY: .366, below: .39, maxDepth: .04, soft: .03, cover: .3, ring: 1.5 }) } }));
     return;
   }
   await bronze(f, src, {
@@ -707,7 +716,7 @@ scene('S31', async f => {
   const src = await rp(f, 'P20', { id: 'c_armies', cam: { cx: .5, cy: .32, zoom: 1.4 } }, { cx: .5, cy: .5, zoom: 1.0 });
   const up = sstep(102.1, 102.45, t);                  // the formation moment: every face catches the pale light
   const sun = real ? { x: .5, y: .34, r: .042 } : { x: .515, y: .14, r: .036 };
-  const skyO = SKY(t, { maxDepth: real ? .02 : .012, soft: .02, below: real ? .74 : .3, horizonY: real ? .72 : .285, night: .9, ring: 1, glow: .25, drama: .3 });
+  const skyO = SKY(t, { maxDepth: real ? .02 : .012, soft: .02, below: real ? .74 : .3, horizonY: real ? .72 : .285, ...TOTALITY_SKY, glow: .25, cover: .35 });
   const sunO = SUN(t, { x: sun.x, y: sun.y, r: sun.r, moonVis: 1, beads: true, limb: [1.1 + .8 * up, 1.6, .9, -Math.PI * .66], ppd: real ? 22 : 16 });
   const coronaO = { k: lerp(.35, .85, seg(t, 100.24, 103.6)), iris: .3, scale: .9 };
   if (real) {
@@ -716,7 +725,7 @@ scene('S31', async f => {
     await bronze(f, src, plateLook(src, { lightDir: [0, -1], lightPoint: [.5, .74], keep: .55, keepDim: .9, rim: .8, poolMatte: .35 + .25 * up, body: 0, fromLight: .5,
       pool: [{ x: .13, y: .36, rx: .15, ry: .3, feather: .7, k: .75 + .2 * up, fig: true }, { x: .87, y: .36, rx: .15, ry: .3, feather: .7, k: .75 + .2 * up, fig: true },
         { x: .5, y: .75, rx: .35, ry: .08, feather: .8, k: .6 }],
-      extra: { lightColor: '#dcd6ca', matteFromDepth: [.22, .4], keepMatte: true, eclipseLift: .15, eclipseCrush: .3, sky: skyO, sun: sunO, corona: coronaO } }));
+      extra: { lightColor: '#dcd6ca', matteFromDepth: [.22, .4], keepMatte: true, ...TOTALITY, sky: skyO, sun: sunO, corona: coronaO } }));
     return;
   }
   await bronze(f, src, {
@@ -736,7 +745,8 @@ scene('S32', async f => {
   if (hasPlate('P21')) {
     await bronze(f, src, plateLook(src, { lightDir: [0, -1], keep: .55, keepDim: .9, fromLight: .5, poolMatte: .3, rim: .9, body: 0,
       pool: [{ x: .3, y: .45, rx: .13, ry: .5, feather: .6, k: .9, fig: true }, { x: .62, y: .45, rx: .13, ry: .5, feather: .6, k: .9, fig: true }],
-      extra: { lightColor: '#dcd6ca', crush: .2, eclipseLift: .15, eclipseCrush: .3, groundFlow: { y0: .5, k: .7 } } }));
+      extra: { lightColor: '#dcd6ca', crush: .2, ...TOTALITY, lightPoint: [.5, .42], groundFlow: { y0: .5, k: .7 },
+        sky: SKY(f.t, { ...TOTALITY_SKY, horizonY: .42, below: .45, maxDepth: .04, soft: .03, cover: .3, ring: 1.4 }) } }));
     return;
   }
   await bronze(f, src, { lightDir: [0, -1], lightColor: '#dcd6ca', pool: [{ x: .4, y: .32, rx: .12, ry: .3, feather: .7, k: .8 }, { x: .62, y: .34, rx: .12, ry: .3, feather: .7, k: .8 }],
@@ -747,7 +757,7 @@ scene('S33', async f => {
   const A = { plate: 'P22a', standin: { id: 'a_duel', cam: k => ({ cx: .3, cy: .22, zoom: 3.4 + .1 * k }) }, cam: k => ({ cx: .5, cy: .5, zoom: 1.02 + .03 * k, mirror: true }) };
   const B = { plate: 'P22b', standin: { id: 'a_duel', cam: k => ({ cx: .52, cy: .48, zoom: 3.4 + .1 * k }) }, cam: k => ({ cx: .5, cy: .5, zoom: 1.02 + .03 * k }) };
   await diptych(f, A, B, { lightDir: [0, -1], lightColor: '#dcd6ca', pool: [{ x: .25, y: .5, rx: .2, ry: .4, feather: .7, k: .85 }, { x: .75, y: .5, rx: .2, ry: .4, feather: .7, k: .85 }], poolMatte: .5, crushFloor: .07, envDim: .55,
-    poolFromLight: { k: .7, bg: .3 }, plateKeep: hasPlate('P22a') ? .6 : 0, keepDim: .95, exposure: 1.15, eclipseLift: .15, eclipseCrush: .3 });
+    poolFromLight: { k: .7, bg: .3 }, plateKeep: hasPlate('P22a') ? .6 : 0, keepDim: .95, exposure: 1.15, ...TOTALITY });
 });
 
 // ---------------------------------------------------------------- S34: last light (beads, the diamond ring, white, the black pupil at 110.58)
@@ -767,7 +777,7 @@ async function SCENE_S34(f) {
   const white = sstep(110.18, 110.42, t);
   await bronze(f, src, {
     eclipse: .97, lightDir: [0, -1], pool: [{ x: .5, y: .95, rx: .5, ry: .1, feather: .8, k: .35 }], poolMatte: 0,
-    sky: SKY(t, { horizonY: hz, night: .93, ring: 1, glow: .15 + .3 * ring, drama: .25 }),
+    sky: SKY(t, { horizonY: hz, ...TOTALITY_SKY, glow: .15 + .3 * ring, cover: .35 }), ...TOTALITY,
     sun: { x: sx, y: sy, r: rS * z, alt: 9, off, moonVis: 1, beads: t < 109.9, ring: ring * (1 + 3 * push), ringAng: ang, limb: [1 + ring, 1.8 * z, 1, ang], jupiter: { x: .2 - push, y: .14 } },
     corona: { k: .25 + .35 * sstep(109.3, 110.0, t), iris: .2, scale: .9 },
     accents: 0, white,
