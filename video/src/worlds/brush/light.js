@@ -72,6 +72,7 @@ export function reference(F, cfg, P) {
   const R = new Float32Array(N), G = new Float32Array(N), B = new Float32Array(N), Lr = new Float32Array(N), rimF = new Float32Array(N);
   const lab = [0, 0, 0], inn = [0, 0, 0], c = [0, 0, 0], tmp = [0, 0, 0];
   const extraLight = cfg.lightField || null, extraShadow = cfg.shadowField || null;
+  const keep = clamp(cfg.plateKeep ?? 0);
   for (let y = 0; y < ah; y++) for (let x = 0; x < aw; x++) {
     const i = y * aw + x;
     rgb2lab(F.R[i], F.G[i], F.B[i], lab);
@@ -104,6 +105,8 @@ export function reference(F, cfg, P) {
     const dv = dvar ? (dvar[i] - .5) * cfg.darkVar : 0;
     const Lout = cfg.crushFloor + dv + cfg.crush * Lk * Lk + glint * Math.max(0, Lk - cfg.crushFloor) * .85;
     let L2 = lerp(Lout, Lin * lerp(cfg.envDim, 1, fig[i]), p);
+    // well-lit plates keep part of their own value design (the pool push stays, the subject is not flattened)
+    if (keep) { const Lp = clamp(.5 + (Math.pow(clamp(Lk), cfg.gammaIn) * cfg.liftIn - .5) * cfg.contrastIn, .03, .97); L2 = lerp(L2, Lp * lerp(cfg.keepDim ?? .85, 1, Math.max(p, fig[i])), keep); }
     L2 += rim * (.95 - L2) * .85;
     let sat = lerp(cfg.satOut, cfg.satIn, p);
     a = a * sat + lerp(.013, .004 + cfg.warmIn * .35, p) + .01 * rim; b = b * sat + lerp(.026, .012 + cfg.warmIn, p) + .035 * rim;

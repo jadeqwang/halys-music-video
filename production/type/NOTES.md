@@ -254,7 +254,9 @@ Other text notes:
 * **SHOTLIST housekeeping**: resolved; the P42–P46 plate rows are out of the §14 shot table.
 * **Era captions**: the table's Text column has no role (the parser calls them CARVED); the type uses PLAQUE faces, as
   the header says.
-* **Typography only, not spelling**: straight quotes are set as typographic quotes. The side panes word-wrap with a
+* **Typography only, not spelling**: straight quotes are set as typographic quotes. Dotted credits and plaques break
+  between their ` · ` groups, never inside one, and drop the dot at the break (portrait: `VICTOR GLOVER · ARTEMIS II` /
+  `DURING TOTALITY · 2026`, `NEXT TOTALITY · 2027-08-02` / `NEAR LUXOR · 6M23S`). The side panes word-wrap with a
   hanging indent; the main pane hard-wraps at 92 columns like a real terminal.
 * **Collisions to watch** once the real scenes land: the counter (top right) against anything tall on the right in
   S24–S34, the S53 card against Thales's construction lines and the lingering Thales block, and S35's caption under

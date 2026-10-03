@@ -77,8 +77,8 @@ export function smartQuotes(s) {
 }
 
 // Balanced line breaking: the fewest lines that fit maxW, then the most even (minimise the longest line, avoid orphans).
-export function breakLines(words, face, px, maxW, maxLines = 6) {
-  const n = words.length, W = (a, b) => textWidth(face, px, words.slice(a, b).join(' '));
+export function breakLines(words, face, px, maxW, maxLines = 6, sep = ' ') {
+  const n = words.length, W = (a, b) => textWidth(face, px, words.slice(a, b).join(sep));
   if (n <= 1 || W(0, n) <= maxW) return [words.slice()];
   let best = null;
   const lim = Math.min(n, 13);
@@ -98,6 +98,18 @@ export function breakLines(words, face, px, maxW, maxLines = 6) {
   const out = [];
   for (let j = 0; j + 1 < best.cuts.length; j++) out.push(words.slice(best.cuts[j], best.cuts[j + 1]));
   return out;
+}
+
+// Labels with ' · ' separators (credits, plaques, the end card) break between the groups, never inside one
+// (`VICTOR GLOVER · ARTEMIS II` / `DURING TOTALITY · 2026`, not `… ARTEMIS` / `II · …`); the separator at a break is
+// dropped. Falls back to word breaks when a group alone is wider than maxW. Returns lines as word arrays.
+export function breakGroups(text, face, px, maxW, maxLines = 3) {
+  const groups = text.split(' · ');
+  if (groups.length > 1 && groups.every(g => textWidth(face, px, g) <= maxW)) {
+    const ls = breakLines(groups, face, px, maxW, maxLines, ' · ');
+    if (ls.length <= maxLines) return ls.map(gs => gs.join(' · ').split(' '));
+  }
+  return breakLines(text.split(' '), face, px, maxW, maxLines);
 }
 
 // Lay out lines of text into positioned words. lines: [[word, ...], ...]; returns words with x (left), y (baseline),

@@ -380,8 +380,8 @@ async function duelLook(f, src, pcam, o = {}) {
   const sun = (await plateSunUV(f, 'P12', pcam, o.keys)) || [.75, .19];
   return {
     lightDir: [sun[0] - .5, -.6], lightPoint: sun,
-    pool: [{ x: .3, y: .45, rx: .2, ry: .42, feather: .75, k: .8 }, { x: .72, y: .45, rx: .2, ry: .42, feather: .75, k: .8 }, ...facePools(src, { body: .4 })],
-    poolFromLight: { k: .5, bg: .2 }, liftDark: .5, poolMatte: .75, envDim: .6, crushFloor: .08, rim: 1, faceMin: .3, glint: 1,
+    pool: facePools(src, { body: .5 }),
+    poolFromLight: { k: .75, bg: .3 }, poolMatte: .55, envDim: .7, crushFloor: .07, rim: .8, faceMin: .3, glint: 1, plateKeep: .5, keepDim: .8,
     sky: SKY(f.t, { maxDepth: .03, soft: .03, below: .3, horizonY: .26, drama: .4, glow: 1.0 }),
     sun: SUN(f.t, { x: sun[0], y: sun[1], r: o.r ?? .022 }),
   };
@@ -462,8 +462,15 @@ scene('S26', async f => {
   // right of the flare); the stand-in's shield is a whole convex disc
   const mirror = real ? { cx: .7, cy: .62, R: .2, u: 0, v: 0, h: .5 } : { cx: .48, cy: .5, R: .42, u: .22, v: -.12, h: .3 };
   await bronze(f, src, {
-    lightDir: [-.85, -.5], pool: [{ x: .45, y: .45, rx: .5, ry: .5, feather: .8, k: .95 }, { x: gx, y: .42, rx: .08, ry: .3, rot: .4, feather: .6, k: gk > 0 && gk < 1 ? 1 : 0 }],
-    poolMatte: .3, crushFloor: .1, accents: 1.4, accentThick: 1.8, glint: 1, impasto: .7,
+    ...(real ? {
+      // P16 is lit like a painting already (the sun flaring in from the right, the bronze rim and the lion): keep it
+      lightDir: [.9, -.45], pool: [{ x: .5, y: .45, rx: .62, ry: .58, feather: .8, k: .9, fig: true }, { x: gx, y: .42, rx: .08, ry: .3, rot: .4, feather: .6, k: gk > 0 && gk < 1 ? 1 : 0, fig: true }],
+      poolFromLight: { k: .8, matte: false }, poolMatte: 0, envDim: 1, crushFloor: .05, plateKeep: .55, keepDim: .75,
+    } : {
+      lightDir: [-.85, -.5], pool: [{ x: .45, y: .45, rx: .5, ry: .5, feather: .8, k: .95 }, { x: gx, y: .42, rx: .08, ry: .3, rot: .4, feather: .6, k: gk > 0 && gk < 1 ? 1 : 0 }],
+      poolMatte: .3, crushFloor: .1,
+    }),
+    accents: 1.4, accentThick: 1.8, glint: 1, impasto: .7,
     overStrokes: egg ? ({ pal }) => PR.mirrorFigure({ cx: f.W * mirror.cx, cy: f.H * mirror.cy, R: f.H * mirror.R, u: mirror.u, v: mirror.v, h: mirror.h, pal }) : null,
   });
 });

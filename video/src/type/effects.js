@@ -5,7 +5,7 @@
 // its onset (at 12 fps up to one drawing late); chops slam on the exact master frame; sung words may linger up to ~1.5 s
 // past a cut.
 
-import { FACE, C, LIGHT, applyFont, textWidth, glyphX, breakLines, layoutLines, byAspect, smartQuotes, ease, measure } from './style.js';
+import { FACE, C, LIGHT, applyFont, textWidth, glyphX, breakLines, breakGroups, layoutLines, byAspect, smartQuotes, ease, measure } from './style.js';
 import { gild } from './gild.js';
 import { chopWord, chopFit, chopEcho, halDisk } from './chop.js';
 import { drawCartouche } from './cartouche.js';
@@ -191,7 +191,7 @@ function plaque(g, f, e, t) {
   const L = f.L, it = e.items[0], px = (e.size === 'hook' ? SIZE.plaqueHook : SIZE.plaque) * u(L);
   const A = anchorPos(L, e.anchor || 'lowerLeft'), pl = placeOf(f, e);
   const face = FACE.plaque, s = smartQuotes(it.text);
-  const mw = A.maxW, lines = breakLines(s.split(' '), face, px, mw);
+  const mw = A.maxW, lines = breakGroups(s, face, px, mw, 4);
   const lh = px * 1.55, n = lines.length;
   const yTop = A.valign === 'top' ? A.y + face.cap * px : A.valign === 'bottom' ? A.y - (n - 1) * lh : A.y - (n - 1) * lh / 2;
   lines.forEach((ws, i) => drawLabel(g, f, ws.join(' '), { x: pl && pl.x != null ? pl.x * L.W : A.x, y: pl && pl.y != null ? pl.y * L.H + i * lh : yTop + i * lh,
@@ -378,7 +378,7 @@ function quote(g, f, e, t) {
   const L = f.L, q = e.items.find(i => i.key === 'q'), who = e.items.find(i => i.key === 'who');
   const px = 40 * u(L), px2 = 27 * u(L), out = 1 - smooth(clamp((t - (e.t1 - .18)) / .18));
   const yb = L.portrait ? .905 * L.H : .915 * L.H;
-  const lines2 = breakLines(who.text.split(' '), FACE.plaque, px2, L.safe.w);
+  const lines2 = breakGroups(who.text, FACE.plaque, px2, L.safe.w, 3);
   const lh2 = px2 * 1.6, y1 = yb - (lines2.length - 1) * lh2 - 1.25 * px - .35 * px2;
   drawLabel(g, f, q.text, { x: L.cx, y: y1, align: 'center', px, face: FACE.plaqueBold, t0: q.t, t, alpha: out, color: C.pearl, stagger: .008 });
   lines2.forEach((ws, i) => drawLabel(g, f, ws.join(' '), { x: L.cx, y: yb - (lines2.length - 1 - i) * lh2, align: 'center', px: px2, t0: who.t + .12, t, alpha: out * .92, color: C.pearl, stagger: .004 }));
@@ -807,7 +807,7 @@ function endcard(g, f, e, t) {
   if (t >= by.t) runs.push({ text: by.text, x: L.cx - bw / 2, y: y + .55 * px, face: bf, px: bpx, sweep: { p: clamp((c.tq - by.t) / .5), band: bpx } });
   gild(g, runs, gildOpts(c, e, { light: LIGHT.end, shadow: .5, boil: 0 }));
   if (t >= nx.t) {
-    const npx = 32 * u(L), lines = breakLines(nx.text.split(' '), FACE.plaque, npx, L.safe.w);   // the one practical line: legible on a phone
+    const npx = 32 * u(L), lines = breakGroups(nx.text, FACE.plaque, npx, L.safe.w, 3);   // the one practical line: legible on a phone
     lines.forEach((ws, i) => drawLabel(g, f, ws.join(' '), { x: L.cx, y: L.safe.y + L.safe.h - .01 * L.H - (lines.length - 1 - i) * npx * 1.6, align: 'center', px: npx, t0: nx.t, t }));
   }
 }
