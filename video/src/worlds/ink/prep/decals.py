@@ -11,6 +11,10 @@ Per frame (plate px, the 960x540 analysis frame):
           the fabric moves, turns and bends
   patch   the round 1420 MHz patch on her LEFT sleeve: the dark ring's ellipse (centre, axes, angle), tracked from the
           first frame's position
+  fold    (body drawings) the jacket's fold field over the print: fold depth 0..1 from the plate's own shading (each
+          material's lightness over its lit level, the letters left out), smoothed, then carried along the folds' own
+          axis into the print (the plate draws the print flat, but its folds run up to it), on a 2 px grid, uint8 base64,
+          with the fold axis; decals.js shades and kinks the print with it
 Output: video/src/worlds/ink/decals/<plate>_<take stem>.json  {pf: {circle, text, patch}}; --debug also writes a contact
 sheet of the detections to video/out/review_v2/room/decals_<plate>.jpg.
 """
@@ -154,6 +158,72 @@ def patch(img, prev):
     return ell(best) if best else None
 
 
+FOLD_FRAMES = {'P57': [13, 33, 38, 42, 45, 49, 55, 59, 63, 67, 69]}     # the body drawings of S78's x-sheet (sheets.js)
+
+
+def matte_of(pid, take, pf):
+    d = pathlib.Path(__file__).resolve().parents[1] / 'mattes' / f'{pid}_{take}'
+    c = sorted(d.glob('m*.png'), key=lambda q: abs(int(q.stem[1:]) - pf)) if d.exists() else []
+    return (cv2.imread(str(c[0]), cv2.IMREAD_GRAYSCALE).astype(np.float32) / 255) if c else None
+
+
+def fold_field(img, matte, C, T, step=2, ctx=64, lam=34., reach=96):
+    """the jacket's shading over the print: shade = the hair's cast shadow (local) and the folds (carried along their axis),
+    fold = the folds alone (they kink the print); both 0..1 on a grid over the print, uint8 base64"""
+    import base64
+    R = max(C['rx'], C['ry'])
+    xs = [C['cx'] - 1.25 * R, C['cx'] + 1.25 * R] + ([p[0] for p in T['pts']] if T else [])
+    ys = [C['cy'] - 1.15 * R] + ([p[2] for p in T['pts']] if T else [C['cy'] + 1.2 * R])
+    x0, x1, y0, y1 = int(min(xs) - 10), int(max(xs) + 12), int(min(ys)), int(max(ys) + 12)
+    X0, X1, Y0, Y1 = max(0, x0 - ctx), min(959, x1 + ctx), max(0, y0 - ctx), min(539, y1 + ctx)
+    crop = img[Y0:Y1 + 1, X0:X1 + 1]
+    lab = cv2.cvtColor(crop, cv2.COLOR_BGR2LAB).astype(np.float32)
+    L, A, B = lab[..., 0], lab[..., 1] - 128, lab[..., 2] - 128
+    her = (matte[Y0:Y1 + 1, X0:X1 + 1] > .5) if matte is not None else np.ones(L.shape, bool)
+    blue = her & (B < -12) & (L > 90)
+    jack = her & ~blue & (L > 110) & (np.abs(B) < 16) & (np.abs(A) < 16)
+    hair = her & (L < 80)
+    near_hair = cv2.dilate(hair.astype(np.uint8), np.ones((5, 5), np.uint8)) > 0
+    below_hair = cv2.dilate(hair.astype(np.uint8), np.ones((15, 9), np.uint8), anchor=(4, 1)) > 0    # the cast shadow falls below
+    band = np.zeros(L.shape, np.uint8)
+    if T:
+        poly = np.int32([[p[0] - X0 - 3, p[1] - 4 - Y0] for p in T['pts']] + [[p[0] - X0 + 3, p[2] + 4 - Y0] for p in T['pts'][::-1]])
+        cv2.fillPoly(band, [poly], 1)
+    valid = (blue | jack) & (band == 0) & ~near_hair
+    ratio = np.ones_like(L)
+    for m in (blue, jack):
+        mm = m & valid
+        if mm.sum() > 30:
+            lit = np.percentile(L[mm], 92); ratio[mm] = L[mm] / max(lit, 1)
+    h = np.clip((1 - ratio - .05) / .15, 0, 1) * valid
+    def mblur(v, w, sg):
+        vb = cv2.GaussianBlur(v * w, (0, 0), sg); wb = cv2.GaussianBlur(w, (0, 0), sg)
+        return np.where(wb > .15, vb / np.maximum(wb, 1e-3), 0)
+    w = valid.astype(np.float32)
+    h = mblur(h, w, 1.6)
+    hs = h * below_hair                          # the hair's cast shadow: shades the print where it falls, never a fold
+    hf = h * ~below_hair                         # the folds
+    # the folds' axis: structure tensor of the fold field (gradients run across a fold; the axis is perpendicular)
+    gx = cv2.Sobel(hf, cv2.CV_32F, 1, 0, ksize=3); gy = cv2.Sobel(hf, cv2.CV_32F, 0, 1, ksize=3)
+    Jxx, Jyy, Jxy = (gx * gx).sum(), (gy * gy).sum(), (gx * gy).sum()
+    ang = .5 * np.arctan2(2 * Jxy, Jxx - Jyy) + np.pi / 2
+    ax, ay = float(np.cos(ang)), float(np.sin(ang))
+    # carry the folds along their axis across the print (the plate draws the print flat, its folds run up to it)
+    H, W = h.shape
+    ext = hf.copy()
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+    for t in range(2, reach + 1, 2):
+        k = np.exp(-t / lam)
+        for sgn in (1, -1):
+            ext = np.maximum(ext, cv2.remap(hf, xx + sgn * t * ax, yy + sgn * t * ay, cv2.INTER_LINEAR, borderValue=0) * k)
+    ext *= her & ~hair
+    shade = np.maximum(ext, hs)
+    gxs = np.clip(np.arange(x0, x1 + 1, step) - X0, 0, W - 1); gys = np.clip(np.arange(y0, y1 + 1, step) - Y0, 0, H - 1)
+    enc = lambda F: base64.b64encode(np.clip(F[gys][:, gxs] * 255 + .5, 0, 255).astype(np.uint8).tobytes()).decode()
+    return {'x0': x0, 'y0': y0, 'step': step, 'nx': int(len(gxs)), 'ny': int(len(gys)), 'axis': [round(ax, 4), round(ay, 4)],
+            'shade': enc(shade), 'fold': enc(ext)}
+
+
 def main(argv):
     pos = [a for a in argv if not a.startswith('--')]
     kw = {a[2:].split('=', 1)[0]: (a.split('=', 1)[1] if '=' in a else True) for a in argv if a.startswith('--')}
@@ -171,6 +241,8 @@ def main(argv):
             c = circle(img, seed['circle'])
             t = text_band(img, c) if c else None
             res[str(pf)] = {'circle': c, 'text': t, 'patch': p}
+            if c and pf in FOLD_FRAMES.get(pid, []):
+                res[str(pf)]['fold'] = fold_field(img, matte_of(pid, take, pf), c, t)
     OUT.mkdir(parents=True, exist_ok=True)
     out = OUT / f'{pid}_{take}.json'
     old = json.loads(out.read_text()) if out.exists() else {}

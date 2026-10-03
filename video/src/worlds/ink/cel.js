@@ -290,8 +290,14 @@ export function analyzeCel(inp, cfg0 = {}) {
     const msk = new Float32Array(N); let any = 0, ks = 0;
     for (let i = 0; i < N; i++) if (mat[i] === m.id) { if (keepSh[i]) ks++; else { msk[i] = 1; any++; } }
     if (!any) continue;
-    const s = gaussMasked(L, msk, W, H, ks ? Math.max(cfg.shadeSigma, 3.2) : cfg.shadeSigma);
+    const sg = ks ? Math.max(cfg.shadeSigma, 3.2) : cfg.shadeSigma, s = gaussMasked(L, msk, W, H, sg);
     for (let i = 0; i < N; i++) if (mat[i] === m.id) Ls[i] = s[i];
+    if (ks) {   // deep inside a big keepShade zone (the print's circle) nothing votes: the fabric there is lit
+      const wb = gauss(msk, W, H, sg), v = [];
+      for (let i = 0; i < N; i += 7) if (msk[i]) v.push(s[i]);
+      v.sort((a, b) => a - b); const lit = v.length ? v[Math.floor(v.length * .85)] : 1;
+      for (let i = 0; i < N; i++) if (keepSh[i] && mat[i] === m.id && wb[i] < .05) Ls[i] = lit;
+    }
   }
   const lab = new Uint8Array(N);
   for (let i = 0; i < N; i++) {

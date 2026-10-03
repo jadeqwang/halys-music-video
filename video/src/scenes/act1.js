@@ -752,9 +752,9 @@ scene('S28', async f => {
       const pcam = kk => ({ cx: .5, cy: .5, zoom: 1.03 + .04 * kk });
       const src = await rp(f, 'P50', null, pcam, { gain: 1.3 });             // a dim plate (meta gain 1.85)
       // MediaPipe locks onto the lion shield as a face from plate frame 45 on, so the faces are lit by design: one key on
-      // each of the five heads (plate uv, measured on the take), drifting up as they look up; the shield keeps its glint
-      // each face catches the pale light as it turns up (plate times of the turns: left Mede 2.85, left Lydian 1.9, the
-      // sword-bearer 2.2, right Lydian 2.55, right Mede 2.75), so the wave reads as light running along the line
+      // each of the five heads (plate uv, measured on the take), drifting up as they look up. Each face catches the pale
+      // light as it turns (plate times of the turns: left Mede 2.85, left Lydian 1.9, the sword-bearer 2.2, right Lydian
+      // 2.55, right Mede 2.75), so the wave reads as light running along the line
       const tp = plateTimeOf(f.shot, t, { keys: KEYS.S28.P50 }), c = camAt(pcam, f);
       const toF = (u, v) => [(u - c.cx) * c.zoom + .5, (v - c.cy) * c.zoom + .5];
       const heads = [[.17, .30, 2.85], [.31, .26, 1.9], [.56, .27, 2.2], [.73, .25, 2.55], [.87, .29, 2.75]].map(([u, v, tu]) => {
