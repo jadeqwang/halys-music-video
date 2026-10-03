@@ -5,7 +5,7 @@
 // river behind them in the low golden light.
 //
 //   259.36 the hit       caught mid-fight: shields slam, swords up all along the line
-//   259.775 THROW DOWN   (the chop) still fighting; at ~260.3 they stop dead and their hands open
+//   259.775 THROW DOWN   (the chop) still fighting; at 260.45 they stop dead and their hands open
 //   260.62 BLADE         every blade falls at once: S76 opens on the falling swords, which strike the sand with the sound
 //                        design's clang (260.685)
 //   261.05 hit           a late one: the nearest Lydian, the only man still holding his sword, lets go; it lands on the hit
@@ -23,10 +23,11 @@ const clamp = (x, a = 0, b = 1) => x < a ? a : x > b ? b : x;
 const lerp = (a, b, k) => a + (b - a) * k;
 const seg = (t, a, b) => clamp((t - a) / (b - a));
 
-// keys (song s -> plate s, take 5): mid-fight from the hit; the hands open at 260.40 (plate 1.55); the cut lands with the
-// swords in the air (1.76) and they strike the sand on the clang (1.88); the Lydian's held sword, lowering (1.88-3.40), is
-// compressed into the next 0.24 s; his sword drops and leaves the frame at its foot on the 261.05 hit (3.62)
-export const P54_KEYS = [[259.36, .20], [260.40, 1.55], [260.62, 1.76], [260.69, 1.88], [260.93, 3.40], [261.05, 3.62], [262.72, 5.0]];
+// keys (song s -> plate s, take 5): mid-fight from the hit; the hands open at 260.45 (plate 1.58), so the cut on BLADE
+// catches the swords in the air and they strike the sand with the clang (1.90 = 260.72); the Lydian's held sword,
+// lowering (1.90-3.54), is compressed into one drawing; his hand opens (3.54 = 260.83) and his sword falls, a little
+// slowed, to hit the sand at his feet (3.71, the frame's bottom edge) on the 261.05 hit (the drawing at 261.037)
+export const P54_KEYS = [[259.36, .20], [260.45, 1.58], [260.72, 1.90], [260.83, 3.54], [261.04, 3.715], [262.72, 5.0]];
 // the framing: landscape holds the mirrored line (a slow push); portrait (a 0.45-wide window on the plate) starts on the
 // corridor between the two lines and drifts left onto the nearest Lydian for the late drop
 function cam(f, t) {

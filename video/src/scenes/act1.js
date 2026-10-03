@@ -748,7 +748,7 @@ scene('S28', async f => {
     (f.type || (f.type = {})).sun = ringSun();
     if (hasPlate('P50')) {
       const pcam = kk => ({ cx: .5, cy: .5, zoom: 1.03 + .04 * kk });
-      const src = await rp(f, 'P50', null, pcam, { gain: 1.45 });            // a dim plate (meta gain 1.85)
+      const src = await rp(f, 'P50', null, pcam, { gain: 1.3 });             // a dim plate (meta gain 1.85)
       // MediaPipe locks onto the lion shield as a face from plate frame 45 on, so the faces are lit by design: one key on
       // each of the five heads (plate uv, measured on the take), drifting up as they look up; the shield keeps its glint
       const tp = plateTimeOf(f.shot, t, { keys: KEYS.S28.P50 }), up = sstep(1.8, 3.0, tp), c = camAt(pcam, f);
@@ -756,7 +756,7 @@ scene('S28', async f => {
       const heads = [[.17, .30], [.31, .26], [.56, .27], [.73, .25], [.87, .29]].map(([u, v]) => toF(u, v - .015 * up));
       src.faces = [];
       await bronze(f, src, plateLook(src, { lightDir: [.55, -.83], lightPoint: [1.02, -.05], keep: .6, keepDim: .95, fromLight: .55, bg: .3, rim: .9, poolMatte: .35, body: 0,
-        pool: [...heads.map(([x, y]) => ({ x, y, rx: .055, ry: .085, feather: .7, k: 1, fig: true })), { x: .5, y: .45, rx: .5, ry: .18, feather: .8, k: .55 }],
+        pool: [...heads.map(([x, y]) => ({ x, y, rx: .045, ry: .07, feather: .7, k: .7, fig: true })), { x: .5, y: .45, rx: .5, ry: .18, feather: .8, k: .55 }],
         extra: { lightColor: '#dcd6ca', eclipseLift: .18, eclipseCrush: .22, exposure: 1.08, groundFlow: { y0: .84, k: .7 },
           focus: heads.map(([x, y]) => ({ x, y, rx: .04, ry: .065, k: 1 })),
           // the steel sky over them glows toward the sun beyond the top right corner (the plate's own light)

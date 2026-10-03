@@ -133,7 +133,10 @@ const E = (cx, cy, rx, ry) => ({ cx, cy, rx, ry });
 // room for the typing poses; the sliver of her cheek beside her hair when seated; the chair back (its trim is chair, not
 // her orange)
 const HAND57 = { 13: E(.502, .652, .04, .046), 49: E(.515, .654, .036, .042), 69: E(.481, .646, .036, .044) };
-const CHEEK57 = E(.39, .402, .011, .044);
+// the sliver of her cheek moves right as she leans (measured: seated x 368-381, f33 x 380-398, leaned x 431-454, setup px);
+// tight zones per body drawing, because the hair's lit locks are warm and bright too
+const cheek57 = pf => pf >= 45 && pf <= 55 ? E(.461, .395, .015, .058) : pf === 42 ? E(.445, .396, .016, .055) : pf === 38 ? E(.425, .396, .016, .05)
+  : pf === 33 ? E(.405, .396, .014, .046) : E(.39, .4, .012, .044);
 // her head and hair in every S78 drawing (setup px): the hair takes its second tone (the sheen) only here, from the plate's
 // lighter locks, so the black reads as anime hair; the chair and trousers stay one flat black
 export const HAIR57 = { poly: [[226, 56], [474, 56], [474, 338], [226, 338]].map(([x, y]) => [x / 960, y / 540]) };
@@ -144,7 +147,7 @@ export function celZones(e) {
   if (e.src === 'sc') return { faces: true, skin: [], navy: null, allowBlue: null };
   if (e.src === 'P57') {
     const body = e.ref || e.pf, near = [13, 49, 69].reduce((b, k) => Math.abs(k - body) < Math.abs(b - body) ? k : b, 13);
-    return { faces: false, skin: near === 49 ? [HAND57[49]] : [HAND57[near], CHEEK57], navy: null, allowBlue: null, clear: [CHAIR57], darkStrands: true, hairRidge: [.022, .012], strandMin: 10, strandW: 1.5, sheenZone: HAIR57 };
+    return { faces: false, skin: [HAND57[near], cheek57(body)], navy: null, allowBlue: null, clear: [CHAIR57], darkStrands: true, hairRidge: [.022, .012], strandMin: 10, strandW: 1.5, sheenZone: HAIR57 };
   }
   if (e.src === 'P58') return { faces: true, skin: [], navy: null, allowBlue: null, brows: true };
   return {};
