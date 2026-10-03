@@ -712,5 +712,19 @@
   "src_h": 720,
   "dur": 5.042,
   "gain": 2.145
+ },
+ "P27_new": {
+  "n": 97,
+  "mattes": 0,
+  "depth": 0,
+  "fields": 0,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "media/plates/P27/take6.mp4",
+  "src_w": 1280,
+  "src_h": 720,
+  "dur": 4.042,
+  "gain": 1.0
  }
 }

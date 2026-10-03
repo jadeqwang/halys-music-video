@@ -25,7 +25,9 @@
    "virtual_avatar": true,
    "est_cost_usd": 0.9248,
    "job": null,
-   "reviewed": "2026-10-03T02:11:35"
+   "reviewed": "2026-10-03T02:11:35",
+   "design": "media/chars/thales_v1.jpg (old design)",
+   "short": "Old Thales design (thales_v1.jpg); he does not walk (the model orbited the camera instead)."
   },
   "2": {
    "verdict": "weak",
@@ -51,7 +53,9 @@
    "virtual_avatar": true,
    "est_cost_usd": 0.9248,
    "job": null,
-   "reviewed": "2026-10-03T02:11:35"
+   "reviewed": "2026-10-03T02:11:35",
+   "design": "media/chars/thales_v1.jpg (old design)",
+   "short": "Old Thales design (thales_v1.jpg); no real walk; sky too bright for totality."
   },
   "3": {
    "verdict": "pass",
@@ -78,7 +82,8 @@
    "est_cost_usd": 0.9248,
    "job": null,
    "reviewed": "2026-10-03T02:35:38",
-   "short": "-"
+   "short": "Old Thales design (thales_v1.jpg); clean walk, the frozen men stay still. Chosen until the redesign.",
+   "design": "media/chars/thales_v1.jpg (old design)"
   },
   "4": {
    "verdict": "pass",
@@ -104,7 +109,65 @@
    "virtual_avatar": true,
    "est_cost_usd": 0.9248,
    "job": null,
-   "reviewed": "2026-10-03T02:35:38"
+   "reviewed": "2026-10-03T02:35:38",
+   "design": "media/chars/thales_v1.jpg (old design)",
+   "short": "Old Thales design (thales_v1.jpg); foreground warriors are big dark masses (less readable)."
+  },
+  "5": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "The new Thales walks toward a static camera on a sandy riverbank at dusk between a frozen Lydian (left: crested helmet, crimson tunic, bronze scales, lion shield) and a frozen Mede (right: red cap, black beard, ochre tunic, wicker shield), face up the whole time; small frozen fighters against the river; clear steps, full figure throughout.",
+   "costume": "New sheet: short curly dark hair (the fillet is faint at this size), trimmed beard, saffron himation with a dark border over a cream chiton, sandals, wooden tablet in the left hand, short stick in the right. Lydian and Mede per sheets; the Mede's sword on his right.",
+   "identity": "Three distinct men; Thales reads as a Greek philosopher, not a saint.",
+   "artefacts": "None; camera truly static (~2 px drift). Ends full-figure, not in the medium shot asked for.",
+   "notes": "Alternate: the cleanest separation of the three figures, but Thales is small in S52's 0-2.11 s window.",
+   "sync": [
+    {
+     "song_t": 182.485,
+     "event": "'Thales' (plate 1.26)",
+     "expected_plate_t": 1.255,
+     "measured_plate_t": 1.083,
+     "offset_s": -0.172,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P27/take5.review.jpg",
+   "contact": "media/plates/P27/take5.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T13:09:55",
+   "design": "media/chars/thales.jpg (redesign)",
+   "short": "Static and clean, but Thales is small; ends full-figure, not medium."
+  },
+  "6": {
+   "verdict": "pass",
+   "score": 5,
+   "purpose": "S52 with the new Thales: on a riverbank path at dusk he walks toward the lens between a frozen Lydian mid-thrust on the left (crested helmet, crimson tunic, bronze scales, black lion on a crimson shield) and a frozen Mede on the right (red cap, black beard, ochre tunic, iron scales, wicker shield), frozen fighters along the water behind; face tilted up with amused curiosity, shadow-stick in his right hand, tablet in his left; he ends in a medium shot.",
+   "costume": "Matches the new sheet: short curly dark hair with the thin fillet visible, trimmed curly beard, saffron himation with a dark woven border over a cream chiton, wooden tablet and a short stick (no staff, no red robe, no long hair). Lydian and Mede per sheets; the Mede's sword on his right side.",
+   "identity": "Three distinct men; Thales reads as an Ionian philosopher of the herm type, not as Jesus.",
+   "artefacts": "Very slight camera drift (~8 px at 1280 over 4 s); from ~3.0 s his tablet overlaps the Mede's shield, so the matte joins them (after S52's 0-2.11 s window).",
+   "notes": "1:1 from t0. S52 uses plate 0-2.11, where Thales (x ~0.50-0.52) is clear of both warriors: the matte component nearest x 0.5 is him. No staff any more: a short gnomon and the tablet.",
+   "sync": [
+    {
+     "song_t": 182.485,
+     "event": "'Thales' (plate 1.26)",
+     "expected_plate_t": 1.255,
+     "measured_plate_t": 1.083,
+     "offset_s": -0.172,
+     "method": "auto: strongest motion stop within +-0.6 s"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P27/take6.review.jpg",
+   "contact": "media/plates/P27/take6.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 0.9248,
+   "job": null,
+   "reviewed": "2026-10-03T13:09:55",
+   "design": "media/chars/thales.jpg (redesign)",
+   "short": "Slight camera drift; tablet overlaps the Mede's shield after 3.0 s (after S52)."
   }
  },
  "shots": "S52",
@@ -113,7 +176,14 @@
   185.23
  ],
  "audio_t0": 181.23,
- "chosen": 3,
- "chosen_why": "Clear walk toward a static camera with full, readable frozen figures (takes 1-2 had no walk; take 4 is darker and more cluttered).",
- "t_chosen": "2026-10-03T02:35:38"
+ "chosen": 6,
+ "chosen_why": "The new Thales reads clearly in S52's window: a larger figure, fillet and border visible, frozen statues framing him, ending in the medium shot asked for; take 5 is static and clean but Thales is small.",
+ "t_chosen": "2026-10-03T13:09:55",
+ "previous_chosen": {
+  "take": 3,
+  "why": "Clear walk toward a static camera with full, readable frozen figures (takes 1-2 had no walk; take 4 is darker and more cluttered).",
+  "design": "media/chars/thales_v1.jpg",
+  "analysis": "video/plates/P27_v1/",
+  "index_key": "P27_v1"
+ }
 }
