@@ -13,7 +13,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import boards  # noqa: E402
 
 
-def patch(src, dst, boxes, feather=12):
+def patch(src, dst, boxes, feather=6):
     a = np.asarray(Image.open(src).convert("RGB")).astype(np.float32)
     b = np.asarray(Image.open(dst).convert("RGB")).astype(np.float32)
     H, W = b.shape[:2]

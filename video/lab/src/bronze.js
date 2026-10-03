@@ -28,80 +28,145 @@ export const palette = () => (PAL ??= new PaletteBox(Object.values(BRONZE_PALETT
 export const DEFAULTS = {
   aw: 960,
   pool: [{ x: .5, y: .45, rx: .3, ry: .35, rot: 0, feather: .6 }],
-  poolMatte: .85, poolBound: null, poolBlur: 7,
-  // values: inside the pool (gamma, lift, contrast, saturation), outside (floor, crush, saturation), glints near the light
-  gammaIn: .95, liftIn: 1.04, contrastIn: 1.18, satIn: 1.18, crushFloor: .13, crush: .17, satOut: .5,
-  glint: .85, glintT: .72, glintReach: 16, envDim: .8, focusLift: .22,
+  poolMatte: .85, poolBound: null, poolBlur: 4, poolLo: .1, poolHi: .8,
+  // values: inside the pool brighter and warmer (Caravaggio, not sepia), falling off fast into deep warm darks that still
+  // read as paint (a breath of umber, varied, never flat black); glints survive only near the light
+  gammaIn: .9, liftIn: 1.1, contrastIn: 1.22, satIn: 1.2, warmIn: .024, crushFloor: .15, crush: .12, satOut: .55, darkVar: .055,
+  glint: .85, glintT: .72, glintReach: 14, envDim: .62, focusLift: .25,
+  // rim light: only on silhouette edges that face the light, broken up; the plate's own bright fringe is suppressed
+  lightDir: [-.75, -.66], rim: .6, rimBreak: .5, fringe: 1,
   // brushes (screen px radius), grid factor, threshold, stroke lengths (control points), turn limit, colour blur
-  brushes: [24, 13, 7.5, 4.2, 2.4], fg: [1.5, 1.3, 1.15, 1.05, 1.0], T: [0, .05, .055, .06, .065],
-  minLen: [2, 2, 2, 1, 1], maxLen: [6, 6, 5, 4, 3], step: [1.0, .95, .9, .85, .8], fc: .5, maxTurn: .42, fs: .5,
-  jitter: .8, boil: .3, colorJit: .03, focusGain: .7, darkRaise: 1.8, fineGate: .22,
+  brushes: [26, 14, 8, 4.4, 2.4], fg: [1.45, 1.3, 1.15, 1.05, 1.0], T: [0, .055, .06, .07, .075],
+  minLen: [2, 2, 2, 1, 1], maxLen: [6, 6, 5, 4, 3], step: [1.05, 1.0, .95, .85, .8], fc: .45, maxTurn: .38, fs: .5,
+  jitter: .8, boil: .3, colorJit: .055, endBlend: .15, focusGain: .7, darkRaise: 1.3, midGate: .2, fineGate: .3, smoothRef: 1,
   // paint body and finish
-  thinDark: .05, thick: .32, thickHi: .5, impasto: .5, spec: .16, weave: 1, crack: .25, varnish: .85, vignette: .35,
-  accents: 1, ground: [.09, .065, .045], seed: 7,
+  thinDark: .05, thick: .34, thickHi: .55, impasto: .55, spec: .18, weave: 1, crack: .25, varnish: .85, vignette: .35,
+  accents: 1, accentThick: 1.5, eyes: [], eyeStrokes: 1, ground: [.09, .065, .045], seed: 7,
   sky: null, sun: null, eclipse: 0, metal: 0, drawFps: 12,
 };
 
+// OKLab of the plate at a fractional analysis position
+function labAt(F, x, y) { return srgb2oklab(samp(F, F.R, x, y), samp(F, F.G, x, y), samp(F, F.B, x, y)); }
+
 // ---------------------------------------------------------------- 1. reference
 export function reference(F, cfg) {
-  const { aw, ah, N } = F, P = palette();
+  const { aw, ah, N } = F, P = palette(), seed = (cfg.seed | 0) * 13 + 1;
   // environment light (designed ellipses, soft) and figure light (the matte, kept sharp so no halo leaks onto the ground)
   let pool = new Float32Array(N);
   for (const e of cfg.pool) { const m = ellipseMask(F, e), k = e.k ?? 1; for (let i = 0; i < N; i++) pool[i] = Math.max(pool[i], m[i] * k); }
   pool = blur(pool, aw, ah, cfg.poolBlur);
+  const fig = new Float32Array(N);
   if (F.M && cfg.poolMatte) {
     const mb = blur(F.M, aw, ah, .8), bound = cfg.poolBound ? ellipseMask(F, cfg.poolBound) : null;
-    for (let i = 0; i < N; i++) pool[i] = Math.max(pool[i], sstep(.25, .75, mb[i]) * cfg.poolMatte * (bound ? bound[i] : 1));
+    for (let i = 0; i < N; i++) { fig[i] = sstep(.25, .75, mb[i]) * (bound ? bound[i] : 1); pool[i] = Math.max(pool[i], fig[i] * cfg.poolMatte); }
   }
   let focus = new Float32Array(N);
   for (const e of cfg.focus || []) { const m = ellipseMask(F, e); for (let i = 0; i < N; i++) focus[i] = Math.max(focus[i], m[i] * (e.k ?? 1)); }
   focus = blur(focus, aw, ah, 3);
   const reach = blur(pool, aw, ah, cfg.glintReach);
   const Lb = blur(F.L, aw, ah, 2.5);
-  // figure light (sharp matte) vs environment light: the environment inside the pool is dimmer than the figures
-  const fig = new Float32Array(N);
-  if (F.M && cfg.poolMatte) { const mb = blur(F.M, aw, ah, .8), bound = cfg.poolBound ? ellipseMask(F, cfg.poolBound) : null; for (let i = 0; i < N; i++) fig[i] = sstep(.25, .75, mb[i]) * (bound ? bound[i] : 1); }
-  const R = new Float32Array(N), G = new Float32Array(N), B = new Float32Array(N), Lr = new Float32Array(N), tmp = [0, 0, 0];
-  for (let i = 0; i < N; i++) {
+  // silhouette geometry (outward normal, edge strength) for the fringe fix and the selective rim
+  const Mb = F.M ? blur(F.M, aw, ah, 1.1) : null, ld = Math.hypot(cfg.lightDir[0], cfg.lightDir[1]) || 1, Lx = cfg.lightDir[0] / ld, Ly = cfg.lightDir[1] / ld;
+  const R = new Float32Array(N), G = new Float32Array(N), B = new Float32Array(N), Lr = new Float32Array(N), rimF = new Float32Array(N), tmp = [0, 0, 0];
+  for (let y = 0; y < ah; y++) for (let x = 0; x < aw; x++) {
+    const i = y * aw + x;
     let [Lk, a, b] = srgb2oklab(F.R[i], F.G[i], F.B[i]);
-    const p = sstep(0, 1, pool[i]);
+    let rim = 0;
+    if (Mb && x > 0 && y > 0 && x < aw - 1 && y < ah - 1 && F.M[i] > .2) {
+      const gx = (Mb[i + 1] - Mb[i - 1]) * .5, gy = (Mb[i + aw] - Mb[i - aw]) * .5, em = Math.hypot(gx, gy);
+      if (em > .015) {
+        const nx = -gx / em, ny = -gy / em;                                        // outward normal
+        // the plate's fringe (bright background bleeding into the figure's edge pixels) takes the value just inside
+        const inn = labAt(F, x - nx * 3.5, y - ny * 3.5), band = sstep(.015, .08, em) * cfg.fringe;
+        if (Lk > inn[0]) { Lk = lerp(Lk, inn[0], band); a = lerp(a, inn[1], band); b = lerp(b, inn[2], band); }
+        // rim light: only where the silhouette faces the light, and broken (never a full outline)
+        const face = Math.max(0, nx * Lx + ny * Ly), brk = sstep(cfg.rimBreak - .08, cfg.rimBreak + .08, fbm(x * .07, y * .07, seed + 77, 3));
+        rim = sstep(.02, .1, em) * Math.pow(face, 1.6) * brk * cfg.rim;
+      }
+    }
+    rimF[i] = rim;
+    const p = sstep(cfg.poolLo, cfg.poolHi, pool[i]);
     let Lin = Math.pow(clamp(Lk), cfg.gammaIn) * cfg.liftIn;
     Lin = clamp(.5 + (Lin - .5) * cfg.contrastIn, .04, .97);
     Lin += cfg.focusLift * focus[i] * (.97 - Lin) * sstep(.08, .4, Lk);      // a designed key on faces and hands
     // glints are ridges and specks (bright with little gradient), not the bright side of every step edge
     const lc = F.L[i] - Lb[i], ratio = F.mag[i] / (8 * Math.max(lc, 1e-3));
     const glint = sstep(cfg.glintT, cfg.glintT + .14, Lk) * sstep(.025, .1, lc) * (1 - sstep(.35, .9, ratio)) * cfg.glint * sstep(.04, .45, reach[i]);
-    const Lout = cfg.crushFloor + cfg.crush * Lk * Lk + glint * Math.max(0, Lk - cfg.crushFloor) * .85;
-    const L2 = lerp(Lout, Lin * lerp(cfg.envDim, 1, fig[i]), p);
+    // the darks are paint: umber, varied a little, so the few dim strokes there can be seen
+    const dv = (fbm(x / aw * 7, y / aw * 7, seed + 5, 3) - .5) * cfg.darkVar;
+    const Lout = cfg.crushFloor + dv + cfg.crush * Lk * Lk + glint * Math.max(0, Lk - cfg.crushFloor) * .85;
+    let L2 = lerp(Lout, Lin * lerp(cfg.envDim, 1, fig[i]), p);
+    L2 += rim * (.95 - L2) * .85;
     const sat = lerp(cfg.satOut, cfg.satIn, p);
-    a = a * sat + lerp(.012, .004, p); b = b * sat + lerp(.024, .012, p);    // warm bias: umber in the dark, golden in the light
+    a = a * sat + lerp(.013, .004 + cfg.warmIn * .35, p) + .01 * rim; b = b * sat + lerp(.026, .012 + cfg.warmIn, p) + .035 * rim;
     const c = oklab2srgb(L2, a, b);
     P.map(c[0], c[1], c[2], tmp);
     R[i] = tmp[0]; G[i] = tmp[1]; B[i] = tmp[2]; Lr[i] = .2126 * tmp[0] + .7152 * tmp[1] + .0722 * tmp[2];
   }
-  return { R, G, B, L: Lr, pool, focus, sky: null };
+  return { R, G, B, L: Lr, pool, focus, fig, rim: rimF, sky: null };
+}
+
+// edge-preserving smooth of the reference (one cross-bilateral pass): small brushes must not paint pores and hair
+function smoothRGB(R, G, B, aw, ah, r = 3, sS = 2.2, sC = .07) {
+  const N = aw * ah, oR = new Float32Array(N), oG = new Float32Array(N), oB = new Float32Array(N), k2 = 1 / (2 * sC * sC), ws = [];
+  for (let j = -r; j <= r; j++) for (let i = -r; i <= r; i++) ws.push(Math.exp(-(i * i + j * j) / (2 * sS * sS)));
+  for (let y = 0; y < ah; y++) for (let x = 0; x < aw; x++) {
+    const c = y * aw + x, r0 = R[c], g0 = G[c], b0 = B[c]; let sr = 0, sg = 0, sb = 0, sw = 0, q = 0;
+    for (let j = -r; j <= r; j++) { const yy = y + j < 0 ? 0 : y + j >= ah ? ah - 1 : y + j;
+      for (let i = -r; i <= r; i++, q++) { const xx = x + i < 0 ? 0 : x + i >= aw ? aw - 1 : x + i, p = yy * aw + xx;
+        const dr = R[p] - r0, dg = G[p] - g0, db = B[p] - b0, w = ws[q] * Math.exp(-(dr * dr + dg * dg + db * db) * k2);
+        sr += R[p] * w; sg += G[p] * w; sb += B[p] * w; sw += w; } }
+    oR[c] = sr / sw; oG[c] = sg / sw; oB[c] = sb / sw;
+  }
+  return [oR, oG, oB];
+}
+
+// region-aware blur: colour never bleeds across the silhouette or the horizon (figure / sky / land blurred separately)
+function regionBlur(chs, regs, aw, ah, sig) {
+  const N = aw * ah, outs = chs.map(() => new Float32Array(N));
+  for (const w of regs) {
+    const den = blur(w, aw, ah, sig);
+    chs.forEach((ch, c) => {
+      const t = new Float32Array(N); for (let i = 0; i < N; i++) t[i] = ch[i] * w[i];
+      const num = blur(t, aw, ah, sig), o = outs[c];
+      for (let i = 0; i < N; i++) o[i] += w[i] * (den[i] > 1e-4 ? num[i] / den[i] : ch[i]);
+    });
+  }
+  return outs;
 }
 
 // ---------------------------------------------------------------- 2. strokes
 // returns [{pts:[[x,y]...] (screen px), apts (analysis px), r (radius px), c0, c1 (rgb), a, thick, seed, layer}]
 // anchor: optional {ox, oy, s} mapping analysis px -> layout space, so a synthetic camera move keeps stroke seeds on the content
-export function strokes(F, ref, cfg, drawIdx = 0, anchor = null) {
+export function strokes(F, ref, cfg, drawIdx = 0, anchor = null, eyeMask = null) {
   const { aw, ah, N } = F, S = W / aw;
   const cR = new Float32Array(N), cG = new Float32Array(N), cB = new Float32Array(N), painted = new Uint8Array(N);
   const out = [], perLayer = [];
   const seed = cfg.seed | 0, boilSeed = seed * 131 + drawIdx * 7919 + 1;
   const A = anchor || { ox: 0, oy: 0, s: 1 };
+  // regions: figure (matte), sky, land; a region id per pixel lets strokes stop at the boundary
+  const fig = new Float32Array(N), skyR = new Float32Array(N), land = new Float32Array(N), rid = new Uint8Array(N);
+  for (let i = 0; i < N; i++) {
+    fig[i] = F.M ? sstep(.4, .6, F.M[i]) : 0; skyR[i] = ref.sky ? Math.min(1 - fig[i], sstep(.4, .6, ref.sky[i])) : 0;
+    land[i] = Math.max(0, 1 - fig[i] - skyR[i]); rid[i] = fig[i] > .5 ? 1 : skyR[i] > .5 ? 2 : 0;
+  }
+  const regs = [fig, skyR, land].filter(w => w.some(v => v > 0));
+  // structural edges (strong, coherent) gate the small brushes: texture (pores, hair, grass) is not drawn stroke by stroke
+  const eS = new Float32Array(N); for (let i = 0; i < N; i++) eS[i] = F.edge[i] * F.coh[i] * F.coh[i];
+  const eImp = blur(eS, aw, ah, 1.4); let em = 1e-6; for (let i = 0; i < N; i++) if (eImp[i] > em) em = eImp[i];
+  for (let i = 0; i < N; i++) eImp[i] = Math.min(1, eImp[i] / (em * .35));
+  const smooth = cfg.smoothRef ? smoothRGB(ref.R, ref.G, ref.B, aw, ah) : [ref.R, ref.G, ref.B];
   for (let li = 0; li < cfg.brushes.length; li++) {
     const Rs = cfg.brushes[li], Ra = Rs / S, sig = Math.max(.6, cfg.fs * Ra * 1.6);
-    const rb = blur(ref.R, aw, ah, sig), gb = blur(ref.G, aw, ah, sig), bb = blur(ref.B, aw, ah, sig);
+    const src = li >= 2 ? smooth : [ref.R, ref.G, ref.B];
+    const [rb, gb, bb] = regionBlur(src, regs, aw, ah, sig);
     const D = new Float32Array(N);
     for (let i = 0; i < N; i++) {
       if (!painted[i]) { D[i] = 9; continue; }
       const dr = cR[i] - rb[i], dg = cG[i] - gb[i], db = cB[i] - bb[i]; D[i] = Math.sqrt(dr * dr + dg * dg + db * db);
     }
     const grid = Math.max(1, cfg.fg[li] * Ra), J = Rs >= 12 ? F.Jc : F.J;
-    const T0 = cfg.T[li], layer = [], last = li === cfg.brushes.length - 1;
-    // the grid lives in layout space (content-anchored under a synthetic camera); cells are visited in that space
+    const T0 = cfg.T[li], layer = [], nL = cfg.brushes.length;
     const gL = grid, lx0 = Math.floor(A.ox / gL) - 1, ly0 = Math.floor(A.oy / gL) - 1;   // fixed cell size in layout space
     const nx = Math.ceil((A.ox + aw * A.s) / gL) + 1, ny = Math.ceil((A.oy + ah * A.s) / gL) + 1;
     for (let cy = ly0; cy < ny; cy++) for (let cx = lx0; cx < nx; cx++) {
@@ -116,24 +181,27 @@ export function strokes(F, ref, cfg, drawIdx = 0, anchor = null) {
       for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) { const i = y * aw + x, d = D[i]; sum += d; n++; if (d > best) { best = d; bi = i; } }
       if (!n) continue;
       const gxi = clamp(Math.round(gx), 0, aw - 1), gyi = clamp(Math.round(gy), 0, ah - 1), ii = gyi * aw + gxi;
-      // threshold: focus (faces, hands) lowers it; the dark outside the light pool raises it
-      const f = ref.focus[ii], p = ref.pool[ii];
+      const f = ref.focus[ii], p = ref.pool[ii], ey = eyeMask ? eyeMask[ii] : 0;
       const T = T0 * (1 - cfg.focusGain * f) * lerp(cfg.darkRaise, 1, p);
       if (li > 0 && sum / n <= T) continue;
-      // the finest brush only works where it matters (focus, inside the light where there is detail)
-      if (last && Math.max(f, p * F.detail[ii]) < cfg.fineGate) continue;
+      // economy: small brushes only where they matter. Mid-small: inside the light or on structural edges; finest: only
+      // structural edges in the light (and never inside the eyes: those are painted with a few deliberate strokes)
+      if (li === nL - 2 && (Math.max(p * .45, eImp[ii] * Math.max(p, f)) < cfg.midGate || ey > .5)) continue;
+      if (li === nL - 1 && (eImp[ii] * Math.max(p, f * .8) < cfg.fineGate || ey > .3)) continue;
       const sx = li === 0 ? clamp(gx, 0, aw - 1) : bi % aw, sy = li === 0 ? clamp(gy, 0, ah - 1) : Math.floor(bi / aw);
-      const st = traceStroke(F, J, sx, sy, Ra, rb, gb, bb, cR, cG, cB, painted, cfg, li, hash4(cx, cy, li, seed + 11));
-      const k = hash4(cx, cy, li, boilSeed + 5), cj = (k - .5) * 2 * cfg.colorJit;
-      const c0 = [clamp(st.c[0] * (1 + cj)), clamp(st.c[1] * (1 + cj)), clamp(st.c[2] * (1 + cj * .8))];
+      const st = traceStroke(F, J, sx, sy, Ra, rb, gb, bb, cR, cG, cB, painted, cfg, li, hash4(cx, cy, li, seed + 11), rid);
+      const k = hash4(cx, cy, li, boilSeed + 5), cj = (k - .5) * 2 * cfg.colorJit, hj = (hash4(cx, cy, li, boilSeed + 9) - .5) * cfg.colorJit;
+      // broken colour: each stroke a slightly different mixture (value and a hint of temperature), decisive, little smear
+      const c0 = [clamp(st.c[0] * (1 + cj + hj * .5)), clamp(st.c[1] * (1 + cj)), clamp(st.c[2] * (1 + cj - hj * .6))];
       const e = st.pts[st.pts.length - 1];
       const c1e = [samp(F, rb, e[0], e[1]), samp(F, gb, e[0], e[1]), samp(F, bb, e[0], e[1])];
       const lum = .2126 * c0[0] + .7152 * c0[1] + .0722 * c0[2];
       // paint body: thin in the darks, loaded in the lights, lead white piles up (impasto) inside the pool
-      const thick = (lerp(cfg.thinDark, cfg.thick, sstep(.12, .55, lum)) * lerp(.45, 1, p) + cfg.thickHi * sstep(.55, .88, lum) * p) * lerp(1.1, .8, li / (cfg.brushes.length - 1));
-      layer.push({ pts: st.pts.map(([x, y]) => [x * S, y * S]), apts: st.pts, ra: Ra, r: Rs * (.9 + .2 * hash4(cx, cy, li, seed + 13)), c0, c1: [lerp(c0[0], c1e[0], .4), lerp(c0[1], c1e[1], .4), lerp(c0[2], c1e[2], .4)], a: .96 + .04 * k, thick: Math.min(.95, thick), seed: hash4(cx, cy, li, seed + 17), layer: li });
+      const thick = (lerp(cfg.thinDark, cfg.thick, sstep(.12, .55, lum)) * lerp(.45, 1, p) + cfg.thickHi * sstep(.55, .88, lum) * p) * lerp(1.1, .8, li / (nL - 1));
+      const eb = cfg.endBlend;
+      layer.push({ pts: st.pts.map(([x, y]) => [x * S, y * S]), apts: st.pts, ra: Ra, r: Rs * (.9 + .2 * hash4(cx, cy, li, seed + 13)), c0, c1: [lerp(c0[0], c1e[0], eb), lerp(c0[1], c1e[1], eb), lerp(c0[2], c1e[2], eb)], a: .96 + .04 * k, thick: Math.min(.95, thick), seed: hash4(cx, cy, li, seed + 17), layer: li });
     }
-    shuffle(layer, seed * 31 + li + drawIdx * 0);
+    shuffle(layer, seed * 31 + li);
     for (const s of layer) paintVirtual(s, F, cR, cG, cB, painted);
     for (const s of layer) out.push(s);
     perLayer.push(layer.length);
@@ -144,9 +212,9 @@ export function strokes(F, ref, cfg, drawIdx = 0, anchor = null) {
   return out;
 }
 
-function traceStroke(F, J, x0, y0, Ra, rb, gb, bb, cR, cG, cB, painted, cfg, li, h) {
+function traceStroke(F, J, x0, y0, Ra, rb, gb, bb, cR, cG, cB, painted, cfg, li, h, rid) {
   const aw = F.aw, c = [samp(F, rb, x0, y0), samp(F, gb, x0, y0), samp(F, bb, x0, y0)];
-  const pts = [[x0, y0]], v = [0, 0, 0];
+  const pts = [[x0, y0]], v = [0, 0, 0], r0 = rid ? rid[Math.round(y0) * aw + Math.round(x0)] : 0;
   let x = x0, y = y0, ldx = 0, ldy = 0;
   const maxL = cfg.maxLen[li], minL = cfg.minLen[li], step = Ra * cfg.step[li] * 1.6, cT = Math.cos(cfg.maxTurn), sT = Math.sin(cfg.maxTurn);
   for (let k = 1; k <= maxL; k++) {
@@ -164,12 +232,12 @@ function traceStroke(F, J, x0, y0, Ra, rb, gb, bb, cR, cG, cB, painted, cfg, li,
       if (dx * ldx + dy * ldy < 0) { dx = -dx; dy = -dy; }
       dx = cfg.fc * dx + (1 - cfg.fc) * ldx; dy = cfg.fc * dy + (1 - cfg.fc) * ldy;
       let m = Math.hypot(dx, dy) || 1; dx /= m; dy /= m;
-      // turn limit: a brush cannot hook back on itself
-      const cs = dx * ldx + dy * ldy;
+      const cs = dx * ldx + dy * ldy;                                          // turn limit: a brush cannot hook back
       if (cs < cT) { const sg = (ldx * dy - ldy * dx) >= 0 ? 1 : -1; dx = ldx * cT - ldy * sT * sg; dy = ldy * cT + ldx * sT * sg; }
     }
     const nx2 = x + dx * step, ny2 = y + dy * step;
     if (nx2 < 0 || ny2 < 0 || nx2 > F.aw - 1 || ny2 > F.ah - 1) break;
+    if (rid && rid[Math.round(ny2) * aw + Math.round(nx2)] !== r0) break;     // never cross the silhouette or the horizon
     x = nx2; y = ny2; ldx = dx; ldy = dy; pts.push([x, y]);
   }
   if (pts.length === 1) { // a dab: give it a short body along the flow
@@ -195,29 +263,103 @@ function paintVirtual(s, F, cR, cG, cB, painted) {
   }
 }
 
-// thick little strokes of lead white / Naples yellow on the hottest highlights inside the light (bronze, blades, eyes)
+// impasto: thick dabs of lead white / Naples on the hottest highlights inside the light (bronze rims, helmet crests,
+// blade and spear edges) and on the water's sparkle, so the highlights physically stand up off the canvas
 function accents(F, ref, cfg, drawIdx) {
   const { aw, ah } = F, S = W / aw, out = [], v = [0, 0, 0];
   const Lb = blur(F.L, aw, ah, 3), seed = cfg.seed * 17 + 5;
   const lead = hexRgb(BRONZE_PALETTE.leadWhite), naples = hexRgb(BRONZE_PALETTE.naples);
+  const T = cfg.accentThick;
+  const push = (x, y, dx, dy, len, r, c, thick, h) => {
+    const a0 = [x - dx * len * .5, y - dy * len * .5], a1 = [x + dx * len * .5, y + dy * len * .5];
+    out.push({ pts: [[a0[0] * S, a0[1] * S], [a1[0] * S, a1[1] * S]], apts: [a0, a1], ra: 1, r, c0: c, c1: lead, a: .98, thick, seed: h, layer: 9 });
+  };
   for (let y = 3; y < ah - 3; y += 2) for (let x = 3; x < aw - 3; x += 2) {
     const i = y * aw + x, p = ref.pool[i];
-    if (p < .4 || (ref.sky && ref.sky[i] > .2)) continue;
-    const L = F.L[i], lc = L - Lb[i];
-    if (L < .64 || lc < .05) continue;
-    let isMax = true;
-    for (let j = -2; j <= 2 && isMax; j++) for (let k = -2; k <= 2; k++) if (F.L[i + j * aw + k] > L) { isMax = false; break; }
-    if (!isMax) continue;
-    const h = hash3(x, y, seed), hb = hash4(x, y, seed, drawIdx * 7919 + 3);
-    if (h > .5 * cfg.accents) continue;
-    flowAt(F, x, y, v, F.J);
-    const len = (1.2 + 2 * h) * (1 + lc * 3), ang = (hb - .5) * .4;
-    const ca = Math.cos(ang), sa = Math.sin(ang), dx = v[0] * ca - v[1] * sa, dy = v[0] * sa + v[1] * ca;
-    const c = F.R[i] - F.B[i] > .12 ? naples : lead;
-    const ox = (hb - .5) * .6, oy = (hash4(x, y, seed + 1, drawIdx) - .5) * .6;
-    const a0 = [x + ox - dx * len * .5, y + oy - dy * len * .5], a1 = [x + ox + dx * len * .5, y + oy + dy * len * .5];
-    out.push({ pts: [[a0[0] * S, a0[1] * S], [a1[0] * S, a1[1] * S]], apts: [a0, a1], ra: 1, r: (1.3 + 1.3 * h) * (.8 + p * .4), c0: c, c1: lead, a: .97, thick: .75 + .2 * p, seed: hash3(x, y, seed + 2), layer: 9 });
+    if (ref.sky && ref.sky[i] > .2) continue;
+    const L = F.L[i], lc = L - Lb[i], h = hash3(x, y, seed), hb = hash4(x, y, seed, drawIdx * 7919 + 3);
+    const warm = F.R[i] - F.B[i] > .12;
+    // (1) specular peaks inside the light
+    if (p > .4 && L > .62 && lc > .045) {
+      let isMax = true;
+      for (let j = -2; j <= 2 && isMax; j++) for (let k = -2; k <= 2; k++) if (F.L[i + j * aw + k] > L) { isMax = false; break; }
+      if (isMax && h < .7 * cfg.accents) {
+        flowAt(F, x, y, v, F.J);
+        const ang = (hb - .5) * .4, ca = Math.cos(ang), sa = Math.sin(ang);
+        push(x + (hb - .5) * .6, y + (hash4(x, y, seed + 1, drawIdx) - .5) * .6, v[0] * ca - v[1] * sa, v[0] * sa + v[1] * ca,
+          (1.3 + 2.2 * h) * (1 + lc * 3), (1.5 + 1.7 * h) * (.8 + p * .4), warm ? naples : lead, T * (.8 + .4 * p), hash3(x, y, seed + 2));
+        continue;
+      }
+    }
+    // (2) bright metal edges (rims, crests, blades, spear tips): dabs laid along the edge
+    if (p > .45 && L > .7 && F.edge[i] > .22 && h < .22 * cfg.accents) {
+      flowAt(F, x, y, v, F.J);
+      push(x, y, v[0], v[1], 2.5 + 3 * h, 1.3 + 1.1 * h, warm ? naples : lead, T * .9, hash3(x, y, seed + 4));
+      continue;
+    }
+    // (3) water sparkle near the light: small round loaded dabs
+    if (p < .6 && L > .78 && lc > .07 && F.mag[i] / (8 * Math.max(lc, 1e-3)) < .6 && h < .35 * cfg.accents) {
+      const reachOk = ref.pool[i] > .08 || (ref.fig && ref.fig[i] > .3);
+      if (reachOk) push(x, y, 1, 0, .6, 1.2 + h, lead, T * .8, hash3(x, y, seed + 6));
+    }
   }
+  return out;
+}
+
+// the eyes, painted with a few deliberate strokes: upper lid, iris, a grey-warm white either side, a lower-lid touch
+// of sienna, and a loaded catchlight. Positions from detected faces (score >= faceMin) or cfg.eyes [{x, y, w}] (uv).
+function eyeGeometry(F, cfg) {
+  const out = [];
+  for (const f of F.faces || []) if (cfg.faceMin != null && f.score >= cfg.faceMin && f.eyes && f.eyes.length >= 2) {
+    const e1 = [f.eyes[0][0] * F.aw, f.eyes[0][1] * F.ah], e2 = [f.eyes[1][0] * F.aw, f.eyes[1][1] * F.ah];
+    const d = Math.hypot(e2[0] - e1[0], e2[1] - e1[1]), dir = [(e2[0] - e1[0]) / d, (e2[1] - e1[1]) / d];
+    for (const e of [e1, e2]) out.push({ x: e[0], y: e[1], w: d * .42, dir });
+  }
+  for (const e of cfg.eyes || []) out.push({ x: e.x * F.aw, y: e.y * F.ah, w: e.w * F.aw, dir: e.dir || [1, 0] });
+  return out;
+}
+function eyeMaskOf(F, eyes) {
+  if (!eyes.length) return null;
+  const m = new Float32Array(F.N);
+  for (const e of eyes) {
+    const r = e.w * .62;
+    for (let y = Math.max(0, Math.floor(e.y - r)); y <= Math.min(F.ah - 1, e.y + r); y++) for (let x = Math.max(0, Math.floor(e.x - r)); x <= Math.min(F.aw - 1, e.x + r); x++) {
+      const dd = Math.hypot((x - e.x) / r, (y - e.y) / (r * .7)); m[y * F.aw + x] = Math.max(m[y * F.aw + x], 1 - sstep(.75, 1, dd));
+    }
+  }
+  return m;
+}
+function eyeStrokes(F, cfg, eyes, drawIdx) {
+  const S = W / F.aw, out = [], Lb = blur(F.L, F.aw, F.ah, 1.2), bs = drawIdx * 7919;
+  const hx = h => hexRgb(BRONZE_PALETTE[h]), lead = hx('leadWhite'), umber = hx('rawUmber'), burnt = hx('burntUmber'), black = hx('boneBlack'), sienna = hx('burntSienna');
+  const mix = (a, b, t) => [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
+  const add = (pts, r, c0, c1, thick, a = .97, sd = .5) => out.push({ pts: pts.map(([x, y]) => [x * S, y * S]), apts: pts, ra: r / S, r, c0, c1: c1 || c0, a, thick, seed: sd, layer: 10 });
+  eyes.forEach((e, k) => {
+    const w = e.w, dir = e.dir, up0 = [dir[1], -dir[0]], up = up0[1] < 0 ? up0 : [-up0[0], -up0[1]];
+    // iris = darkest point near the eye centre; catchlight = brightest point near the iris
+    let ix = e.x, iy = e.y, lmin = 9;
+    for (let y = Math.round(e.y - w * .3); y <= e.y + w * .3; y++) for (let x = Math.round(e.x - w * .4); x <= e.x + w * .4; x++) {
+      const L = Lb[clamp(y, 0, F.ah - 1) * F.aw + clamp(x, 0, F.aw - 1)]; if (L < lmin) { lmin = L; ix = x; iy = y; }
+    }
+    let cx = ix, cy = iy, lmax = -1;
+    for (let y = Math.round(iy - w * .2); y <= iy + w * .2; y++) for (let x = Math.round(ix - w * .2); x <= ix + w * .2; x++) {
+      const L = F.L[clamp(y, 0, F.ah - 1) * F.aw + clamp(x, 0, F.aw - 1)]; if (L > lmax) { lmax = L; cx = x; cy = y; }
+    }
+    const P = (t, h) => [e.x + dir[0] * t * w * .55 + up[0] * h * w, e.y + dir[1] * t * w * .55 + up[1] * h * w];
+    const jit = (q) => (hash3(k, q, cfg.seed + bs) - .5) * .06 * w;
+    // whites (greyed, never pure), then the iris over them
+    const white = mix(mix(lead, umber, .38), [0.72, 0.6, 0.5], .25);
+    add([P(-.75, .02), P(-.3, .06)], w * .1 * S, white, null, .3, .85, .11);
+    add([P(.3, .06), P(.75, .02)], w * .1 * S, mix(white, umber, .15), null, .3, .85, .13);
+    const irisC = mix(mix(burnt, umber, .5), black, .25);
+    add([[ix - up[0] * w * .1 + jit(1), iy - up[1] * w * .1], [ix + up[0] * w * .1, iy + up[1] * w * .1 + jit(2)]], w * .2 * S, irisC, mix(irisC, black, .4), .45, .98, .17);
+    // upper lid: a confident dark arc; lower lid: a touch of sienna
+    const lid = []; for (let t = -1; t <= 1.001; t += .25) lid.push(P(t, .2 * (1 - t * t) + .1 + (t > 0 ? .02 : 0)));
+    add(lid, w * .075 * S, mix(black, burnt, .35), mix(black, umber, .3), .5, .95, .19);
+    add([P(-.45, -.16), P(.5, -.14)], w * .04 * S, mix(sienna, umber, .4), null, .25, .6, .23);
+    // the catchlight: one loaded dab of lead white
+    add([[cx - .3, cy], [cx + .3, cy]], Math.max(1.4, w * .055 * S), lead, lead, 1.6, .99, .29);
+  });
   return out;
 }
 
