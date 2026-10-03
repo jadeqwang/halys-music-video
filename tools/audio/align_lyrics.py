@@ -49,7 +49,10 @@ ALIAS = {"hairlies": "halys", "hae": "halys", "mates": "medes", "tealight": "day
 OVERRIDE = {
     ("verse1", 0, "The"): 67.50,      # first sung sound; Whisper says 67.0-67.14 (inside the silence before it)
     ("verse1", 2, "Sun"): 81.50,      # passes disagree (81.46 / 81.80 / 82.18); lead-stem dip at 81.45, note starts 81.5
-    ("chorus1", 0, "Daylight"): 96.55,  # lead_v1 "Tealight@96.12" starts inside the held "god"
+    ("verse1", 2, "burning"): 82.70,   # passes 82.62 / 82.72 / 82.80; 83.05 is the "-ning" level jump
+    ("chorus1", 0, "Daylight"): 96.88,  # "god" is held 95.2-96.8; new note (pitch step) at 96.88 (Whisper 96.12-96.74)
+    ("verse2", 3, "what"): 170.72,     # "cold" held to 170.45, voiced onset 170.72 (lead_v2 What@170.60)
+    ("thales", 0, "Thales"): 182.55,   # "chill" is held to 182.45; breath, then a new phrase at 182.55 (Whisper 181.90)
     ("chorus1", 1, "eye"): 100.20,     # "Eye@98.78-100.50": the vowel enters at 100.2 after the breath at 99-100
     ("thales", 1, "Warriors"): 188.60,  # "Warriors@187.60": breath/silence 187.65-188.55 in the lead stem
     ("thales", 1, "a"): 193.25,        # the "[rest, rest]" (192.75-193.1) precedes "a sudden spark"
@@ -58,8 +61,32 @@ OVERRIDE = {
     ("chorus2", 0, "Shadow"): 200.30,   # unprompted mix pass: Shadow@200.26; 194.9-200.2 is the held "spaaark"
     ("chorus2", 1, "Sunlight"): 204.82,  # Whisper 203.46-203.50 is inside "day"; lead silent 204.2-204.8, onset 204.82
     ("chorus2", 2, "Throw"): 208.62,   # lead_v2 "Throw@206.98-209.10"; lead silent 207.7-208.6, onset 208.62
-    ("chorus2", 3, "Home"): 211.75,    # "blade" is held through the beat-held-back bar (209.9-211.7); "h" at 211.75
+    ("chorus2", 3, "Home"): 211.45,    # "blade" is held through the beat-held-back bar (209.9-211.4); breathy "h" at
+                                       # 211.45 (lead_v2 Home@211.40), "t" of "to" at 211.75
 }
+
+
+# Chopped vocals. Suno sang the chops as varying phrases, not as one repeated sample (2-bar cycles of the vocal stem
+# correlate at r < 0.5), so they cannot be found by template matching; MFCC-DTW against the sung words is not
+# decisive either. Positions come from the vocal-stem unit onsets, the bar grid and short-window Whisper passes
+# (tools/audio/whisper/chop_*.json, bursts_np.json); "conf" says how each label was established.
+#   (drop, word, approx t, conf)
+CHOP_SLOTS = [
+    # Drop 1, bar 64: first statement, one chop per beat
+    (1, "halo", 110.66, "medium: beat slot + unit onset; Whisper: 'the sky sky' over 111.5-112"),
+    (1, "in the", 110.98, "medium"), (1, "sky", 111.45, "medium"), (1, "sky", 111.885, "medium"),
+    # Drop 1, bars 81-88: four 2-bar cycles, onsets on beats 2 / 4 / 1 / 3 (Whisper: "Halo, in the, sky, sky")
+    (1, "halo", 140.455, "high"), (1, "in the", 141.355, "high"), (1, "sky", 141.75, "high"), (1, "sky", 142.65, "high"),
+    (1, "halo", 143.935, "high"), (1, "in the", 144.77, "high"), (1, "sky", 145.225, "high"), (1, "sky", 146.10, "high"),
+    (1, "halo", 147.34, "pattern"), (1, "in the", 147.94, "pattern"), (1, "sky", 148.645, "pattern"), (1, "sky", 149.56, "pattern"),
+    (1, "halo", 150.845, "pattern"), (1, "in the", 151.695, "pattern"), (1, "sky", 152.125, "pattern"), (1, "sky", 153.03, "pattern"),
+    # Drop 2: bars 125-148 carry only wordless sustained vocal lines; the chops are shouted at the end of the drop
+    (2, "throw down", 256.395, "high: unprompted Whisper on the isolated bursts hears 'I'm done!'; DTW best = 'throw down'"),
+    (2, "throw down", 257.245, "high"), (2, "throw down", 259.765, "medium"),
+    (2, "blade", 260.625, "medium: DTW best = sung 'blade' (chorus 2); Whisper 'blade@260.60'"),
+    (2, "throw down", 263.135, "low: held note to ~266.1; unprompted Whisper 'I'm done'"),
+]
+STUTTER = (112.30, 118.10)   # Drop 1 bars 65-67: 8th- then 16th-note stutter of the chop (Whisper hears "sky ... sky")
 
 
 def norm(w):
@@ -221,6 +248,46 @@ def snap_line(est, sig, ts, st, lo, hi, min_gap=0.06, w_on=1.2):
     return [float(ct[c]) for c in path[::-1]]
 
 
+def chop_events():
+    """snap CHOP_SLOTS to vocal-stem onsets; add the bars 65-67 stutter onsets."""
+    y, sr = sf.read(ROOT / "media" / "stems" / "vocals.wav", dtype="float32")
+    y = y.mean(1)
+    hop = 240
+    r = gaussian_filter1d(20 * np.log10(librosa.feature.rms(y=y, frame_length=960, hop_length=hop)[0] + 1e-9), 1.0)
+    M = librosa.power_to_db(librosa.feature.melspectrogram(y=y, sr=sr, n_fft=1024, hop_length=hop, n_mels=64, fmin=100, fmax=8000), ref=np.max, top_db=75)
+    fl = np.zeros(M.shape[1])
+    fl[2:] = np.maximum(M[:, 2:] - M[:, :-2], 0).mean(0)
+    fl = gaussian_filter1d(fl, 1.0)[:len(r)]
+    t = np.arange(len(r)) * hop / sr
+    pk, _ = find_peaks(fl, distance=int(0.07 / (hop / sr)), prominence=np.percentile(fl, 90) * 0.5)
+    on = t[pk]
+    out = []
+    for drop, word, t0, conf in CHOP_SLOTS:
+        k = np.where(np.abs(on - t0) <= 0.06)[0]
+        ts = float(on[k[np.argmin(np.abs(on[k] - t0))]]) if len(k) else t0
+        out.append(dict(drop=drop, word=word, t=round(ts, 3), conf=conf))
+    a, b = STUTTER
+    for x in on[(on >= a) & (on < b)]:
+        i = int(x / (hop / sr))
+        if r[i:i + 8].max() > np.percentile(r[(t >= a) & (t < b)], 40):
+            out.append(dict(drop=1, word="stutter", t=round(float(x), 3), conf="texture"))
+    out.sort(key=lambda c: c["t"])
+    for i, c in enumerate(out):   # end = next chop / vocal offset
+        nxt = out[i + 1]["t"] if i + 1 < len(out) else c["t"] + 1.0
+        j0, j1 = int(c["t"] / (hop / sr)) + 4, int(min(nxt, c["t"] + 1.2) / (hop / sr))
+        end = min(nxt, c["t"] + 1.2)
+        if j1 > j0 + 12:
+            low = r[j0:j1] < r[j0:j1].max() - 15
+            run = 0
+            for q, lo_ in enumerate(low):          # first sustained (>= 60 ms) drop of 15 dB
+                run = run + 1 if lo_ else 0
+                if run >= 12:
+                    end = float(t[j0 + q - run + 1])
+                    break
+        c["end"] = round(max(end, c["t"] + 0.12), 3)
+    return out
+
+
 def main():
     TW = true_words()
     keys = [w["key"] for w in TW]
@@ -276,8 +343,13 @@ def main():
         if words:
             words[-1]["end"] = round(voiced_offset(t, rdb, words[-1]["t"] + 0.12, words[-1]["t"] + 6.0), 3)
         lines.append(dict(sec=sec, text=text, t0=words[0]["t"], t1=words[-1]["end"], words=words))
+    for a, b in zip(lines[:-1], lines[1:]):      # a held last note ends where the next line starts, at the latest
+        if a["t1"] > b["t0"] - 0.02:
+            a["t1"] = a["words"][-1]["end"] = round(max(b["t0"] - 0.02, a["words"][-1]["t"] + 0.1), 3)
+    chops = chop_events()
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps(dict(lines=lines), indent=1))
+    OUT.write_text(json.dumps(dict(lines=lines, chops=chops), indent=1))
+    print(f"{len(chops)} chop events ({sum(1 for c in chops if c['word'] != 'stutter')} labelled)")
     for L in lines:
         print(f"{L['sec']:8s} {L['t0']:7.2f}-{L['t1']:7.2f}  " + " ".join(f"{w['w']}@{w['t']:.2f}({w['t'] - w['est']:+.2f})" for w in L["words"]))
 

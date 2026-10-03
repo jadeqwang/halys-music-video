@@ -29,7 +29,7 @@ if tf.exists():
 
 
 def sheet(mat):
-    files = sorted(p for p in D.glob(f"*_{mat}.jpg"))
+    files = sorted(p for p in D.glob(f"*_{mat}.jpg") if not p.name.startswith("sheet_"))
     if not files:
         print("no renders for", mat)
         return
@@ -52,7 +52,8 @@ def sheet(mat):
         t = timings.get((plate, mat))
         if t:
             ms = t["ms"]
-            note = f"{plate} · {mat} · analysis {ms.get('analysis', 0)} ms + render {ms.get('render', 0)} ms at 1920×1080, headless SwiftShader (CPU)"
+            load = f", load {t['load1']:.1f} on {t.get('cores', 4)} cores" if 'load1' in t else ""
+            note = f"{plate} · {mat} · analysis {ms.get('analysis', 0)} ms + render {ms.get('render', 0)} ms at 1920×1080, headless SwiftShader (CPU){load}"
         else:
             note = f"{plate} · {mat}"
         d.text((32 + tw // 2 + 16, y + th * 2 + 10), note, font=f2, fill=(190, 186, 178))

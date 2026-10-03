@@ -29,11 +29,16 @@ export function drawTime(F0, c, d) { return F0 / FPS + d / c; }
 
 // ---------------------------------------------------------------- timing data (video/data/timing.json)
 // Owned by the audio tools (tools/audio/). Loaded leniently: any of these fields may be absent.
-//   dur        song length in s                 beats      [t, ...] (measured; the tempo drifts 136.5 -> 142 BPM)
-//   downbeats  [t, ...] or downbeat_idx [i...]  sections   [[name, t0, t1], ...] or [{name, t0|start, t1|end}, ...]
-//   lines / words                              lyric timings, passed through untouched
-//   curves     {fps, rms: [...], vocal: [...], ...} feature envelopes for audio-reactive drawing
-export const TM = { dur: 273.6, bpm: 140, beat: 60 / 140, t0: 0.147, beats: [], downbeats: [], sections: [], lines: [], words: [], curves: null, loaded: false };
+//   dur        song length in s                 beats      [t, ...] (measured; the tempo drifts 136.4 -> 142 BPM)
+//   downbeats  [t, ...] or downbeat_idx [i...]  sections   [{id, name, t0, t1, bar0, bar1, ...}] or [[id, t0, t1], ...]
+//   lines      [{sec, text, t0, t1, words: [[t0, word, t1], ...]}]   (lyric timings, passed through)
+//   chops      [{drop, word, t, end, bar, beat, ...}]  the chopped drop words ("halo", "blade"), one per occurrence
+//   events     {drop_impacts, kicks, snares, stabs, timpani, choir, risers, holds, final_chord, ...}
+//   bars, tempo  per-bar times and the tempo curve
+//   curves     {fps, t0, rms: [...], low, mid, high, onset, vocal} feature envelopes for audio-reactive drawing
+// TM.raw keeps the whole file for anything not normalised here.
+export const TM = { dur: 273.6, bpm: 140, beat: 60 / 140, t0: 0.147, beats: [], downbeats: [], sections: [], lines: [], words: [],
+  chops: [], events: {}, bars: [], tempo: [], curves: null, raw: null, loaded: false };
 
 export function setTiming(d) {
   if (!d) return TM;
@@ -46,9 +51,12 @@ export function setTiming(d) {
   } else if (d.bpm) { TM.bpm = +d.bpm; TM.beat = 60 / TM.bpm; TM.t0 = +(d.t0 || 0); }
   if (d.downbeats) TM.downbeats = d.downbeats.map(Number);
   else if (d.downbeat_idx && TM.beats.length) TM.downbeats = d.downbeat_idx.map(i => TM.beats[i]).filter(Number.isFinite);
-  TM.sections = (d.sections || []).map(s => Array.isArray(s) ? { name: s[0], t0: +s[1], t1: +s[2] } : { name: s.name || s.label, t0: +(s.t0 ?? s.start), t1: +(s.t1 ?? s.end) });
+  TM.sections = (d.sections || []).map(s => Array.isArray(s) ? { id: s[0], name: s[0], t0: +s[1], t1: +s[2] }
+    : { ...s, id: s.id || s.name || s.label, name: s.name || s.label || s.id, t0: +(s.t0 ?? s.start), t1: +(s.t1 ?? s.end) });
   TM.lines = d.lines || []; TM.words = d.words || [];
+  TM.chops = d.chops || []; TM.events = d.events || {}; TM.bars = d.bars || []; TM.tempo = d.tempo || [];
   TM.curves = d.curves || null;
+  TM.raw = d;
   TM.loaded = true;
   return TM;
 }
@@ -78,9 +86,17 @@ export function pulse(t, k = 8, every = 1) {
   return Math.exp(-k * frac(bp) * TM.beat * every);
 }
 export function sectionAt(t) { return TM.sections.find(s => t >= s.t0 && t < s.t1) || null; }
+export const section = id => TM.sections.find(s => s.id === id) || null;
+// the latest chop at or before t (within `hold` seconds), e.g. for type that slams on the chops. By default only sung
+// words count (entries with conf "texture", word "stutter", are vocal stutters, not words); pass keep = () => true for all.
+export function chopAt(t, hold = 1, keep = c => c.conf !== 'texture') {
+  let best = null;
+  for (const c of TM.chops) if (c.t <= t + EPS && t - c.t < hold && keep(c) && (!best || c.t > best.t)) best = c;
+  return best;
+}
 // sample a feature curve (linear interpolation); 0 when the curve is missing
 export function curve(name, t) {
   const C = TM.curves; if (!C || !C[name]) return 0;
-  const a = C[name], fps = C.fps || 24, x = clamp(t * fps, 0, a.length - 1), i = Math.floor(x), k = x - i;
+  const a = C[name], fps = C.fps || 24, x = clamp((t - (C.t0 || 0)) * fps, 0, a.length - 1), i = Math.floor(x), k = x - i;
   return i + 1 < a.length ? a[i] * (1 - k) + a[i + 1] * k : a[i];
 }

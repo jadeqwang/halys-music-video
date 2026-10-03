@@ -12,7 +12,7 @@
 //    horizon band low in frame, a few planets, faint stars); the rest of the land is dark stone under the same light.
 
 import { W, H, clamp, lerp, sstep, hash3, hexRgb, s2l } from './core.js';
-import { blur, ellipseMask } from './analysis.js';
+import { blur, ellipseMask, lic } from './analysis.js';
 import { skyMask, horizonRows } from './sky.js';
 import { traceLines } from './corona.js';
 import { GLSL_COMMON } from './gl.js';
@@ -22,8 +22,9 @@ export const DEFAULTS = {
   white: '#ece6db', grey: '#8a8c90', shadow: '#16161c', orange: '#f08a2a', navy: '#0b0e16', navyTop: '#05060a',
   depthK: 2600, depthBlur: 1.6, reliefK: 3.2, reliefBlur: 1.8, coarse: 7, wrap: .6, soft: .6, sss: .12,
   key: [.12, -1, .55], keyCol: [.86, .91, 1.0], keyI: 1.15, rimI: .65, rimW: 1.6, bounceI: .035, ambI: .16, specI: .28, specPow: 45, sheen: .07,
-  aoK: 9, aoL: .35, veinDsep: 34, veinAmt: .55, veinW: [.5, 1.7], cloud: .06,
+  aoK: 9, aoL: .35, veinDsep: 30, veinAmt: 0, veinW: [.45, 1.9], veinAngle: .5, veinScale: 7, veinLen: 45, veinIso: .62, veinZone: .7, cloud: .03, mottle: .08,
   landAlbedo: .025, landSpec: .06, matteSharp: .5,
+  glassT: .1, glassI: 2.0, glassReach: 10, glassY: .55, water: 0, waterY: .6,
   sky: null, horizonBand: .05, horizonI: 1.4, planets: [], stars: 140, exposure: 1.0, vignette: .4,
   eyeFlat: 1, faceMin: .7, eyes: [], seed: 5,
 };
@@ -52,14 +53,39 @@ function prepFields(F, cfg) {
   const eyeList = [...(cfg.eyes || [])];
   for (const f of F.faces || []) if (f.score >= cfg.faceMin) for (const e of f.eyes) eyeList.push({ x: e[0], y: e[1], rx: (f.box[2] - f.box[0]) * .13, ry: (f.box[3] - f.box[1]) * .09 });
   for (const e of eyeList) { const m = ellipseMask(F, { feather: .6, ...e }); for (let i = 0; i < N; i++) eyes[i] = Math.max(eyes[i], m[i] * cfg.eyeFlat); }
-  return { Db, Lb, sky, M, ao, band, eyes };
+  // mottling: line-integral convolution of a soft noise along the flow, a cloudy grey drift that follows the form
+  const nz = new Float32Array(N); let h = (cfg.seed * 2654435761) >>> 0;
+  for (let i = 0; i < N; i++) { h ^= h << 13; h >>>= 0; h ^= h >>> 17; h ^= h << 5; h >>>= 0; nz[i] = (h & 65535) / 65535; }
+  const nzb = blur(nz, aw, ah, cfg.veinScale);
+  const c2 = Math.cos(2 * cfg.veinAngle), s2 = Math.sin(2 * cfg.veinAngle), J = { xx: new Float32Array(N), xy: new Float32Array(N), yy: new Float32Array(N) };
+  for (let i = 0; i < N; i++) { const a = F.Jc.xx[i], b = F.Jc.xy[i], c = F.Jc.yy[i], m = (a + c) / 2, d = (a - c) / 2, d2 = d * c2 - b * s2; J.xx[i] = m + d2; J.yy[i] = m - d2; J.xy[i] = d * s2 + b * c2; }
+  const mot0 = lic(F, nzb, { len: cfg.veinLen, J });
+  // normalise by percentiles so the iso-levels sit in the populated range
+  const srt = Float32Array.from(mot0).sort(), lo = srt[Math.floor(N * .02)], hi = srt[Math.floor(N * .98)];
+  const mot = new Float32Array(N); for (let i = 0; i < N; i++) mot[i] = clamp((mot0[i] - lo) / Math.max(1e-6, hi - lo));
+  // frozen spray: the plate's bright specks (droplets, splashes) become glass glints hanging in the dark
+  const Lg = blur(F.L, aw, ah, 2), gl = new Float32Array(N);
+  const ring = blur(M, aw, ah, cfg.glassReach);            // spray hangs only close to the bodies, not over the whole river
+  for (let y = 1; y < ah - 1; y++) for (let x = 1; x < aw - 1; x++) {
+    const i = y * aw + x, L = F.L[i], lc = L - Lg[i]; if (lc < cfg.glassT || sky[i] > .5 || L < .55 || ring[i] < .12 || y < ah * cfg.glassY) continue;
+    let mx = true; for (let j = -1; j <= 1 && mx; j++) for (let k = -1; k <= 1; k++) if ((j || k) && F.L[i + j * aw + k] > L) { mx = false; break; }
+    if (mx) gl[i] = Math.min(1, (lc - cfg.glassT) * 8) * (1 - .6 * M[i]);
+  }
+  // the water: where the land lies low and flat in frame (below the subject's feet line), a dark mirror of the horizon band
+  return { Db, Lb, sky, M, ao, band, eyes, mot, glass: blur(gl, aw, ah, .6) };
 }
 
 // veins: sparse streamlines through the coarse flow (long, sweeping), only on stone (not the sky)
 function veinLines(F, f, cfg) {
   const N = F.N, imp = new Float32Array(N);
   for (let i = 0; i < N; i++) imp[i] = (1 - f.sky[i]) * sstep(.3, .7, f.M[i]);
-  const vf = { xx: F.Jc.xx, xy: F.Jc.xy, yy: F.Jc.yy, imp, sky: f.sky, sun: null };
+  // rotate the coarse tensor: veins run at an angle to the carved contours (still the same field, not topographic lines)
+  const c2 = Math.cos(2 * cfg.veinAngle), s2 = Math.sin(2 * cfg.veinAngle), xx = new Float32Array(N), xy = new Float32Array(N), yy = new Float32Array(N);
+  for (let i = 0; i < N; i++) {
+    const a = F.Jc.xx[i], b = F.Jc.xy[i], c = F.Jc.yy[i], m = (a + c) / 2, d = (a - c) / 2;
+    const d2 = d * c2 - b * s2, b2 = d * s2 + b * c2; xx[i] = m + d2; yy[i] = m - d2; xy[i] = b2;
+  }
+  const vf = { xx, xy, yy, imp, sky: f.sky, sun: null };
   const lines = traceLines(F, vf, { dsepMin: cfg.veinDsep * .55, dsepMax: cfg.veinDsep, dtest: .6, step: .7, maxLen: 600, minLen: 30, maxTurn: 2.2, sepGamma: 1, seed: cfg.seed });
   const S = W / F.aw;
   return lines.map((L, j) => {
@@ -86,11 +112,11 @@ void main() { float hw = vA.y, ext = hw + 4.0; float d = abs(vA.x) * ext;
 const SHADE_FS = `#version 300 es
 precision highp float;
 in vec2 vUv;
-uniform sampler2D uF0, uF1, uVein, uImg;
+uniform sampler2D uF0, uF1, uVein, uImg, uF2;
 uniform vec2 uRes, uARes;
 uniform vec3 uWhite, uGrey, uShadow, uOrange, uNavy, uNavyTop, uKey, uKeyCol;
 uniform float uDepthK, uReliefK, uCoarse, uWrap, uSoft, uKeyI, uRimI, uRimW, uBounceI, uAmbI, uSpecI, uSpecPow, uSheen, uVeinAmt, uCloud;
-uniform float uLandAlbedo, uLandSpec, uHorizonI, uExposure, uVig, uFlip, uSeed, uSss;
+uniform float uLandAlbedo, uLandSpec, uHorizonI, uExposure, uVig, uFlip, uSeed, uSss, uMottle, uVeinIso, uVeinZone, uGlassI, uWater, uWaterY;
 uniform vec4 uPlanets[4]; uniform int uNPlanets; uniform float uStars;
 out vec4 o;
 ${GLSL_COMMON}
@@ -122,10 +148,17 @@ void main() {
   vec2 g = vec2(Lr(uv + vec2(e1.x, 0)) - Lr(uv - vec2(e1.x, 0)), Lr(uv + vec2(0, e1.y)) - Lr(uv - vec2(0, e1.y)));
   vec3 n = normalize(nF + vec3(-g * rk, 0.0));
   // ---- albedo: marble with veins along the flow field, faint clouding; the land is dark stone
-  float vein = texture(uVein, uv).r;
+  float vein = texture(uVein, uv).r * uVeinAmt;
+  // level-set veins: iso-lines of a noise smeared along the flow (irregular, branching, following the form), clustered in zones
+  float mv = f1.a, fw = max(fwidth(mv), 1e-4);
+  float zone = smoothstep(0.45, 0.8, fbm(sp * 0.0012 + uSeed * 3.1));                 // veins come and go
+  float dv = abs(mv - 0.5);
+  float v1 = 1.0 - smoothstep(0.0, fw * (0.7 + 2.2 * zone), dv);                       // the vein: hairline to ~3 px
+  float halo = exp(-dv * dv / (2.0 * pow(fw * (3.0 + 6.0 * zone), 2.0))) * 0.25;       // soft grey bleed around it
+  vein = max(vein, max(v1, halo) * zone * uVeinZone + smoothstep(0.62, 0.95, mv) * uMottle * zone);
   float cloud = fbm(sp * 0.004 + uSeed) - 0.5;
   vec3 alb = uWhite * (1.0 + uCloud * cloud);
-  alb = mix(alb, uGrey, clamp(vein * uVeinAmt, 0.0, 0.85));
+  alb = mix(alb, uGrey, clamp(vein * m, 0.0, 0.85));
   float land = 1.0 - m;
   alb *= mix(1.0, uLandAlbedo, land);
   // ---- light
@@ -151,6 +184,15 @@ void main() {
   float spec = (pow(nh, uSpecPow) * uSpecI + pow(nh, 8.0) * uSheen) * mix(1.0, uLandSpec, land) * (1.0 - eye) * ao;
   col += uKeyCol * spec;
   // ---- composite: crisp matte silhouettes over the sky; land everywhere else
+  col += uOrange * uHorizonI * 0.05 * smoothstep(0.0, 1.0, band) * land * (1.0 - sky);
+  // water: a dark mirror, the orange horizon band reflected as a soft streak near the far bank, ripples break it
+  float wz = uWater * land * (1.0 - sky) * smoothstep(uWaterY - 0.12, uWaterY + 0.05, uv.y);
+  float ripple = 0.55 + 0.45 * vnoise(vec2(sp.x * 0.004, sp.y * 0.09));
+  float refl = exp(-max(0.0, uv.y - uWaterY) / 0.045) * ripple;                 // the far bank's horizon glow, mirrored
+  col = mix(col, uShadow * 0.45 + uOrange * 0.22 * refl, wz * 0.85);
+  // frozen spray: tiny glass glints with a small cool halo
+  float gls = texture(uF2, uv).r;
+  col += vec3(0.92, 0.95, 1.0) * uGlassI * gls * gls + uOrange * 0.25 * gls;
   vec3 outc = mix(col, skyc, sky * (1.0 - m));
   outc *= uExposure;
   vec2 q = (uv - 0.5) * vec2(1.0, 0.85);
@@ -167,7 +209,7 @@ function prepare(F, cfg) {
   if (!c) {
     const t0 = performance.now();
     const f = prepFields(F, cfg);
-    const veins = veinLines(F, f, cfg);
+    const veins = cfg.veinAmt > 0 ? veinLines(F, f, cfg) : [];
     c = { f, veins, ms: Math.round(performance.now() - t0) };
     if (cache.size > 3) cache.delete(cache.keys().next().value);
     cache.set(key, c);
@@ -202,19 +244,19 @@ export async function render(glw, F, cfg, ctx) {
   const P = glw.program(VEIN_VS, VEIN_FS), Mv = glw.mesh(P, { aPos: { data: pos, size: 2 }, aA: { data: A, size: 2 } }, idx);
   glw.draw(P, Mv, {}, VEIN, 'add'); Mv.dispose();
   // fields at analysis res
-  const T0 = glw.fieldTexture(F.aw, F.ah, [f.Db, f.Lb, f.M, f.sky]), T1 = glw.fieldTexture(F.aw, F.ah, [f.ao, f.band, f.eyes, null]);
+  const T0 = glw.fieldTexture(F.aw, F.ah, [f.Db, f.Lb, f.M, f.sky]), T1 = glw.fieldTexture(F.aw, F.ah, [f.ao, f.band, f.eyes, f.mot]), T2 = glw.fieldTexture(F.aw, F.ah, [f.glass, null, null, null]);
   const lin = h => hexRgb(h).map(s2l);
   const pl = new Float32Array(16); (cfg.planets || []).slice(0, 4).forEach((p, i) => { pl[i * 4] = p.x; pl[i * 4 + 1] = p.y; pl[i * 4 + 2] = p.i ?? 1; pl[i * 4 + 3] = p.r ?? 1.6; });
   glw.pass(SHADE_FS, {
-    uF0: T0, uF1: T1, uVein: VEIN.tex[0], uARes: [F.aw, F.ah],
+    uF0: T0, uF1: T1, uF2: T2, uVein: VEIN.tex[0], uARes: [F.aw, F.ah], uGlassI: cfg.glassI, uWater: cfg.water, uWaterY: cfg.waterY,
     uWhite: lin(cfg.white), uGrey: lin(cfg.grey), uShadow: lin(cfg.shadow), uOrange: lin(cfg.orange), uNavy: lin(cfg.navy), uNavyTop: lin(cfg.navyTop),
     uKey: cfg.key, uKeyCol: cfg.keyCol, uDepthK: cfg.depthK, uReliefK: cfg.reliefK, uCoarse: cfg.coarse, uWrap: cfg.wrap, uSoft: cfg.soft,
     uKeyI: cfg.keyI, uRimI: cfg.rimI, uRimW: cfg.rimW, uBounceI: cfg.bounceI, uAmbI: cfg.ambI, uSpecI: cfg.specI, uSpecPow: cfg.specPow, uSheen: cfg.sheen, uVeinAmt: cfg.veinAmt, uCloud: cfg.cloud,
-    uLandAlbedo: cfg.landAlbedo, uLandSpec: cfg.landSpec, uSss: cfg.sss, uHorizonI: cfg.horizonI, uExposure: cfg.exposure, uVig: cfg.vignette, uFlip: 1, uSeed: cfg.seed,
+    uLandAlbedo: cfg.landAlbedo, uLandSpec: cfg.landSpec, uSss: cfg.sss, uMottle: cfg.mottle, uVeinIso: cfg.veinIso, uVeinZone: cfg.veinZone, uHorizonI: cfg.horizonI, uExposure: cfg.exposure, uVig: cfg.vignette, uFlip: 1, uSeed: cfg.seed,
     uPlanets: pl, uNPlanets: Math.min(4, (cfg.planets || []).length), uStars: cfg.stars
   }, null);
   glw.finish();
-  glw.deleteTexture(T0); glw.deleteTexture(T1);
+  glw.deleteTexture(T0); glw.deleteTexture(T1); glw.deleteTexture(T2);
   ms.gpu = Math.round(performance.now() - t0);
   return { ms, nVeins: c.veins.length, fieldsMs: c.ms };
 }

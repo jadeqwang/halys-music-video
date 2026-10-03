@@ -87,7 +87,7 @@ export function resolveItems(spec) {
     if (raw === 'all') { for (const s of SHOTS) out.push(frameAt((s.t0 + s.t1) / 2)); continue; }
     if ((m = raw.match(/^f(\d+)$/))) { out.push(+m[1]); continue; }
     if (/^-?\d+(\.\d+)?$/.test(raw)) { out.push(frameAt(+raw)); continue; }
-    m = raw.match(/^([A-Za-z_][\w-]*)(?:([@+*])(\d+(?:\.\d+)?))?$/);
+    m = raw.match(/^([A-Za-z_][\w-]*)(?:([@+*])(\d*\.?\d+))?$/);
     const s = m && shotById(m[1]);
     if (!s) throw new Error(`sheet item "${raw}": not a time, frame or shot id`);
     const [op, v] = [m[2], +m[3]];
@@ -121,7 +121,9 @@ Object.assign(HALYS, {
       const x = (k % cols) * w, y = Math.floor(k / cols) * (h + lab);
       c.drawImage(OUT, x, y, w, h);
       setFont(c, 'mono', 13); c.fillStyle = '#ddd'; c.textBaseline = 'top';
-      c.fillText(`${(items[k] / FPS).toFixed(2)}s f${items[k]} ${fi.shot ? fi.shot.id : 'gap'} ${fi.shot ? fi.shot.cadence + 'fps #' + fi.d : ''} ${ms[k].toFixed(0)}ms`, x + 5, y + h + 4);
+      const long = `${(items[k] / FPS).toFixed(2)}s f${items[k]} ${fi.shot ? fi.shot.id : 'gap'} ${fi.shot ? fi.shot.cadence + 'fps #' + fi.d : ''} ${ms[k].toFixed(0)}ms`;
+      const short = `${(items[k] / FPS).toFixed(2)}s ${fi.shot ? fi.shot.id : 'gap'}`;
+      c.fillText(c.measureText(long).width <= w - 10 ? long : short, x + 5, y + h + 4);
     }
     return { url: S.toDataURL('image/jpeg', .9), ms, items };
   },

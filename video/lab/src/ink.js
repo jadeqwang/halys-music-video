@@ -15,11 +15,11 @@ import { GLSL_COMMON } from './gl.js';
 
 // character materials: base, shadow, highlight (sRGB hex); L range (OKLab) the material can occupy under shading; chroma anchor
 export const MATERIALS = [
-  { name: 'hair', base: '#101114', shadow: '#0b0c0f', hi: '#2a2e3a', L: [0, .34], ab: [0, -.005] },
+  { name: 'hair', base: '#101114', shadow: '#0b0c0f', hi: '#353c4d', L: [0, .34], ab: [0, -.005], cuts: [-.06, .04] },
   { name: 'jacket', base: '#f2f0ea', shadow: '#c3c5cf', hi: '#ffffff', L: [.5, 1.01], ab: [-.004, -.01] },
   { name: 'orange', base: '#f08a2a', shadow: '#c2601b', hi: '#ffab55', L: [.5, .9], ab: [.07, .13] },
   { name: 'navy', base: '#1e2433', shadow: '#151a26', hi: '#2c3549', L: [.12, .42], ab: [-.004, -.03] },
-  { name: 'skin', base: '#f0d0b8', shadow: '#d3a28c', hi: '#fbe6d6', L: [.55, .96], ab: [.03, .045] },
+  { name: 'skin', base: '#f0d0b8', shadow: '#d3a28c', hi: '#fbe6d6', L: [.36, .86], ab: [.03, .045], cuts: [-.09, .12] },
 ];
 
 export const DEFAULTS = {
@@ -27,7 +27,7 @@ export const DEFAULTS = {
   bilR: 3, bilS: 2.2, bilC: .07, bilIt: 3, bgIt: 3, bgR: 4,
   shadowCut: -.075, hiCut: .1, wL: 3, bandAA: 1,
   line: '#121216', lineBg: '#1b2030', lineW: [.55, 2.3], silW: 2.6, lineHi: .2, lineLo: .09, lineMin: 9, bgLineHi: .34, bgLineMin: 16,
-  bgMode: 0, bgLevels: 6, bgK: 11, bgChroma: .95, bgLift: 1.0, glowI: .55, glowR: 10, emissiveT: .55, priorK: .06,
+  bgMode: 0, bgLevels: 6, bgK: 11, bgChroma: .95, bgLift: 1.0, glowI: .55, glowR: 10, emissiveT: .55, priorK: .1,
   regions: {},   // per-shot material priors: { skin: [ellipses], navy: [...], jacket: [...], orange: [...] }
   vignette: .25, seed: 9,
 };
@@ -121,6 +121,7 @@ uniform sampler2D uC, uX, uLines, uP;
 uniform vec2 uRes;
 uniform vec3 uBase[5], uShadow[5], uHi[5], uLineC, uLineBg, uBgPal[12];
 uniform vec4 uRange[5];
+uniform vec2 uCuts[5];
 uniform int uK;
 uniform float uShadowCut, uHiCut, uWL, uPriorK, uBgChroma, uBgLift, uGlowI, uVig, uFlip, uBgMode, uBgLevels;
 out vec4 o;
@@ -133,7 +134,8 @@ vec3 oklab2lin(vec3 c) {
 vec3 celOf(int i, float L) {
   vec4 R = uRange[i];
   float t = L - mix(R.x, R.y, 0.62), aa = max(fwidth(L), 1e-4) * 0.75;
-  float sh = 1.0 - smoothstep(uShadowCut - aa, uShadowCut + aa, t), hi = smoothstep(uHiCut - aa, uHiCut + aa, t);
+  vec2 cu = uCuts[i];
+  float sh = 1.0 - smoothstep(cu.x - aa, cu.x + aa, t), hi = smoothstep(cu.y - aa, cu.y + aa, t);
   return mix(mix(uBase[i], uShadow[i], sh), uHi[i], hi * (1.0 - sh));
 }
 void main() {
@@ -230,6 +232,7 @@ export async function render(glw, F, cfg, ctx) {
     uC: TC, uX: TX, uLines: LT.tex[0],
     uBase: flat(MATERIALS.map(m => lin(m.base))), uShadow: flat(MATERIALS.map(m => lin(m.shadow))), uHi: flat(MATERIALS.map(m => lin(m.hi))),
     uRange: flat(MATERIALS.map(m => [m.L[0], m.L[1], m.ab[0], m.ab[1]])), uLineC: lin(cfg.line), uLineBg: lin(cfg.lineBg),
+    uCuts: flat(MATERIALS.map(m => m.cuts || [cfg.shadowCut, cfg.hiCut])),
     uShadowCut: cfg.shadowCut, uHiCut: cfg.hiCut, uWL: cfg.wL, uPriorK: cfg.priorK, uBgChroma: cfg.bgChroma, uBgLift: cfg.bgLift, uGlowI: cfg.glowI, uVig: cfg.vignette, uFlip: 1,
     uP: TP, uBgPal: pal, uK: Math.min(12, f.cen.length), uBgMode: cfg.bgMode, uBgLevels: cfg.bgLevels
   }, null);

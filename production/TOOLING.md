@@ -4,8 +4,10 @@ How the generation tools, the plate pipeline and the JavaScript render harness w
 they are built on (measured in this sandbox on 2026-10-02 unless marked otherwise). Read this before
 spending money.
 
-> Status (2026-10-02): models section written from the cached schemas, the catalog and the smoke tests
-> in `media/genlog.jsonl`. Render-harness and encoding sections are being written as the harness is built.
+> Status (2026-10-03): models from the cached schemas, the priced catalog and the smoke tests in `media/genlog.jsonl`
+> (total spend so far $1.04; this pass made no paid calls). Tools audited, plate pipeline run end to end, render harness
+> built and verified (3.6), release encoder verified (4). Contents: 0 sandbox · 1 models · 2 tools · 3 render harness ·
+> 4 release encoding.
 
 ---
 
@@ -55,7 +57,7 @@ priced catalog in `tools/cf_schemas/catalog.json` (`python3 tools/cfai.py catalo
 | `camera_fixed` | accepted, **no effect** (provider does not support it). Ask for camera behaviour in the prompt |
 | `seed` | accepted, **not reproducible** |
 | `watermark` | `false` (default in our tools) → no visible watermark |
-| Price | **480p $0.1028/s, 720p $0.2312/s**; with any reference video **480p $0.4304/s, 720p $0.9676/s**. Image and audio references are free. 5 s @720p = $1.16; 10 s @720p = $2.31; 4 s @480p = $0.41 (measured) |
+| Price | **480p $0.1028/s, 720p $0.2312/s**; with any reference video **480p $0.4304/s, 720p $0.9676/s**. Image and audio references do not change the rate. 5 s @720p = $1.16; 10 s @720p = $2.31; 4 s @480p = $0.41 (measured) |
 | Latency | measured **146 s** wall for 4 s @480p with 1 image + 1 audio reference (submit → webhook → relay mirror → KV read). Expect a few minutes for 10–15 s @720p (the orbital project budgeted 1500 s per job). Run takes in parallel (`PLATE_PAR=4`) |
 | Output host | `*.volces.com` (blocked here) → files arrive through the relay's KV mirror (≤ 200 MB per file, 20 MiB KV chunks) |
 | Provenance | every mp4 carries a **C2PA manifest** (`uuid` box) signed by *Byteplus Pte. Ltd.* (GlobalSign S/MIME cert), `model_name: dreamina-seedance-2-5`, action `c2pa.created`, `digitalSourceType: trainedAlgorithmicMedia`. ffmpeg re-encodes drop it; plates never appear in the film, so the film carries no C2PA. Honest credit: "drawn in JavaScript over AI-generated motion reference" |
@@ -90,9 +92,10 @@ inp = {"prompt": "...", "duration": 4, "resolution": "480p", "aspect_ratio": "16
 paths, rec = cfai.gen("bytedance/seedance-2.5", inp, "media/tests/x.mp4", tag="test:x")   # blocks; bg mode + relay
 ```
 
-Other Seedance variants on the gateway (not used): `seedance-2.0` (480p/720p/**1080p**, ≤ 12 s, $0.07/$0.15/$0.37 per s
-without video input), `seedance-2.0-fast` ($0.06/$0.12), `seedance-2.0-mini` ($0.04/$0.09). They take
-`reference_video` (singular) instead of `reference_videos`.
+Other Seedance variants on the gateway (not used): `seedance-2.0` (480p/720p/**1080p/4k**, 4–12 s, $0.07/$0.15/$0.37/
+$0.78 per s without video input), `seedance-2.0-fast` (480p/720p, $0.06/$0.12), `seedance-2.0-mini` ($0.04/$0.09).
+The 2.0 family takes one `reference_video` (singular), at most 4 `reference_images` and **no audio references**, so
+lip-synced singer plates need 2.5.
 
 ### 1.2 Nano Banana 2 / Pro / 2-lite: `google/nano-banana-2`, `google/nano-banana-pro`, `google/nano-banana-2-lite`
 
@@ -106,8 +109,8 @@ Gemini image models: style frames, character and set sheets, stills that become 
 | Latency | measured 21–64 s @2K, 27 s @1K → background mode | longer (background) |
 | Provenance | C2PA signed by Google LLC ("Created by Google Generative AI") + **invisible SynthID watermark** ("Applied imperceptible SynthID watermark") | same |
 
-`nano-banana-2-lite`: $0.25 / $30 per 1M, JPEG or PNG. Output hands back an R2 presigned URL (directly downloadable;
-no mirror needed).
+`nano-banana-2-lite`: $0.25 / $30 per 1M, JPEG or PNG. Google (and ElevenLabs) outputs come back from AI Gateway as R2
+presigned URLs, which are downloadable from the sandbox directly (no relay mirror needed).
 
 ```bash
 python3 tools/cfai.py gen google/nano-banana-2 media/tests/still.jpg \
@@ -174,8 +177,8 @@ locally on CPU. `python3 tools/models.py` downloads them to `~/.cache/halys/mode
 
 | Model | Tool | Speed (4 CPUs) | Notes |
 |---|---|---|---|
-| Depth Anything V2 Small (ViT-S, ONNX, fabio-sim release v2.0.0, fixed 518×518) | `tools/plate_depth.py` | ~1.3 s/frame | relative inverse depth, normalised per plate (2–98 %) so maps do not flicker |
-| rembg `isnet-anime` (default), `isnet-general-use`, `u2net_human_seg` | `tools/plate_masks.py` | ~0.7–2 s/matte | models download from GitHub releases into `~/.rembg/models` |
+| Depth Anything V2 Small (ViT-S, ONNX, fabio-sim release v2.0.0, fixed 518×518) | `tools/plate_depth.py` | 1.2 s/frame (measured: 49 frames in 57 s) | relative inverse depth, normalised per plate (2–98 %) so maps do not flicker |
+| rembg `isnet-anime` (default), `isnet-general-use`, `u2net_human_seg` | `tools/plate_masks.py` | 1.2 s/matte (measured: 49 in 58 s, plus ~20 s model load) | models download from GitHub releases into `~/.rembg/models` |
 | MediaPipe face landmarker (478 landmarks + 52 blendshapes) | `tools/plate_meta.py` | fast | found the anime face on 97/97 smoke frames (with the upscaled-crop retry); needs `libegl1 libgles2` |
 | nagadomi `lbpcascade_animeface` | `tools/plate_meta.py` | fast | fallback, box only |
 
@@ -244,7 +247,7 @@ video/
   src/main.js           boot, renderFrame(i), hold keys, window.HALYS API
   src/time.js           60 fps master timeline, cadence quantisation, timing.json loader, beat helpers (beatPos, pulse, curve)
   src/registry.js       scene() / shot() registry, default cadence per world, frame-grid snapping, gaps
-  src/edit.js           THE SHOT LIST (placeholder until SHOTLIST.md): one shot() per cut
+  src/edit.js           THE SHOT LIST (placeholder until SHOTLIST.md: one shot per timing.json section): one shot() per cut
   src/layout.js         size-aware layout: safe areas, type unit, cover/contain with focus, per-aspect pick()
   src/assets.js         fetch/ImageBitmap/JSON loaders with LRU caches, pixels() for map decoding
   src/plates.js         plate frames, maps (g/o/v/d/m), meta, fields; plate-time mapping; numeric field decoding
@@ -259,7 +262,7 @@ video/
 
 * Master frame `i` shows song time `i / FPS` (FPS = 60; `--fps` / `?fps=` overrides). The film is 273.624 s →
   **16 418 master frames**.
-* Every shot declares a **draw cadence** (drawings per second). Defaults by world (TREATMENT v0.1, "frame rate is a
+* Every shot declares a **draw cadence** (drawings per second). Defaults by world (TREATMENT.md, "frame rate is a
   genre signal"): BRONZE 12, GOLD 12, MARBLE 30, CORONA 60, ORBIT 60, ROOM 12 (anime on twos). Override per shot with
   `cadence:`. Between drawings the image is **held**: at cadence 12 each drawing stays for 5 master frames, at 30 for 2.
 * Drawing `d` of a shot starting at frame `F0` covers frames with `floor((i − F0)·c / FPS) = d` and is drawn at song
@@ -267,6 +270,14 @@ video/
   Cadences that do not divide 60 (e.g. 24) are allowed and give uneven 3:2 holds (warned by `--list`).
 * Shot times are song seconds; they snap to the master grid (a cut shows on the first frame at or after `t0`). When
   shots overlap, the one defined last wins (inserts over a base shot). Uncovered frames render black and are listed.
+* **Timing data** (`video/data/timing.json`, written by `tools/audio/`; the harness only reads it): `time.js` exposes
+  `TM.beats` (measured; the tempo drifts 136.4 → 142 BPM, never use a constant grid), `TM.downbeats`, `TM.bars`,
+  `TM.sections` (`{id, name, t0, t1, bar0, bar1}`, 16 bar-aligned sections), `TM.lines` (lyrics with word timings),
+  `TM.chops` (each chopped drop word with its time), `TM.events` (drop impacts, kicks, snares, stabs, timpani, choir,
+  risers, final chord, ...), `TM.curves` (24 fps envelopes: rms, low, mid, high, onset, vocal) and helpers
+  `beatPos(t)`, `beatTime(n)`, `pulse(t)`, `section(id)`, `sectionAt(t)`, `chopAt(t)`, `curve(name, t)`. The placeholder
+  edit cuts on `TM.sections`; its drop words slam in on `TM.chops` (verified frame-exact: "HALO" first appears on master
+  frame 6640, the first frame at or after the measured 110.66 s chop; "IN THE" on 6659, "SKY" on 6688).
 * **Hold de-duplication.** All frames of one drawing share a key `"<shot>#<d>"`. `render.mjs --frames` renders one frame
   per key and hard-links the held frames (`f06628.jpg … f06632.jpg` → one inode). Placeholder film: 16 418 frames from
   ~8 000 drawings; 12 fps sections cost ~3 ms per frame effective. Encoders see identical frames, which compress to
@@ -293,6 +304,10 @@ scene('corona', async f => {
 
 Rules for scenes: no state carried between frames (caches are fine), no `Date.now()`/`performance.now()` in the
 picture, randomness from `f.rng()` / `hash*()` (the engine also reseeds `Math.random` per drawing as a safety net).
+Scenes are ES modules under `src/scenes/` (import `plateFieldsAt`, `plateMap`, `plateTime` from `../plates.js`,
+`getGL` from `../gl.js`, `setFont` from `../fonts.js`) and register themselves when `edit.js` imports them. The
+look-dev materials in `video/lab/src/` are ES modules too: port a material by wrapping its draw call in `scene()` and
+replacing its fixed 1920×1080 constants with `f.W`, `f.H` and `f.L`.
 
 ### 3.3 Output sizes and aspect ratios
 
@@ -313,15 +328,23 @@ node render.mjs --sheet=all --cols=4 --w=480              # contact sheet (items
 node render.mjs --stills=drop1,200.5 [--png]              # full-size stills -> out/stills/
 node render.mjs --clip=110:116                            # quick MP4 with the song, no frames on disk
 node render.mjs --frames=0:273.7 --workers=4              # all frames -> out/frames/f%05d.jpg (resumable, hold-linked)
+node render.mjs --frames=110:154 --stale                  # after changing a scene: redraw frames drawn from older sources
 node render.mjs --encode [--range=108:113]                # frames + Halys.mp3 -> out/halys_1920x1080_60[_range].mp4 (x264 CRF 16)
 node render.mjs --frames=0:273.7 --size=1080x1350 && node render.mjs --encode --size=1080x1350   # the 4:5 cut
 node render.mjs --serve [--port=8000]                     # studio: http://127.0.0.1:8000/studio.html?t=110&w=960&h=540
 ```
 
-Options: `--fps=60`, `--q=0.93` (JPEG), `--dir=`, `--song=` (e.g. an extended final mix), `--force`, `--no-dedupe`,
+Options: `--fps=60`, `--q=0.93` (JPEG), `--dir=`, `--song=` (e.g. an extended final mix), `--stale`, `--force`, `--no-dedupe`,
 `--shared` (one browser, N pages), `--timeout=180` (s per frame; a hung page is restarted and the frame retried once),
 `--chrome=PATH`, `--verbose`, `--debug` (master-frame overlay; disables de-duplication). Interrupt any time: finished
 frames are written atomically and a re-run resumes.
+
+**Resume safety (`keys.json`).** Each frames directory keeps a ledger: for every frame file, the drawing key it holds
+and a hash of the sources it was drawn from (`src/`, `studio.html`, `data/timing.json`, `plates/index.json`). On a
+re-run, frames whose key changed (the edit moved a cut or changed a cadence) are **redrawn automatically**; frames drawn
+from older sources, and frames with no ledger entry, are **kept with a warning** (redraw them with `--stale`, or
+everything in the range with `--force`), so a scene tweak never silently mixes old and new drawings without you being
+told.
 
 Studio (`--serve`): space play/pause (audio via a Range-capable `audio/song.mp3` alias), ←/→ one master frame,
 shift+←/→ one second, `[` `]` previous/next shot, size presets (16:9, 4:5, 9:16, half-res for speed), shot buttons.
@@ -349,9 +372,14 @@ shift+←/→ one second, `[` `]` previous/next shot, size presets (16:9, 4:5, 9
 
 * **5-second render + encode with the song** (108–113 s, crossing the C2 cut from 12 fps BRONZE to 60 fps WebGL
   CORONA): 300 frames from 176 drawings in 9.5 s with 4 workers; `--encode --range=108:113` → H.264 1920×1080 60/1,
-  300 frames, 5.000 s, AAC 48 kHz 5.000 s, 1.4 MB. The muxed audio matches `Halys.mp3` at **108.000 s (0.0 ms offset,
-  correlation 0.998)**.
-* 4:5: `--size=1080x1350` frames + encode (1080×1350 60/1). Studio boots without page errors and plays with audio.
+  300 frames, 5.000 s, AAC 48 kHz 5.000 s, 1.5 MB, tagged BT.709/tv. The muxed audio matches `Halys.mp3` at
+  **108.000 s (0.0 ms offset, correlation 0.998)**; decoded frames match the source JPEGs within ~1 level.
+* **The whole placeholder film**: `--frames=0:273.7 --workers=4` → 16 418 master frames from 8 052 drawings
+  (49 %: the rest are hold links) in ≈ 6 min total (7 360 drawings in 323 s = 21 ms/frame effective), 680 MB on disk.
+* **Determinism**: 24 frames around the cut drawn independently (`--no-dedupe`, 2 workers) are byte-identical to the
+  hold-linked render (3 workers), and `renderAt(t)` returns identical bytes for repeated t.
+* 4:5: `--size=1080x1350` frames + encode (1080×1350 60/1); `--fps=30` lists and warns about uneven 12 fps holds.
+  Studio boots without page errors and plays with audio.
 
 ---
 
@@ -360,7 +388,7 @@ shift+←/→ one second, `[` `]` previous/next shot, size presets (16:9, 4:5, 9
 ```bash
 tools/encode_release.sh                  # release/Halys_1080p60_hevc.mp4 (~94 MB) + release/Halys_720p60_h264.mp4 (~90 MB)
 tools/encode_release.sh --hevc           # or --h264
-tools/encode_release.sh --test=100:120   # excerpt at the full film's bitrate into release/test/, with projected full size
+tools/encode_release.sh --test=100:120   # excerpt at the full film's bitrate into video/out/release_test/, projected full size
 FRAMES=video/out/frames_1080x1350 NAME=Halys_4x5 tools/encode_release.sh --hevc          # the 4:5 cut
 H264_SIZE=1920x1080 H264_MB=240 tools/encode_release.sh --h264                            # an upload master (no cap)
 ```
@@ -369,14 +397,19 @@ H264_SIZE=1920x1080 H264_MB=240 tools/encode_release.sh --h264                  
   `Halys.mp3`). It refuses to run if any frame of the range is missing and prints the `render.mjs` command to fill it.
 * **Colour:** Chromium's JPEG frames are JFIF (BT.601 matrix, full range) but players decode HD video as BT.709
   limited range. ffmpeg's automatic conversion fixes the range and not the matrix, which shifts the palette on
-  playback (measured: green 0,200,80 → 0,172,77; vermilion 194,64,31 → 205,73,28). Every encoder here (`render.mjs
-  --encode/--clip`, `encode_release.sh`) converts explicitly with
-  `scale=in_color_matrix=bt601:out_color_matrix=bt709:in_range=pc:out_range=tv` and tags BT.709/tv (round trip
-  within ±4 levels). Keep this in any new ffmpeg command that reads the frames.
+  playback (measured: green 0,200,80 → 0,172,77; vermilion 194,64,31 → 205,73,28). swscale's direct YUV→YUV matrix
+  conversion is no cure either (≈ 3 levels too dark). Every encoder here (`render.mjs --encode/--clip`,
+  `encode_release.sh`) goes through RGB with accurate rounding,
+  `-vf format=rgb24,scale=out_color_matrix=bt709:out_range=tv:flags=accurate_rnd+full_chroma_int,format=yuv420p`,
+  and tags `-colorspace bt709 -color_primaries bt709 -color_trc bt709 -color_range tv`: the round trip is within
+  ±1 level. Keep this in any new ffmpeg command that reads the frames.
 * Two-pass VBR sized for GitHub's 100 MB cap: video kbps = (target MB × 8 × 0.994 / duration) − audio kbps. For
   273.6 s: **HEVC ≈ 2 550 kbps** video + AAC 192k (x265 `slow`, aq-mode 3, keyframe ≥ every 4 s, `hvc1` tag for Apple
   players); **H.264 720p60 ≈ 2 470 kbps** + AAC 160k (x264 `slow`, High). If a full-length file still lands above
   99 MB, pass 2 is re-run once at a proportionally lower bitrate; the final size is checked against the cap.
+* The song (273.624 s) ends 9 ms before the last 60 fps frame does, so audio is padded (`-af apad -shortest`): every
+  frame is kept and x264's two passes see the same frame count. The script body runs inside `main`, so editing the
+  file while an encode runs is safe (bash otherwise keeps reading a running script by byte offset).
 * Why two-pass and not CRF: 12 fps painted sections (each drawing held 5 frames) are nearly free, the 60 fps light
   sections are expensive; a size target moves the bits to the drops. Expect the drops (≈ 82 s of 60 fps drawing) to be
   the quality bottleneck at ~2.5 Mbit/s; if they break up, raise `HEVC_MB` only for an off-repo file, or simplify the

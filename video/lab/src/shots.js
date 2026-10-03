@@ -28,7 +28,7 @@ export const SHOTS = {
     marble: {
       sky: { maxDepth: .006, soft: .01, below: .16 },
       planets: [{ x: .64, y: .045, i: 1.6, r: 2.2 }, { x: .83, y: .075, i: .9, r: 1.7 }, { x: .07, y: .03, i: .6, r: 1.4 }],
-      horizonBand: .028, horizonI: 1.1,
+      horizonBand: .028, horizonI: 1.1, water: 1, waterY: .44,
     },
   },
   b_face: {
@@ -75,7 +75,7 @@ export const SHOTS = {
   d_room: {
     ink: {
       regions: {
-        skin: [{ x: .395, y: .776, rx: .045, ry: .045, k: 1 }, { x: .604, y: .43, rx: .02, ry: .03, k: .8 }, { x: .612, y: .27, rx: .035, ry: .1, k: 1 }],
+        skin: [{ x: .395, y: .776, rx: .045, ry: .045, k: 1 }, { x: .604, y: .43, rx: .02, ry: .03, k: .8 }, { x: .612, y: .27, rx: .035, ry: .1, k: 1 }, { x: .592, y: .215, rx: .03, ry: .055, k: 1 }],
         jacket: [{ x: .63, y: .62, rx: .13, ry: .2, rot: -.3, k: .8 }, { x: .5, y: .78, rx: .08, ry: .06, k: .6 }],
         navy: [{ x: .62, y: .95, rx: .2, ry: .1, k: .8 }],
       },

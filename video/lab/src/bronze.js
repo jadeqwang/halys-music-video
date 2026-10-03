@@ -31,7 +31,7 @@ export const DEFAULTS = {
   poolMatte: .85, poolBound: null, poolBlur: 7,
   // values: inside the pool (gamma, lift, contrast, saturation), outside (floor, crush, saturation), glints near the light
   gammaIn: .95, liftIn: 1.04, contrastIn: 1.18, satIn: 1.18, crushFloor: .13, crush: .17, satOut: .5,
-  glint: .85, glintT: .72, glintReach: 16, envDim: .8,
+  glint: .85, glintT: .72, glintReach: 16, envDim: .8, focusLift: .22,
   // brushes (screen px radius), grid factor, threshold, stroke lengths (control points), turn limit, colour blur
   brushes: [24, 13, 7.5, 4.2, 2.4], fg: [1.5, 1.3, 1.15, 1.05, 1.0], T: [0, .05, .055, .06, .065],
   minLen: [2, 2, 2, 1, 1], maxLen: [6, 6, 5, 4, 3], step: [1.0, .95, .9, .85, .8], fc: .5, maxTurn: .42, fs: .5,
@@ -67,6 +67,7 @@ export function reference(F, cfg) {
     const p = sstep(0, 1, pool[i]);
     let Lin = Math.pow(clamp(Lk), cfg.gammaIn) * cfg.liftIn;
     Lin = clamp(.5 + (Lin - .5) * cfg.contrastIn, .04, .97);
+    Lin += cfg.focusLift * focus[i] * (.97 - Lin) * sstep(.08, .4, Lk);      // a designed key on faces and hands
     // glints are ridges and specks (bright with little gradient), not the bright side of every step edge
     const lc = F.L[i] - Lb[i], ratio = F.mag[i] / (8 * Math.max(lc, 1e-3));
     const glint = sstep(cfg.glintT, cfg.glintT + .14, Lk) * sstep(.025, .1, lc) * (1 - sstep(.35, .9, ratio)) * cfg.glint * sstep(.04, .45, reach[i]);
@@ -250,29 +251,39 @@ export function skyField(F, cfg, mask) {
   const R = new Float32Array(N), G = new Float32Array(N), B = new Float32Array(N);
   const txx = new Float32Array(N), txy = new Float32Array(N), tyy = new Float32Array(N), tmp = [0, 0, 0];
   const twist = sk.twist ?? 1.6, pitch = sk.pitch ?? .35, vortexR = (sk.vortex ?? .16) * aw, glowR = sk.glowR ?? .2;
-  const zen = sk.zenith ?? .26, hor = sk.horizonL ?? .66, cloudAmt = sk.clouds ?? 1;
+  const zen = sk.zenith ?? .26, hor = sk.horizonL ?? .66, cloudAmt = sk.clouds ?? 1, rays = sk.rays ?? .05, cov = sk.cover ?? .6;
+  // cloud density in a frame that twists around the sun: horizontal banks far away, one vortex close to it
+  const dens = (x, y) => {
+    const dx = x - sg.sx, dy = y - sg.sy, d = Math.hypot(dx, dy) + 1e-3, tw = twist * Math.exp(-d / vortexR), c = Math.cos(tw), s = Math.sin(tw);
+    const u = (sg.sx + dx * c - dy * s) / aw, v = (sg.sy + dx * s + dy * c) / aw;
+    return sstep(cov - .06, cov + .07, fbm(u * 3.4, v * 11, seed, 5) * .8 + fbm(u * 9 + 3.1, v * 22 + 1.7, seed + 9, 4) * .3) * cloudAmt;
+  };
   for (let y = 0; y < ah; y++) for (let x = 0; x < aw; x++) {
     const i = y * aw + x; if (mask[i] < .003) continue;
     const dx = x - sg.sx, dy = y - sg.sy, d = Math.hypot(dx, dy) + 1e-3, dn = d / aw;
-    // cloud masses: horizontal banks (stretched noise), curled into one vortex close to the sun
-    const tw = twist * Math.exp(-d / vortexR), c = Math.cos(tw), s = Math.sin(tw);
-    const u = (sg.sx + dx * c - dy * s) / aw, v = (sg.sy + dx * s + dy * c) / aw;
-    const n1 = fbm(u * 3.4, v * 11, seed, 5), n2 = fbm(u * 9 + 3.1, v * 22 + 1.7, seed + 9, 4);
-    const cloud = sstep(.4, .68, n1 * .8 + n2 * .3) * cloudAmt;
+    const near0 = Math.exp(-dn / ((sk.glowR ?? .2) * 1.7));
+    const cl = dens(x, y) * (1 - .7 * near0);                      // the sky opens around the sun
+    // the edge of a cloud that faces the sun is lit: density falls when stepping toward the sun
+    const st = Math.min(9, d * .5), toward = dens(x - dx / d * st, y - dy / d * st);
+    const lit = clamp((cl - toward * (1 - .7 * near0)) * 2.5) * cl;
     const hz = clamp(y / Math.max(hzY, 1));
     const glow = Math.exp(-dn / (glowR * .3)) * .5 + Math.exp(-dn / glowR) * .38;
-    const near = Math.exp(-dn / (glowR * 1.6));                    // clouds near the sun are lit gold, far ones dark
-    let L = lerp(zen, hor, Math.pow(hz, 1.4)) + glow * (1 - .6 * e);
-    const rim = cloud * (1 - cloud) * 4;
-    L += cloud * lerp(-.17, .1, near) + rim * .1 * near;
+    const near = Math.exp(-dn / (glowR * 1.7));
+    const phi = Math.atan2(dy, dx), ray = 1 + rays * Math.sin(phi * 37 + 2 * Math.sin(phi * 5)) * sstep(.5, 2, d / sg.sr) * Math.exp(-dn / .5);
+    const Lgap = (lerp(zen, hor, Math.pow(hz, 1.4)) + glow * (1 - .6 * e)) * ray;
+    const Lbody = lerp(.2, .52, near) + .1 * hz;
+    const Lrim = lerp(.5, .96, near);
+    let L = lerp(Lgap, Lbody, cl) + lit * (Lrim - Lbody) * (1 - .5 * e);
     L *= gain * (1 - .5 * Math.pow(e, 1.5));
-    const warm = clamp(glow * 1.5 + hz * hz * .6 + near * cloud * .5), chroma = 1 - .7 * e;
-    // dark clouds: umber with a breath of madder; zenith: umber-verdigris; glow: Naples; horizon: ochre
-    let a = (lerp(-.012, .016, warm) + .03 * cloud * (1 - near)) * chroma, b = (lerp(.018, .09, warm) + .015 * rim * near) * chroma;
+    const warm = clamp(glow * 1.5 + hz * hz * .6), chroma = 1 - .7 * e;
+    // gaps: verdigris-grey high, ochre-gold low and near the sun; bodies: umber with a breath of madder; rims: Naples
+    let a = lerp(lerp(-.016, .012, warm), .024, cl * (1 - lit)), b = lerp(lerp(.012, .085, warm), .032, cl * (1 - lit));
+    a = lerp(a, .012, lit); b = lerp(b, .095, lit);
+    a *= chroma; b *= chroma;
     const col = oklab2srgb(clamp(L, .05, .97), a, b);
     P.map(col[0], col[1], col[2], tmp);
     R[i] = tmp[0]; G[i] = tmp[1]; B[i] = tmp[2];
-    // flow: log-spiral tangent near the sun, banks elsewhere that follow the cloud shapes (as tensors: orientation-free)
+    // flow: log-spiral tangent near the sun, banks elsewhere (as tensors: orientation-free)
     const rx = dx / d, ry = dy / d;
     const fx = -ry * Math.cos(pitch) + rx * Math.sin(pitch), fy = rx * Math.cos(pitch) + ry * Math.sin(pitch);
     const wv = Math.exp(-d / (vortexR * 1.3));
@@ -346,7 +357,7 @@ function sunStrokes(F, cfg, sky, drawIdx) {
   for (let j = 0; j < 14; j++) {
     const a0 = hash4(j, 1, seed, 0) * TAU, rad = r * (1.1 + .5 * hash4(j, 2, seed, 0)), span = (.25 + .35 * hash4(j, 3, seed, 0)) * (1 + .1 * (hash4(j, 3, bs, 0) - .5));
     const pts = []; for (let q = 0; q <= 5; q++) { const a = a0 + span * q / 5, rr = rad * (1 + .06 * q / 5); const x = cx + Math.cos(a) * rr, y = cy + Math.sin(a) * rr; if (!inSky(x, y) || inMoon(x, y)) break; pts.push([x, y]); }
-    if (pts.length >= 2) add(pts, Math.max(2, r * (.07 + .05 * hash4(j, 4, seed, 0))), metal(naples, e * .8).map(v => v * dim), metal(ochre, e * .8).map(v => v * dim), .5, .4, hash4(j, 5, seed, 0));
+    if (pts.length >= 2 && e < .7) add(pts, Math.max(2, r * (.07 + .05 * hash4(j, 4, seed, 0))), metal(naples, e * .8).map(v => v * dim), metal(ochre, e * .8).map(v => v * dim), .5 * (1 - e / .7), .4, hash4(j, 5, seed, 0));
   }
   // the disc and the bite are drawn exactly by SUN_FS in paint() (a crisp limb: the bite is the film's countdown clock)
   return out;

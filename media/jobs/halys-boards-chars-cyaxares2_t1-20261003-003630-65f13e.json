@@ -1,0 +1,24 @@
+{
+ "job": "halys-boards-chars-cyaxares2_t1-20261003-003630-65f13e",
+ "model": "google/nano-banana-pro",
+ "tag": "boards:chars:cyaxares2_t1",
+ "out": "/tmp/claude-0/-home-user-halys-music-video/b8664d69-2871-5fba-a7df-659b9d78ccf5/scratchpad/raw/cyaxares2_t1.jpg",
+ "t_submit": 1790987792.0726728,
+ "submitted": "2026-10-03T00:36:32",
+ "run": {
+  "runId": "67b8229cb00b88161eacc3e80579fae8f111cbdc0f85277cdcd513e7f47ac4dd",
+  "state": "Running",
+  "httpStatus": 202
+ },
+ "input": {
+  "prompt": "A photographic character turnaround sheet for a historical feature film, shot in a costume-department studio. One actor in a complete, museum-accurate reconstructed costume of c. 585 BC Anatolia is ph...(4037 chars)",
+  "aspect_ratio": "16:9",
+  "image_size": "2K",
+  "output_format": "jpg",
+  "image_input": [
+   "data:image/jpeg;base64...(667 KB)"
+  ]
+ },
+ "est_cost_usd": 0.1375,
+ "meta": {}
+}

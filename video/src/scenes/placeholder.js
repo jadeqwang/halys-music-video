@@ -4,17 +4,20 @@
 // Everything here is a stand-in: no look decisions are made in this file.
 
 import { scene } from '../registry.js';
-import { PAL, TAU, clamp, kf, lerp, rgba, smooth } from '../core.js';
+import { PAL, TAU, clamp, kf, rgba, smooth } from '../core.js';
 import { setFont } from '../fonts.js';
-import { pulse, beatPos, FPS } from '../time.js';
+import { pulse, beatPos, chopAt, section, TM, FPS } from '../time.js';
 import { getGL } from '../gl.js';
-import { plateMap, plateTime, PLATES } from '../plates.js';
+import { plateMap, plateTime, plateFrameIndex, PLATES } from '../plates.js';
 import { makeCanvas, pixels, LRU } from '../assets.js';
 
 // Moon offset in sun radii (2 = first/fourth contact, 0 = totality) across the whole song: the cold open shows
-// the payoff (total), the rewind goes back to a full sun, Act I's bite counts down to totality on Drop 1, the
-// diamond ring (C3) opens it, Drop 2 runs to fourth contact. Song times are placeholders until SHOTLIST.md.
-const MOON = [[0, 0], [5, 0], [12, 2.6], [20, 2.0], [110.6, 0], [189, 0], [195, .06], [215.6, .9], [256, 2.4]];
+// the payoff (total), the rewind goes back to a full sun, Act I's bite counts down to totality on Drop 1's first
+// kick, the diamond ring (C3) opens it, Drop 2 runs to fourth contact. Keyed to timing.json when it is loaded.
+const at = (id, k, dflt) => { const s = section(id); return s ? s[k] : dflt; };
+const C2 = ((TM.events.drop_impacts || [])[0] || {}).t ?? 110.58;
+const MOON = [[0, 0], [5, 0], [at('intro_a', 't1', 27.2) - 15, 2.6], [at('intro_a', 't1', 27.2), 2.0], [C2, 0],
+  [at('thales', 't1', 200) - 12, 0], [at('thales', 't1', 200) - 6, .06], [at('drop2', 't0', 215.3), .9], [at('outro', 't0', 257.7), 2.4]];
 export const moonOffset = t => kf(t, MOON, k => k);
 
 const SUN_AT = { '16:9': [.66, .36], '21:9': [.68, .38], '4:3': [.62, .34], '1:1': [.5, .33], '4:5': [.5, .3], '9:16': [.5, .27] };
@@ -45,7 +48,10 @@ function title(f, lines, role) {
   g.save();
   g.textBaseline = 'alphabetic';
   if (role === 'drop') {                             // giant chopped word: fills the frame width
-    const word = lines[Math.floor(beatPos(f.t)) % lines.length];
+    // the measured chop (timing.json `chops`) slams in on its own frame; without timing data, one word per beat
+    const ch = chopAt(f.t, 1.5), n = lines.length;
+    const word = ch && ch.t >= f.shot.t0 - 1e-6 ? ch.word.toUpperCase() : TM.chops.length ? null : lines[((Math.floor(beatPos(f.t)) % n) + n) % n];
+    if (!word) { g.restore(); return; }
     let px = L.H * (L.portrait ? .2 : .36);
     setFont(g, 'drop', px);
     const w = g.measureText(word).width, max = L.safe.w;
@@ -95,9 +101,9 @@ void main() {
 const _ink = new LRU(24);
 async function plateInk(f) {                         // a plate's ink map as dark cel lines on transparent
   const p = f.shot.plate; if (!p || !PLATES[p.id]) return null;
-  const tp = plateTime(f.shot, f.t), m = await plateMap(p.id, 'g', tp, { loop: !!p.loop });
+  const tp = plateTime(f.shot, f.t), opts = { loop: !!p.loop }, m = await plateMap(p.id, 'g', tp, opts);
   if (!m) return null;
-  const key = `${p.id}@${m.width}x${m.height}@${Math.round(tp * 1000)}`;
+  const key = `${p.id}#${plateFrameIndex(p.id, tp, opts)}`;
   let c = _ink.get(key);
   if (!c) {
     const d = pixels(m), id = new ImageData(m.width, m.height);

@@ -16,9 +16,9 @@ import { skyMask } from './sky.js';
 
 export const DEFAULTS = {
   aw: 960,
-  dsepMin: 1.6, dsepMax: 9, dtest: .5, step: .6, maxLen: 900, minLen: 22, maxTurn: 1.5,
+  dsepMin: 1.6, dsepMax: 13, dtest: .5, step: .6, maxLen: 900, minLen: 22, maxTurn: 1.5,
   gamma: 1.35, gain: 1.3, darkCut: .04, edgeGain: 1.2, matteGain: .75, sepGamma: .7,
-  pool: null, poolMatte: 1, poolBlur: 8, envDim: .22, envSep: .14, depthFade: .45, weightVar: .45,
+  pool: null, poolMatte: 1, poolBlur: 8, envDim: .2, envSep: .07, depthFade: .45, weightVar: .45,
   particles: 0, partThresh: .035, partGain: 2.2, partSize: [.7, 1.5],
   width: [.6, 1.5], lambda: 70, speed: .5, pulse: .5, kick: 0,
   pearl: '#f3efe6', orange: '#f08a2a', bg: '#05070c',

@@ -8,9 +8,11 @@
 //                                                                contact sheet; items: shot id (midpoint), id@frac,
 //                                                                id+seconds, id*N (N samples), seconds, fNNN, all
 //   node render.mjs --stills=drop1,200.5 [--png] [--out=out/stills]   full-size stills
-//   node render.mjs --frames=0:273.6 [--workers=4] [--force] [--no-dedupe]
+//   node render.mjs --frames=0:273.6 [--workers=4] [--stale] [--force] [--no-dedupe]
 //                                                                JPEG frames -> out/frames/f%05d.jpg (resumable;
-//                                                                held frames are hard links to their drawing)
+//                                                                held frames are hard links to their drawing;
+//                                                                keys.json redraws frames the edit moved; --stale
+//                                                                also redraws frames drawn from older sources)
 //   node render.mjs --encode [--range=a:b] [--crf=16] [--out=out/halys_1920x1080_60.mp4]
 //                                                                frames + song -> H.264 MP4 (review master;
 //                                                                tools/encode_release.sh makes the release files)
@@ -27,6 +29,7 @@ import { createServer } from 'node:http';
 import { mkdirSync, writeFileSync, readFileSync, existsSync, statSync, renameSync, readdirSync, createReadStream, linkSync, copyFileSync, unlinkSync } from 'node:fs';
 import { dirname, resolve, extname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 process.chdir(HERE);
@@ -78,7 +81,7 @@ if (args.encode) {
     '-ss', t0.toFixed(6), '-t', (n / fps).toFixed(6), '-i', SONG,
     '-map', '0:v:0', '-map', '1:a:0', '-frames:v', String(n),
     '-vf', TO709, '-c:v', 'libx264', '-preset', args.preset || 'slow', '-crf', String(args.crf || 16), ...TAG709,
-    '-c:a', 'aac', '-b:a', '256k', '-movflags', '+faststart', '-shortest', out]);
+    '-af', 'apad', '-c:a', 'aac', '-b:a', '256k', '-movflags', '+faststart', '-shortest', out]);
   const sz = statSync(out).size;
   console.log(`wrote ${out}  ${(sz / 1e6).toFixed(1)} MB  (${((Date.now() - t) / 1000).toFixed(1)} s)`);
   process.exit(0);
@@ -159,7 +162,18 @@ const cleanup = async () => {
   if (MISSING.size) console.log(`not found (optional, skipped): ${[...MISSING].slice(0, 8).join(', ')}${MISSING.size > 8 ? ` +${MISSING.size - 8} more` : ''}`);
   MISSING.clear();
 };
-process.on('SIGINT', async () => { console.log('\ninterrupted; finished frames are kept (rerun to resume)'); await cleanup(); process.exit(130); });
+let flushLedger = null;
+process.on('SIGINT', async () => { console.log('\ninterrupted; finished frames are kept (rerun to resume)'); if (flushLedger) flushLedger(); await cleanup(); process.exit(130); });
+
+// Hash of everything a frame's pixels depend on besides its index: the page sources, timing data, plate index.
+function hashSources() {
+  const h = createHash('sha1');
+  const walk = d => { for (const f of readdirSync(d, { withFileTypes: true }).sort((x, y) => x.name.localeCompare(y.name))) {
+    const p = join(d, f.name); if (f.isDirectory()) walk(p); else { h.update(p); h.update(readFileSync(p)); } } };
+  walk('src');
+  for (const f of ['studio.html', 'data/timing.json', 'plates/index.json']) if (existsSync(f)) { h.update(f); h.update(readFileSync(f)); }
+  return h.digest('hex').slice(0, 10);
+}
 
 try {
   if (args.list || args.probe) {
@@ -212,16 +226,34 @@ try {
     const keys = await page0.evaluate(([x, y]) => window.HALYS.keys(x, y), [first, last]);
     const groups = new Map();
     keys.forEach((k, j) => { const key = args['no-dedupe'] ? `${k}@${first + j}` : k; if (!groups.has(key)) groups.set(key, []); groups.get(key).push(first + j); });
+    // Ledger (keys.json): for every frame file, "<drawing key>|<source hash>" it was drawn with. A frame whose key
+    // changed (the edit moved a cut, a cadence changed) is redrawn automatically; a frame drawn from older sources
+    // (scene code, timing.json, plates) is kept with a warning unless --stale (or --force) is given.
+    const SRC = hashSources(), LEDGER = `${FRAMES_DIR}/keys.json`;
+    let ledger = {}; try { ledger = JSON.parse(readFileSync(LEDGER, 'utf8')); } catch (e) { }
+    flushLedger = () => writeAtomic(LEDGER, JSON.stringify(ledger));
+    const keyOf = i => keys[i - first];
     const exists = i => { try { return statSync(fpath(i)).size > 0; } catch (e) { return false; } };
-    const tasks = [];
+    const state = i => {                 // 'missing' | 'ok' | 'moved' (key changed) | 'old' (older sources) | 'legacy' (no record)
+      if (!exists(i)) return 'missing';
+      const rec = ledger[i]; if (!rec) return 'legacy';
+      const [k, h] = rec.split('|');
+      return k !== keyOf(i) ? 'moved' : h !== SRC ? 'old' : 'ok';
+    };
+    const tasks = [], count = { moved: 0, old: 0, legacy: 0 };
     let linkedNow = 0;
     for (const [key, idx] of groups) {
       if (args.force) { tasks.push({ key, idx }); continue; }
-      const done = idx.filter(exists);
-      if (done.length === idx.length) continue;
-      if (done.length) { for (const i of idx) if (!exists(i)) { linkAtomic(fpath(done[0]), fpath(i)); linkedNow++; } continue; }
+      const st = idx.map(state);
+      for (const x of st) if (x in count) count[x]++;
+      const good = idx.filter((i, j) => st[j] === 'ok' || ((st[j] === 'old' || st[j] === 'legacy') && !args.stale));
+      if (good.length === idx.length) continue;
+      if (good.length) { for (const i of idx) if (!good.includes(i)) { linkAtomic(fpath(good[0]), fpath(i)); ledger[i] = ledger[good[0]] || `${keyOf(i)}|${SRC}`; linkedNow++; } continue; }
       tasks.push({ key, idx });
     }
+    if (count.moved) console.log(`${count.moved} frames hold a drawing the edit no longer puts there: redrawing them`);
+    if (count.old) console.log(`${count.old} frames were drawn from older sources (src/, timing.json or plates changed): ${args.stale ? 'redrawing them (--stale)' : 'KEPT; pass --stale to redraw them, or --force for everything in the range'}`);
+    if (count.legacy) console.log(`${count.legacy} frames have no ledger entry (drawn before keys.json existed): ${args.stale ? 'redrawing them (--stale)' : 'KEPT; pass --stale to redraw them'}`);
     const nFrames = last - first + 1, todoFrames = tasks.reduce((s, t) => s + t.idx.length, 0);
     console.log(`${FRAMES_DIR}: frames ${first}-${last} (${nFrames}) at ${W}x${H}@${FPS}: ${groups.size} drawings; ${tasks.length} to render (${todoFrames} frames), ` +
       `${nFrames - todoFrames - linkedNow} already done${linkedNow ? `, ${linkedNow} re-linked` : ''}; ${Math.min(workers, tasks.length)} workers`);
@@ -243,9 +275,10 @@ try {
         if (!r) { failed.push(lead); continue; }
         writeAtomic(fpath(lead), b64(r.url));
         for (const i of task.idx.slice(1)) linkAtomic(fpath(lead), fpath(i));
+        for (const i of task.idx) ledger[i] = `${keyOf(i)}|${SRC}`;
         done++; framesOut += task.idx.length; drawMs += r.drawMs; encMs += r.encMs;
         if (Date.now() - lastLog > 5000 || done === tasks.length) {
-          lastLog = Date.now();
+          lastLog = Date.now(); flushLedger();
           const el = (Date.now() - start) / 1000;
           console.log(`  ${done}/${tasks.length} drawings (${framesOut}/${todoFrames} frames)  page: draw ${(drawMs / done).toFixed(0)} ms + jpeg ${(encMs / done).toFixed(0)} ms  ` +
             `wall ${(el * 1000 / done).toFixed(0)} ms/drawing, ${(el * 1000 / framesOut).toFixed(0)} ms/frame  eta ${((tasks.length - done) * el / done / 60).toFixed(1)} min`);
@@ -254,6 +287,7 @@ try {
       if (w !== 0) await closePage(page);
     };
     await Promise.all(Array.from({ length: Math.max(1, Math.min(workers, tasks.length)) }, (_, w) => work(w)));
+    flushLedger();
     const el = (Date.now() - start) / 1000;
     if (done) console.log(`rendered ${done} drawings -> ${framesOut} frames in ${el.toFixed(1)} s (${(el / framesOut * 1000).toFixed(0)} ms/frame effective with ${workers} workers)`);
     if (failed.length) { console.log(`FAILED frames: ${failed.join(', ')} (rerun to retry)`); exitCode = 1; }
@@ -266,7 +300,7 @@ try {
     const keys = await page.evaluate(([x, y]) => window.HALYS.keys(x, y), [first, last]);
     const ff = spawn('ffmpeg', ['-y', '-hide_banner', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(FPS), '-c:v', 'mjpeg', '-i', '-',
       '-ss', (first / FPS).toFixed(6), '-t', (n / FPS).toFixed(6), '-i', SONG, '-map', '0:v', '-map', '1:a',
-      '-vf', TO709, '-c:v', 'libx264', '-preset', 'medium', '-crf', '18', ...TAG709, '-c:a', 'aac', '-b:a', '192k', '-shortest', out], { stdio: ['pipe', 'inherit', 'inherit'] });
+      '-vf', TO709, '-c:v', 'libx264', '-preset', 'medium', '-crf', '18', ...TAG709, '-af', 'apad', '-c:a', 'aac', '-b:a', '192k', '-shortest', out], { stdio: ['pipe', 'inherit', 'inherit'] });
     let buf = null, prevKey = null, drawn = 0; const start = Date.now();
     for (let j = 0; j < n; j++) {
       if (keys[j] !== prevKey || args['no-dedupe']) { buf = b64((await frameOf(page, first + j)).url); prevKey = keys[j]; drawn++; }
@@ -275,8 +309,12 @@ try {
     ff.stdin.end(); await new Promise(r => ff.on('close', r));
     console.log(`wrote ${out}: ${n} frames from ${drawn} drawings in ${((Date.now() - start) / 1000).toFixed(1)} s`);
   } else {
-    console.log(readFileSync(fileURLToPath(import.meta.url), 'utf8').split('\n').slice(1, 23).map(l => l.replace(/^\/\/ ?/, '')).join('\n'));
+    const src = readFileSync(fileURLToPath(import.meta.url), 'utf8').split('\n').slice(1);
+    console.log(src.slice(0, src.findIndex(l => !l.startsWith('//'))).map(l => l.replace(/^\/\/ ?/, '')).join('\n'));
   }
+} catch (e) {
+  console.error(`error: ${String(e.message || e).split('\n')[0]}`);
+  exitCode = 1;
 } finally {
   await cleanup();
 }

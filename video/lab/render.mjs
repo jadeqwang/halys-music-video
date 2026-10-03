@@ -10,6 +10,7 @@ import { spawn } from 'node:child_process';
 import { createServer } from 'node:http';
 import { mkdirSync, writeFileSync, existsSync, statSync, createReadStream, appendFileSync } from 'node:fs';
 import { dirname, resolve, extname, join } from 'node:path';
+import { loadavg, cpus } from 'node:os';
 import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -44,7 +45,8 @@ await page.waitForFunction('window.ready === true', null, { timeout: 120000, pol
 
 const b64 = url => Buffer.from(url.slice(url.indexOf(',') + 1), 'base64');
 const set = args.set ? JSON.parse(args.set) : {};
-const logT = (rec) => { mkdirSync(OUT, { recursive: true }); appendFileSync(join(OUT, 'timings.jsonl'), JSON.stringify({ when: new Date().toISOString(), ...rec }) + '\n'); };
+// timings are logged with the machine's 1-minute load average: on a shared box the numbers mean little without it
+const logT = (rec) => { mkdirSync(OUT, { recursive: true }); appendFileSync(join(OUT, 'timings.jsonl'), JSON.stringify({ when: new Date().toISOString(), load1: +loadavg()[0].toFixed(2), cores: cpus().length, ...rec }) + '\n'); };
 
 try {
   if (args.still || args.bench) {

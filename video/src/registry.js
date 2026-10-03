@@ -43,7 +43,8 @@ export function finalize() {
     s.dur = s.t1 - s.t0;
     s.hold = FPS / s.cadence;        // master frames per drawing (fractional for rates that do not divide FPS)
     if (s.F1 <= s.F0) warn.push(`shot ${s.id} is shorter than one frame`);
-    if (Math.abs(s.hold - Math.round(s.hold)) > 1e-9) warn.push(`shot ${s.id}: cadence ${s.cadence} does not divide ${FPS} fps (uneven holds)`);
+    if (s.cadence > FPS) warn.push(`shot ${s.id}: cadence ${s.cadence} is above the ${FPS} fps master rate (every frame is a new drawing)`);
+    else if (Math.abs(s.hold - Math.round(s.hold)) > 1e-9) warn.push(`shot ${s.id}: cadence ${s.cadence} does not divide ${FPS} fps (uneven holds)`);
   }
   return warn;
 }

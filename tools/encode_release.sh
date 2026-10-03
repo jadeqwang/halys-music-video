@@ -94,7 +94,7 @@ PY
   mkdir -p "$OUT"
   TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
   IN=(-framerate "$FPS" -start_number "$A" -i "$FRAMES/f%05d.jpg")
-  AIN=(-ss "$T0" -t "$SECS" -i "$AUDIO")
+  AIN=(-ss "$T0" -t "$SECS" -i "$AUDIO")     # (apad + -shortest below: the last frame may outlast the song by < 1 frame)
   GOP=$((FPS * 4))          # a keyframe at least every 4 s (seeking, streaming)
   # Chromium's JPEG frames are JFIF (BT.601 matrix, full range); players decode HD as BT.709 limited range. Convert the
   # matrix explicitly (ffmpeg's automatic conversion only fixes the range: greens/reds would shift) and tag the result.
@@ -113,7 +113,7 @@ PY
       -x265-params "pass=1:stats=$TMP/x265.log:$X265" -f null /dev/null
     hevc2() { ffmpeg -y -hide_banner -loglevel error -stats "${IN[@]}" "${AIN[@]}" -map 0:v:0 -map 1:a:0 -frames:v "$N" "${VF[@]}" \
       -c:v libx265 -preset "$PRESET" -b:v "${1}k" -x265-params "pass=2:stats=$TMP/x265.log:$X265" -tag:v hvc1 \
-      "${TAG709[@]}" -c:a aac -b:a 192k -movflags +faststart -shortest "$F"; }
+      "${TAG709[@]}" -af apad -c:a aac -b:a 192k -movflags +faststart -shortest "$F"; }
     hevc2 "$VB"
     if VB2=$(refit "$F" "$VB" 99); then echo "  $(stat -c %s "$F") bytes > 99 MB: pass 2 again at ${VB2} kbps"; hevc2 "$VB2"; fi
     report "$F" 100
@@ -129,7 +129,7 @@ PY
       -b:v "${VB}k" -g "$GOP" -pass 1 -passlogfile "$TMP/x264" -f null /dev/null
     h2642() { ffmpeg -y -hide_banner -loglevel error -stats "${IN[@]}" "${AIN[@]}" -map 0:v:0 -map 1:a:0 -frames:v "$N" "${VF[@]}" \
       -c:v libx264 -preset "$PRESET" -profile:v high -b:v "${1}k" -g "$GOP" -pass 2 -passlogfile "$TMP/x264" \
-      "${TAG709[@]}" -c:a aac -b:a 160k -movflags +faststart -shortest "$F"; }
+      "${TAG709[@]}" -af apad -c:a aac -b:a 160k -movflags +faststart -shortest "$F"; }
     h2642 "$VB"
     # the cap applies to files meant for the repo; an explicitly bigger H264_MB is an upload master
     CAP=$(python3 -c "print(max(100, $H264_MB * 1.05))")
