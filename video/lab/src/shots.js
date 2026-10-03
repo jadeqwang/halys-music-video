@@ -28,7 +28,7 @@ export const SHOTS = {
     marble: {
       sky: { maxDepth: .006, soft: .01, below: .16 },
       planets: [{ x: .64, y: .045, i: 1.6, r: 2.2 }, { x: .83, y: .075, i: .9, r: 1.7 }, { x: .07, y: .03, i: .6, r: 1.4 }],
-      horizonBand: .028, horizonI: 1.1, water: 1, waterY: .44,
+      horizonBand: .02, horizonWide: .06, horizonI: 1.0, water: 1, waterY: .44,
     },
   },
   b_face: {

@@ -23,16 +23,16 @@ export const DEFAULTS = {
   // form: depth normals from an edge-preserving smooth of the depth map; luminance only as a low-weight band-pass carving
   depthK: 2600, dBilR: 4, dBilS: 3, dBilC: .025, dBilIt: 2, reliefK: 1.5, carveFine: 1.4, carveCoarse: 6, fineK: .15,
   coarse: 7, wrap: .6, soft: .55,
-  key: [.12, -1, .55], keyCol: [.86, .91, 1.0], keyI: 1.15, rimI: .7, rimW: 1.6, bounceI: .04, ambI: .16,
+  key: [.12, -1, .55], keyCol: [.86, .91, 1.0], keyI: 1.15, rimI: .5, rimW: 1.6, bounceI: .04, ambI: .16,
   specI: .3, specPow: 170, sheen: .02, grain: .035, sparkle: .45,
   sss: .16, sssCol: [1.0, .8, .62],
   aoK: 9, aoL: .2,
   // veins: a few thin irregular veins running through the block (warped by the flow field), gated into zones
-  veinAmt: .55, veinPeriod: 300, veinWarp: 2.4, veinFlow: .9, veinZoneLo: .52, veinW: 1.0, cloud: .03, mottle: .05,
+  veinAmt: .6, veinPeriod: 300, veinWarp: 2.4, veinFlow: .9, veinZoneLo: .45, veinW: 1.0, cloud: .03, mottle: .05,
   veinScale: 7, veinAngle: .5, veinLen: 45,
-  landAlbedo: .3, landSpec: .1, fogD: .12, fogI: .16, depthRim: .4, matteSharp: 1.5,
+  landAlbedo: .2, landSpec: .1, fogLo: .05, fogHi: .6, fogI: .06, depthRim: .4, matteSharp: 1.5,
   glassT: .1, glassI: 2.0, glassReach: 10, glassY: .55, water: 0, waterY: .6,
-  sky: null, horizonBand: .022, horizonWide: .12, horizonI: 1.2, planets: [], stars: 140, exposure: 1.0, vignette: .4,
+  sky: null, horizonBand: .03, horizonWide: .15, horizonI: 1.15, planets: [], stars: 140, exposure: 1.0, vignette: .4,
   eyeFlat: 1, faceMin: .7, eyes: [], seed: 5,
 };
 
@@ -60,7 +60,7 @@ function prepFields(F, cfg) {
     for (let x = 0; x < aw; x++) { win.length = 0; for (let j = Math.max(0, x - 18); j <= Math.min(aw - 1, x + 18); j++) win.push(hz0[j]); win.sort((a, b) => a - b); hz[x] = win[win.length >> 1]; }
     const hzs = hz.slice(); for (let x = 0; x < aw; x++) { let a = 0, n = 0; for (let j = Math.max(0, x - 10); j <= Math.min(aw - 1, x + 10); j++) { a += hzs[j]; n++; } hz[x] = a / n; }
     const bw = cfg.horizonWide * ah;
-    for (let x = 0; x < aw; x++) for (let y = 0; y < ah; y++) { const dy = hz[x] - y; band[y * aw + x] = dy >= 0 ? .8 * Math.exp(-dy / bh) + .2 * Math.exp(-dy / bw) : Math.exp(dy / (bh * .3)) * .5; }
+    for (let x = 0; x < aw; x++) for (let y = 0; y < ah; y++) { const dy = hz[x] - y; band[y * aw + x] = dy >= 0 ? .62 * Math.exp(-dy / bh) + .38 * Math.exp(-dy / bw) : 0; }
   }
   // eyes: flat, matte, blank
   const eyes = new Float32Array(N);
@@ -87,7 +87,9 @@ function prepFields(F, cfg) {
   }
   // the water: where the land lies low and flat in frame (below the subject's feet line), a dark mirror of the horizon band
   const nearM = blur(M, aw, ah, 4);
-  return { Db, Lb, sky, M, ao, band, eyes, mot, glass: blur(gl, aw, ah, .6), nearM };
+  const dv = []; for (let i = 0; i < N; i += 5) if (M[i] > .5) dv.push(Db[i]);
+  dv.sort((a, b) => a - b); const dSubj = dv.length ? dv[dv.length >> 1] : .5;
+  return { Db, Lb, sky, M, ao, band, eyes, mot, glass: blur(gl, aw, ah, .6), nearM, dSubj };
 }
 
 // bilateral filter on a scalar field, never mixing across the matte boundary
@@ -146,7 +148,7 @@ uniform vec2 uRes, uARes;
 uniform vec3 uWhite, uGrey, uShadow, uOrange, uNavy, uNavyTop, uKey, uKeyCol;
 uniform float uDepthK, uReliefK, uCoarse, uWrap, uSoft, uKeyI, uRimI, uRimW, uBounceI, uAmbI, uSpecI, uSpecPow, uSheen, uVeinAmt, uCloud;
 uniform float uLandAlbedo, uLandSpec, uHorizonI, uExposure, uVig, uFlip, uSeed, uSss, uMottle, uGlassI, uWater, uWaterY;
-uniform float uGrain, uSparkle, uFogD, uFogI, uDepthRim, uVeinPeriod, uVeinWarp, uVeinFlow, uVeinZoneLo, uVeinW;
+uniform float uGrain, uSparkle, uFogLo, uFogHi, uDSubj, uFogI, uDepthRim, uVeinPeriod, uVeinWarp, uVeinFlow, uVeinZoneLo, uVeinW;
 uniform vec3 uSssCol;
 uniform vec4 uPlanets[4]; uniform int uNPlanets; uniform float uStars;
 out vec4 o;
@@ -198,7 +200,7 @@ void main() {
   float gr = hash12(floor(sp * 0.8) + uSeed);
   alb *= 1.0 + uGrain * (gr - 0.5);
   // the land and the other statues: the same stone; distance is handled below by aerial perspective
-  float near = smoothstep(0.0, uFogD, D(uv));
+  float near = smoothstep(uFogLo, uFogHi, D(uv) / uDSubj);              // distance relative to the subject
   alb *= mix(1.0, uLandAlbedo, land);
   // ---- light
   vec3 L = normalize(uKey), V = vec3(0, 0, 1);
@@ -229,7 +231,7 @@ void main() {
   float awayM = 1.0 - smoothstep(0.02, 0.15, texture(uF2, uv).g);                       // never along the subject's edge
   col += uOrange * uDepthRim * dE * land * (1.0 - sky) * awayM;
   // aerial perspective: the far land is veiled by night air lit faintly by the horizon glow, near forms stay dark stone
-  vec3 fogC = uNavy * 2.2 + uOrange * uFogI * (0.35 + 0.65 * smoothstep(0.0, 1.0, band));
+  vec3 fogC = uNavy * 2.6 + uOrange * uFogI;
   col = mix(col, fogC, land * (1.0 - sky) * (1.0 - near) * 0.85);
   // ---- composite: crisp matte silhouettes over the sky; land everywhere else
   col += uOrange * uHorizonI * 0.05 * smoothstep(0.0, 1.0, band) * land * (1.0 - sky);
@@ -300,7 +302,7 @@ export async function render(glw, F, cfg, ctx) {
     uWhite: lin(cfg.white), uGrey: lin(cfg.grey), uShadow: lin(cfg.shadow), uOrange: lin(cfg.orange), uNavy: lin(cfg.navy), uNavyTop: lin(cfg.navyTop),
     uKey: cfg.key, uKeyCol: cfg.keyCol, uDepthK: cfg.depthK, uReliefK: cfg.reliefK, uCoarse: cfg.coarse, uWrap: cfg.wrap, uSoft: cfg.soft,
     uKeyI: cfg.keyI, uRimI: cfg.rimI, uRimW: cfg.rimW, uBounceI: cfg.bounceI, uAmbI: cfg.ambI, uSpecI: cfg.specI, uSpecPow: cfg.specPow, uSheen: cfg.sheen, uVeinAmt: cfg.veinAmt, uCloud: cfg.cloud,
-    uLandAlbedo: cfg.landAlbedo, uLandSpec: cfg.landSpec, uSss: cfg.sss, uMottle: cfg.mottle, uGrain: cfg.grain, uSparkle: cfg.sparkle, uFogD: cfg.fogD, uFogI: cfg.fogI, uDepthRim: cfg.depthRim,
+    uLandAlbedo: cfg.landAlbedo, uLandSpec: cfg.landSpec, uSss: cfg.sss, uMottle: cfg.mottle, uGrain: cfg.grain, uSparkle: cfg.sparkle, uFogLo: cfg.fogLo, uFogHi: cfg.fogHi, uDSubj: f.dSubj, uFogI: cfg.fogI, uDepthRim: cfg.depthRim,
     uVeinPeriod: cfg.veinPeriod, uVeinWarp: cfg.veinWarp, uVeinFlow: cfg.veinFlow, uVeinZoneLo: cfg.veinZoneLo, uVeinW: cfg.veinW, uSssCol: cfg.sssCol, uHorizonI: cfg.horizonI, uExposure: cfg.exposure, uVig: cfg.vignette, uFlip: 1, uSeed: cfg.seed,
     uPlanets: pl, uNPlanets: Math.min(4, (cfg.planets || []).length), uStars: cfg.stars
   }, null);
