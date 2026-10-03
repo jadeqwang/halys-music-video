@@ -41,7 +41,9 @@
    "virtual_avatar": true,
    "est_cost_usd": 3.468,
    "job": null,
-   "reviewed": "2026-10-03T01:53:33"
+   "reviewed": "2026-10-03T01:53:33",
+   "short": "Parade ranks (no battle) in the high part (plate 0-4.5 s); the camera then descends into the melee.",
+   "timing": "S05 = plate 0-3.5 and S06 (descent) = plate 3.5-7.0 at 1:1 from t0; for the later wides (S16, S20, S24, S30, S35, S44) use the static master at plate 0-4.5 (slow or hold it); the armies charge into the ford 6.5-9 s."
   },
   "2": {
    "verdict": "pass",
@@ -91,5 +93,8 @@
   7.18,
   22.18
  ],
- "audio_t0": 7.18
+ "audio_t0": 7.18,
+ "chosen": 1,
+ "chosen_why": "Opens exactly on the canonical master composition (halys_wide3) and holds it for 4.5 s, then a clean descent that fits S06 1:1 while the armies surge into the ford; the river stays visible. Take 2 floods the riverbed. Take 3 (no-board retake for a high drift over a battle already raging) was still queued at the provider after 60 min.",
+ "t_chosen": "2026-10-03T03:08:12"
 }
