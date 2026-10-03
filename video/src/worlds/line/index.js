@@ -21,7 +21,7 @@ import { LRU } from '../../assets.js';
 import { clamp } from '../../core.js';
 
 export { FL } from './trace.js';
-export { coronaLines, skyField } from './corona.js';
+export { coronaLines, skyField, CORONA_DEFAULTS } from './corona.js';
 export { sourceFields, resolve } from './source.js';
 export * as audio from './audio.js';
 export * as proc from './proc.js';

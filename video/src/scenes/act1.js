@@ -233,7 +233,7 @@ async function eyeFrame(f, o = {}) {
     sky: SKY(t, { maxDepth: real ? .02 : .012, soft: .02, below: hzTarget + .03, horizonY: hzTarget, horizonLine: [[0, hzTarget], [1, hzTarget]], ignoreMatte: true, ...TOTALITY_SKY, cover: 0, clouds: 0, vortex: .05 }),
     sun: { x: EYE.x, y: EYE.y, r: rSun, off: o.off ?? 0, moonVis: 1, limb: [1.6 + (o.ring || 0) * 2, 2.2, 1, -Math.PI * .66], ring: o.ring || 0,
       ringAng: -Math.PI * .66, jupiter: { x: .2, y: .14 }, vis: 0 },
-    corona: { k: o.corona ?? 1, photo: true, scale: 1.35, tilt: -.42, glow: 1.15, fall: 1.7, asym: .9, t },
+    corona: { k: o.corona ?? 1, photo: true, scale: 1.5, tilt: -.42, glow: 1.5, fall: 1.55, asym: .9, t },
     crushFloor: .08, crush: .25, satOut: .5, accents: .2, crack: .3, T: [0, .07, .08, .1, .12], midGate: .3, fineGate: .4,
     exposure: o.exposure ?? 1, ...o.extra,
   });

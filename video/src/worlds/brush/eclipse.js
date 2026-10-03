@@ -135,9 +135,9 @@ export function coronaPhoto(o) {
   const nI = Math.round(900 * Math.min(2.4, R / 60) * sc);
   for (let j = 0; j < nI; j++) {
     const phi0 = h(j, 1) * TAU, e = env(phi0), q2 = Math.pow(h(j, 2), 2.2);
-    const len = R * (.08 + Math.min(1.1, e) * .55 * q2 + .04 * h(j, 3));
+    const len = R * (.1 + Math.min(1.2, e) * .7 * q2 + .05 * h(j, 3));
     const shimmer = .03 * Math.sin(t * (1.2 + .5 * h(j, 4)) + h(j, 5) * TAU);
-    const b = (.55 + .5 * h(j, 6)) * (1 - .55 * q2) * k;
+    const b = (.7 + .5 * h(j, 6)) * (1 - .5 * q2) * k;
     polar(q => [R * (1.0 + .01 * h(j, 7)) + len * q, phi0 + shimmer * q], 4, Math.max(.8, R * (.008 + .012 * h(j, 8))), b, h(j, 9) < .7 ? pearl : cool, ash, .4, h(j, 10), .85, .3 + .35 * h(j, 11));
   }
   // 2. helmet streamers: many fine strokes from a wide base converging into a long, slightly bent ray

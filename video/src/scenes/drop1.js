@@ -12,7 +12,7 @@
 // For the marble world: drawCrystallise(f, { widen }) and S45_HANDOFF (S45 section below).
 
 import { scene, shotOverride } from '../registry.js';
-import { drawLines, plateLines, sourceFields, coronaRing, ringU, staticMesh, dynLayer, audio, proc, FL, camUniforms, project, PALETTE, resolve } from '../worlds/line/index.js';
+import { drawLines, plateLines, sourceFields, coronaRing, ringU, staticMesh, dynLayer, audio, proc, FL, camUniforms, project, PALETTE, resolve, CORONA_DEFAULTS } from '../worlds/line/index.js';
 import { clamp, lerp, sstep, smooth, easeInOut, easeOut, hash3, TAU } from '../core.js';
 import { FPS } from '../time.js';
 
@@ -338,11 +338,13 @@ scene('S38', async f => {
 // Top-down, the soldiers become particles and re-form on the beat like a drone show. Formation 0 is the armies where
 // they stand in the master composition (P01's ranked banks lifted onto the ground plane); then, snapping on the listed
 // stabs: two mirrored blocks -> streams along the banks -> a vortex -> rings -> one bold ring around the river bend ->
-// an iris. S40: the iris tightens into an eye that mirrors the sky; the camera tilts up from the eye on the ground to the
-// eye in the sky (the corona, which lands exactly where S41's centre-locked ring is); at 138.6 s the sky's eye is HER
-// eye for two master frames. Every soldier is a crisp point with a tiny spear tick (2 x 2600 of them, sharp, no bloom);
-// a snap streaks them for a few frames (motion trails), then they hold still and sharp. Design space: 1920 x 1080
-// "map px", (960, 540) = the bend.
+// the ring tightens onto the limb of a black disk. S40: the ring fills into a REAL eclipse made of particles (a crisp
+// black disk, a dense bright limb, red prominences, helmet streamers flowing outward, polar plumes, the inner corona),
+// built from the same streamer table and tilt as the sky's corona, so it mirrors the eclipse in the sky; the camera
+// tilts up from the eclipse on the ground to the real one (which lands exactly where S41's centre-locked ring is). No
+// eye shapes and no eyelids anywhere: the eclipse always looks like an actual eclipse (SHOTLIST S40). Every soldier is
+// a crisp point with a tiny spear tick (2 x 2600 of them, sharp, no bloom); a snap streaks them for a few frames
+// (motion trails), then they hold still and sharp. Design space: 1920 x 1080 "map px", (960, 540) = the bend.
 const NP = 2600;                                   // agents per side (Lydians sigma = -1 west, Medes sigma = +1 east)
 const riverX = y => 960 + 150 * Math.sin(Math.PI * (y - 540) / 980);
 // formation snaps on the listed stabs; a stab 1-10 ms after a kick lands on the kick's frame (one visual hit, not two)
@@ -389,30 +391,62 @@ function formation(F, j, sg, t, ts) {
     case 3: { const a = j % 6, u = Math.floor(j / 6) / (NP / 6), r = 140 + 430 * u + 30 * (hash3(j, sg, 23) - .5), th = a * TAU / 6 + (sg > 0 ? Math.PI / 6 : 0) + 1.9 * Math.log(r / 140) * -sg + -sg * .85 * dt + .11 * (hash3(j, sg, 24) - .5); return [960 + r * Math.cos(th), 540 + r * Math.sin(th), -Math.sin(th) * -sg, Math.cos(th) * -sg]; }
     case 4: { const kk = 2 * (j % 4) + (sg > 0 ? 1 : 0), m = Math.floor(j / 4), r = 210 + kk * 19 + 9 * (hash3(j, sg, 25) - .5), th = m / (NP / 4) * TAU + -sg * .6 * dt + kk * .3; return [960 + r * Math.cos(th), 540 + r * Math.sin(th), -Math.sin(th) * -sg, Math.cos(th) * -sg]; }
     case 5: { const kk = sg > 0 ? 1 : 0, r = 236 + kk * 46 + (j % 5) * 7, th = j / NP * TAU + -sg * 1.3 * dt; return [960 + r * Math.cos(th), 540 + r * Math.sin(th), -Math.sin(th) * -sg, Math.cos(th) * -sg]; }   // the ring: two bold bands
-    case 6: { const sp = j % 45, u = Math.floor(j / 45) / (NP / 45), r = 150 + 175 * u, th = (2 * sp + (sg > 0 ? 1 : 0)) * TAU / 90 + .025 * (hash3(j, sg, 27) - .5); return [960 + r * Math.cos(th), 540 + r * Math.sin(th), Math.cos(th), Math.sin(th)]; }
-    case 7: {
-      if (j % 3 === 0) {                           // eyelids (almond, four rows deep) from a third of the agents
-        const q = (Math.floor(j / 3) / (NP / 3)), upper = sg < 0, x = 960 + (q - .5) * 980, lid = Math.sin(Math.PI * q), row = (Math.floor(j / 3) % 4) * 6;
-        const y = upper ? 540 - 255 * lid - row * lid : 540 + 205 * lid + row * lid;
-        return [x, y, upper ? (q - .5) * .6 : 0, upper ? -1 : 1];
-      }
-      const jj = j - Math.floor(j / 3) - 1, sp = jj % 45, u = Math.floor(jj / 45) / (NP * 2 / 3 / 45), r = 108 + 122 * u, th = (2 * sp + (sg > 0 ? 1 : 0)) * TAU / 90;
-      return [960 + r * Math.cos(th), 540 + r * Math.sin(th), Math.cos(th), Math.sin(th)];
-    }
+    case 6: { const q = 2 * j + (sg > 0 ? 1 : 0), r = R0 + 2 + 70 * Math.pow(hash3(q, 28, 61), 2.2), th = q / (2 * NP) * TAU + .02 * (hash3(q, 27, 61) - .5);   // the ring tightens onto the limb
+      return [960 + r * Math.cos(th), 540 + r * Math.sin(th), Math.cos(th), Math.sin(th)]; }
+    case 7: return eclipseAt(j, sg, t);
   }
   return [960, 540, 0, -1];
 }
-// agent j of side sg at time t: a hard snap (fast, overshooting) from the previous formation after each listed stab
+// the ground eclipse: disk radius (map px) and the sky corona's own streamer / prominence table and tilt (the mirror)
+const R0 = 150;
+const EC = { tilt: RING.tilt, streamers: CORONA_DEFAULTS.streamers, prominences: CORONA_DEFAULTS.prominences };
+const EC_W = (() => { const w = EC.streamers.map(S => S[3] * Math.sqrt(S[1])), tot = w.reduce((a, b) => a + b, 0); let acc = 0; return w.map(v => (acc += v / tot)); })();
+// agent j of side sg in the particle eclipse: [x, y, dirx, diry, colour (0 pearl, 1 orange, 2 H-alpha red), brightness]
+function eclipseAt(j, sg, t) {
+  const q = 2 * j + (sg > 0 ? 1 : 0), h = a => hash3(q, a, 61), u = h(1), flow = Math.max(0, t - SNAPS[7]);
+  let r, th, o = .04, b;
+  if (u < .2) { r = R0 + 1.5 + 5 * h(2) * h(3); th = h(4) * TAU; b = 1.25; }                                   // the limb: a dense bright ring
+  else if (u < .26) {                                                                                         // prominences: small red arches on the limb
+    const P = EC.prominences[Math.floor(h(2) * EC.prominences.length)], s = h(3), lay = .55 + .15 * Math.floor(h(4) * 4);
+    r = R0 + 2 + R0 * P[2] * 2.2 * lay * Math.sin(Math.PI * s); th = EC.tilt + P[0] + P[1] * 1.5 * lay * (2 * s - 1); o = 2; b = 1.15;
+  } else if (u < .62) {                                                                                       // helmet streamers: wide domed base, long stalk
+    let si = 0; while (si < EC_W.length - 1 && h(2) > EC_W[si]) si++;
+    const S = EC.streamers[si], s = (h(3) + .035 * flow) % 1, hw = S[2] * (.12 + .88 * Math.pow(1 - s, 1.7));
+    r = R0 * (1.02 + S[1] * Math.pow(s, 1.25)); th = EC.tilt + S[0] + hw * (2 * h(4) - 1) * Math.sqrt(h(5));
+    b = S[3] * 1.35 * Math.pow(R0 / r, .85) * sstep(0, .05, s) * (1 - sstep(.75, 1, s));
+  } else if (u < .85) { r = R0 * (1.02 - .28 * Math.log(1 - .96 * h(2))); th = h(3) * TAU; b = .9 * Math.pow(R0 / r, 1.5); }     // the inner corona
+  else if (u < .95) {                                                                                         // polar plumes
+    const pole = EC.tilt + (h(2) < .5 ? -1 : 1) * Math.PI / 2, s = h(3), a0 = pole + (h(4) - .5);
+    r = R0 * (1.02 + .9 * s); th = a0 + (a0 - pole) * .4 * (r - R0) / R0; b = .75 * Math.pow(R0 / r, 2) * (1 - sstep(.6, 1, s));
+  } else { const s = (h(2) + .025 * flow) % 1; th = h(3) * TAU; r = R0 * (1.05 + 2.4 * s); b = .45 * Math.pow(R0 / r, 1.2) * sstep(0, .08, s) * (1 - sstep(.6, 1, s)); }   // faint outer rays
+  const c = Math.cos(th), sn = Math.sin(th);
+  return [960 + r * c, 540 + r * sn, c, sn, o, b];
+}
+// agent j of side sg at time t: a hard snap (fast, overshooting) from the previous formation after each listed stab;
+// the eclipse (k = 7) fills outward from the limb instead (agents bound for the outer corona leave later)
 function agentAt(j, sg, t) {
   let k = 0; while (k + 1 < SNAPS.length && t >= SNAPS[k + 1] - 1e-6) k++;
-  // the snap frame is the flight's first frame (every agent has moved on it: the hit lands on the stab's frame)
-  const ts = SNAPS[k], D = k === 7 ? .9 : .16, st = .012 * hash3(j, sg > 0 ? 3 : 4, 9), tf = t - ts + 1 / FPS - st;
-  const B = formation(k, j, sg, t, ts);
+  const ts = SNAPS[k], side = sg < 0 ? .85 : .12, full = v => (v.length < 6 ? [v[0], v[1], v[2], v[3], v[4] ?? side, v[5] ?? 1] : v);
+  const B = full(formation(k, j, sg, t, ts));
   if (k === 0) return B;
-  const e = k === 7 ? easeInOut(clamp(tf / D)) : easeBack(tf / D);
-  if (e >= 1 && k !== 7) return B;
-  const A = formation(k - 1, j, sg, t, SNAPS[k - 1]);
-  return [lerp(A[0], B[0], e), lerp(A[1], B[1], e), lerp(A[2], B[2], e), lerp(A[3], B[3], e)];
+  // the snap frame is the flight's first frame (every agent has moved on it: the hit lands on the stab's frame)
+  const D = k === 7 ? .9 : .16, st = k === 7 ? .5 * clamp((Math.hypot(B[0] - 960, B[1] - 540) - R0) / (3.2 * R0)) : .012 * hash3(j, sg > 0 ? 3 : 4, 9);
+  const tf = t - ts + 1 / FPS - st, e = k === 7 ? easeInOut(clamp(tf / D)) : easeBack(tf / D);
+  if (e >= 1 && (k === 7 || tf >= D)) return B;
+  const A = full(formation(k - 1, j, sg, t, SNAPS[k - 1]));
+  return A.map((v, i) => lerp(v, B[i], e));
+}
+// map-space lines with the disk (960, 540, r) cut out: the ground eclipse's disk is crisp black
+function clipDisk(lines, r) {
+  const out = [];
+  for (const L of lines) {
+    if (!L) continue;
+    let cur = [];
+    const flush = () => { if (cur.length > 1) out.push(proc.line(cur, { b: L.b[0], w: L.w[0], o: L.o[0], phase: L.phase, spd: L.spd, flags: L.flags })); cur = []; };
+    for (let k = 0; k < L.n; k++) { const x = L.xy[k * 2], y = L.xy[k * 2 + 1]; if (Math.hypot(x - 960, y - 540) < r) flush(); else cur.push([x, y]); }
+    flush();
+  }
+  return out;
 }
 function groundLines() {                          // the river (orange banks, flowing water) and a sparse map of the land
   const out = [];
@@ -457,16 +491,18 @@ function projectLines(lines, C, f) {
 function agentLines(f, t, C) {
   const out = [], s = f.H / 1080, kick = audio.kickEnv(t, .12);
   let ki = 0; while (ki + 1 < SNAPS.length && t >= SNAPS[ki + 1] - 1e-6) ki++;
-  const ds = t - SNAPS[ki], flash = 1 + 1.2 * Math.exp(-ds / .06) * (ki > 0 ? 1 : 0), flying = ki > 0 && ds < (ki === 7 ? 1 : .26);
-  const pupilPump = 1 + .1 * kick;
-  const pump = p => { const dx = p[0] - 960, dy = p[1] - 540, r = Math.hypot(dx, dy); if (r < 260 && r > 1) { p[0] = 960 + dx * pupilPump; p[1] = 540 + dy * pupilPump; } return p; };
+  const ds = t - SNAPS[ki], flash = 1 + 1.2 * Math.exp(-ds / .06) * (ki > 0 ? 1 : 0), flying = ki > 0 && ds < (ki === 7 ? 1.5 : .26);
+  // the corona breathes with the kick: everything outside the limb pushed radially out from the disk (the disk stays put)
+  const breath = 1 + .12 * kick;
+  const pump = p => { const dx = p[0] - 960, dy = p[1] - 540, r = Math.hypot(dx, dy); if (r > R0 + 1) { const k = (R0 + (r - R0) * breath) / r; p[0] = 960 + dx * k; p[1] = 540 + dy * k; } return p; };
   for (const sg of [-1, 1]) for (let j = 0; j < NP; j++) {
-    const a = agentAt(j, sg, t); if (t >= SNAPS[7] && j % 3 !== 0) pump(a);
+    const a = agentAt(j, sg, t); if (t >= SNAPS[6]) pump(a);
     const pa = C.proj(a[0], a[1]); if (!pa) continue;
-    const dk = Math.min(1.8, C.z0 / pa[2]) * s, o = sg < 0 ? .85 : .12;
-    const b0 = (1.45 + .45 * hash3(j, sg, 1)) * flash * (1 + .45 * kick);
+    const dk = Math.min(1.8, C.z0 / pa[2]) * s, o = clamp(a[4], 0, 2);
+    const b0 = (1.45 + .45 * hash3(j, sg, 1)) * flash * (1 + .45 * kick) * a[5];
+    if (b0 < .02) continue;
     if (flying) {
-      const b = agentAt(j, sg, t - .5 / FPS); if (t - .5 / FPS >= SNAPS[7] && j % 3 !== 0) pump(b);
+      const b = agentAt(j, sg, t - .5 / FPS); if (t - .5 / FPS >= SNAPS[6]) pump(b);
       const pb = C.proj(b[0], b[1]);
       if (pb) { const len = Math.hypot(pa[0] - pb[0], pa[1] - pb[1]); if (len > 4 * s && len < 420 * s) out.push(proc.line([[pb[0], pb[1]], [pa[0], pa[1]]], { b: u => b0 * .3 * u, w: 1.2 * dk, o, flags: FL.SHARP })); }
     }
@@ -476,41 +512,35 @@ function agentLines(f, t, C) {
   }
   return out;
 }
-// the bold outlines that make the ring and the eye read at a glance (phone size): drawn once the agents have landed
+// the bold outlines that make the ring and the eclipse read at a glance (phone size): drawn once the agents have landed
 function boldShapes(t) {
   const out = [], kick = audio.kickEnv(t, .13);
   const circ = (r, b, w, o) => { const pts = []; for (let k = 0; k <= 180; k++) { const a = k / 180 * TAU; pts.push([960 + r * Math.cos(a), 540 + r * Math.sin(a)]); } return proc.line(pts, { b, w, o, flags: FL.NOFADE | FL.SHARP }); };
   const ringK = t >= SNAPS[5] && t < SNAPS[6] ? sstep(SNAPS[5] + .1, SNAPS[5] + .3, t) : 0;
   if (ringK > 0) { out.push(circ(229, 1.1 * ringK, 2.8, .85), circ(271, .7 * ringK, 1.6, .5), circ(317, 1.1 * ringK, 2.8, .12)); }
-  const irisK = t >= SNAPS[6] && t < SNAPS[7] + .4 ? sstep(SNAPS[6] + .1, SNAPS[6] + .3, t) * (1 - sstep(SNAPS[7], SNAPS[7] + .4, t)) : 0;
-  if (irisK > 0) out.push(circ(330, 1.4 * irisK, 2.4, .5), circ(148, 1.2 * irisK, 2, .5));
-  const eyeK = sstep(SNAPS[7] + .5, SNAPS[7] + 1.1, t);
-  if (eyeK > 0) {
-    for (const upper of [true, false]) { const pts = []; for (let k = 0; k <= 120; k++) { const q = k / 120, lid = Math.sin(Math.PI * q); pts.push([960 + (q - .5) * 980, upper ? 540 - 255 * lid - 22 * lid : 540 + 205 * lid + 22 * lid]); } out.push(proc.line(pts, { b: 1.3 * eyeK, w: 3.2, o: upper ? .85 : .12, flags: FL.NOFADE | FL.SHARP })); }
-    out.push(circ(236 * (1 + .03 * kick), 1.5 * eyeK, 2.6, .5));
-  }
+  // from the ring tightening on: the limb of the ground eclipse, a crisp bright circle at the black disk's edge
+  const limbK = t >= SNAPS[6] ? sstep(SNAPS[6] + .08, SNAPS[6] + .2, t) : 0;
+  if (limbK > 0) out.push(circ(R0 + 1, 1.5 * limbK, 2.6, .06));
   return out;
 }
+const diskOn = t => t >= SNAPS[6] + .08;
 scene('S39', async f => {
-  const t = f.t, C = mapCam(f, 0); await p01Positions();
-  const ground = projectLines(groundLines(), C, f), kick = audio.kickEnv(t, .12);
-  await drawLines(f, { layers: [dynLayer(ground, { uT: audio.flowPhase(t) }), dynLayer(projectLines(boldShapes(t), C, f), {}), dynLayer(agentLines(f, t, C), {})], kick, kickWidth: .5, look: { glow: [.08, .03] }, disk: false });
+  const t = f.t, C = mapCam(f, 0), s = f.H / 1080; await p01Positions();
+  const ground = projectLines(diskOn(t) ? clipDisk(groundLines(), R0) : groundLines(), C, f), kick = audio.kickEnv(t, .12);
+  await drawLines(f, { layers: [dynLayer(ground, { uT: audio.flowPhase(t) }), dynLayer(projectLines(boldShapes(t), C, f), {}), dynLayer(agentLines(f, t, C), {})], kick, kickWidth: .5, look: { glow: [.08, .03] },
+    disk: diskOn(t) ? { x: f.W / 2, y: f.H / 2, r: R0 * s } : false });
   steer(f, { kick });
 });
-const ANIME = [snap(138.6), snap(138.6) + 1 / FPS];
 scene('S40', async f => {
   const t = f.t, W = f.W, H = f.H, s = H / 1080, C = mapCam(f, t), kick = audio.kickEnv(t, .13);
-  const layers = [dynLayer(projectLines(groundLines(), C, f), { uT: audio.flowPhase(t) }), dynLayer(projectLines(boldShapes(t), C, f), {}), dynLayer(agentLines(f, t, C), {})];
-  // the ground pupil's limb (a bold ring of light) once the eye has formed
-  const pupilK = sstep(SNAPS[7] + .3, SNAPS[7] + .9, t);
-  if (pupilK > 0) { const pts = []; for (let k = 0; k <= 96; k++) { const a = k / 96 * TAU, r = 100 * (1 + .1 * kick); pts.push([960 + r * Math.cos(a), 540 + r * Math.sin(a)]); } layers.push(dynLayer(projectLines([proc.line(pts, { b: 2.2 * pupilK, w: 3.2, flags: FL.NOFADE })], C, f), {})); }
-  let disk = false, sun = null;
+  const layers = [dynLayer(projectLines(clipDisk(groundLines(), R0), C, f), { uT: audio.flowPhase(t) }), dynLayer(projectLines(boldShapes(t), C, f), {}), dynLayer(agentLines(f, t, C), {})];
+  // top-down: the ground eclipse's disk is cut analytically (crisp black); once the sky's eclipse rises into view, its disk
+  let disk = C.top ? { x: W / 2, y: H / 2, r: R0 * s } : false, sun = C.top ? [W / 2, H / 2, R0 * s] : null;
   if (C.horizon != null) layers.push(dynLayer([proc.line([[-50, C.horizon], [W + 50, C.horizon]], { b: .9, w: 1.4, o: 1, flags: FL.NOFADE }), proc.line([[-50, C.horizon + 6 * s], [W + 50, C.horizon + 6 * s]], { b: .3, w: 1, o: 1, flags: FL.NOFADE })], {}));
   if (C.sun && C.sun[1] < H + 300 * s) {
     const R = ringR(H); sun = [C.sun[0], C.sun[1], R];
-    const anime = Math.round(t * FPS) >= Math.round(ANIME[0] * FPS) && Math.round(t * FPS) <= Math.round(ANIME[1] * FPS);
-    if (anime) { layers.push(dynLayer(proc.animeEye(C.sun[0], C.sun[1], 4.6 * R, { b: 1.5, w: 2.4 * s }), {})); disk = { x: C.sun[0] + .02 * 4.6 * R, y: C.sun[1], r: .3 * .2 * 4.6 * R }; }
-    else { layers.push({ mesh: coronaRing(f, 'ring', { refR: R, ...RING }), u: { ...ringU(C.sun[0], C.sun[1], R * (1 + .025 * kick)), uBright: 1.25, uPush: [C.sun[0], C.sun[1], 22 * kick * s, 300 * s] } }); disk = { x: C.sun[0], y: C.sun[1], r: R }; }
+    layers.push({ mesh: coronaRing(f, 'ring', { refR: R, ...RING }), u: { ...ringU(C.sun[0], C.sun[1], R * (1 + .025 * kick)), uBright: 1.25, uPush: [C.sun[0], C.sun[1], 22 * kick * s, 300 * s] } });
+    disk = { x: C.sun[0], y: C.sun[1], r: R };
   }
   await drawLines(f, { layers, kick, kickWidth: .5, look: { glow: [.14, .05] }, disk });
   steer(f, { kick, sun: sun ? typeSun(sun) : undefined });
