@@ -57,8 +57,9 @@ from 5 o'clock, `magnitude`, `moonOffset`, `beads`, `diamondRing`, `jupiterAt`, 
 cover, glow, glowR, drama, fire, night, ring, haze`), masked by depth (`maxDepth`), an explicit `horizonLine`
 `[[u, v], ...]`, or `src.sky`. Its strokes follow the spiral tensor and turn with it.
 `sun: {x, y, r, alt, off, moonVis, beads, ring, ringAng, limb, jupiter {ppd|x,y}, vis}` drawn exactly (a flat
-blazing disk, golden-orange near the horizon, no rings) after the strokes; `corona {k, iris, scale, tilt, glow}`
-painted fibres (iris = the S01 eye).
+blazing disk, golden-orange near the horizon, no rings) after the strokes; `corona {k, photo, scale, tilt, glow,
+asym}`: `photo: true` paints the corona as a totality photograph shows it (inner corona, asymmetric helmet streamers,
+polar plumes, coronal holes, a few prominences) with a matching asymmetric glow; every Act I corona uses it.
 
 **Strokes** `brushes` (px at 1080p, 5 layers), `strokeScale`, `T` (per-layer error thresholds), `midGate`,
 `fineGate` (detail needed for the small brushes), `maxLen`, `minLen`, `fg`, `jitter`, `boil`, `boilColor`,

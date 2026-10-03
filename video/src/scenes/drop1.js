@@ -70,7 +70,7 @@ function boxesOnScreen(boxes, win = {}, clampInside = true) {
 }
 
 // ---------------------------------------------------------------- S35: the break, and the whole battlefield reacts
-// 110.58 the world returns as light from the black pupil (master composition, P01) while the armies ripple: spear ticks
+// 110.58 the world returns as light from the eclipse's black disk (master composition, P01) while the armies ripple: spear ticks
 // tilt and fall as men drop to their knees, others scatter, a wave running out from the eclipse. Then one chop-cut per
 // word on the real reaction plates, each landing its reaction on the cut (PLATES.md sync keys): IN THE (110.98) a Lydian
 // sinks to his knees, arms raised (P42); SKY (111.455) a rearing horse (P44); SKY (111.89) a Mede prostrate (P43). The
@@ -408,17 +408,17 @@ function eclipseAt(j, sg, t) {
   if (u < .2) { r = R0 + 1.5 + 5 * h(2) * h(3); th = h(4) * TAU; b = 1.25; }                                   // the limb: a dense bright ring
   else if (u < .26) {                                                                                         // prominences: small red arches on the limb
     const P = EC.prominences[Math.floor(h(2) * EC.prominences.length)], s = h(3), lay = .55 + .15 * Math.floor(h(4) * 4);
-    r = R0 + 2 + R0 * P[2] * 2.2 * lay * Math.sin(Math.PI * s); th = EC.tilt + P[0] + P[1] * 1.5 * lay * (2 * s - 1); o = 2; b = 1.15;
+    r = R0 + 2 + R0 * P[2] * 2.4 * lay * Math.sin(Math.PI * s); th = EC.tilt + P[0] + P[1] * 1.5 * lay * (2 * s - 1); o = 2; b = 1.3;
   } else if (u < .62) {                                                                                       // helmet streamers: wide domed base, long stalk
     let si = 0; while (si < EC_W.length - 1 && h(2) > EC_W[si]) si++;
     const S = EC.streamers[si], s = (h(3) + .035 * flow) % 1, hw = S[2] * (.12 + .88 * Math.pow(1 - s, 1.7));
     r = R0 * (1.02 + S[1] * Math.pow(s, 1.25)); th = EC.tilt + S[0] + hw * (2 * h(4) - 1) * Math.sqrt(h(5));
-    b = S[3] * 1.35 * Math.pow(R0 / r, .85) * sstep(0, .05, s) * (1 - sstep(.75, 1, s));
-  } else if (u < .85) { r = R0 * (1.02 - .28 * Math.log(1 - .96 * h(2))); th = h(3) * TAU; b = .9 * Math.pow(R0 / r, 1.5); }     // the inner corona
+    b = S[3] * 1.25 * Math.pow(R0 / r, 1.7) * sstep(0, .05, s) * (1 - sstep(.75, 1, s));
+  } else if (u < .85) { r = R0 * (1.02 - .28 * Math.log(1 - .96 * h(2))); th = h(3) * TAU; b = .95 * Math.pow(R0 / r, 2.6); }    // the inner corona
   else if (u < .95) {                                                                                         // polar plumes
     const pole = EC.tilt + (h(2) < .5 ? -1 : 1) * Math.PI / 2, s = h(3), a0 = pole + (h(4) - .5);
-    r = R0 * (1.02 + .9 * s); th = a0 + (a0 - pole) * .4 * (r - R0) / R0; b = .75 * Math.pow(R0 / r, 2) * (1 - sstep(.6, 1, s));
-  } else { const s = (h(2) + .025 * flow) % 1; th = h(3) * TAU; r = R0 * (1.05 + 2.4 * s); b = .45 * Math.pow(R0 / r, 1.2) * sstep(0, .08, s) * (1 - sstep(.6, 1, s)); }   // faint outer rays
+    r = R0 * (1.02 + .9 * s); th = a0 + (a0 - pole) * .4 * (r - R0) / R0; b = .8 * Math.pow(R0 / r, 2.4) * (1 - sstep(.6, 1, s));
+  } else { const s = (h(2) + .025 * flow) % 1; th = h(3) * TAU; r = R0 * (1.05 + 2.4 * s); b = .4 * Math.pow(R0 / r, 1.6) * sstep(0, .08, s) * (1 - sstep(.6, 1, s)); }    // faint outer rays
   const c = Math.cos(th), sn = Math.sin(th);
   return [960 + r * c, 540 + r * sn, c, sn, o, b];
 }
@@ -508,7 +508,8 @@ function agentLines(f, t, C) {
     }
     const fl = Math.hypot(a[2], a[3]) || 1, tip = C.proj(a[0] + a[2] / fl * 10, a[1] + a[3] / fl * 10);
     if (tip) out.push(proc.line([[pa[0], pa[1]], [tip[0], tip[1]]], { b: b0 * .8, w: 1.3 * dk, o, flags: FL.SHARP }));             // the spear tick
-    out.push(proc.line([[pa[0], pa[1]], [pa[0] + .5, pa[1]]], { b: b0 * 2.1, w: 3.6 * dk, o, flags: FL.TIP | FL.SHARP }));       // the soldier: a point of light
+    const bq = Math.min(1, a[5]);                  // the corona fades outward: fainter AND smaller points (the limb stays saturated)
+    out.push(proc.line([[pa[0], pa[1]], [pa[0] + .5, pa[1]]], { b: b0 * 2.1 * Math.sqrt(bq), w: 3.6 * dk * (.55 + .45 * bq), o, flags: FL.TIP | FL.SHARP }));   // the soldier: a point of light
   }
   return out;
 }

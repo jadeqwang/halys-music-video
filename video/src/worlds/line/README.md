@@ -72,14 +72,14 @@ const r = await drawLines(f, { src: { plate: 'P12', standin: 'duelup' }, tp,    
 | `phase`, `pulse`, `lambda` | travelling pulses: travel, depth 0..1, wavelength px |
 | `invert`, `flash` | dark lines on pearl; a pearl flash 0..1 |
 | `look` | `{ exposure, glow: [half, quarter], vignette, fade, bright, flat, white, width, endFade, soft, minW }`; `width`/`flat`/`white`/`soft` are the "widen into strokes" controls (S45) |
-| `reveal` | `{ x, y, r, ramp, boost }`: lines inside r are hidden and ignite just outside it (the pupil opening, S35) |
+| `reveal` | `{ x, y, r, ramp, boost }`: lines inside r are hidden and ignite just outside it (the black disk opening onto the world, S35) |
 | `disk`, `ring` | the crisp black disk `{x, y, r}` (default: the plate's sun) and a ring of light `{r, w, i}` around it |
 | `plates` | several plate layers instead of `src`: `[{ src, rect: [x, y, w, h] (frame fractions), tp, trace, ... }]` (diptychs, split screens); each entry overrides the shared opts |
 | `tickFx` | animate the spear ticks per frame: `(tick, i) => ({ dx, dy, lean, lenK, bK, tipK }) | null | false` (S35's reaction wave) |
 | `layers` | extra layers after the plate: `{ mesh | meshes | lines, u, cam, meta }`; `dynLayer(lines)` for lines built this frame, `coronaRing(f, key, {refR, corona, skyField, tilt})` + `ringU(cx, cy, R)` for a placeable corona, `staticMesh(f, key, build)` for cached procedural sets |
 
 `proc.js` (procedural line art in any 2D space): `line`, `circle`, `ellipse`, `gear`, `dial`, `glyphRow`, `orbits`,
-`animeEye`, `displace`. ORBIT's Antikythera gear train and Halley's map can be built from these.
+`displace`. ORBIT's Antikythera gear train and Halley's map can be built from these.
 
 ## For the type layer
 

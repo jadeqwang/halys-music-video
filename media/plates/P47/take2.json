@@ -1,0 +1,64 @@
+{
+ "plate": "P47",
+ "take": 2,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 177.2,
+ "est_cost_usd": 1.156,
+ "duration_s": 5.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 100.24,
+   "dur": 4.76,
+   "file": "media/plates/P47/audio_song_0100.24_4.76.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 5,
+  "takes": 2,
+  "refs": [
+   "LYD",
+   "MED"
+  ],
+  "audio": {
+   "t0": 100.24,
+   "src": "song",
+   "dur": 4.76
+  },
+  "t_song": [
+   100.24,
+   105.0
+  ],
+  "shots": "S31b",
+  "sync": [
+   [
+    102.21,
+    "BOOM: the comrade grabs the raised forearm"
+   ]
+  ],
+  "prompt": "Medium-wide side-on shot at waist height in a knee-deep red-brown river during a total solar eclipse. Readable dusk light of a total eclipse: dim, even twilight, an orange glow low along the horizon, every face and costume still clearly readable. No fog, no smoke. In the centre the Lydian from reference image 1 (crested bronze helmet pushed up, braids, short beard, crimson tunic, bronze scale corselet, crimson lion shield) stands over the Mede from reference image 2 (red felt cap, black curly beard, long-sleeved ochre tunic, iron scale corselet, wicker shield, short sword on his RIGHT thigh), who kneels on one knee in the water at frame right, shield lowered, looking up at him. The Lydian faces right and holds a short iron sword raised high over his head, about to strike. Just behind him at frame left stands a second Lydian soldier, a different, younger, clean-shaven man dressed like reference image 1 (crested bronze helmet, crimson tunic, bronze scale corselet). Three clearly separate figures. 0-1.8 s: the blow is about to fall. At exactly 2.0 s, on the big drum hit of the reference audio, the soldier behind lunges forward, grabs the raised sword arm by the forearm with both hands and pulls it back. At 2.4 s the striker turns his head toward him in surprise. At 2.8 s the soldier lets go with one hand and points up at the sky. From 3.2 s all three look up at the sky in awe and hold still, the sword held back. Behind them on the darker far bank the ranks of both armies (crested bronze helmets left, red felt caps right) turn their faces up together at 3.0 s. Camera static. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "notes": "The arm-pull: the comrade's grab lands on the 102.21 boom (plate 1.97); then the look up.",
+  "avatar": true
+ },
+ "request": {
+  "prompt": "Medium-wide side-on shot at waist height in a knee-deep red-brown river during a total solar eclipse. Readable dusk light of a total eclipse: dim, even twilight, an orange glow low along the horizon, every face and costume still clearly readable. No fog, no smoke. In the centre the Lydian from reference image 1 (crested bronze helmet pushed up, braids, short beard, crimson tunic, bronze scale corselet, crimson lion shield) stands over the Mede from reference image 2 (red felt cap, black curly beard, long-sleeved ochre tunic, iron scale corselet, wicker shield, short sword on his RIGHT thigh), who kneels on one knee in the water at frame right, shield lowered, looking up at him. The Lydian faces right and holds a short iron sword raised high over his head, about to strike. Just behind him at frame left stands a second Lydian soldier, a different, younger, clean-shaven man dressed like reference image 1 (crested bronze helmet, crimson tunic, bronze scale corselet). Three clearly separate figures. 0-1.8 s: the blow is about to fall. At exactly 2.0 s, on the big drum hit of the reference audio, the soldier behind lunges forward, grabs the raised sword arm by the forearm with both hands and pulls it back. At 2.4 s the striker turns his head toward him in surprise. At 2.8 s the soldier lets go with one hand and points up at the sky. From 3.2 s all three look up at the sky in awe and hold still, the sword held back. Behind them on the darker far bank the ranks of both armies (crested bronze helmets left, red felt caps right) turn their faces up together at 3.0 s. Camera static. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. Nobody sings or speaks; the audio is only background music for timing. Reference images are identity, costume and location references only: never show the grey studio, the turnaround layout or the inset panels. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "data:image/jpeg;base64...(582 KB)",
+   "data:image/jpeg;base64...(557 KB)"
+  ],
+  "reference_audios": [
+   "data:audio/mpeg;base64...(154 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T12:50:49"
+}

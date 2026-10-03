@@ -980,6 +980,38 @@ for _k, _v in RETAKES2.items():
     PLATES[_k]["prompt_v1"] = PLATES[_k]["prompt"]
     PLATES[_k].update(_v)
 
+# ---------------------------------------------------------------- Thales redesign (director, 2026-10-03): he read as Jesus
+# New canonical sheet media/chars/thales.jpg (= media/boards/chars/thales3_t1.jpg; the old one is media/chars/thales_v1.jpg):
+# short curly hair with a thin fillet, trimmed curly beard, saffron himation with a dark woven border, wax tablet + short gnomon.
+THALES2 = ("Thales of Miletus, the man from reference image 1 (about 40, SHORT CURLY dark hair bound with a thin fillet, a short "
+           "trimmed curly beard, a lively, clever face; a saffron-ochre wool himation with a dark woven border over an undyed "
+           "cream chiton, leather sandals; a wax tablet in his left hand and a short wooden shadow-stick, a gnomon about 40 cm "
+           "long, in his right hand; no long staff, no red robe, no long hair)")
+RETAKES3 = {
+    "P27": dict(
+        retake_note="Thales redesign: v1/v2 used the old sheet (long knotted hair, terracotta mantle, long staff), which read as "
+                    "Jesus; v3 uses the new philosopher-herm sheet and keeps v2's static camera and explicit steps",
+        prompt=(f"During a total solar eclipse, on a flat riverbank, {THALES2} walks toward the camera: four slow, clear steps (left "
+                "foot, right foot, left, right), the shadow-stick in his right hand, tablet in his left, his face tilted up to the "
+                "sky with sharp, amused curiosity, as if checking a calculation. He walks along a path between warriors frozen like "
+                "statues mid-battle on both sides of him: a Lydian like reference image 2 (crested bronze helmet, crimson tunic, lion "
+                "shield) frozen mid-thrust on the left, a Mede like reference image 3 (red felt cap, ochre tunic, wicker shield) "
+                "frozen behind his shield on the right, more frozen warriors further back. The warriors are completely motionless; "
+                f"Thales is the only thing that moves. {DUSK} He is lit a little warmer than the frozen men. Camera static on a "
+                f"tripod at chest height: he starts in the middle distance and ends in a medium shot. {REAL} {SHEET_ONLY} {NOTXT}")),
+    "P28": dict(
+        retake_note="Thales redesign: takes 1-2 used the old Jesus-like sheet; v2 uses the new philosopher-herm sheet",
+        prompt=(f"Medium close-up of {THALES2}, standing among motionless warriors (dark shapes behind him) during a total solar "
+                "eclipse. Readable dusk light: dim twilight from above and a warm orange glow from the horizon on one side of his "
+                "face, the face clearly lit. 0-3 s: he looks up at the sky, studying it with quick, intelligent eyes, tapping the "
+                "shadow-stick against the tablet as if confirming a calculation. At 3.0 s he lowers his gaze and looks straight into "
+                "the camera lens with a knowing look and the hint of a sly smile, one eyebrow slightly raised, and holds it to the "
+                f"end. Camera static, very slow push-in. {REAL} Natural skin. {NOSING} {SHEET_ONLY} {NOTXT}")),
+}
+for _k, _v in RETAKES3.items():
+    PLATES[_k]["prompt_v2"] = PLATES[_k]["prompt"]
+    PLATES[_k].update(_v)
+
 # Every photoreal identity sheet trips Seedance's real-person filter (InputImageSensitiveContentDetected.PrivacyInformation,
 # measured on the 2026-10-03 pilot: P01, P03, P12 all rejected at input, free); the virtual-avatar route then accepts them and
 # keeps identity and costume. Go straight to it for plates that attach a photoreal sheet.

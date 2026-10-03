@@ -44,3 +44,13 @@ clip of each section is kept (20 MB budget): r2 0–14 s, r4 25–52 s, r3 67–
   S12 a flat golden disk (no white hole); S13 on P09 (the cavalry charge); S16 with the crowd pass; S17/S19 duel on
   P12 with strikes landing on beats.
 - Weak: S18's silhouettes are small blobs; the wides' troops still read as a texture at full frame, not Altdorfer-fine.
+
+## Round 5 (checks 0–3 s and 93–106 s: `r5_check_*.mp4`, `r5_sheet_checks.jpg`)
+
+- The eclipse reads as an eclipse: every corona is now photographic (asymmetric helmet streamers, polar plumes, coronal
+  holes, irregular prominences, glow following the streamers); S01's dome is clear (no cloud bands framing the disk);
+  S29b's sky is a crescent among clouds, no eye-shaped vortex. The human eye XCU (S29) is unchanged.
+- New S31b (101.61–103.64, the arm-pull) on the totality look: band behind, silhouettes rim-lit. P47 is not generated
+  yet, so it runs on P13 (one fallen in the water, one standing over him) at the same rhythm; it switches to P47
+  automatically with the grab keyed to 102.21 (P47 t0 100.24, grab ~1.97 s in: adjust if PLATES.md gives a key).
+- Open: "EYE OF GODS ABOVE" does not yet linger into S31b (the type track still ends it with S31).

@@ -1,0 +1,67 @@
+{
+ "plate": "P47",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "Arm-pull in the shallows at dusk: the Lydian hero (crest, crimson, scales) with sword raised over the kneeling Mede; a bareheaded Lydian comrade grabs the forearm at ~1.6 s and pulls; the striker turns; the comrade points up; both look up by 3.5-4.7 s.",
+   "costume": "Hero and Mede per sheets; the comrade is bareheaded (helmet off).",
+   "identity": "Three distinct men.",
+   "artefacts": "Grab ~0.4 s early; background ranks static.",
+   "notes": "Alternate.",
+   "sync": [
+    {
+     "song_t": 102.21,
+     "event": "BOOM: the comrade grabs the raised forearm",
+     "expected_plate_t": 1.97,
+     "measured_plate_t": 1.6,
+     "offset_s": -0.37,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P47/take1.review.jpg",
+   "contact": "media/plates/P47/take1.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T12:54:12"
+  },
+  "2": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S31b delivered: knee-deep at dusk, the Lydian hero (crested helmet, crimson tunic, scales) stands over the Mede (red cap, black beard, ochre tunic, iron scales, wicker shield) kneeling in the water, sword raised; the comrade lunges in with a splash and his hands close on the raised forearm at ~1.9 s, pulling it back; the striker turns to him (~2.6 s); both Lydians look up (~3.6 s), the comrade points skyward (~4.8 s); the Mede looks up too.",
+   "costume": "Hero and Mede match the sheets; the comrade wears the Lydian crimson tunic and bronze scales but is bareheaded (helmet off), which keeps the three men distinct.",
+   "identity": "Three clearly distinct men.",
+   "artefacts": "The far-bank ranks are a static wall: their faces-up wave is not readable (borrow P20's unison look-up).",
+   "notes": "Grab 102.21 -> plate 1.90 (-0.07 s).",
+   "sync": [
+    {
+     "song_t": 102.21,
+     "event": "BOOM: the comrade grabs the raised forearm",
+     "expected_plate_t": 1.97,
+     "measured_plate_t": 1.9,
+     "offset_s": -0.07,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P47/take2.review.jpg",
+   "contact": "media/plates/P47/take2.sheet.jpg",
+   "virtual_avatar": true,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-03T12:54:12",
+   "short": "Comrade bareheaded; background ranks static (no readable faces-up wave)."
+  }
+ },
+ "shots": "S31b",
+ "t_song": [
+  100.24,
+  105.0
+ ],
+ "audio_t0": 100.24,
+ "chosen": 2,
+ "chosen_why": "The grab lands on the boom (-0.07 s) with a readable lunge; take 1 grabs ~0.4 s early.",
+ "t_chosen": "2026-10-03T12:54:12"
+}
