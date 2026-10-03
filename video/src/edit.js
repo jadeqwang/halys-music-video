@@ -9,10 +9,11 @@
 // CORONA/ORBIT 60 (every frame), ROOM 12 ("on twos" anime timing with real holds).
 // This module is imported after timing.json has loaded, so cuts can use TM.sections, beatTime(n), TM.events, ...
 
-import { shot } from './registry.js';
+import { shot, SCENES, OVERRIDES } from './registry.js';
 import { TM } from './time.js';
 import { loadJSON } from './assets.js';
 import './scenes/placeholder.js';
+import './scenes/index.js';   // section modules register scenes named by shot id ('S01'...) or world ('world:bronze')
 
 const SL = await loadJSON('data/shotlist.json', { optional: true });
 
@@ -47,10 +48,13 @@ const FALLBACK = [['cold_open', 0, 7.18], ['intro_a', 7.18, 27.24], ['intro_b', 
 if (SL && SL.shots && SL.shots.length) {
   SL.shots.forEach((s, k) => {
     const last = k === SL.shots.length - 1, t1 = s.t1 ?? TM.dur;
+    const sceneName = SCENES.has(s.id) ? s.id : SCENES.has('world:' + s.world) ? 'world:' + s.world : 'placeholder';
+    const o = OVERRIDES.get(s.id) || {};
     shot({
-      id: s.id, t0: s.t0, t1: last ? Math.max(t1, TM.dur) : t1, world: s.world, scene: 'placeholder',
-      params: { label: `${s.worlds.join('→')} · ${s.plates.join('+') || '—'}`, cues: s.cues, worlds: s.worlds, plates: s.plates, section: s.section },
-      ...(s.world === 'room' ? { plate: { ...ROOM_PLATE, at: s.t0 }, framing: ROOM_FRAMING } : {}),
+      id: s.id, t0: s.t0, t1: last ? Math.max(t1, TM.dur) : t1, world: s.world, scene: sceneName,
+      ...(sceneName === 'placeholder' && s.world === 'room' ? { plate: { ...ROOM_PLATE, at: s.t0 }, framing: ROOM_FRAMING } : {}),
+      ...o,
+      params: { label: `${s.worlds.join('→')} · ${s.plates.join('+') || '—'}`, cues: s.cues, worlds: s.worlds, plates: s.plates, section: s.section, ...(o.params || {}) },
     });
   });
 } else (TM.sections.length ? TM.sections.map(s => [s.id, s.t0, s.t1]) : FALLBACK).forEach(([id, t0, t1], k, secs) => {

@@ -22,6 +22,10 @@ export const WORLDS = {            // default draw cadence per world (TREATMENT.
 };
 
 export const SCENES = new Map();
+// Per-shot overrides set by the section modules (video/src/scenes/*.js): plate mapping, framing, params, cadence.
+// edit.js merges them into the shot list, so section owners never have to edit edit.js.
+export const OVERRIDES = new Map();
+export function shotOverride(id, o) { OVERRIDES.set(id, { ...(OVERRIDES.get(id) || {}), ...o }); }
 export function scene(name, draw, opts = {}) { SCENES.set(name, { name, draw, ...opts }); }
 
 export const SHOTS = [];
