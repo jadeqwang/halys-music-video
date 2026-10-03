@@ -284,13 +284,18 @@ def contact(folder, cols=4, cw=480):
             and V.get(m["name"], {}).get("verdict", "keep") not in ("reject",)]
     if not rows:
         return None
+    def key(m):
+        v = V.get(m["name"], {})
+        subj = v.get("subject", "ZZZ")
+        return (SUBJECT_ORDER.index(subj) if subj in SUBJECT_ORDER else 99, 0 if v.get("verdict") == "canonical" else 1, m["name"])
+    rows.sort(key=key)
     ch = int(cw * 9 / 16)
     lab = 34
     n = len(rows)
     r = (n + cols - 1) // cols
     sheet = Image.new("RGB", (cols * cw + (cols + 1) * 8, r * (ch + lab) + (r + 1) * 8 + 40), (16, 16, 18))
     d = ImageDraw.Draw(sheet)
-    d.text((10, 10), f"HALYS boards: {folder} ({n} kept)", fill=(235, 235, 235), font=_font(20))
+    d.text((10, 10), f"HALYS boards: {folder} ({n} kept; * = canonical, orange)", fill=(235, 235, 235), font=_font(20))
     for k, m in enumerate(rows):
         im = Image.open(BOARDS / folder / f"{m['name']}.jpg").convert("RGB")
         im.thumbnail((cw, ch))
@@ -300,7 +305,9 @@ def contact(folder, cols=4, cw=480):
         v = V.get(m["name"], {})
         star = "* " if v.get("verdict") == "canonical" else ""
         col = (240, 138, 42) if star else (200, 200, 200)
-        d.text((x, y + ch + 4), f"{star}{m['name']}  [{m['model'].split('/')[-1]}]"[:64], fill=col, font=_font(14))
+        subj = v.get("subject", "")
+        d.text((x, y + ch + 2), f"{star}{subj}"[:60], fill=col, font=_font(13))
+        d.text((x, y + ch + 17), f"{m['name']}  [{m['model'].split('/')[-1]}]"[:64], fill=(170, 170, 170), font=_font(12))
     out = BOARDS / f"{folder}_contact.jpg"
     finish_jpg_img(sheet, out)
     return out
