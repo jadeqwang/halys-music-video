@@ -515,8 +515,11 @@ const S19_SUN = { '16:9': [.66, .12], portrait: [.6, .12] };
 // the top right, the dust over the melee painted as sky, a warm pool on the exchange
 function battleDuelLook(f, src, pool, o = {}) {
   const sun = (o.sun || S17_SUN)[f.W / f.H > 1.2 ? '16:9' : 'portrait'];
+  // o.melee: a soft band of light on the battle behind the duel (v of the crowd's middle), so the fighting there reads
+  // (and a focus region, so the small brushes cut the figures there instead of one dark wall of strokes)
+  if (o.melee) pool = [...pool, { x: .5, y: o.melee, rx: .6, ry: .11, feather: .85, k: .62 }];
   return plateLook(src, { lightDir: [.8, -.55], lightPoint: sun, keep: .5, keepDim: .82, fromLight: .75, bg: .3, rim: .85, poolMatte: .5, body: .45,
-    pool, extra: { glint: 1.1, groundFlow: { y0: o.groundY ?? .6, k: .8 },
+    pool, extra: { glint: 1.1, groundFlow: { y0: o.groundY ?? .6, k: .8 }, ...(o.melee ? { focus: [{ x: .5, y: o.melee, rx: .6, ry: .1, k: .7 }] } : {}),
       sky: SKY(f.t, { maxDepth: .03, soft: .03, below: .32, horizonY: .27, drama: .45, glow: 1.05, glowR: .26 }),
       sun: SUN(f.t, { x: sun[0], y: sun[1], r: .022 }), ...(o.extra || {}) } });
 }
@@ -540,7 +543,7 @@ scene('S19', async f => {
     // full orchestra: a little sway and push; portrait holds the Mede and the clash (S17's portrait held the Lydian)
     const wide = f.W / f.H > 1.2, cx = wide ? .5 : .6, pcam = k => ({ cx: cx + .012 * Math.sin(k * 3), cy: .5, zoom: 1.04 + .05 * k });
     const src = await rp(f, 'P60', null, pcam);
-    await bronze(f, src, battleDuelLook(f, src, [{ x: wide ? .48 : .3, y: .42, rx: wide ? .26 : .4, ry: .32, feather: .75, k: .7, fig: true }], { sun: S19_SUN }));
+    await bronze(f, src, battleDuelLook(f, src, [{ x: wide ? .48 : .3, y: .42, rx: wide ? .26 : .4, ry: .32, feather: .75, k: .7, fig: true }], { sun: S19_SUN, melee: .3 }));
     return;
   }
   const pcam = k => ({ cx: .5 + .015 * Math.sin(k * 3), cy: .52, zoom: 1.1 + .05 * k });
@@ -552,7 +555,7 @@ scene('S21', async f => {
     // (portrait holds the Lydian going down and the spear stabbing the water beside him)
     const wide = f.W / f.H > 1.2, cx = wide ? .5 : .36, pcam = k => ({ cx, cy: .52, zoom: 1.04 + .05 * k });
     const src = await rp(f, 'P61', null, pcam);
-    await bronze(f, src, battleDuelLook(f, src, [{ x: wide ? .4 : .5, y: .55, rx: wide ? .3 : .45, ry: .35, feather: .75, k: .75, fig: true }], { groundY: .55, sun: S19_SUN }));
+    await bronze(f, src, battleDuelLook(f, src, [{ x: wide ? .4 : .5, y: .55, rx: wide ? .3 : .45, ry: .35, feather: .75, k: .75, fig: true }], { groundY: .55, sun: S19_SUN, melee: .3 }));
     return;
   }
   const src = await rp(f, 'P13', { id: 'a_duel', cam: k => ({ cx: .42, cy: .58, zoom: 1.5 + .1 * k }) }, k => ({ cx: .5, cy: .52, zoom: 1.04 + .05 * k }));
