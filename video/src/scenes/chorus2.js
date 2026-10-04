@@ -176,10 +176,10 @@ scene('S62', async f => {
   const src = await plate(f, 'P53', cam, { keys: S62.keys, standin: 'a_duel' });
   redRiver(src, .62);
   // (the sun is beyond the right edge, low over the bank he walks toward: no disk, its light on the clouds). The plate's own
-  // sky is kept and made a stroke region above the far bank's crest (plate v .445); the strokes are kept a little shorter
-  // than GOLD's (maxLen), because the long ones dragged cream sky-coloured scraps into the thin dark band of the far bank
-  // under the walking figures
+  // sky is kept and made a stroke region above the far bank's crest (plate v .445). The second brush paints everywhere
+  // (T[1] ~ 0): the GPU shows first-layer sky paint spilling onto the thin dark band of the far bank (cream scraps under the
+  // walking men) that the engine's CPU canvas does not see, so no later layer covered it (reported to the engine's owner)
   const hz = camScreen(f, cam)(.5, .445)[1] / f.H;
   await gold2(f, src, { cam, sky: false, groundFlow: { y0: .72, k: .7 }, detail: .85, tag: 'S62', typeDir: [.75, -.66],
-    post: st => { st.sky = plateSky(src, { horizon: hz }); st.key += '|hz' + hz.toFixed(3); }, paint: { maxLen: [3, 4, 4, 4, 3] } });
+    post: st => { st.sky = plateSky(src, { horizon: hz }); st.key += '|hz' + hz.toFixed(3); }, paint: { T: [0, .0001, .05, .06, .07] } });
 });

@@ -1073,6 +1073,51 @@ PLATES.update({
         notes="S28 v2 (replaces P18's row of six): pairs locked mid-combat look up one after another (decision 3)."),
 })
 
+# ---------------------------------------------------------------- v2 follow-up, ACT1: the rest of Act I's lone duels (decision 2's principle)
+# S19, S21 and S25 also showed a lone duel on empty water. P60 / P61 continue P48's shot (its frames 97 / 84 as first frames:
+# the same duelists, light and battle behind them) into S19's flurry on the beats and S21's knock-down; P62 continues P15's
+# own face-off (its first frame) while the ranks on the far bank crash into a melee, so the cut at 77.88 to P15's shore melee
+# still matches. First frame + audio only (as P58): the first frame carries identity and costume.
+ACT1_LIGHT = "Hard, low golden sun from frame right, warm rim light, long shadows; clear air, no fog, no haze."
+ACT1_DUEL = ("the Lydian on the left (crested bronze helmet, crimson tunic, bronze scale corselet, round crimson lion shield, spear) and "
+             "the Mede on the right (red felt cap, black beard, ochre tunic, iron scale corselet, round wicker shield, spear)")
+PLATES.update({
+    "P60": dict(
+        duration=5, takes=2, first_frame="media/plates/P60/ff_P48t1_f097.jpg", audio=a(51.27), t_song=[51.27, 56.27], shots="S19",
+        sync=[[52.166, "beat: strike 1 (plate 0.90)"], [52.596, "beat: strike 2 (plate 1.33)"], [53.466, "downbeat: shields slam (plate 2.20)"],
+              [54.346, "beat: strike 4 (plate 3.08)"], [54.776, "beat: strike 5 (plate 3.51)"]],
+        prompt=("The same shot continues from the first frame: side-on at waist height in the knee-deep red-brown shallows, "
+                f"{ACT1_DUEL}, full figures, mirrored; behind them both battle lines keep fighting in the water across the whole frame, "
+                "nobody stands still. The duel speeds up into five fast, clear exchanges, one on each drum beat of the reference audio: "
+                "at 0.9 s the Lydian thrusts and the Mede catches the point on his wicker shield; at 1.3 s the Mede thrusts back and the "
+                "Lydian turns it with his lion shield; at 2.2 s they slam shield against shield and the water bursts up in a gold spray; "
+                "at 3.1 s the Mede swings his spear shaft and the Lydian blocks it; at 3.5 s the Lydian thrusts low and the Mede jumps "
+                f"back. Every strike ends in a sharp stop, never a blur. Camera static. {ACT1_LIGHT} {REAL} No blood. {PERIOD} {NOTXT}"),
+        notes="S19 v2: P48's duel continues as five exchanges on the beats, the battle behind them."),
+    "P61": dict(
+        duration=5, takes=2, first_frame="media/plates/P61/ff_P48t1_f084.jpg", audio=a(58.72), t_song=[58.72, 63.72], shots="S21",
+        sync=[[59.60, "timpani: knocked down (plate 0.88)"], [62.20, "cut out: up on one knee (plate 3.48)"]],
+        prompt=("The same shot continues from the first frame: side-on at waist height in the knee-deep red-brown shallows, "
+                f"{ACT1_DUEL}; behind them both battle lines keep fighting in the water across the whole frame. At 0.9 s, on the drum "
+                "hit of the reference audio, the Mede charges and slams his wicker shield into the Lydian, who falls backward into the "
+                "water with a big splash; at 2.0 s the Mede drives his spear down at him; the Lydian rolls sideways, clear, and the spear "
+                "stabs into the water where he was, throwing up spray; by 3.5 s the Lydian is up on one knee, shield raised, water "
+                "streaming off him, facing the Mede again. Clear, readable action with sharp stops, no blood. Camera static. "
+                f"{ACT1_LIGHT} {REAL} {PERIOD} {NOTXT}"),
+        notes="S21 v2: P13's knock-down, in P48's shot, the battle behind them."),
+    "P62": dict(
+        duration=5, takes=2, first_frame="media/plates/P62/ff_P15t2_f001.jpg", audio=a(74.41), t_song=[74.41, 79.41], shots="S25",
+        sync=[[74.655, "'Lydians' (plate 0.25)"], [75.925, "'Medes' (plate 1.52)"], [77.88, "cut to P15's shore melee (plate 3.47)"]],
+        prompt=("The same shot continues from the first frame: a symmetrical face-off in the knee-deep red-brown shallows, "
+                f"{ACT1_DUEL.replace('on the left (', 'on the left in profile facing right (').replace('on the right (', 'on the right in profile facing left (')}, "
+                "exactly centred and mirrored, shields up, spear points lowered toward each other; they step slowly sideways, circling, "
+                "eyes locked, and do not strike. Behind them, on the gravel bank across the water, the two lines fight from the first "
+                "second: Lydians (crested helmets, crimson tunics, lion shields) and Medes (red caps, ochre tunics, wicker shields) clash "
+                "all along the bank, spears thrusting, shields slamming, men falling, dust kicked up; the melee fills the whole width of "
+                f"the far bank. Camera static. Low golden sun at frame right, long shadows, clear air. {REAL} No blood. {PERIOD} {NOTXT}"),
+        notes="S25 v2: P15's mirrored face-off, now with the melee raging on the shore behind them."),
+})
+
 # ---------------------------------------------------------------- v2 revision, GOLD (production/REVISION_V2.md decision 5)
 # "Bronze was precious: nobody throws it away." Caught mid-action, shocked, they let go: weapons FALL from opening hands,
 # never thrown; no shrug, no posing, serious faces. S61 the wide drop (P51), S61b one hand opens over the held "blade"

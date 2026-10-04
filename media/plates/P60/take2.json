@@ -1,0 +1,72 @@
+{
+ "plate": "P60",
+ "take": 2,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 169.1,
+ "est_cost_usd": 1.156,
+ "duration_s": 5.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 51.27,
+   "dur": 5.0,
+   "file": "media/plates/P60/audio_song_0051.27_5.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 5,
+  "takes": 2,
+  "first_frame": "media/plates/P60/ff_P48t1_f097.jpg",
+  "audio": {
+   "t0": 51.27,
+   "src": "song"
+  },
+  "t_song": [
+   51.27,
+   56.27
+  ],
+  "shots": "S19",
+  "sync": [
+   [
+    52.166,
+    "beat: strike 1 (plate 0.90)"
+   ],
+   [
+    52.596,
+    "beat: strike 2 (plate 1.33)"
+   ],
+   [
+    53.466,
+    "downbeat: shields slam (plate 2.20)"
+   ],
+   [
+    54.346,
+    "beat: strike 4 (plate 3.08)"
+   ],
+   [
+    54.776,
+    "beat: strike 5 (plate 3.51)"
+   ]
+  ],
+  "prompt": "The same shot continues from the first frame: side-on at waist height in the knee-deep red-brown shallows, the Lydian on the left (crested bronze helmet, crimson tunic, bronze scale corselet, round crimson lion shield, spear) and the Mede on the right (red felt cap, black beard, ochre tunic, iron scale corselet, round wicker shield, spear), full figures, mirrored; behind them both battle lines keep fighting in the water across the whole frame, nobody stands still. The duel speeds up into five fast, clear exchanges, one on each drum beat of the reference audio: at 0.9 s the Lydian thrusts and the Mede catches the point on his wicker shield; at 1.3 s the Mede thrusts back and the Lydian turns it with his lion shield; at 2.2 s they slam shield against shield and the water bursts up in a gold spray; at 3.1 s the Mede swings his spear shaft and the Lydian blocks it; at 3.5 s the Lydian thrusts low and the Mede jumps back. Every strike ends in a sharp stop, never a blur. Camera static. Hard, low golden sun from frame right, warm rim light, long shadows; clear air, no fog, no haze. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. No blood. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "notes": "S19 v2: P48's duel continues as five exchanges on the beats, the battle behind them."
+ },
+ "request": {
+  "prompt": "The same shot continues from the first frame: side-on at waist height in the knee-deep red-brown shallows, the Lydian on the left (crested bronze helmet, crimson tunic, bronze scale corselet, round crimson lion shield, spear) and the Mede on the right (red felt cap, black beard, ochre tunic, iron scale corselet, round wicker shield, spear), full figures, mirrored; behind them both battle lines keep fighting in the water across the whole frame, nobody stands still. The duel speeds up into five fast, clear exchanges, one on each drum beat of the reference audio: at 0.9 s the Lydian thrusts and the Mede catches the point on his wicker shield; at 1.3 s the Mede thrusts back and the Lydian turns it with his lion shield; at 2.2 s they slam shield against shield and the water bursts up in a gold spray; at 3.1 s the Mede swings his spear shaft and the Lydian blocks it; at 3.5 s the Lydian thrusts low and the Mede jumps back. Every strike ends in a sharp stop, never a blur. Camera static. Hard, low golden sun from frame right, warm rim light, long shadows; clear air, no fog, no haze. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. No blood. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "adaptive",
+  "generate_audio": false,
+  "use_virtual_avatar": false,
+  "image": "data:image/jpeg;base64...(184 KB)",
+  "reference_audios": [
+   "data:audio/mpeg;base64...(161 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T23:55:43"
+}

@@ -47,6 +47,11 @@ is `media/chars/thales_v1.jpg`), and P27/P28 were regenerated with it (their pre
 * **A redesigned identity sheet carries straight through.** The new Thales sheet (fillet, trimmed beard, saffron himation with
   a dark border, tablet, short gnomon) held in all four P27/P28 takes on the first pass; none drifted back to a staff or long hair.
 * No stirrups, flags, logos or modern objects appeared in any chosen take; the Median sword sits on the right where visible.
+* **"Let go, never throw" works; an odd one out in a unison action is hard** (v2 GOLD, P51–P54). With "Nobody throws anything: the weapons
+  simply fall straight down out of the opening hands" every one of the 11 takes dropped its weapons and none threw them. A single late
+  man was ignored in 3 of 5 P54 takes (everyone dropped together, or the front pair turned to pose for the camera); it came only when the
+  prompt described two separate drops ("FIRST, at 1.3 s … SECOND, at 2.0 s") and named the late man by costume and place (P54 v3, 2 of 2).
+  Swords dropped point-first onto sand stick upright; on a wet bank they fall flat.
 * **A first frame and an audio reference can be combined** (`first_frame` + `audio` in a spec; v2 P57/P58, 4/4 takes accepted): the take opens
   on the keyframe and keeps its drawing (hair length, the print, the patch side, the expression) for the whole clip.
 * **Image edits for keyframes (Nano Banana Pro):** a descriptive "redraw her" prompt on a plate frame changes almost nothing; an explicit numbered
@@ -94,10 +99,11 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 | S53–S54 | P28 (4) | looks up 0–2.2, head down 2.25–2.7, eyes on the lens 187.65 → 2.75, face square ~3.2, sly half-smile from ~3.25 |
 | S57–S58 | P29 (1) | light sweep 1.7–4.0; the roar 200.315 → 5.85 |
 | S59 / S60 | P30 (1) / P31 (1) | 1:1 |
-| S61 | P32 (1) | blades fly 0–2.17; the sinking sword 2.17–5.0 under the held "blade" |
-| S62 | P33 (1) | apex 215.287 → 3.40 (match cut to P34) |
+| S61 / S61b | P51 (1) / P52 (2) | v2: caught mid-fight, they stop (209.10 → 1.38), the hands open (209.55 → 2.28), the weapons land on "blade" (209.945 → 2.66); S61b: the hand opens 210.42 → 2.88, the guard meets the water 211.30 → 3.92 |
+| S62 | P53 (2) | v2: 1:1 from 0.10 s in (211.44 → 0.10); the upright sword, eased to the frame centre by 214.85, match-cuts to P34 (video/data/sword_handoff.json) |
 | S63 / S67 / S68 / S70 | P34 (2) / P35 (3) / P36 (1) / P37 (1) | 1:1 (P36 faces up 237.66 → 2.10) |
-| S74–S76 | P38 (4) | raise 259.35 → 2.00, BLADE 260.62 → 2.35, straggler 261.05 → 3.60 |
+| S74 | P38 (4) | the dive lands on P38 frame 1.55 in lines (drop2.js S74, not GOLD's): until it reads gold_outro.js `s75Start()`, its last 0.7 s dissolves P38's formation into S75's P54 |
+| S75–S76 (+ S77's first 0.6 s in lines) | P54 (5) | v2: mid-fight from the hit (259.36 → 0.20); the hands open 260.45 → 1.58; the swords hit the sand 260.72 → 1.90; the late Lydian lets go 260.83 → 3.54, his sword lands 261.04 → 3.715; still to 262.72 → 5.0 (S77 traces this frame) |
 | S78 | P57 (2) + P39 (1) | v2: she is P57 (registered into P39's frame), the room is P39's painted background. Typing poses on the ticks over held bodies f13 / f49 / f69; the lean f33→f45 lands on dt.shift 268.081; back f55→f67; the commit burst f71→f92 |
 | S79 | P55 (1) | v2, the kings' oath (P40 is unused): the clasp's shake 270.04 → 0.42, settled by 270.30 → 0.68; the hold runs at 0.61x to 273.40 → 2.58 |
 | S80–S81 | P58 (2) | v2: the face held on f30 (the smirk throughout); the shoulder redrawn on the clicks: lifts f12–f18 / f39–f45 / f69–f78, presses f24 / f48 / f84 on 273.455 / 274.025 / 274.927; the wink is drawn (eye.js), shut on 276.947 |
@@ -220,8 +226,12 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 | P48 | S17 (v2) | take1 | pass 4 | 44.06 | 46.06→2.00 (+0.00) | Golden dust haze over the far melee (asked for clear air): the renderer paints its sky and sun into it. Take 2 renamed `rejected_take2.*`. |
 | P49 | S18 (v2) | take2 | pass 4 | 46.49 | 1:1 from 0.70 s in (46.49→0.70) | The plate's sun sits on the horizon behind the fighters: S18 keys the silhouettes and paints its own sun higher. |
 | P50 | S28 (v2) | take2 | pass 4 | 88.28 | 89.78→1.90 (+0.40); 90.20→2.25 (+0.33); 90.60→2.60 (+0.28); 90.87→2.90 (+0.31); 91.31→3.30 (+0.27) | The central Mede stays behind his wicker shield: five faces turn up, not six. |
+| P51 | S61 (v2) | take1 | pass 4 | 208.7 | 209.10→1.38 (+0.98); 209.55→2.28 (+1.43); 209.945→2.66 (+1.42); 210.18→2.95 (+1.47) | The stop and the drop land ~1.4 s late (retimed). At army scale the drop reads mainly through the centre Lydian's sword and the empty hands. MediaPipe takes the Mede's wicker shield for a face (S61 paints no eyes). |
+| P52 | S61b (v2) | take2 | pass 4 | 210.18 | 210.18→2.50 (+2.50); 210.42→2.88 (+2.64); 211.30→3.92 (+2.80); 211.44→4.04 (+2.78) | The hand holds still for 2.8 s before it opens: S61b uses the plate's last 1.5 s. |
+| P53 | S62 (v2) | take2 | pass 4 | 211.44 | 1:1 from 0.10 s in (211.44→0.10) | The brush engine paints cream scraps onto the thin dark far bank under the walking men, so S62 forces the second brush layer everywhere. |
+| P54 | S75, S76 (v2) | take5 | pass 4 | 259.355 | 259.36→0.20 (+0.20); 260.45→1.58 (+0.49); 260.72→1.90 (+0.54); 260.83→3.54 (+2.07); 261.04→3.715 (+2.03); 262.72→5.0 (+1.64) | The late drop comes 1.65 s after the others in the plate, against 0.43 s in the music: the held sword is squeezed into one drawing. The swords stick upright in the sand. |
 | P55 | S79 (v2) | take1 | pass 4 | 269.54 | 270.04→0.42 (-0.08); 270.30→0.68; 273.40→2.58 (the hold slowed to 0.61x) | Profile faces: MediaPipe finds only Syennesis, so the faces, clasp and cuts are tracked by hand in treaty.js; Cyaxares' akinakes is at his left hip. |
-| P57 | S78 (v2) | take2 | pass 4 | 266.12 | poses by hand: lean stop 1.79 s → 268.081 (dt.shift); typing poses per tick (x-sheet) | Starts on keyframe K78d (first frame). The lamp is unlit in the keyframe (only she is used). The plate's print is flat; its bend comes from the cloth's motion (measured per frame). |
+| P57 | S78 (v2) | take2 | pass 4 | 266.12 | poses by hand: lean stop 1.79 s → 268.081 (dt.shift); typing poses per tick (x-sheet) | Starts on keyframe K78d (first frame). The lamp is unlit in the keyframe (only she is used). The plate's print is flat: the renderer wraps it round her back and kinks and shades it with the plate's measured folds. |
 | P58 | S80, S81 (v2) | take2 | pass 4 | 273.4 | presses f24 / f48 / f84 → 273.455 / 274.025 / 274.927 | Starts on keyframe K80b. Tracing thins the smirk and the narrowed lids: the renderer draws the mouth line, crease, heavy lids and catchlights (expr.js). |
 
 ## Per plate

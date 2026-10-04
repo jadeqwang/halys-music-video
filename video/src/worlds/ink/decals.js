@@ -30,7 +30,7 @@ export async function initDecals(takes) {
 // the print's wrap: cylinder radius in circle radii, the turn of the back at the print's centre (rad, + = the frame-right
 // side turns away), the camera's elevation (sin), the fold kink (setup px at full depth, per 40 px of circle radius) and the
 // direction a fold valley shifts the print in the picture (seen from above: down)
-export const WRAP = { k: 2.1, phi: .32, elev: .36, kink: 3.2, view: [.2 / Math.hypot(.2, 1), 1 / Math.hypot(.2, 1)] };
+export const WRAP = { k: 2.1, phi: .32, elev: .36, kink: 5.5, view: [.2 / Math.hypot(.2, 1), 1 / Math.hypot(.2, 1)] };
 
 const _b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 function foldOf(D, xf) {
@@ -179,7 +179,7 @@ function bandAt(P, x, k) {
 
 // the fold shade over the print as an alpha mask (output size), crisp: the field thresholded with a one-pixel antialiased
 // edge (the field's gradient), like the cel fills
-function shadeMask(W, H, view, G, warpPts, t = .45) {
+function shadeMask(W, H, view, G, warpPts, t = .34) {
   const F = G.fold; if (!F) return null;
   let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
   for (const [x, y] of warpPts) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); }

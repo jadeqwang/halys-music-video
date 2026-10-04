@@ -167,7 +167,7 @@ def matte_of(pid, take, pf):
     return (cv2.imread(str(c[0]), cv2.IMREAD_GRAYSCALE).astype(np.float32) / 255) if c else None
 
 
-def fold_field(img, matte, C, T, step=2, ctx=64, lam=34., reach=96):
+def fold_field(img, matte, C, T, step=2, ctx=64, lam=80., reach=140):
     """the jacket's shading over the print: shade = the hair's cast shadow (local) and the folds (carried along their axis),
     fold = the folds alone (they kink the print); both 0..1 on a grid over the print, uint8 base64"""
     import base64
@@ -203,21 +203,30 @@ def fold_field(img, matte, C, T, step=2, ctx=64, lam=34., reach=96):
     h = mblur(h, w, 1.6)
     hs = h * below_hair                          # the hair's cast shadow: shades the print where it falls, never a fold
     hf = h * ~below_hair                         # the folds
-    # the folds' axis: structure tensor of the fold field (gradients run across a fold; the axis is perpendicular)
+    # each fold's own axis: the local structure tensor of the fold field (gradients run across a fold; the axis is
+    # perpendicular), smoothed so it is steady across the print; the frame's mean axis is kept for the record
     gx = cv2.Sobel(hf, cv2.CV_32F, 1, 0, ksize=3); gy = cv2.Sobel(hf, cv2.CV_32F, 0, 1, ksize=3)
-    Jxx, Jyy, Jxy = (gx * gx).sum(), (gy * gy).sum(), (gx * gy).sum()
+    Jxx, Jyy, Jxy = (cv2.GaussianBlur(q, (0, 0), 9) for q in (gx * gx, gy * gy, gx * gy))
     ang = .5 * np.arctan2(2 * Jxy, Jxx - Jyy) + np.pi / 2
-    ax, ay = float(np.cos(ang)), float(np.sin(ang))
-    # carry the folds along their axis across the print (the plate draws the print flat, its folds run up to it)
+    AX, AY = np.cos(ang).astype(np.float32), np.sin(ang).astype(np.float32)
+    g0 = .5 * np.arctan2(2 * Jxy.sum(), (Jxx - Jyy).sum()) + np.pi / 2
+    ax, ay = float(np.cos(g0)), float(np.sin(g0))
+    # carry the folds along their axes across the print (the plate draws the print flat, its folds run up to it)
     H, W = h.shape
     ext = hf.copy()
     yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
     for t in range(2, reach + 1, 2):
         k = np.exp(-t / lam)
         for sgn in (1, -1):
-            ext = np.maximum(ext, cv2.remap(hf, xx + sgn * t * ax, yy + sgn * t * ay, cv2.INTER_LINEAR, borderValue=0) * k)
+            ext = np.maximum(ext, cv2.remap(hf, xx + sgn * t * AX, yy + sgn * t * AY, cv2.INTER_LINEAR, borderValue=0) * k)
     ext *= her & ~hair
-    shade = np.maximum(ext, hs)
+    shade = cv2.GaussianBlur(np.maximum(ext, hs), (0, 0), 2.0)       # crisp after thresholding; no stair-steps or slivers
+    # small islands (a fold's decayed tail cut off from it) are not folds: halve them below the print's threshold
+    n, lab_, st, _ = cv2.connectedComponentsWithStats((shade >= .34).astype(np.uint8), 8)   # decals.js shadeMask t
+    for k in range(1, n):
+        if st[k, cv2.CC_STAT_AREA] < 220:
+            shade[lab_ == k] *= .5
+    ext = cv2.GaussianBlur(ext, (0, 0), 4.5)                         # the kink: a smooth bend over several letters
     gxs = np.clip(np.arange(x0, x1 + 1, step) - X0, 0, W - 1); gys = np.clip(np.arange(y0, y1 + 1, step) - Y0, 0, H - 1)
     enc = lambda F: base64.b64encode(np.clip(F[gys][:, gxs] * 255 + .5, 0, 255).astype(np.uint8).tobytes()).decode()
     return {'x0': x0, 'y0': y0, 'step': step, 'nx': int(len(gxs)), 'ny': int(len(gys)), 'axis': [round(ax, 4), round(ay, 4)],

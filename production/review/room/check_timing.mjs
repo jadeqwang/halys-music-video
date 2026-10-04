@@ -6,7 +6,8 @@
 // 1. measures each sound event's onset in the final mix (the sound-design master): the final chord, the three key clicks,
 //    the wink's ting (peak spectral flux in the event's band, 2 ms hops, within +-90 ms of SOUND_DESIGN.md's cue time);
 // 2. reads the INK x-sheets (video/src/worlds/ink/sheets.js, the same data the renderer uses) for the frame each visual
-//    event lands on: the spin's landing drawing, the three key-press drawings, the eyelid fully shut, the cut to black;
+//    event lands on: the three key-press drawings, the eyelid fully shut, the cut to black. (v2: the chair spin is gone;
+//    the final chord is now the edit's cut from S78 to TREATY's S79, reported for information, not judged here);
 // 3. if rendered frames exist, checks the pixels: the picture changes ON the event frame (ROI difference to the previous
 //    frame vs. the frame before), and for the wink the first frame with no white of the eye left in the eye ROI.
 // Master clock: 60 fps; frame i shows song time i/60; "on time" = the first frame at or after the onset (0 frames late).
@@ -14,7 +15,7 @@ import { spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { roomSheets, EV, lidAt } from '../../../video/src/worlds/ink/sheets.js';
+import { roomSheets, EV, lidAt, TAKES } from '../../../video/src/worlds/ink/sheets.js';
 import { frameAt, FPS } from '../../../video/src/worlds/ink/xsheet.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url)), ROOT = resolve(HERE, '../../..');
@@ -58,10 +59,9 @@ function onset(t, { f0 = 0, f1 = 24000, win = .09 } = {}) {
   return { t: bt, rise: best };
 }
 
-const SH = roomSheets({});
-const firstTag = (sh, tag) => sh.find(e => e.tag === tag);
+const SH = roomSheets(TAKES);
 const visual = {
-  chord: firstTag(SH.wide, 'land').F,
+  chord: frameAt(EV.shots.S78[1]),                       // the cut S78 -> S79 (SHOTLIST 270.04, TREATY's shot follows)
   keys: SH.close.filter(e => e.tag === 'key').map(e => e.F),
   ting: (() => { for (let i = frameAt(EV.ting) - 40; i < frameAt(EV.ting) + 40; i++) if (lidAt(i / FPS) >= 1) return i; return null; })(),
   black: frameAt(EV.black),
@@ -83,19 +83,19 @@ function changeAt(F, box) {
   return { before: mad(a, b), at: mad(b, c) };
 }
 const whites = buf => { if (!buf) return null; let n = 0; for (let i = 0; i < buf.length; i += 3) { const r = buf[i], g = buf[i + 1], b = buf[i + 2]; if (r > 225 && g > 225 && b > 220 && Math.max(r, g, b) - Math.min(r, g, b) < 18) n++; } return n; };
-const ROI = { spin: [420, 120, 960, 960], sleeve: [0, 640, 760, 440], eye: [700, 300, 380, 200] };
+const ROI = { cut: [0, 0, 1920, 1080], sleeve: [0, 640, 760, 440], eye: [1000, 420, 220, 120] };   // eye: her left (frame right), P58
 
 const row = (name, Fv, a) => {
   const Fa = frameAt(a.t);
   return { name, onset: +a.t.toFixed(4), onsetFrame: Fa, visualFrame: Fv, visualTime: +(Fv / FPS).toFixed(4), framesLate: Fv - Fa, flux: +a.rise.toFixed(0) };
 };
-const rows = [row('final chord / spin lands', visual.chord, audio.chord), ...visual.keys.map((F, k) => row(`key click ${k + 1} / key-press drawing`, F, audio.keys[k])), row('ting / eyelid shut', visual.ting, audio.ting)];
+const rows = [row('final chord / cut to S79 (info)', visual.chord, audio.chord), ...visual.keys.map((F, k) => row(`key click ${k + 1} / key-press drawing`, F, audio.keys[k])), row('ting / eyelid shut', visual.ting, audio.ting)];
 console.log(`audio: ${SONG.replace(ROOT + '/', '')}   frames: ${existsSync(FRAMES) ? FRAMES.replace(ROOT + '/', '') : '(none rendered)'}   ${FPS} fps\n`);
 console.log('event                               onset (s)   onset f   visual f   late (frames)   pixel check');
 for (const r of rows) {
   let px = '';
   if (existsSync(FRAMES)) {
-    const box = r.name.startsWith('final') ? ROI.spin : r.name.startsWith('key') ? ROI.sleeve : ROI.eye;
+    const box = r.name.startsWith('final') ? ROI.cut : r.name.startsWith('key') ? ROI.sleeve : ROI.eye;
     if (r.name.startsWith('ting')) {
       const w0 = whites(roi(r.visualFrame - 1, box)), w1 = whites(roi(r.visualFrame, box));
       px = w0 == null ? 'frames missing' : `eye whites ${w0} -> ${w1} px`;
@@ -107,6 +107,6 @@ for (const r of rows) {
   console.log(`${r.name.padEnd(36)} ${r.onset.toFixed(3).padStart(9)}   ${String(r.onsetFrame).padStart(7)}   ${String(r.visualFrame).padStart(8)}   ${String(r.framesLate).padStart(13)}   ${px}`);
 }
 console.log(`\ncut to black: f${visual.black} (${(visual.black / FPS).toFixed(3)} s), ${((visual.black - visual.ting) / FPS).toFixed(2)} s after the eyelid shuts; audio ends ${EV.audioEnd} s, film ${EV.end} s`);
-const bad = rows.filter(r => Math.abs(r.framesLate) > 1);
+const bad = rows.filter(r => !r.name.includes('(info)') && Math.abs(r.framesLate) > 1);
 console.log(bad.length ? `\nFAIL: ${bad.map(r => r.name).join(', ')} off by more than one frame` : '\nOK: every event within one frame of its sound');
 process.exit(bad.length ? 1 : 0);

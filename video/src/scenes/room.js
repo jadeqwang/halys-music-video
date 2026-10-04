@@ -75,7 +75,10 @@ async function character(f, S, sheet, view) {
 const HER39 = [[245, 92], [412, 92], [428, 250], [532, 318], [545, 400], [478, 470], [478, 545], [96, 545], [100, 388], [172, 300], [238, 252]];
 const NOLINES39 = [WIN39.panes[1], [[0, -5], [42, -5], [42, 290], [0, 290]], SCR39.main, SCR39.side, [[160, 100], [275, 100], [285, 340], [150, 340]]];
 const BG_WIDE = { zone: HER39, K: 18, gain: 1.25, dark: .82, seg: [.45, 110], minArea: 90, noLines: NOLINES39,
-  frames: [{ src: 'P39', pf: 1 }, { src: 'P39', pf: 40 }, { src: 'P39', pf: 97 }, { src: 'P40', pf: 104, tier: 1 }, { src: 'P40', pf: 121, tier: 1 }, { src: 'P40', pf: 53, tier: 1 }, { src: 'P40', pf: 1, tier: 2 }] };
+  frames: [{ src: 'P39', pf: 1 }, { src: 'P39', pf: 40 }, { src: 'P39', pf: 97 }, { src: 'P40', pf: 104, tier: 1 }, { src: 'P40', pf: 121, tier: 1 }, { src: 'P40', pf: 53, tier: 1 }, { src: 'P40', pf: 1, tier: 2 },
+    // v2: P57's poses uncover a little of the desk that P39/P40 never saw (her arm in the settle-back drawings): it fills
+    // only those pixels, so the room elsewhere is unchanged
+    { src: 'P57', pf: 67, tier: 3 }, { src: 'P57', pf: 45, tier: 3 }, { src: 'P57', pf: 13, tier: 3 }] };
 // screens: the ultrawide's left quarter is behind her head (a sidebar), the terminal fills the rest; the vertical
 // monitor stacks the sim's Earth (the S77 hand-off), the ΔT map and the tmux panes
 export const WIDE_SCREENS = {

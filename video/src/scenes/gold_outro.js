@@ -57,8 +57,8 @@ async function battle(f) {
   const T = f.type || (f.type = {}), sx = clamp(sun[0], .05, .95) * f.W, sy = clamp(sun[1], -.2, .4) * f.H;
   T.light = { dir: [.55, -.83], elev: .55, color: '#fff0c8', intensity: 1.12 };
   T.field = { center: [sx, sy], r: 0 };                    // the chop's streamers radiate from the light
-  // the chops ride high, over the far line and the river, so the sand where the blades fall stays clear
-  T.place = { ...(T.place || {}), 'S75.chop': { x: .5, y: .25 }, 'S76.chop': { x: .5, y: .25 } };
+  // the chops ride a little above the centre: clear of the near faces at the top and of the sand where the blades fall
+  T.place = { ...(T.place || {}), 'S75.chop': { x: .5, y: .4 }, 'S76.chop': { x: .5, y: .4 } };
 }
 scene('S75', battle);
 scene('S76', battle);

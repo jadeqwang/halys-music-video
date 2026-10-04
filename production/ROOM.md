@@ -30,9 +30,12 @@ sheet (nano-banana-pro; prompts beside the files in `media/plates/P57/`, `P58/`)
   lean, the way the sheet draws black hair.
 * **The print and the patch are drawn by us but sit on the fabric.** Their positions are measured on every plate frame (`video/src/worlds/ink/
   prep/decals.py`): the circle's true edge (an ellipse, ignoring where hair overlaps it), the cap line and baseline of the RARE EARTH line, the
-  patch's ring. The circle stays the plate's own blue shape; RARE EARTH is set along the measured band (mesh warp) and the patch is mapped onto the
-  measured ellipse, both between the fills and the line art, clipped to her visible jacket and toned by its fold shadows. So the print moves, tilts
-  and bends with her back (it visibly swings with the lean) and the patch rides on the sleeve, turning with the arm.
+  patch's ring, and over the print the jacket's fold field (fold depth from the plate's own shading, carried along each fold's axis, because the
+  plate draws the print flat while its folds run up to it). The circle and RARE EARTH are one printed piece: wrapped round her back as a cylinder
+  about the spine (they compress toward the side that turns away, and the baseline arcs with the convex back seen from above), kinked where a
+  fold crosses them, and toned with their own shadow colour under the folds and the hair's cast shadow. The patch is mapped onto the measured
+  ellipse. All are drawn between the fills and the line art, clipped to her visible jacket, crisp; so the print bends in any single frame and
+  swings with the lean, and the patch rides on the sleeve, turning with the arm.
 * **S80–S81 = P58** (take 2, from keyframe K80b: P41's close-up with the director's reference expression). The smirk is there from the cut back
   (closed lips, her left corner up, eyes narrowed and on us, head tilted). The face is one held cel; her right shoulder dips on each key click.
   Tracing thins the expression's two carrying lines, so the renderer draws them as an animator would on the key drawing: the smirk line with the

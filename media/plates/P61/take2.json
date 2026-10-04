@@ -1,0 +1,60 @@
+{
+ "plate": "P61",
+ "take": 2,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 345.2,
+ "est_cost_usd": 1.156,
+ "duration_s": 5.041667,
+ "audio_refs": [
+  {
+   "src": "Halys.mp3",
+   "t0": 58.72,
+   "dur": 5.0,
+   "file": "media/plates/P61/audio_song_0058.72_5.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 5,
+  "takes": 2,
+  "first_frame": "media/plates/P61/ff_P48t1_f084.jpg",
+  "audio": {
+   "t0": 58.72,
+   "src": "song"
+  },
+  "t_song": [
+   58.72,
+   63.72
+  ],
+  "shots": "S21",
+  "sync": [
+   [
+    59.6,
+    "timpani: knocked down (plate 0.88)"
+   ],
+   [
+    62.2,
+    "cut out: up on one knee (plate 3.48)"
+   ]
+  ],
+  "prompt": "The same shot continues from the first frame: side-on at waist height in the knee-deep red-brown shallows, the Lydian on the left (crested bronze helmet, crimson tunic, bronze scale corselet, round crimson lion shield, spear) and the Mede on the right (red felt cap, black beard, ochre tunic, iron scale corselet, round wicker shield, spear); behind them both battle lines keep fighting in the water across the whole frame. At 0.9 s, on the drum hit of the reference audio, the Mede charges and slams his wicker shield into the Lydian, who falls backward into the water with a big splash; at 2.0 s the Mede drives his spear down at him; the Lydian rolls sideways, clear, and the spear stabs into the water where he was, throwing up spray; by 3.5 s the Lydian is up on one knee, shield raised, water streaming off him, facing the Mede again. Clear, readable action with sharp stops, no blood. Camera static. Hard, low golden sun from frame right, warm rim light, long shadows; clear air, no fog, no haze. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "notes": "S21 v2: P13's knock-down, in P48's shot, the battle behind them."
+ },
+ "request": {
+  "prompt": "The same shot continues from the first frame: side-on at waist height in the knee-deep red-brown shallows, the Lydian on the left (crested bronze helmet, crimson tunic, bronze scale corselet, round crimson lion shield, spear) and the Mede on the right (red felt cap, black beard, ochre tunic, iron scale corselet, round wicker shield, spear); behind them both battle lines keep fighting in the water across the whole frame. At 0.9 s, on the drum hit of the reference audio, the Mede charges and slams his wicker shield into the Lydian, who falls backward into the water with a big splash; at 2.0 s the Mede drives his spear down at him; the Lydian rolls sideways, clear, and the spear stabs into the water where he was, throwing up spray; by 3.5 s the Lydian is up on one knee, shield raised, water streaming off him, facing the Mede again. Clear, readable action with sharp stops, no blood. Camera static. Hard, low golden sun from frame right, warm rim light, long shadows; clear air, no fog, no haze. Photoreal live-action cinema, crisp focus, high shutter speed with no motion blur. No stirrups, no flags, no modern objects. No text, no watermark.",
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "adaptive",
+  "generate_audio": false,
+  "use_virtual_avatar": false,
+  "image": "data:image/jpeg;base64...(181 KB)",
+  "reference_audios": [
+   "data:audio/mpeg;base64...(161 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-03T23:58:39"
+}

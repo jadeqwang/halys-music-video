@@ -504,16 +504,22 @@ async function duelLook(f, src, pcam, o = {}) {
 // in from frame right; we paint it where v1 had it, high in the battle's dust at the top right (the haze over the melee
 // becomes sky). Until P48 is analysed: v1 (P12, the duel alone).
 const S17_SUN = { '16:9': [.86, .13], portrait: [.8, .1] };
+// the look of the duel in the middle of the battle (P48 and its continuations P60 / P61): side light from the low sun at
+// the top right, the dust over the melee painted as sky, a warm pool on the exchange
+function battleDuelLook(f, src, pool, o = {}) {
+  const sun = S17_SUN[f.W / f.H > 1.2 ? '16:9' : 'portrait'];
+  return plateLook(src, { lightDir: [.8, -.55], lightPoint: sun, keep: .5, keepDim: .82, fromLight: .75, bg: .3, rim: .85, poolMatte: .5, body: .45,
+    pool, extra: { glint: 1.1, groundFlow: { y0: o.groundY ?? .6, k: .8 },
+      sky: SKY(f.t, { maxDepth: .03, soft: .03, below: .32, horizonY: .27, drama: .45, glow: 1.05, glowR: .26 }),
+      sun: SUN(f.t, { x: sun[0], y: sun[1], r: .022 }), ...(o.extra || {}) } });
+}
 scene('S17', async f => {
   if (hasPlate('P48')) {
     // (portrait holds the Lydian and his lion shield turning the spear; the Mede's lunge reaches in from the right)
     const wide = f.W / f.H > 1.2, cx = wide ? .5 : .33, pcam = k => ({ cx, cy: .5, zoom: 1.02 + .04 * k });
-    const src = await rp(f, 'P48', null, pcam), sun = S17_SUN[wide ? '16:9' : 'portrait'];
-    await bronze(f, src, plateLook(src, { lightDir: [.8, -.55], lightPoint: sun, keep: .5, keepDim: .82, fromLight: .75, bg: .3, rim: .85, poolMatte: .5, body: .45,
-      pool: [{ x: wide ? .38 : .52, y: .42, rx: wide ? .2 : .4, ry: .3, feather: .75, k: .75, fig: true }],     // the exchange: shield meets spear
-      extra: { glint: 1.1, groundFlow: { y0: .6, k: .8 },
-        sky: SKY(f.t, { maxDepth: .03, soft: .03, below: .32, horizonY: .27, drama: .45, glow: 1.05, glowR: .26 }),
-        sun: SUN(f.t, { x: sun[0], y: sun[1], r: .022 }) } }));
+    const src = await rp(f, 'P48', null, pcam);
+    // the exchange: shield meets spear
+    await bronze(f, src, battleDuelLook(f, src, [{ x: wide ? .38 : .52, y: .42, rx: wide ? .2 : .4, ry: .3, feather: .75, k: .75, fig: true }]));
     return;
   }
   const pcam = k => ({ cx: .5, cy: .5, zoom: 1.02 + .04 * k });
