@@ -14,35 +14,45 @@
    thin fresh cut: Lydians and Medes "make sworn compacts as do the Greeks; and besides, when they cut the skin of their arms, they lick each other's
    blood" (Herodotus 1.74, tr. Godley; no licking, no gore). The mediators Syennesis and Labynetus watch from the edges. One light pool falls on the
    clasp, the shot holds through the frozen chord, and a small plaque reads `THE OATH · HERODOTUS 1.74`. Her terminal never draws over this shot.
-7. **Cut back to her grin, then the wink on the ting** (S80–S81). At 273.40 we are back in the room, in an anime close-up: the closed-lip,
-   one-corner-up, mischievous smirk. She types blind (keys 273.45, 274.05, enter 274.95) and the commit prints behind her. Then the wink lands
-   on the ting at 276.95: her eyelid crosses her eye like the Moon crossing the Sun. Hold, then black.
+7. **Cut back to her grin, then the wink on the ting** (S80–S81). At 273.40 we are back in the room, in a close-up of her own anime footage
+   (composited, not redrawn): a warm, closed-lip half-smile with relaxed brows and bright eyes, the knowing look of the reference photo. She types
+   blind, her shoulder dropping on each key (273.455, 274.025, enter 274.927), and the commit prints behind her. Then her own anime wink shuts on the
+   ting at 276.95, with a small sparkle. Hold, then black.
 8. End card: **HALYS** / Jade Wang / NEXT TOTALITY · 2027-08-02 · LUXOR · 6m23s.
 
-**She is anime; the room stays abstract** (REVISION_V2 decisions 6 and 8). Her two plates start from anime keyframes made from the character
-sheet (nano-banana-pro; prompts beside the files in `media/plates/P57/`, `P58/`), then Seedance animates them with the song as the audio reference:
+**She stays in her own anime; the room stays abstract** (REVISION_V2 decisions 6 and 8, and the director's v3 note: keep her in her anime
+style so she is different from her surroundings, as the rewind video does, which keeps the wink cute rather than sinister).
 
+**Unlike the rest of the film, these three shots (S78, S80, S81) show AI-generated anime footage of her.** Everywhere else a plate is traced
+reference and never shown; here the Seedance plates P57 and P59 themselves are on screen, matted and composited directly over the painted room.
+Each plate starts from an anime keyframe made from the character sheet with nano-banana-pro (prompts and references beside the files in
+`media/plates/P57/`, `P59/`), and Seedance animates it with the song as the audio reference. The rewind precedent is followed exactly: the anime
+footage composited directly, a light grade, an ink outline and a scene rim light. The v2 cel re-segmentation of her (and its drawn smirk, eyes
+and eyelid) is gone: nothing on her is redrawn except the patch's lettering in S78.
+
+* **How she is composited** (`video/src/worlds/ink/prep/direct.py`, `video/src/worlds/ink/direct.js`). Every odd frame of the take, at its native
+  1280x720: her matte (the INK prep matte, snapped to the full-size frame and cut crisp; in S78 the plate's chair is cut out, so the room's chair
+  stands in front of her; in the close-up the monitor glow between her outer strands is removed), a light grade (the bottom of the range to the
+  room's ink, blue casts trimmed, colours otherwise the plate's own), then in the renderer a clean ink line on the matte edge, the room's light
+  across her as a light multiply wash, and a hard anime rim on the edges that face each light: pearl from the monitors, orange from the lamp.
+  Timing is the room's: on twos, real holds, each event on its exact master frame (`video/src/worlds/ink/sheets.js`).
 * **S78 = P57** (take 2, from keyframe K78d: P39's frame with her redrawn to the sheet's back view). Long straight black hair ending at the top of
-  the light-blue circle; RARE EARTH under it; the round **1420 MHz patch on her LEFT sleeve**; orange stripes on both upper sleeves. Only she comes
-  from P57 (registered into P39's frame); the room is P39's painted background as before. Limited animation on the ticks: the body is held, the
-  typing hand is redrawn on each tick; on the tick before `dt.shift` she leans toward the ΔT map and the lean lands on `dt.shift` (268.08), she
-  settles back before the commit, the commit is typed in a burst on twos; cut on the chord. Her hair carries light strand lines and a sheen in the
-  lean, the way the sheet draws black hair.
-* **The print and the patch are drawn by us but sit on the fabric.** Their positions are measured on every plate frame (`video/src/worlds/ink/
-  prep/decals.py`): the circle's true edge (an ellipse, ignoring where hair overlaps it), the cap line and baseline of the RARE EARTH line, the
-  patch's ring, and over the print the jacket's fold field (fold depth from the plate's own shading, carried along each fold's axis, because the
-  plate draws the print flat while its folds run up to it). The circle and RARE EARTH are one printed piece: wrapped round her back as a cylinder
-  about the spine (they compress toward the side that turns away, and the baseline arcs with the convex back seen from above), kinked where a
-  fold crosses them, and toned with their own shadow colour under the folds and the hair's cast shadow. The patch is mapped onto the measured
-  ellipse. All are drawn between the fills and the line art, clipped to her visible jacket, crisp; so the print bends in any single frame and
-  swings with the lean, and the patch rides on the sleeve, turning with the arm.
-* **S80–S81 = P58** (take 2, from keyframe K80b: P41's close-up with the director's reference expression). The smirk is there from the cut back
-  (closed lips, her left corner up, eyes narrowed and on us, head tilted). The face is one held cel; her right shoulder dips on each key click.
-  Tracing thins the expression's two carrying lines, so the renderer draws them as an animator would on the key drawing: the smirk line with the
-  curled corner and the cheek crease, and heavy-lidded eyes with catchlights. The reference photo was shown only to the image model, as an
-  expression reference; it was never sent to Seedance.
-* **The wink is ours:** her left eye (frame right, the smirk's side); the eyelid crosses the iris with the Moon's curved limb and shuts exactly
-  on the ting (276.95), the diamond-ring flare and a sparkle, the other eye narrows a touch; black at 277.55.
+  the light-blue circle; RARE EARTH under it; the round **1420 MHz patch on her LEFT sleeve**; orange stripes on both upper sleeves. Her footage is
+  registered into P39's frame; the room is P39's painted background as before. On the first ticks she types (a new drawing on each tick), drifts
+  toward the vertical monitor, leans in on the tick before `dt.shift` and lands the lean on it (268.08), types on the next ticks leaned, settles
+  back from 268.52 and types the commit in a burst on twos; the last drawing holds to the cut on the chord. The circle, RARE EARTH and the folds
+  are the footage's own, so they bend, turn and swing with the jacket in every frame. The patch's lettering is not: Seedance garbles 1420 MHz into
+  glyphs that change every frame, so the patch is redrawn crisp on the footage, mapped onto its ring as measured on that frame (it turns with the
+  arm), in the disc and ink colours sampled from that frame, clipped to her (`decals.js`).
+* **S80–S81 = P59** (take 2, from keyframe K59b). K59b is the character sheet's own front face (its upscaled head), tilted slightly and pasted onto
+  P41's close-up (the dark room, the monitor glow, the lamp, the jacket and headphones), then cleaned up by nano-banana-pro with minimal edits:
+  relaxed, slightly raised brows, bright eyes on the lens, a soft closed-lip half-smile with one corner up and a faint dimple. The v2 keyframes
+  (K80a/K80b, from P41's own face) read sinister, with furrowed brows and narrowed eyes, and are superseded with their plate P58. The half-smile is
+  there from the cut back at 273.40. Her hand is up on the keyboard behind her and she types blind: her shoulder comes down on each key click
+  (the plate's presses, frames 37 / 61 / 73, land on 273.455 / 274.025 / 274.927), then she lifts her hand off while the commit prints behind her.
+  **The wink is hers** (the plate's own closed-eye arc, her left eye, frame right): it closes on two drawings and is shut exactly on the ting
+  (276.947, frame 16617), with a small four-point sparkle beside it; it stays shut to black at 277.55. The director's reference photo was used only
+  as an expression reference for the v2 keyframes; K59b was made from words and the sheet alone, and no photo has ever been sent to Seedance.
 
 ## Set
 

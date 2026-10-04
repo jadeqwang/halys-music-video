@@ -7,5 +7,10 @@
   "/tmp/claude-0/-home-user-halys-music-video/b8664d69-2871-5fba-a7df-659b9d78ccf5/scratchpad/ref/expr_face.jpg"
  ],
  "out": "media/plates/P59/K59a.jpg",
- "est_cost_usd": null
+ "est_cost_usd": null,
+ "refs_saved": {
+  "K59_guide.png": "media/plates/P59/K59_guide.jpg (paste-up: the sheet front head, tilted 7 deg, over P41 f22; built by scaling the head to the eye distance of P41 f22)",
+  "sheet_head_front.jpg": "the character sheet front head, upscaled (rewind-music-video assets/character/anime/CANON_HEAD_front.jpg, from the same Pasted image.png sheet)",
+  "expr_face.jpg": "face crop of the director's reference photo refs/jade/IMG_20170223_162015.jpg (expression only; never sent to Seedance)"
+ }
 }

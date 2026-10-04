@@ -52,8 +52,14 @@ is `media/chars/thales_v1.jpg`), and P27/P28 were regenerated with it (their pre
   man was ignored in 3 of 5 P54 takes (everyone dropped together, or the front pair turned to pose for the camera); it came only when the
   prompt described two separate drops ("FIRST, at 1.3 s … SECOND, at 2.0 s") and named the late man by costume and place (P54 v3, 2 of 2).
   Swords dropped point-first onto sand stick upright; on a wet bank they fall flat.
-* **A first frame and an audio reference can be combined** (`first_frame` + `audio` in a spec; v2 P57/P58, 4/4 takes accepted): the take opens
-  on the keyframe and keeps its drawing (hair length, the print, the patch side, the expression) for the whole clip.
+* **A first frame and an audio reference can be combined** (`first_frame` + `audio` in a spec; v2/v3 P57/P58/P59, 6/6 takes accepted): the take
+  opens on the keyframe and keeps its drawing (hair length, the print, the patch side, the expression) for the whole clip. With the sound-design
+  slice as the reference, P59 put its wink on the chime it was asked for: the eye shut 36 ms after the ting in take 2, 120 ms in take 1.
+* **Expressions: start from the face you want, not the face you have** (v3 ROOM). Editing P41's stern close-up toward a "mischievous smirk"
+  (K80a/K80b) kept its heavy, inward-angled brows and narrowed the eyes: it read sinister. Pasting the character sheet's own soft face onto the
+  frame and asking for minimal edits (relaxed brows, bright eyes, a closed-lip half-smile) kept it cute (K59b), and Seedance held it for 5 s.
+* **Seedance garbles small lettering and changes it every frame** (P57's 1420 MHz patch), even when the big lettering holds (RARE EARTH): any
+  plate shown on screen needs its small text redrawn.
 * **Image edits for keyframes (Nano Banana Pro):** a descriptive "redraw her" prompt on a plate frame changes almost nothing; an explicit numbered
   edit list works for big changes (hair length) but can ignore small ones (moving a patch to the other arm); a crude paint-over of the change on the
   frame, then "clean this up", carries it reliably (K78b → K78d).
@@ -105,9 +111,9 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 | S63 / S67 / S68 / S70 | P34 (2) / P35 (3) / P36 (1) / P37 (1) | 1:1 (P36 faces up 237.66 → 2.10) |
 | S74 | P54 (5) | v2: the dive's last 0.7 s trace S75's first drawing in lines (P54 at 0.20 through S75's camera, per aspect: drop2.js reads gold_outro.js `s75Start()`), then condense into its paint. P38 is no longer used |
 | S75–S76 (+ S77's first 0.6 s in lines) | P54 (5) | v2: mid-fight from the hit (259.36 → 0.20); the hands open 260.45 → 1.58; the swords hit the sand 260.72 → 1.90; the late Lydian lets go 260.83 → 3.54, his sword lands 261.04 → 3.715; still to 262.72 → 5.0 (S77 traces this frame) |
-| S78 | P57 (2) + P39 (1) | v2: she is P57 (registered into P39's frame), the room is P39's painted background. Typing poses on the ticks over held bodies f13 / f49 / f69; the lean f33→f45 lands on dt.shift 268.081; back f55→f67; the commit burst f71→f92 |
+| S78 | P57 (2) + P39 (1) | v3: P57 shown directly (matted, composited over P39's painted room). A typing drawing per tick from f65–f75 (the same seated pose as f1–f19), the drift f19→f31, the lean f33→f45 lands on dt.shift 268.081, leaned f47–f51, back f53→f63 from the 268.524 tick, settled f65–f69, the commit burst f77→f97 (odd frames only: the plate moves on twos) |
 | S79 | P55 (1) | v2, the kings' oath (P40 is unused): the clasp's shake 270.04 → 0.42, settled by 270.30 → 0.68; the hold runs at 0.61x to 273.40 → 2.58 |
-| S80–S81 | P58 (2) | v2: the face held on f30 (the smirk throughout); the shoulder redrawn on the clicks: lifts f12–f18 / f39–f45 / f69–f78, presses f24 / f48 / f84 on 273.455 / 274.025 / 274.927; the wink is drawn (eye.js), shut on 276.947 |
+| S80–S81 | P59 (2) | v3: P59 shown directly. Hand up f29 at the cut; the presses f37 / f61 / f73 land on 273.455 / 274.025 / 274.927 (the lifts on twos before each); hand off f75→f83; her eye closing f85, shut f87 on the ting 276.947 (frame 16617); the wink's little nod f87→f101 to black 277.55 |
 
 ## Weak spots to know about
 
@@ -217,7 +223,7 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 | P38 | S74, S75, S76 | take4 | pass 4 | 257.68 | 259.35→2.00 (+0.33); 260.62→2.35 (-0.59); 261.05→3.60 (+0.23) | Shrug barely visible; the late gap is 1.25 s in the plate vs 0.43 s in the music. |
 | P39 | S78 (the painted room since v2; she is P57) | take1 | pass 4 | 266.12 | 1:1 from t0 | Blue back circle faint. |
 | P40 | unused since v2 (S79 is P55) | take2 | pass 5 | 268.3 | 270.04→2.10 (+0.36) | The v1 chair spin; no shot reads it. |
-| P41 | unused since v2 (S80–S81 are P58) | take4 | pass 4 | 273.4 | 276.95→4.45 (+0.90) | The v1 deadpan close-up; no shot reads it. |
+| P41 | unused since v2 (S80–S81 are P59; its frame 22 is the base of the keyframe K59b) | take4 | pass 4 | 273.4 | 276.95→4.45 (+0.90) | The v1 deadpan close-up; no shot reads it. |
 | P42 | S35, S36 | take2 | pass 4 | 110.58 | 110.98→1.00 (+0.60); 111.44→1.60 (+0.74); 111.86→2.90 (+1.61); 112.31→4.50 (+2.77) | Reactions spread over 1.0-4.5 s rather than on consecutive kicks. |
 | P43 | S35, S36 | take2 | pass 4 | 110.58 | 111.89→1.10 (-0.21); 111.44→1.80 (+0.94); 111.86→3.50 (+2.21); 112.31→4.30 (+2.58) | Amulet small, arm grab subtle; reactions spread over 1.1-4.3 s. |
 | P44 | S35, S36 | take1 | pass 4 | 110.58 | 111.45→0.92 (+0.04) | The Mede is already dismounted at the start. |
@@ -235,8 +241,9 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 | P53 | S62 (v2) | take2 | pass 4 | 211.44 | 1:1 from 0.10 s in (211.44→0.10) | The brush engine paints cream scraps onto the thin dark far bank under the walking men, so S62 forces the second brush layer everywhere. |
 | P54 | S75, S76 (v2) | take5 | pass 4 | 259.355 | 259.36→0.20 (+0.20); 260.45→1.58 (+0.49); 260.72→1.90 (+0.54); 260.83→3.54 (+2.07); 261.04→3.715 (+2.03); 262.72→5.0 (+1.64) | The late drop comes 1.65 s after the others in the plate, against 0.43 s in the music: the held sword is squeezed into one drawing. The swords stick upright in the sand. |
 | P55 | S79 (v2) | take1 | pass 4 | 269.54 | 270.04→0.42 (-0.08); 270.30→0.68; 273.40→2.58 (the hold slowed to 0.61x) | Profile faces: MediaPipe finds only Syennesis, so the faces, clasp and cuts are tracked by hand in treaty.js; Cyaxares' akinakes is at his left hip. |
-| P57 | S78 (v2) | take2 | pass 4 | 266.12 | poses by hand: lean stop 1.79 s → 268.081 (dt.shift); typing poses per tick (x-sheet) | Starts on keyframe K78d (first frame). The lamp is unlit in the keyframe (only she is used). The plate's print is flat: the renderer wraps it round her back and kinks and shades it with the plate's measured folds. |
-| P58 | S80, S81 (v2) | take2 | pass 4 | 273.4 | presses f24 / f48 / f84 → 273.455 / 274.025 / 274.927 | Starts on keyframe K80b. Tracing thins the smirk and the narrowed lids: the renderer draws the mouth line, crease, heavy lids and catchlights (expr.js). |
+| P57 | S78 (v2; v3 on screen) | take2 | pass 4 | 266.12 | poses by hand: lean stop 1.79 s → 268.081 (dt.shift); typing drawings per tick (x-sheet) | Starts on keyframe K78d (first frame). Shown directly since v3 (matted; the plate's chair cut out). Its patch lettering is garbled and changes every frame: the renderer redraws the patch on the footage. |
+| P58 | unused since v3 (S80, S81 are P59) | take2 | pass 4 | 273.4 | presses f24 / f48 / f84 → 273.455 / 274.025 / 274.927 | Starts on keyframe K80b. The face reads sinister (heavy inward brows, narrowed eyes); superseded by P59. |
+| P59 | S80, S81 (v3, on screen) | take2 | pass 4 | 273.4 | presses f37 / f61 / f73 → 273.455 / 274.025 / 274.927; the eye shut f87 → 276.947 (+0.036 at 1:1) | Starts on keyframe K59b (the sheet's own face). Shown directly: matted (the monitor glow between her outer strands and the chair rim behind her shoulder removed), lightly graded, ink outline and rim in the renderer. |
 
 ## Per plate
 
@@ -846,10 +853,11 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 * **Delivers:** she types with both hands, leans toward the vertical monitor (1.3–1.8 s, stop at 1.79) and settles back (2.2–2.6 s), then types on; the circle and the lettering shift, tilt and foreshorten with the jacket as she leans; the patch stays on the left sleeve and turns with the arm. Camera static (median flow ≤ 0.01 px/frame).
 * **Sync keys:** the lean's stop (plate 1.79 s) is placed on dt.shift 268.081 by the x-sheet; the typing poses are chosen per tick (no 1:1 playback).
 * **Checks:** Hair, jacket, stripes, circle, lettering and patch side match the sheet's back view · Same room layout as P39 (registration) · The plate's own lettering and patch text are only measured, never traced.
+* **v3 (on screen):** the footage itself is composited (prepared RGBA frames at 1280x720, odd frames: `video/src/worlds/ink/direct/P57_take2/`, `prep/direct.py`; the plate's chair, found as the pixels that keep their median brightness through the take, is cut out of her matte so the room's chair stands in front of her). The circle, RARE EARTH and the folds are the plate's own; only the patch is redrawn on it (its lettering is garbled and changes every frame), on the ring measured per frame, in colours sampled from that frame.
 * **Review sheet:** `media/plates/P57/take2.review.jpg`; 8-frame contact `media/plates/P57/take2.sheet.jpg`.
 * Take 1: pass 4: same action with a smaller lean (stop 2.46 s); the stronger lean of take 2 shows the print travelling with the cloth better.
 
-### P58 · The grin: the anime close-up (v2, ROOM; REVISION_V2 decision 8)
+### P58 · The grin: the anime close-up (v2, ROOM; REVISION_V2 decision 8; superseded by P59 in v3)
 
 * **Shots:** S80, S81 (v2; replaces P41). **Window:** song [273.4, 278.4], audio reference = the sound-design master cut at t0 = 273.4 s (keys 0.05 / 0.65 / 1.55 s, the ting 3.55 s), 5 s, 2 takes reviewed. **Spend:** $2.31 for the two takes, plus $0.30 for two keyframe stills (K80a–b) = **$2.61**.
 * **Keyframe (first frame):** `media/plates/P58/K80b_ff.jpg` (16:9 crop of `K80b.jpg`). Nano Banana Pro edit of P41 frame 22 with the sheet's three-quarter face and, as the expression reference only, a face crop of the director's reference photo (`refs/jade/IMG_20170223_162015.jpg`; the hat and the photo were never sent to Seedance). K80a smiled with teeth and a frown (smug); **K80b**: lips closed, her left corner curled up with a cheek crease, eyes narrowed and engaged, head tilted a little.
@@ -859,6 +867,18 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 * **Checks:** Face, hair, headphones and jacket match the sheet and P41's look · The expression is the reference's, not a deadpan · Clean eyes for the drawn wink.
 * **Review sheet:** `media/plates/P58/take2.review.jpg`; 8-frame contact `media/plates/P58/take2.sheet.jpg`.
 * Take 1: pass 4: the same smirk with a smoother shoulder drift (no clear presses).
+* **Superseded (v3):** in motion the face reads sinister (heavy, inward-angled brows, narrowed eyes), so S80–S81 use P59.
+
+### P59 · The grin and the wink: the anime close-up from the sheet's own face (v3, ROOM; REVISION_V2 decision 8, on screen)
+
+* **Shots:** S80, S81 (v3; replaces P58). **Window:** song [273.4, 278.4], audio reference = the sound-design master cut at t0 = 273.4 s (keys 0.055 / 0.625 / 1.527 s, the ting 3.547 s, black 4.15 s), 5 s, 2 takes reviewed. **Spend:** $2.31 for the two takes, plus $0.33 for two keyframe stills (K59a–b) = **$2.65**.
+* **Keyframe (first frame):** `media/plates/P59/K59b_ff.jpg` (16:9 resize of `K59b.jpg`; prompts and refs in the `.json` beside each). A paste-up guide (the character sheet's front head, upscaled and tilted ~7°, pasted onto P41 frame 22: the dark room, the monitor glow, the lamp, the jacket, the headphones) cleaned up by Nano Banana Pro with minimal edits to the face: relaxed, slightly raised brows, bright eyes with catchlights on the lens, a closed-lip half-smile with one corner up and a faint dimple. K59a (the same, with the director's photo as an expression reference) smiled more broadly and symmetrically; **K59b** (words and the sheet only, no photo) has the asymmetric, knowing half-smile. No photo has been sent to Seedance.
+* **Chosen:** take 2 → `media/plates/P59/take2.mp4`; analysis in `video/plates/P59/` (frames 121, fields 121, mattes 61, depth 61, gain 1.0), INK isnet-anime mattes at full size (`video/src/worlds/ink/mattes/P59_take2/`, odd frames) and the prepared RGBA frames shown on screen (`video/src/worlds/ink/direct/P59_take2/`; the monitor's glow between her outer strands and the chair back's rim behind her right shoulder are removed from the matte).
+* **Delivers:** the half-smile and bright eyes from the first frame to the last, no frown; her right shoulder (frame left) rises to the keyboard behind her by f19 and comes down three times (median vertical flow: presses landing f37, f61, f73), rises again after the third; her left eye (frame right) closes into a curved anime wink over f85–f87, stays shut to f113 with a little nod, the other eye open and bright.
+* **Sync keys:** presses f37 / f61 / f73 → the key clicks 273.455 / 274.025 / 274.927 (x-sheet, on twos with the lifts before each); the eye shut f87 → the ting 276.947 (frame 16617; at 1:1 it would land 36 ms late); black at 277.55 with the eye still shut.
+* **Checks:** Face, hair, headphones and jacket match the sheet · Cute and knowing, not sinister · The wink is the plate's own (no drawn eyelid).
+* **Review sheet:** 8-frame contact `media/plates/P59/take2.sheet.jpg`.
+* Take 1: pass 4: the same face and wink (shut f89, 120 ms after the ting at 1:1) with four small, even shoulder taps; take 2's bigger presses read better as typing and its wink closes faster.
 
 ### P48 · The first exchange, in the middle of the battle (v2, ACT1; REVISION_V2 decision 2)
 

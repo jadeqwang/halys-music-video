@@ -1257,8 +1257,8 @@ PLATES.update({
 # the .json beside it): P39 f40 / P41 f22 redrawn so she matches the character sheet. K78d: her hair ends at the top of the
 # circle, the light-blue circle and RARE EARTH are fully visible, the 1420 MHz patch is on her LEFT sleeve (K78b + a paint-over
 # guide -> K78d). K80b: the closed-lip, one-corner-up smirk of the director's reference photo; the photo was shown to the image
-# model only, as an expression reference, and is never sent to Seedance. The renderer draws the wink itself (eye.js), so P58
-# keeps both eyes open.
+# model only, as an expression reference, and is never sent to Seedance. In v2 the renderer drew the wink itself, so P58 keeps
+# both eyes open. v3 (director): she is shown as her own anime footage (P57 and P59 composited directly) and P59 winks itself.
 ANIME_FF = ("Anime style with clean cel shading and crisp tapered line art exactly like the first frame: flat cel colours, one "
             "shadow tone, painted flat backgrounds, no depth-of-field blur, no yellow cast.")
 PLATES.update({

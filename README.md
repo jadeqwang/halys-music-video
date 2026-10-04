@@ -1,7 +1,7 @@
 # HALYS — music video
 
 **Song:** *Halys* by Jade Wang
-**Video:** every frame drawn by JavaScript, at 4:41 and 1920×1080, 60 fps
+**Video:** drawn by JavaScript (her room shots composite her own anime footage), 4:41, 1920×1080, 60 fps
 
 * ▶ **[`release/Halys_1080p60_hevc.mp4`](release/Halys_1080p60_hevc.mp4)** — 1920×1080, 60 fps, HEVC (two-pass, sized under GitHub's 100 MB limit)
 * [`release/Halys_720p60_h264.mp4`](release/Halys_720p60_h264.mp4) — 1280×720, 60 fps, H.264, for players and sites that need H.264
@@ -38,8 +38,9 @@ What happens:
 - The sun's growing bite is the countdown through Act I, and totality lands exactly on the first kick of Drop 1.
 - Drop 2 runs every time humanity looked up at the same ring: the Antikythera mechanism, Halley's 1715 map, Eddington in 1919,
   Concorde in 1973, the 2024 crowds, Artemis II, Luxor 2027 and a Phobos eclipse on Mars. Then Earthset, the first blue in the film.
-- In the room, she spins to camera on the final chord, holds a deadpan stare, types `git commit -am "fix(halys): schedule eclipse to end war (#585)"`
-  without looking, and winks. Her eyelid crosses her eye like the Moon crossing the Sun.
+- In the room she drags the path of totality onto the Halys. On the final chord the film cuts back to the river: the two kings swear peace the way
+  Herodotus says Lydians and Medes did, hands clasped, forearms cut. Then the room again: she grins, types
+  `git commit -am "fix(halys): schedule eclipse to end war (#585)"` without looking, and winks.
 
 Facts on screen are checked in [`production/FACTCHECK.md`](production/FACTCHECK.md). The eclipse geometry (sunset totality, Sun 8.6° above the WNW horizon,
 Jupiter beside it, Saros 57) is computed in [`production/RESEARCH.md`](production/RESEARCH.md). The terminal admits the one liberty: under standard ΔT the Halys
@@ -72,19 +73,22 @@ research ──► character, set and style boards (image models) ──► refe
    [`video/data/timing.json`](video/data/timing.json). Every cut and every word on screen is keyed to it.
 2. **Boards.** Historical character turnarounds, set sheets and style frames were generated with image models (Nano Banana Pro, GPT Image 2, Seedream)
    from the research briefs, with costume accuracy reviewed against Herodotus, the Persepolis reliefs and museum references.
-3. **Reference plates.** 49 short clips generated with **Seedance 2.5** on Cloudflare, each conditioned on the boards and on the matching slice of the song.
-   **They are never shown.** The renderer reads them only as data: optical flow, structure, edges, depth, subject mattes and timing.
+3. **Reference plates.** About 60 short clips generated with **Seedance 2.5** on Cloudflare, each conditioned on the boards and on the matching slice of the song.
+   **They are never shown, with one exception.** The renderer reads them only as data: optical flow, structure, edges, depth, subject mattes and timing.
+   The exception is Jade in the room (S78, S80–S81). Her anime footage is composited directly, with a light grade, an ink outline and a rim light, so
+   she stands apart from the abstract room. That is the medium the director chose for her.
 4. **The drawing.** Three engines draw every frame from that data as a pure function of song time (`renderAt(t)`), in headless Chromium:
    * **brush** (`video/src/worlds/brush/`): coarse-to-fine painterly strokes along the flow field, designed light pools, impasto, canvas, varnish;
      drawn at 12 fps so the paint boils without strobing. BRONZE, MARBLE and GOLD share it.
    * **line** (`video/src/worlds/line/`): flow-advected field lines, a corona modelled on totality photographs, particles, 3D orbits from depth; 60 fps.
-   * **ink** (`video/src/worlds/ink/`): flat cel animation on twos for the room, with the eyelid drawn by hand.
+   * **ink** (`video/src/worlds/ink/`): the room as flat abstract shapes on twos, with her anime footage composited over it and the 1420 MHz patch redrawn on her sleeve.
    * **type** (`video/src/type/`): gilded carved capitals lit by each scene, chopped words filled with corona streamers, inscriptions, the terminal.
 5. **Sound.** The song is untouched. A light layer of wind, a distant battle, birds that stop on "quiet", a roar, a blade, keys and one sparkle
    (ElevenLabs via Cloudflare plus procedural synthesis) is mixed 15–35 dB under it and loudness-matched (−15.4 LUFS).
 
-The honest provenance line: **drawn in JavaScript over AI-generated motion reference (Seedance 2.5); boards made with image models; sound-design layer partly
-AI-generated.** Generation spend is logged call by call in `media/genlog.jsonl` (≈ $127 total, $112 of it on Seedance plates).
+The honest provenance line: **drawn in JavaScript over AI-generated motion reference (Seedance 2.5); Jade's room shots composite AI-generated anime footage
+of her; boards made with image models; sound-design layer partly AI-generated.** Generation spend is logged call by call in `media/genlog.jsonl`
+(≈ $167 total, $150 of it on Seedance plates).
 
 ## Render it
 
