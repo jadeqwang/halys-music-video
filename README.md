@@ -17,6 +17,10 @@ In the sixth year of the war between Lydia and Media, a total solar eclipse arri
 made peace, made the Halys their border and sealed it with a marriage. Thales of Miletus is said to have predicted it.
 The film follows that legend and then breaks reality on the drop.
 
+**The history behind it:** [What Herodotus tells us, and how the ancients predicted eclipses](production/HISTORY.md). It covers the one paragraph
+the film is built on, what nobody knows (including how, or whether, Thales really foretold it), how eclipse prediction went from Babylonian
+pattern matching to geometry, and where the film bends the record.
+
 ## The film
 
 **The eclipse is a real eclipse, and the only eyelid is hers.** The four contact points of a solar eclipse are the act breaks, so every genre switch
@@ -43,6 +47,7 @@ itself only reached 96–99 %, hence `dt.shift(+300)`.
 
 | Production documents | |
 |---|---|
+| **History: Herodotus, Thales and ancient eclipse prediction** | [`production/HISTORY.md`](production/HISTORY.md) |
 | Treatment | [`production/TREATMENT.md`](production/TREATMENT.md) |
 | Style bible | [`production/STYLE_BIBLE.md`](production/STYLE_BIBLE.md) |
 | Shot list, locked to the beat grid | [`production/SHOTLIST.md`](production/SHOTLIST.md) |

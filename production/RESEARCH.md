@@ -355,13 +355,20 @@ From 38.4°N 33.9°E at 15:58 UT. See `refs/eclipse/computed_sky-at-totality-585
 - **His statue's epigram:** "Pride of Miletus and Ionian lands, / Wisest astronomer, here Thales stands" (DL 1.34).
 - **Likeness:** none survives. The one herm inscribed with his name, in the Vatican, has lost its head. The design is ours to make.
 
-**How could he have predicted it? [?]**
+**How could he have predicted it? [?]** Full sourcing and the S53 recommendation are in `research/THALES_METHOD.md`.
 
-1. Herodotus only claims a forecast *to the year*.
-2. **Babylonian** scribes kept eclipse records for centuries and could flag eclipse *possibilities* with period rules: six-month spacing, and the 223-month "saros" for lunar eclipses by at least the mid-6th century BC. They could say when an eclipse was possible *somewhere*, not whether it would be seen *here*.
-3. The 585 eclipse falls exactly one saros after the **18 May 603 BC** eclipse, which we compute as a morning partial of about 0.5 at Miletus. "Look again 18 years on" is conceivable.
+1. Herodotus only claims a forecast *to the year*. **No ancient source says how he did it.**
+2. **Babylonian** scribes had kept eclipse records since 747 BC, about 160 years before 585, and could flag eclipse *possibilities* by counting months.
+   - Possibilities fall six months apart, sometimes five. Lunar lists of this kind survive for every year from 604 to 576 BC.
+   - The 223-month cycle was in use for lunar eclipses by the mid-6th century BC, and almost certainly by about 575.
+   - Seventh-century Assyrian court reports already watch for solar-eclipse possibilities.
+   - They could say when an eclipse was possible *somewhere*, never whether it would be seen *here*.
+3. The 585 eclipse falls exactly one 223-month cycle after the **18 May 603 BC** eclipse. That eclipse was total from Arabia across the northern Persian Gulf and Iran to Central Asia, and reached about 0.85 at Babylon. At Miletus we compute only a mid-morning partial of about 0.5, with the Sun 36° up, which is easy to miss. "Look again 223 months on" is conceivable only with Babylonian records, and nothing links Thales to them.
 4. **Sceptics:** Neugebauer wrote that "there exists no cycle for solar eclipses visible at a given place." Many historians think Thales was lucky, or that the story grew afterwards.
-5. **Designer-safe:** show him *counting*: tally rows of months, a list of past eclipse dates, a gnomon's shadow. Show no instrument he could not have had.
+5. **Designer-safe:** show what is attested: his forecast named only the year.
+   - Every modern hypothesis (the 223-month cycle, Couprie's "clusters", O'Grady's 23½ months) is a count of lunar months between past eclipses, but none is attested for Thales.
+   - So do not present counting, eclipse tables, cycles, geometry or the 1/720 as his method.
+   - Show no instrument he could not have had.
 
 ### 2.4 Syennesis "the Cilician" **[?]**
 
