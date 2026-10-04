@@ -103,7 +103,7 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 | S61 / S61b | P51 (1) / P52 (2) | v2: caught mid-fight, they stop (209.10 → 1.38), the hands open (209.55 → 2.28), the weapons land on "blade" (209.945 → 2.66); S61b: the hand opens 210.42 → 2.88, the guard meets the water 211.30 → 3.92 |
 | S62 | P53 (2) | v2: 1:1 from 0.10 s in (211.44 → 0.10); the upright sword, eased to the frame centre by 214.85, match-cuts to P34 (video/data/sword_handoff.json) |
 | S63 / S67 / S68 / S70 | P34 (2) / P35 (3) / P36 (1) / P37 (1) | 1:1 (P36 faces up 237.66 → 2.10) |
-| S74 | P38 (4) | the dive lands on P38 frame 1.55 in lines (drop2.js S74, not GOLD's): until it reads gold_outro.js `s75Start()`, its last 0.7 s dissolves P38's formation into S75's P54 |
+| S74 | P54 (5) | v2: the dive's last 0.7 s trace S75's first drawing in lines (P54 at 0.20 through S75's camera, per aspect: drop2.js reads gold_outro.js `s75Start()`), then condense into its paint. P38 is no longer used |
 | S75–S76 (+ S77's first 0.6 s in lines) | P54 (5) | v2: mid-fight from the hit (259.36 → 0.20); the hands open 260.45 → 1.58; the swords hit the sand 260.72 → 1.90; the late Lydian lets go 260.83 → 3.54, his sword lands 261.04 → 3.715; still to 262.72 → 5.0 (S77 traces this frame) |
 | S78 | P57 (2) + P39 (1) | v2: she is P57 (registered into P39's frame), the room is P39's painted background. Typing poses on the ticks over held bodies f13 / f49 / f69; the lean f33→f45 lands on dt.shift 268.081; back f55→f67; the commit burst f71→f92 |
 | S79 | P55 (1) | v2, the kings' oath (P40 is unused): the clasp's shake 270.04 → 0.42, settled by 270.30 → 0.68; the hold runs at 0.61x to 273.40 → 2.58 |
@@ -951,7 +951,7 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
   * 261.040 → 3.715 (+2.03 s) · the 261.05 hit: the late sword lands at the frame's foot
   * 262.720 → 5.00 (+1.64 s) · still, to the boom
 * **Checks:** Costumes correct (crests, crimson, scales; red caps, black beards, ochre, iron scales, wicker shields) · Mirrored, equal · No shrug, no smile, no posing.
-* **Notes for the renderer:** Portrait drifts onto the nearest Lydian for the late drop (cx 0.5 → 0.29, 260.45–260.8). The chops sit at y 0.4, clear of the near faces and of the sand where the blades fall. No eyes are painted, because MediaPipe takes the round shields for faces. drop2.js S74 still traces P38 for the dive's landing, so it should read gold_outro.js `s75Start()` (plate P54, plate time 0.2, the S75 camera).
+* **Notes for the renderer:** Portrait drifts onto the nearest Lydian for the late drop (cx 0.5 → 0.29, 260.45–260.8). The chops sit at y 0.4, clear of the near faces and of the sand where the blades fall. No eyes are painted, because MediaPipe takes the round shields for faces. drop2.js S74's landing reads gold_outro.js `s75Start()` (plate P54, plate time 0.2, the S75 camera per aspect) and S77's opening reads `s76End()`, so the line traces match the paint on both cuts.
 * **Review sheet:** `media/plates/P54/take5.review.jpg`; contact `media/plates/P54/take5.sheet.jpg`.
 * Take 6 (v3): pass 3 (alternate): a late Lydian holds his sword out (1.8–2.6 s) and drops it at about 2.7 s, but the sky is red-pink rather than gold.
 * Take 4 (v2): weak 2: every blade drops at once, including the near Mede who was named as the late one.
