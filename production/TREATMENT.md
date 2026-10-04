@@ -130,10 +130,11 @@ The final chord may be held a few seconds longer (spectral freeze) to give the w
   painted sun (the simulation leaking); on the first chopped "HALO" the O is eclipsed for 3–4 frames leaving **HAL**; (the anime-eye flash is cut).
 * **Drop 1 caption:** "we just went sci-fi." — V. Glover, Artemis II, during totality, 6 Apr 2026 (small, accurately attributed, no agency marks).
 * **The Flammarion moment** (the 1888 engraving of a man pushing his head through the firmament) for *"What was it like when reality suddenly broke"*.
-* **Thales section:** a generic forecast card ("Will the sun go dark over the Halys before sunset?" YES 3¢ → 99¢, ≤ 2 s, no real-market UI) and
-  Antikythera-style bronze gears (the saros dial) turning into lines of code.
+* ~~**Thales section:** a generic forecast card ("Will the sun go dark over the Halys before sunset?" YES 3¢ → 99¢, ≤ 2 s, no real-market UI) and
+  Antikythera-style bronze gears (the saros dial) turning into lines of code.~~ *(cut in v0.4: S53 now shows only what the sources support)*
 * **Final chorus:** the warriors roar when the light comes back (the Reykjavik crowd, Aug 2026).
-* **Drop 2:** both armies drop their blades exactly on the chopped "BLADE" — with one straggler. A thrown sword match-cuts to an unbranded
+* **Drop 2:** *(v0.4: no straggler's shrug, and nothing is thrown: a dropped sword stands upright in the mud and match-cuts to the starship)*
+  both armies drop their blades exactly on the chopped "BLADE" — with one straggler. A thrown sword match-cuts to an unbranded
   stainless-steel starship (the *2001* bone→satellite grammar; "swords into starships"). The resolve is **Earthset** (Artemis II's defining image) under
   "home to the ones you love": the first blue in the film is home.
 * **Terminal reveal (all real, readable code):** `seed=-585`, `world.step()`, persistent panes named `lydians` `medes` `sun` `moon`, a ΔT band plot on
@@ -176,3 +177,24 @@ The final chord may be held a few seconds longer (spectral freeze) to give the w
   and in how people react to the sky. The only eyelid in the film is hers, in the wink, drawn with the Moon's curved edge. The rhyme is now implied rather than drawn.
 * **The arm-pull** (S31b, on the 102.21 boom): the Lydian hero is about to strike the fallen Mede when his comrade grabs his arm; all three look up.
   A comrade stopping the strike makes the moment of stopping human.
+
+## v0.4: the director's notes on the v1 film
+
+The notes, word for word, and the decision on each are in [REVISION_V2.md](REVISION_V2.md). What changed in the picture:
+
+* **The Sun is painted.** Its limb is made of brush strokes that break the edge like the rest of the canvas. The Moon's bite still cuts a clean
+  curve, so the eclipse stays real.
+* **Battles, not duels.** Every Act I duel now has the two lines fighting behind it (S17, S19, S21, S25), and S18's silhouettes are a fighting line
+  along the horizon. S28's warriors look up *mid-fight*, pairs locked in combat, not standing in a row.
+* **Thales: only what the sources support.** The prediction-market card and the "saros" gear are gone. A research pass
+  ([research/THALES_METHOD.md](research/THALES_METHOD.md), reader version in [HISTORY.md](HISTORY.md)) found the forecast corroborated and the
+  method unknown, so S53 shows a gold arc of twelve new-moon ticks (the year, Herodotus' "limit") and the plaque `HE NAMED ONLY THE YEAR · HERODOTUS 1.74`.
+  His triangle-in-a-semicircle and shadow stick stay as dim, unlabelled attributes.
+* **Bronze is precious.** Nobody throws a weapon. Caught mid-fight and shocked, they let go: S61's weapons fall into the shallows; S61b's sword
+  slides from an opening hand; S62's dropped sword stands upright in the mud as its owner walks home, a vertical that match-cuts to the rocket;
+  S75–S76's battle line drops every blade on "BLADE", one late, faces serious, no shrug.
+* **The kings make peace** (S79, on the final chord) instead of Jade spinning to camera. Alyattes and Cyaxares clasp right hands, forearms freshly
+  cut, as Herodotus 1.74 describes the Lydian and Median oath, in one pool of dusk light, the mediators watching.
+* **Jade is her original anime self** against an abstract room, the medium the director chose for the rewind video. The 1420 MHz patch is on her
+  sleeve, RARE EARTH wraps her back and takes the folds, and the cut back from the kings lands on a cute, mischievous half-smile, then the wink.
+
