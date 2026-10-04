@@ -1782,6 +1782,39 @@
    ]
   },
   {
+   "id": "S53.year",
+   "fx": "limit",
+   "shot": "S53",
+   "t1": 188.51,
+   "dim": [
+    187.65,
+    188.0,
+    0.35
+   ],
+   "t0": 183.34,
+   "world": "marble",
+   "worlds": [
+    "marble",
+    "bronze"
+   ],
+   "items": [
+    {
+     "key": "p",
+     "role": "plaque",
+     "text": "HE NAMED ONLY THE YEAR",
+     "reveal": "line",
+     "t": 184.51
+    },
+    {
+     "key": "credit",
+     "role": "plaque",
+     "text": "HERODOTUS 1.74",
+     "reveal": "line",
+     "t": 184.75
+    }
+   ]
+  },
+  {
    "id": "S55.behold",
    "fx": "carved",
    "shot": "S55",

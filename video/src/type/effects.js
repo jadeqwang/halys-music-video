@@ -743,8 +743,21 @@ function thales(g, f, e, t) {
   if (t >= pq.t) drawLabel(g, f, pq.text, { x: P ? L.cx : x + .02 * px, y: y + .72 * px + 1.25 * ppx + .4 * gpx, align: P ? 'center' : 'left', px: ppx, t0: pq.t, t, rule: false, alpha: out });
 }
 
-// (S53: v2 removed the forecast card. The shot's payoff, Thales's 1/720 construction with its Greek letters and its
-// 1⁄720 label, is part of the picture: video/src/scenes/marble.js draws it under the lyric and behind Thales.)
+// ---------------------------------------------------------------- S53: the year's limit (v2; replaces the forecast card)
+// PLAQUE in the lower third under the carved lyric: HE NAMED ONLY THE YEAR (Herodotus 1.74.2), with HERODOTUS 1.74 as a
+// smaller, dimmer second line. 16:9: left, on the lyric's edge, with the museum label's hairline rule above. Portrait:
+// centred under the lyric (marble.js lifts the lyric to make room). e.dim = [t0, t1, amount]: held into S54, dimmed with
+// the gold figure. (The year arc itself is picture: marble.js draws it behind Thales.)
+function limit(g, f, e, t) {
+  const L = f.L, S = L.safe, P = L.portrait;
+  const main = e.items.find(i => i.key === 'p'), credit = e.items.find(i => i.key === 'credit');
+  const px = SIZE.plaque * u(L), cpx = 24 * u(L), bottom = S.y + S.h - .004 * L.H;
+  const a = e.dim ? 1 - e.dim[2] * smooth(clamp((t - e.dim[0]) / (e.dim[1] - e.dim[0]))) : 1;
+  const x = P ? L.cx : anchorPos(L, 'leftLow').x, align = P ? 'center' : 'left';
+  const yMain = credit ? bottom - 1.6 * cpx : bottom;
+  if (main && t >= main.t) drawLabel(g, f, main.text, { x, y: yMain, align, px, t0: main.t, t, alpha: a, rule: !P });
+  if (credit && t >= credit.t) drawLabel(g, f, credit.text, { x, y: bottom, align, px: cpx, t0: credit.t, t, alpha: a * .78 });
+}
 
 // ---------------------------------------------------------------- S57: SPARK bursts and fades
 function spark(g, f, e, t) {
@@ -859,5 +872,5 @@ function cartouche(g, f, e, t) { return drawCartouche(g, f, e, t, ctxOf(f, e, t)
 function terminal(g, f, e, t) { return drawTerminal(g, f, e, t); }
 
 export const FX = { carved, plaque, inscr, incised, counter, hud, chop, quote, map, diptych, mirrored, bronze, crescents, ring, pupil, shadow,
-  thales, spark, era, home, endcard, cartouche, terminal };
+  thales, limit, spark, era, home, endcard, cartouche, terminal };
 export { gildOpts, sweepP, ctxOf, carvedRuns, carvedLayout };

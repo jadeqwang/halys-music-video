@@ -642,16 +642,19 @@ scene('S25', async f => {
   if (!melee && hasPlate('P62')) {
     // the face-off, side-lit, centred and mirrored; the plate's bright sky above v .25 becomes our sky with the sun in the
     // top right corner (as the plate has it); a warm pool on each hero, the melee behind them in the plate's own light
-    const pcam = k => ({ cx: .5, cy: .5, zoom: 1.02 + .03 * k });
+    // (portrait cannot hold both heroes: it pans from the Lydian, as LYDIANS appears, to the Mede on MEDES at 75.93)
+    const wide = f.W / f.H > 1.2, pan = smooth(seg(f.t, 74.95, 76.2));
+    const pcam = k => ({ cx: wide ? .5 : lerp(.31, .69, pan), cy: .5, zoom: 1.02 + .03 * k });
     const src = await rp(f, 'P62', null, pcam), hzY = .25;
     src.sky = brightSky(src, hzY);
-    const sun = (await plateSunUV(f, 'P62', pcam)) || [.96, .08];
+    // our sun in the sky over the bank, clear of the counter (top right) and of LYDIANS / MEDES
+    const sun = wide ? [.955, .165] : [.5, .11];
     await bronze(f, src, plateLook(src, { lightDir: [.8, -.5], lightPoint: sun, keep: .55, keepDim: .85, fromLight: .7, bg: .35, rim: .5, poolMatte: .5, body: 0,
-      pool: [{ x: .27, y: .45, rx: .15, ry: .45, feather: .6, k: .95, fig: true }, { x: .7, y: .45, rx: .15, ry: .45, feather: .6, k: .95, fig: true },
-        { x: .5, y: .28, rx: .5, ry: .1, feather: .8, k: .55 }],      // the melee on the bank behind them
+      pool: [...[.27, .7].map(u => { const c = camAt(pcam, f); return { x: (u - c.cx) * c.zoom + .5, y: .45, rx: .15 * c.zoom * (wide ? 1 : 2.2), ry: .45, feather: .6, k: .95, fig: true }; }),
+        { x: .5, y: .28, rx: .5, ry: .1, feather: .8, k: .55 }],      // the heroes (plate x .27 / .70), the melee on the bank behind them
       extra: { exposure: 1.05, groundFlow: { y0: .52, k: .7 },
         sky: SKY(f.t, { horizonY: hzY, below: hzY + .03, drama: .4, glow: 1.15, glowR: .3, cover: .48, vortex: .3, zenith: .3 }),
-        sun: SUN(f.t, { x: Math.min(.97, sun[0]), y: Math.max(.05, sun[1]), r: .026 }) } }));
+        sun: SUN(f.t, { x: sun[0], y: sun[1], r: .026 }) } }));
     return;
   }
   const pcam = melee ? (k => ({ cx: .5, cy: .45, zoom: 1.12 + .04 * k })) : (k => ({ cx: .5, cy: .5, zoom: 1.02 + .03 * k }));

@@ -20,7 +20,6 @@ import { paintStone, planetPoints, STONE_PAINT } from '../worlds/marble/paint.js
 import { flockSource } from '../worlds/marble/birds.js';
 import { mapSource, armyPawns, toBoard, BATTLE, boardToScreen } from '../worlds/marble/anatolia.js';
 import { gildLines } from '../worlds/marble/diagrams.js';
-import { setFont } from '../fonts.js';
 import { goldReference, goldSun, goldOff, SPARK_PAL, EGRESS_DIR, C3 } from '../worlds/marble/gold.js';
 import { drawCrystallise, widenAt } from './drop1.js';
 
@@ -379,7 +378,7 @@ scene('S52', async f => {
   await paintStone(f, st, { stars: { toScreen: camScreen(f, cam), n: 140, k: .75 }, paint: { palette: SPARK_PAL } });
   f.type.light = { dir: [-.6, -.8], elev: .5, color: '#f3dcb0', intensity: 1.0, cool: .25 };
 });
-// S53: close; Thales's geometry blooms around him in gold (v2: what the sources credit him with); S54: the glance.
+// S53: close; the year he named blooms beside him in gold (v3: only what the sources corroborate); S54: the glance.
 // P28: he studies the sky 0-2.2 (played slower, under the bloom), lowers his head with a blink 2.25-2.7 at plate speed,
 // his eyes meet the lens on 187.65 (2.75), then 1:1 into the sly half-smile (~3.25)
 const S53_KEYS = [[183.34, .05], [187.13, 2.23], [187.65, 2.75], [188.51, 3.61]];
@@ -388,52 +387,41 @@ async function s53(f, dim) {
   const tp = kfl(f.t, S53_KEYS), line = .405 + .011 * tp, hzF = (line - cam.cy) / camRect(f, cam).hU + .5;
   const { st, TM } = await thalesFrame(f, { plate: 'P28', cam, keys: S53_KEYS, skyLine: line, sky: { dLo: .02, dHi: .05, below: .55, run: 3 }, stone: { horizonY: hzF + .035 } });
   await paintStone(f, st, { stars: { toScreen: camScreen(f, cam), n: 120, k: .7 }, paint: { palette: SPARK_PAL }, statueDetail: .9 });
-  // the geometry, behind him (his matte cuts it) and under the lyric (the type layer draws after the scene)
+  // portrait: lift the lyric a little off the bottom edge so the plaque (effects.js `limit`) fits under it
+  if (f.H > f.W * 1.02) f.type.place = { ...(f.type.place || {}), 'S53.foretold': { y: .875 } };
+  // the gold figure, behind him (his matte cuts it) and under the lyric (the type layer draws after the scene)
   const L = f.layer(7);
-  thalesGeometry(L.g, f.W, f.H, f.t, { dim, scratch: f.layer(8) });
+  thalesGeometry(L.g, f.W, f.H, f.t, { dim });
   cutMatte(L, TM, st.aw, st.ah, f);
   const g = f.g; g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(L.c, 0, 0); g.restore();
 }
 
-// ---------------------------------------------------------------- S53 v2: Thales's geometry (REVISION_V2, decision #4)
-// No forecast card. Gold incised construction in the existing gold-leaf style (diagrams.js gildLines), lettered in the
-// Greek manner with one sequence across the page (Α ... Ξ), behind him and under the lyric:
-//   * THE PAYOFF, upper right where v1's card was. Diogenes Laertius 1.24 (tr. Hicks): "according to some the first to
-//     declare the size of the sun to be one seven hundred and twentieth part of the solar circle, and the size of the
-//     moon to be the same fraction of the lunar circle." About Α (the eye) the compass draws the solar circle and the
-//     nearer lunar circle, each ruled into 720 parts; on "sun" (184.51) the Sun's disk lights, exactly one part ΒΓ of its
-//     circle; the Moon is one part ΔΕ of its own. The view pushes in on ΒΓ until both disks read; the Moon moves into
-//     the two lines from Α through Β and Γ, its image (the dark disk it shows the eye on the Sun's circle, the same
-//     size because it is the same fraction) slides over the Sun, and covers it exactly on "dark" (186.38). Label 1⁄720
-//     on both arcs; nothing else.
-//   * HIS THEOREM, upper left (v1's place and timing): the triangle in a semicircle ΖΗΘ, right angle at Θ (Pamphila in
-//     D.L. 1.24-25).
-//   * THE SHADOW STICK, lower right where v1's gear was: the pyramid's height ΚΛ and its shadow ΛΜ, the stick ΜΝ set
-//     upright at the end of that shadow and its own shadow ΜΞ, the parallel rays ΚΜ and ΝΞ: two similar triangles
-//     (Plutarch, Banquet of the Seven Sages 147A; Hieronymus in D.L. 1.27).
-// v1's saros ring and its gear-into-code are gone: the ring read as "Thales used the saros" (RESEARCH §7: do not say)
-// and the code computed this eclipse; nothing on screen may claim more than Herodotus 1.74 (he foretold the year).
-const DIV = TAU / 720;                                   // one part of a circle in 720
-const TG = {
-  t0: 183.40, solar: [183.42, 184.16], lunar: [183.84, 184.46], sight: [184.20, 184.51], sun: 184.51, moon: 184.56,
-  zoom: [184.72, 185.86], close: [185.30, 186.38], dark: 186.38, letters: 185.22, labelSun: 185.48, labelMoon: 185.80,
-  theorem: 184.50, stick: 183.56,
-};
-// per aspect, in px (u = the short side / 1080). ratio: the full view about C0 (radius R0) pushes in until the Sun (at
-// angle phi from Α) sits at S1 with the lunar arc `reach` px nearer Α (rm = lunar / solar radius); the Moon starts moonA
-// off the Sun's line and stands moonD px (signed) off it when the push-in ends; it lives in a soft ellipse (mask).
+// ---------------------------------------------------------------- S53 v3: the year he named (REVISION_V2 decision #4, revised)
+// The director: "go with what a research agent can corroborate" (production/research/THALES_METHOD.md §7). What is
+// corroborated is the forecast: Herodotus 1.74.2, οὖρον προθέμενος ἐνιαυτὸν τοῦτον ("setting this year as the limit"). No
+// method is. So, in the existing gold-leaf style (diagrams.js gildLines), behind him (his matte cuts it), under the lyric:
+//   * THE PAYOFF, upper right, where v1's card was: the year. A compass arc ruled with twelve new-moon ticks (a year of
+//     months, no numbers), closed at each end by a short boundary stroke, the οὖρος. On "sun" (184.51) the Sun lights
+//     inside the arc, under no month in particular; on "dark" (186.38) the Moon's disk covers it.
+//   * ATTRIBUTES, dim and unlabelled: the triangle in a semicircle (Pamphila in D.L. 1.24-25) and the shadow stick
+//     (Plutarch, Moralia 147A; Hieronymus in D.L. 1.27). Later writers credited him with these; they are ornament here,
+//     never the method.
+// The plaque HE NAMED ONLY THE YEAR / HERODOTUS 1.74 is type (effects.js `limit`). Gone, because none is attested as how
+// he foretold it: v1's saros ring, its gear-into-code and its forecast card, and v2's 1/720 construction.
+const TG = { t0: 183.42, arc: [183.42, 184.02], months: [183.66, 184.4], sun: 184.51, moon: [185.5, 186.38], theorem: 184.5, stick: 183.56 };
+const ATTR = .42;                                            // the attributes' strength: dim, clearly secondary
+// per aspect, px (u = the short side / 1080). year: the arc's apex (x, y), radius R (its centre straight below), half-angle
+// span; the Sun hangs sunDrop under the apex; the Moon comes in along `from` (radians, screen angle toward the Sun)
 function geoLayout(W, H) {
   const P = H > W * 1.02, u = (P ? W : H) / 1080;
   if (!P) return { P, u,
-    ratio: { C0: [.8125 * W, .222 * H], R0: 186 * u, phi: 0, S1: [.915 * W, .222 * H], reach: 650 * u, rm: .86, moonA: -.62, moonD: 125 * u,
-      mask: { x: .74 * W, y: .215 * H, rx: 560 * u, ry: 205 * u, soft: 120 * u }, letter: 31 * u, label: 34 * u },
-    theorem: { x: .17 * W, y: .33 * H, R: .1 * H, letter: 27 * u },
-    stick: { x: .785 * W, y: .89 * H, s: u, letter: 25 * u },
+    year: { x: .775 * W, y: .158 * H, R: 820 * u, span: .405, sunDrop: 96 * u, sunR: 25 * u, from: .5 },
+    theorem: { x: .17 * W, y: .33 * H, R: .1 * H },
+    stick: { x: .785 * W, y: .89 * H, s: u },
   };
-  return { P, u,
-    ratio: { C0: [.873 * W, .118 * H], R0: 104 * u, phi: -Math.PI / 2, S1: [.8 * W, .1 * H], reach: 325 * u, rm: .88, moonA: .55, moonD: -60 * u,
-      mask: { x: .79 * W, y: .19 * H, rx: 290 * u, ry: 225 * u, soft: 90 * u }, letter: 29 * u, label: 32 * u },
-    theorem: null, stick: null,                       // (no room beside his head in portrait: the payoff alone)
+  return { P, u,                                             // portrait: the column of sky right of his head
+    year: { x: .79 * W, y: .1 * H, R: 560 * u, span: .33, sunDrop: 82 * u, sunR: 21 * u, from: .5 },
+    theorem: null, stick: null,                              // (no room beside his head: the year alone)
   };
 }
 // a stroked element in diagrams.js's format ({P, cum, L, w}: gildLines reveals it along its length)
@@ -442,168 +430,59 @@ function elem(pts, w, closed = false) {
   for (let i = 1; i < P.length; i++) { L += Math.hypot(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]); cum.push(L); }
   return { P, cum, L, w };
 }
-// many short gold strokes of one width in four batched passes (the same passes as gildLines: umber shadow, leaf,
-// burnished edge, restrained glow)
-function gildSegs(g, segs, w, u, alpha = 1) {
-  if (!segs.length || alpha <= 0) return;
-  const pass = (col, wk, dx, dy, comp, a, blur) => {
-    g.save(); g.globalCompositeOperation = comp; g.globalAlpha = alpha * a; g.strokeStyle = col; g.lineCap = 'round';
-    if (blur) { g.shadowColor = col; g.shadowBlur = blur * u; }
-    g.lineWidth = Math.max(.6, w * wk * u); g.beginPath();
-    for (const s of segs) { g.moveTo(s[0] + dx * u, s[1] + dy * u); g.lineTo(s[2] + dx * u, s[3] + dy * u); }
-    g.stroke(); g.restore();
-  };
-  pass('rgba(38,22,8,0.55)', 1.5, 1.1, 1.6, 'source-over', 1, 0);
-  pass('#b98a32', 1, 0, 0, 'source-over', 1, 0);
-  pass('#f4dc96', .42, -.3, -.4, 'source-over', 1, 0);
-  pass('rgba(255,196,110,0.5)', 2.6, 0, 0, 'lighter', .35, 6);
-}
-// incised gold lettering (as diagrams.js arcText): umber shadow, ochre body, pale highlight. role 'greek' = Cardo 700
-function goldText(g, text, x, y, px, u, a = 1, o = {}) {
-  if (a <= 0.01) return;
-  g.save();
-  if (o.role === 'greek') { g.font = `700 ${Math.round(px)}px "Cardo"`; g.letterSpacing = '0px'; } else setFont(g, 'carved', px);
-  g.textAlign = o.align || 'center'; g.textBaseline = o.baseline || 'middle';
-  g.globalAlpha = a; g.fillStyle = 'rgba(38,22,8,0.62)'; g.fillText(text, x + 1.1 * u, y + 1.5 * u);
-  g.fillStyle = '#c99a3c'; g.fillText(text, x, y);
-  g.globalAlpha = a * .55; g.fillStyle = '#fbe6a8'; g.fillText(text, x - .4 * u, y - .5 * u);
-  g.restore();
-}
-// "1⁄720" as a true diagonal fraction (Cinzel has the fraction slash but no numerator / denominator figures): the
-// numerator raised, the denominator on the baseline, both at 0.68 of the slash; centred on (x, y)
-function goldFraction(g, x, y, px, u, a = 1) {
-  if (a <= 0.01) return;
-  const s = px * .68, cap = .7;
-  g.save(); setFont(g, 'carved', s); const wn = g.measureText('1').width, wd = g.measureText('720').width;
-  setFont(g, 'carved', px); const ws = g.measureText('⁄').width; g.restore();
-  const tot = wn + ws * .55 + wd, x0 = x - tot / 2, base = y + cap * px / 2;
-  goldText(g, '1', x0 + wn / 2, base - cap * px + cap * s, s, u, a, { baseline: 'alphabetic' });
-  goldText(g, '⁄', x0 + wn + ws * .275, base, px, u, a, { baseline: 'alphabetic' });
-  goldText(g, '720', x0 + wn + ws * .55 + wd / 2, base, s, u, a, { baseline: 'alphabetic' });
-}
-// the angular window of a circle (centre ox, oy, radius r) that can show inside the mask ellipse's bounding circle:
-// null = none, [a, a + TAU] = all of it
-function arcWindow(ox, oy, r, M) {
-  const Rb = Math.max(M.rx, M.ry) + M.soft, dx = M.x - ox, dy = M.y - oy, d = Math.hypot(dx, dy);
-  if (d < 1e-6) return r <= Rb ? [0, TAU] : null;
-  const c = (d * d + r * r - Rb * Rb) / (2 * d * r);
-  if (c >= 1) return null;
-  const am = Math.atan2(dy, dx);
-  if (c <= -1) return [am - Math.PI, am + Math.PI];
-  const hw = Math.acos(c); return [am - hw, am + hw];
-}
-// wrap angle a into [lo, lo + TAU)
-const wrapA = (a, lo) => a - TAU * Math.floor((a - lo) / TAU);
 
 export function thalesGeometry(g, W, H, t, o = {}) {
   const lay = geoLayout(W, H), u = lay.u, dim = 1 - (o.dim ?? 0) * .35;
   if (t < TG.t0) return;
-  // the payoff lives in its own soft-edged layer (the push-in sweeps its arcs out of the frame)
-  const S = o.scratch || (() => { const c = new OffscreenCanvas(W, H); return { c, g: c.getContext('2d') }; })();
-  ratioFigure(S.g, t, lay.ratio, u);
-  const M = lay.ratio.mask;
-  S.g.save(); S.g.globalCompositeOperation = 'destination-in';
-  S.g.setTransform(M.rx + M.soft, 0, 0, M.ry + M.soft, M.x, M.y);
-  const gr = S.g.createRadialGradient(0, 0, 0, 0, 0, 1);
-  gr.addColorStop(0, '#fff'); gr.addColorStop(Math.min(M.rx / (M.rx + M.soft), M.ry / (M.ry + M.soft)), '#fff'); gr.addColorStop(1, 'rgba(255,255,255,0)');
-  S.g.fillStyle = gr; S.g.fillRect(-40, -40, 80, 80); S.g.restore();
-  g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = dim; g.drawImage(S.c, 0, 0); g.restore();
-  if (lay.theorem) theoremFigure(g, t, lay.theorem, u, dim);
-  if (lay.stick) stickFigure(g, t, lay.stick, u, dim);
+  yearFigure(g, t, lay.year, u, dim);
+  if (lay.theorem) theoremFigure(g, t, lay.theorem, u, dim * ATTR);
+  if (lay.stick) stickFigure(g, t, lay.stick, u, dim * ATTR);
 }
 
-// the payoff: the solar and lunar circles in 720 parts, the push-in, totality on "dark"
-function ratioFigure(g, t, R, u) {
-  const k = easeInOut(seg(t, TG.zoom[0], TG.zoom[1]));
-  const z1 = R.reach / (1 - R.rm), z = R.R0 * Math.pow(z1 / R.R0, k);
-  const cphi = Math.cos(R.phi), sphi = Math.sin(R.phi);
-  const sx = lerp(R.C0[0] + R.R0 * cphi, R.S1[0], k), sy = lerp(R.C0[1] + R.R0 * sphi, R.S1[1], k);
-  const ox = sx - z * cphi, oy = sy - z * sphi;                                // Α on screen
-  const at = (r, a) => [ox + z * r * Math.cos(a), oy + z * r * Math.sin(a)];
-  const M = R.mask, rm = R.rm;
-  // the Moon: moonA off the Sun's line in the full view, moonD px off it when the push-in ends, closing to 0 on "dark"
-  const d0 = -R.R0 * rm * Math.sin(R.moonA);
-  const dM = lerp(d0, R.moonD, k) * (1 - smooth(seg(t, TG.close[0], TG.dark)));
-  const th = t < TG.zoom[0] ? R.phi + R.moonA : R.phi - Math.asin(clamp(dM / (z * rm), -1, 1));
-  const lines = [];
-  // the two circles, swept by the compass from the Sun's line (the solar one closes where the Sun will light)
-  const circle = (r, kRev, w, a0) => {
-    if (kRev <= 0) return;
-    const win = arcWindow(ox, oy, z * r, M); if (!win) return;
-    const aEnd = a0, aStart = a0 - kRev * TAU;                                  // swept toward decreasing angles
-    // sample the revealed sweep [aStart, aEnd] where it falls inside the window
-    const step = Math.max(DIV / 8, Math.min(.02, 5 / (z * r)));
-    let run = [];
-    for (let a = aStart; a <= aEnd + 1e-9; a += step) {
-      const aw = wrapA(a, win[0]), inside = aw <= win[1];
-      if (inside) run.push(at(r, a)); else if (run.length) { if (run.length > 1) lines.push([elem(run, w), 1]); run = []; }
-    }
-    if (run.length) run.push(at(r, aEnd));
-    if (run.length > 1) lines.push([elem(run, w), 1]);
-  };
-  const kS = easeInOut(seg(t, TG.solar[0], TG.solar[1])), kL = easeInOut(seg(t, TG.lunar[0], TG.lunar[1]));
-  circle(1, kS, 1.5, R.phi);
-  circle(rm, kL, 1.3, R.phi);
-  // the 720 parts: ticks (pointing away from Α) appear as the compass passes them; every 10th and 60th longer,
-  // the two that bound the Sun's part longest
-  const divPx = z * DIV, ticks = (r, kRev, dir, segs, segsMajor) => {
-    if (kRev <= 0) return;
-    const win = arcWindow(ox, oy, z * r, M); if (!win) return;
-    const base = clamp(.42 * divPx * r, 3.2 * u, 15 * u);
-    for (let m = 0; m < 720; m++) {
-      const a = R.phi + (m - .5) * DIV, sm = (((.5 - m) * DIV) % TAU + TAU) % TAU / TAU;   // sweep fraction at this tick
-      const vis = clamp((kRev - sm) / .04); if (vis <= 0) continue;
-      if (wrapA(a, win[0]) > win[1]) continue;
-      const lenK = m === 0 || m === 1 ? 2.6 : m % 60 === 0 ? 2.2 : m % 10 === 0 ? 1.55 : 1;   // (m 0, 1: the parts ΒΓ, ΔΕ)
-      const len = base * lenK * vis, c = Math.cos(a), s = Math.sin(a), r0 = z * r, r1 = r0 + dir * len;
-      (lenK > 1 ? segsMajor : segs).push([ox + r0 * c, oy + r0 * s, ox + r1 * c, oy + r1 * s]);
-    }
-  };
-  const tS = [], tSM = [], tL = [], tLM = [];
-  ticks(1, kS, 1, tS, tSM); ticks(rm, kL, 1, tL, tLM);
-  // Α, the eye at the centre
-  const A = [ox, oy], kA = sstep(TG.t0, TG.t0 + .2, t);
-  // the Sun's line: the radii ΑΒ and ΑΓ (one line in the full view, a wedge once pushed in), ruled outward to the Sun
-  const kSight = easeInOut(seg(t, TG.sight[0], TG.sight[1]));
-  for (const e of [-.5, .5]) { const a = R.phi + e * DIV; lines.push([elem([A, at(1 + 2.8 * clamp(.42 * divPx, 3.2 * u, 15 * u) / z, a)], 1.05), kSight]); }
-  // the Moon's lines from Α through its part ΔΕ, out to the Sun's circle (where they cut off the Moon's image)
-  const kMoon = sstep(TG.moon, TG.moon + .25, t);
-  if (kMoon > 0) for (const e of [-.5, .5]) { const a = th + e * DIV; lines.push([elem([A, at(1, a)], .75), easeInOut(seg(t, TG.moon, TG.moon + .4))]); }
-  gildLines(g, lines, u);
-  gildSegs(g, tS, .8, u); gildSegs(g, tSM, 1.15, u); gildSegs(g, tL, .7, u); gildSegs(g, tLM, 1.0, u);
-  // the eye
-  if (kA > 0) { g.save(); g.globalAlpha = kA; g.fillStyle = 'rgba(38,22,8,0.6)'; g.beginPath(); g.arc(A[0] + 1.1 * u, A[1] + 1.5 * u, 3.6 * u, 0, TAU); g.fill();
-    g.fillStyle = '#d9b05a'; g.beginPath(); g.arc(A[0], A[1], 3.4 * u, 0, TAU); g.fill(); g.restore();
-    goldText(g, 'Α', A[0] - 16 * u, A[1] + 18 * u, R.letter, u, kA, { role: 'greek' }); }
-  // the disks: the Sun (one part of its circle), the Moon (one part of its own, lit on the side toward the Sun) and the
-  // Moon's image on the Sun's circle (the disk the eye sees: the same size, because it is the same fraction)
-  const rS = z * Math.sin(DIV / 2), rMo = z * rm * Math.sin(DIV / 2);
-  const [sunX, sunY] = at(1, R.phi), [mX, mY] = at(rm, th), [iX, iY] = at(1, th);
-  const kSun = sstep(TG.sun, TG.sun + .14, t), tot = t >= TG.dark - 1e-6;
-  if (kSun > 0) sunDisk(g, sunX, sunY, Math.max(rS, 1.2 * u), u, kSun, tot);
-  if (kMoon > 0) {
-    moonDisk(g, mX, mY, Math.max(rMo, 1.4 * u), R.phi, u, kMoon);
-    imageDisk(g, iX, iY, Math.max(rS, 1.6 * u), u, kMoon * sstep(1.2, 4, rS / u), tot);
+// the year: the arc swept by the compass from the left limit, the twelve new moons counted in, the right limit closing it;
+// the Sun lights inside on "sun", the Moon covers it on "dark"
+function yearFigure(g, t, Y, u, dim) {
+  const cx = Y.x, cy = Y.y + Y.R, a0 = -Math.PI / 2 - Y.span, a1 = -Math.PI / 2 + Y.span;
+  const at = (r, a) => [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+  const items = [], kArc = easeInOut(seg(t, TG.arc[0], TG.arc[1]));
+  const arc = []; for (let i = 0; i <= 120; i++) arc.push(at(Y.R, a0 + (a1 - a0) * i / 120));
+  items.push([elem(arc, 1.5), kArc]);
+  // the limits: short strokes across the arc, the left one where the compass sets down, the right one when it arrives
+  const limit = (a, k) => items.push([elem([at(Y.R - 15 * u, a), at(Y.R + 22 * u, a)], 1.9), k]);
+  limit(a0, sstep(TG.arc[0], TG.arc[0] + .14, t));
+  limit(a1, sstep(TG.arc[1] - .04, TG.arc[1] + .1, t));
+  // twelve new moons, counted in one after another (ticks with a dark new-moon disk at the tip)
+  const moons = [];
+  for (let m = 1; m <= 12; m++) {
+    const a = a0 + (a1 - a0) * m / 13, tm = lerp(TG.months[0], TG.months[1], (m - 1) / 11), k = sstep(tm, tm + .09, t);
+    if (k <= 0) continue;
+    items.push([elem([at(Y.R, a), at(Y.R + 13 * u, a)], 1.05), k]);
+    moons.push([...at(Y.R + 13 * u + 4.4 * u, a), k]);
   }
-  // letters at the ends of the two parts (Β Γ on the Sun's circle, Δ Ε on the Moon's, all four on the lines from Α),
-  // once the parts read; then 1⁄720 beside each disk, on the side away from the Moon's approach
-  const kLet = sstep(TG.letters, TG.letters + .25, t) * sstep(9, 16, divPx / u);
-  if (kLet > 0) {
-    const off = (r, a, out) => at(r + out / z, a), px = R.letter;
-    const nrm = [-Math.sin(R.phi), Math.cos(R.phi)], ax = [Math.cos(R.phi), Math.sin(R.phi)];   // + = increasing angle; outward
-    const tickS = 2.6 * clamp(.42 * divPx, 3.2 * u, 15 * u), tickM = 2.6 * clamp(.42 * divPx * rm, 3.2 * u, 15 * u), gap = px * .62;
-    const put = (ch, p, sgn, a) => goldText(g, ch, p[0] + sgn * nrm[0] * px * .42, p[1] + sgn * nrm[1] * px * .42, px, u, a, { role: 'greek' });
-    put('Β', off(1, R.phi - .5 * DIV, tickS + gap), -1, kLet); put('Γ', off(1, R.phi + .5 * DIV, tickS + gap), 1, kLet);
-    const kLetM = kLet * sstep(TG.letters + .3, TG.letters + .55, t);
-    put('Δ', off(rm, R.phi - .5 * DIV, tickM + gap), -1, kLetM); put('Ε', off(rm, R.phi + .5 * DIV, tickM + gap), 1, kLetM);
-    const side = Math.sign(R.moonD) || 1, lab = (x, y, r) => [x + side * nrm[0] * (r + px * 1.2) - ax[0] * px * .35, y + side * nrm[1] * (r + px * 1.2) - ax[1] * px * .35];
-    const kLs = sstep(TG.labelSun, TG.labelSun + .3, t) * kLet, kLm = sstep(TG.labelMoon, TG.labelMoon + .3, t) * kLet;
-    const [lx, ly] = lab(sunX, sunY, rS), [mxL, myL] = lab(...at(rm, R.phi), rMo);
-    goldFraction(g, lx, ly, R.label, u, kLs);
-    goldFraction(g, mxL, myL, R.label, u, kLm);
+  gildLines(g, items, u, { alpha: dim });
+  for (const [x, y, k] of moons) newMoon(g, x, y, 3.6 * u, u, k * dim);
+  // the Sun, inside the arc under its middle (no month is singled out: he named only the year)
+  const sx = Y.x, sy = Y.y + Y.sunDrop, kSun = sstep(TG.sun, TG.sun + .14, t), tot = t >= TG.moon[1] - 1e-6;
+  if (kSun > 0) sunDisk(g, sx, sy, Y.sunR, u, kSun * dim, tot);
+  // the Moon: in from the upper left over the last second, covering the Sun exactly on "dark"
+  const km = seg(t, TG.moon[0], TG.moon[1]);
+  if (km > 0) {
+    const d = Y.sunR * 3.4 * Math.pow(1 - km, 1.6), mx = sx - Math.cos(Y.from) * d, my = sy - Math.sin(Y.from) * d;
+    coverDisk(g, mx, my, Y.sunR, u, sstep(0, .25, km) * dim, tot);
   }
 }
-// the Sun: a gilded disk with a soft glow; at totality only its limb shows round the Moon's image, with a corona glow
+// a new moon at a tick's tip: dark, rimmed in gold leaf
+function newMoon(g, x, y, r, u, a) {
+  if (a <= .01) return;
+  g.save(); g.globalAlpha = a;
+  g.fillStyle = 'rgba(38,22,8,0.55)'; g.beginPath(); g.arc(x + 1.1 * u, y + 1.5 * u, r, 0, TAU); g.fill();
+  g.fillStyle = '#0b0d14'; g.beginPath(); g.arc(x, y, r, 0, TAU); g.fill();
+  g.strokeStyle = '#c99a3c'; g.lineWidth = Math.max(.7, 1.05 * u); g.stroke();
+  g.globalAlpha = a * .6; g.strokeStyle = '#f4dc96'; g.lineWidth = Math.max(.5, .45 * u);
+  g.beginPath(); g.arc(x - .3 * u, y - .4 * u, r, Math.PI * 1.05, Math.PI * 1.6); g.stroke();
+  g.restore();
+}
+// the Sun: a gilded disk with a soft glow; at totality only the glow (the corona) shows round the Moon
 function sunDisk(g, x, y, r, u, a, tot) {
   g.save(); g.globalAlpha = a;
   g.fillStyle = 'rgba(38,22,8,0.55)'; g.beginPath(); g.arc(x + 1.1 * u, y + 1.6 * u, r, 0, TAU); g.fill();
@@ -611,79 +490,50 @@ function sunDisk(g, x, y, r, u, a, tot) {
   gr.addColorStop(0, '#fff2c4'); gr.addColorStop(.55, '#e6b95e'); gr.addColorStop(1, '#a9782c');
   g.fillStyle = gr; g.beginPath(); g.arc(x, y, r, 0, TAU); g.fill();
   g.globalCompositeOperation = 'lighter';
-  const R2 = r * (tot ? 2.6 : 2.0), gl = g.createRadialGradient(x, y, r * .9, x, y, R2);
-  gl.addColorStop(0, `rgba(255,214,140,${tot ? .5 : .32})`); gl.addColorStop(1, 'rgba(255,190,110,0)');
+  const R2 = r * (tot ? 2.7 : 2.1), gl = g.createRadialGradient(x, y, r * .9, x, y, R2);
+  gl.addColorStop(0, `rgba(255,214,140,${tot ? .52 : .34})`); gl.addColorStop(1, 'rgba(255,190,110,0)');
   g.fillStyle = gl; g.beginPath(); g.arc(x, y, R2, 0, TAU); g.fill();
-  // while the disk is too small to read (the full view: one part is ~1.6 px), its light marks it like a star
-  const star = 1 - sstep(4, 10, r / u);
-  if (star > 0) {
-    const Rs = 13 * u, gs = g.createRadialGradient(x, y, 0, x, y, Rs);
-    gs.addColorStop(0, `rgba(255,246,214,${.95 * star})`); gs.addColorStop(.18, `rgba(255,222,150,${.55 * star})`); gs.addColorStop(1, 'rgba(255,200,120,0)');
-    g.fillStyle = gs; g.beginPath(); g.arc(x, y, Rs, 0, TAU); g.fill();
-  }
   g.restore();
 }
-// the Moon on its own circle: dark toward the eye, lit gold on the half toward the Sun (it is new)
-function moonDisk(g, x, y, r, phi, u, a) {
-  g.save(); g.globalAlpha = a;
-  g.fillStyle = 'rgba(38,22,8,0.55)'; g.beginPath(); g.arc(x + 1.1 * u, y + 1.6 * u, r, 0, TAU); g.fill();
-  g.fillStyle = '#0d1018'; g.beginPath(); g.arc(x, y, r, 0, TAU); g.fill();
-  g.fillStyle = '#c99a3c'; g.beginPath(); g.arc(x, y, r, phi - Math.PI / 2, phi + Math.PI / 2); g.closePath(); g.fill();
-  g.strokeStyle = '#f4dc96'; g.lineWidth = Math.max(.7, 1 * u); g.beginPath(); g.arc(x, y, r, 0, TAU); g.stroke();
-  g.restore();
-}
-// the Moon's image on the Sun's circle: a dark disk (it hides what is behind it), a fine gold rim
-function imageDisk(g, x, y, r, u, a, tot) {
-  if (a <= 0.01) return;
+// the Moon over the Sun: a dark disk (it hides what is behind it) with a fine gold rim, bright at totality
+function coverDisk(g, x, y, r, u, a, tot) {
+  if (a <= .01) return;
   g.save(); g.globalAlpha = a;
   g.fillStyle = '#080a10'; g.beginPath(); g.arc(x, y, r, 0, TAU); g.fill();
   g.strokeStyle = tot ? '#fff1c8' : '#d8b062'; g.lineWidth = Math.max(.7, (tot ? 1.6 : .9) * u); g.stroke();
   g.restore();
 }
 
-// his theorem: the triangle in a semicircle (v1's figure and timing, now lettered): circle, diameter ΖΗ, Θ on the arc,
-// the right angle at Θ
-function theoremFigure(g, t, T, u, dim) {
+// attribute: the triangle in a semicircle (v1's figure and timing), drawn dim and unlabelled
+function theoremFigure(g, t, T, u, alpha) {
   const t1 = TG.theorem; if (t < t1) return;
   const X = T.x, Y = T.y, R = T.R, ta = -.12, tb = 2.05, items = [];
   const circ = []; for (let i = 0; i <= 96; i++) { const a = -Math.PI / 2 + TAU * i / 96; circ.push([X + Math.cos(a) * R, Y + Math.sin(a) * R]); }
-  items.push([elem(circ, 1.5), sstep(t1, t1 + .7, t)]);
+  items.push([elem(circ, 1.3), sstep(t1, t1 + .7, t)]);
   const Z = [X + Math.cos(Math.PI + ta) * R, Y + Math.sin(Math.PI + ta) * R], Hh = [X + Math.cos(ta) * R, Y + Math.sin(ta) * R], Th = [X + Math.cos(-tb) * R, Y + Math.sin(-tb) * R];
-  items.push([elem([Z, Hh], 1.3), sstep(t1 + .5, t1 + .85, t)]);
-  items.push([elem([Z, Th, Hh], 1.5), sstep(t1 + .75, t1 + 1.25, t)]);
+  items.push([elem([Z, Hh], 1.1), sstep(t1 + .5, t1 + .85, t)]);
+  items.push([elem([Z, Th, Hh], 1.3), sstep(t1 + .75, t1 + 1.25, t)]);
   { const d1 = [Z[0] - Th[0], Z[1] - Th[1]], d2 = [Hh[0] - Th[0], Hh[1] - Th[1]], l1 = Math.hypot(...d1), l2 = Math.hypot(...d2), q = .16 * R;
     const p1 = [Th[0] + d1[0] / l1 * q, Th[1] + d1[1] / l1 * q], p2 = [Th[0] + d2[0] / l2 * q, Th[1] + d2[1] / l2 * q], p3 = [p1[0] + d2[0] / l2 * q, p1[1] + d2[1] / l2 * q];
-    items.push([elem([p1, p3, p2], 1.1), sstep(t1 + 1.15, t1 + 1.4, t)]); }
-  gildLines(g, items, u, { alpha: dim });
-  const out = (p, k) => [X + (p[0] - X) * k, Y + (p[1] - Y) * k], px = T.letter;
-  const kZH = sstep(t1 + .62, t1 + .85, t), kT = sstep(t1 + 1.0, t1 + 1.25, t);
-  const z2 = out(Z, 1 + .55 * px / R), h2 = out(Hh, 1 + .55 * px / R), th2 = out(Th, 1 + .6 * px / R);
-  goldText(g, 'Ζ', z2[0], z2[1], px, u, kZH * dim, { role: 'greek' });
-  goldText(g, 'Η', h2[0], h2[1], px, u, kZH * dim, { role: 'greek' });
-  goldText(g, 'Θ', th2[0], th2[1], px, u, kT * dim, { role: 'greek' });
+    items.push([elem([p1, p3, p2], 1.0), sstep(t1 + 1.15, t1 + 1.4, t)]); }
+  gildLines(g, items, u, { alpha });
 }
 
-// the shadow stick (Plutarch 147A): ground, the pyramid ΚΛ and its shadow to Μ, the stick ΜΝ at the shadow's end and its
-// shadow to Ξ, the two parallel rays; drawn early, while the circles are ruled, then held
-function stickFigure(g, t, T, u, dim) {
+// attribute: the shadow stick (Plutarch 147A), dim and unlabelled: ground, the pyramid and its height, the stick set at
+// the end of the pyramid's shadow, the two parallel rays; drawn early, then held
+function stickFigure(g, t, T, u, alpha) {
   const t1 = TG.stick; if (t < t1) return;
   const s = T.s, x0 = T.x, y0 = T.y, P = (x, y) => [x0 + x * s, y0 + y * s];
-  const base = 68, h = 128, sh = 172, st = 52, ssh = st * sh / h;               // ΚΛ : ΛΜ = ΜΝ : ΜΞ
+  const base = 68, h = 128, sh = 172, st = 52, ssh = st * sh / h;               // height : shadow = stick : its shadow
   const Lp = P(base + 6, 0), K = P(base + 6, -h), Mp = P(base + 6 + sh, 0), N = P(base + 6 + sh, -st), X = P(base + 6 + sh + ssh, 0);
   const items = [];
-  items.push([elem([P(-4, 0), P(base + 6 + sh + ssh + 26, 0)], 1.3), sstep(t1, t1 + .4, t)]);                    // the ground
-  items.push([elem([P(6, 0), K, P(2 * base + 6, 0)], 1.5), sstep(t1 + .2, t1 + .6, t)]);                          // the pyramid
-  items.push([elem([K, Lp], .8), sstep(t1 + .5, t1 + .7, t)]);                                                    // its height
-  items.push([elem([P(base + 6 - 40 * sh / h, -h - 40), Mp], 1.0), sstep(t1 + .55, t1 + .85, t)]);                // the ray over its apex
-  items.push([elem([Mp, N], 1.6), sstep(t1 + .8, t1 + .95, t)]);                                                  // the stick
-  items.push([elem([P(base + 6 + sh - 40 * ssh / st, -st - 40), X], 1.0), sstep(t1 + .9, t1 + 1.15, t)]);         // the ray over its top
-  gildLines(g, items, u, { alpha: dim });
-  const px = T.letter, kA = sstep(t1 + .55, t1 + .8, t), kB = sstep(t1 + .95, t1 + 1.2, t);
-  goldText(g, 'Κ', K[0] - .62 * px, K[1] - .2 * px, px, u, kA * dim, { role: 'greek' });
-  goldText(g, 'Λ', Lp[0], Lp[1] + .7 * px, px, u, kA * dim, { role: 'greek' });
-  goldText(g, 'Μ', Mp[0], Mp[1] + .7 * px, px, u, kB * dim, { role: 'greek' });
-  goldText(g, 'Ν', N[0] + .55 * px, N[1] - .45 * px, px, u, kB * dim, { role: 'greek' });
-  goldText(g, 'Ξ', X[0], X[1] + .7 * px, px, u, kB * dim, { role: 'greek' });
+  items.push([elem([P(-4, 0), P(base + 6 + sh + ssh + 26, 0)], 1.2), sstep(t1, t1 + .4, t)]);                    // the ground
+  items.push([elem([P(6, 0), K, P(2 * base + 6, 0)], 1.3), sstep(t1 + .2, t1 + .6, t)]);                          // the pyramid
+  items.push([elem([K, Lp], .75), sstep(t1 + .5, t1 + .7, t)]);                                                   // its height
+  items.push([elem([P(base + 6 - 40 * sh / h, -h - 40), Mp], .9), sstep(t1 + .55, t1 + .85, t)]);                 // the ray over its apex
+  items.push([elem([Mp, N], 1.4), sstep(t1 + .8, t1 + .95, t)]);                                                  // the stick
+  items.push([elem([P(base + 6 + sh - 40 * ssh / st, -st - 40), X], .9), sstep(t1 + .9, t1 + 1.15, t)]);          // the ray over its top
+  gildLines(g, items, u, { alpha });
 }
 function cutMatte(L, M, aw, ah, f) {
   const id = new ImageData(aw, ah), d = id.data;

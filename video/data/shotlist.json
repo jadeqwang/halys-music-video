@@ -1328,12 +1328,22 @@
      "role": "carved",
      "t": null,
      "text": "FORETOLD THE SUN WOULD GO DARK"
+    },
+    {
+     "role": "plaque",
+     "t": null,
+     "text": "HERODOTUS 1.74"
+    },
+    {
+     "role": "plaque",
+     "t": 184.51,
+     "text": "HE NAMED ONLY THE YEAR"
     }
    ],
    "section": "11 · Thales, 181.23–199.98 (B105–115). Strings and choir climb; breath 187.65–188.55; rest 192.75–193.1.",
-   "picture": "**Thales's geometry** blooms around him: gold incised compass-and-straightedge lines, points lettered in the Greek manner (Α to Ξ), behind him and under the lyric. **Payoff, upper right:** about Α the compass draws the Sun's circle and the Moon's nearer circle, each ruled into 720 parts. On \"sun\" the Sun lights, exactly one part ΒΓ of its circle; the view pushes in on ΒΓ. The Moon, one part ΔΕ of its own circle, closes into the same two lines from Α; its image slides over the Sun and covers it exactly on \"dark\" (D.L. 1.24: each is 1/720 of its circle). Each arc is labelled `1⁄720`, and nothing else. **Also:** his theorem, the triangle in a semicircle ΖΗΘ (upper left; Pamphila in D.L. 1.24–25); the shadow stick, pyramid ΚΛΜ and stick ΜΝΞ as similar triangles (lower right; Plutarch 147A, D.L. 1.27). 4:5 shows the payoff alone. No card, no saros, no code: nothing may claim more than Herodotus 1.74 (he foretold the year).",
-   "text": "CARVED `FORETOLD THE SUN WOULD GO DARK`",
-   "sync": "Sun lights on \"sun\" 184.51; totality on \"dark\" 186.38"
+   "picture": "**The year he named.** Thales looks up. Beside him, in gold incised construction lines (behind him, under the lyric), the payoff sits upper right where the card was. It is a compass arc of twelve new-moon ticks (a year of months, no numbers), closed at each end by a short boundary stroke: Herodotus' οὖρος, \"the limit\". On \"sun\" the Sun lights inside the arc, under no particular month; on \"dark\" the Moon's disk covers it. As dim, unlabelled ornament only: the triangle in a semicircle (upper left) and the shadow stick (lower right), things later writers credited him with. There is no 1/720, no saros, no card and no code: nothing claims a method (production/research/THALES_METHOD.md). 4:5 shows the year arc alone.",
+   "text": "CARVED `FORETOLD THE SUN WOULD GO DARK` · PLAQUE 184.51 `HE NAMED ONLY THE YEAR` · `HERODOTUS 1.74`",
+   "sync": "Sun lights on \"sun\" 184.51 and is covered on \"dark\" 186.38; the plaque and the arc hold, dimmed, through S54"
   },
   {
    "id": "S54",

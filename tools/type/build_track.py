@@ -203,9 +203,13 @@ ev("S52.thales", "thales", "S52", [("THALES", {"key": "name", "reveal": "words"}
                                    ("ΘΑΛΗΣ", {"key": "greek", "reveal": "line", "t": 182.70}),
                                    ("THALES OF MILETUS", {"key": "plaque", "reveal": "line", "t": 182.86})],
    t1=184.60, fadeout=.35)
-# S53's line is the only type event in the shot: the payoff (the 1/720 construction, its Greek letters and its 1⁄720
-# label) is drawn by the scene (video/src/scenes/marble.js) as part of the figure, under this line and behind Thales
+# S53: the lyric, and under it the PLAQUE that says what Herodotus 1.74.2 actually claims (he set "this year" as the
+# limit), from "sun" (184.51) with the credit a beat later; held into S54, dimmed with the scene's gold year arc
+# (video/src/scenes/marble.js draws the arc; in portrait it lifts the lyric to make room for the plaque)
 ev("S53.foretold", "carved", "S53", [("FORETOLD THE SUN WOULD GO DARK", {"key": "l", "reveal": "words"})], anchor="leftLow", light="marble", size="reference")
+ev("S53.year", "limit", "S53", [("HE NAMED ONLY THE YEAR", {"key": "p", "reveal": "line", "t": 184.51}),
+                                ("HERODOTUS 1.74", {"key": "credit", "reveal": "line", "t": 184.75})],
+   t1=188.51, dim=[187.65, 188.0, .35])
 ev("S55.behold", "carved", "S55", [("WARRIORS BEHOLD …", {"key": "l", "reveal": "words"})], anchor="left", light="marble", ellipsis=[190.55, 192.45])
 ev("S56.sudden", "carved", "S56", [("A SUDDEN", {"key": "l", "reveal": "words"})], anchor="left", light="beads")
 ev("S57.spark", "spark", "S57", [("SPARK", {"key": "l", "reveal": "none", "t": 194.86})])
@@ -368,7 +372,7 @@ def reading_report(events):
             n = len(it["text"])
             dt = e["t1"] - t_in
             rows.append((e["id"], it["key"], n, round(t_in, 2), round(e["t1"], 2), round(dt, 2), round(n / dt, 1) if dt > 0 else 99, it["text"]))
-        if e["fx"] in ("quote", "era"):
+        if e["fx"] in ("quote", "era", "limit"):
             n = sum(len(i["text"]) for i in e["items"]); t_in = min(i["t"] for i in e["items"]); dt = e["t1"] - t_in
             rows.append((e["id"], "together", n, round(t_in, 2), round(e["t1"], 2), round(dt, 2), round(n / dt, 1), " / ".join(i["text"] for i in e["items"])))
     return rows
