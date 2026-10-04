@@ -69,7 +69,7 @@ every Act I corona uses it.
 
 **Strokes** `brushes` (px at 1080p, 5 layers), `strokeScale`, `T` (per-layer error thresholds), `midGate`,
 `fineGate` (detail needed for the small brushes), `maxLen`, `minLen`, `fg`, `jitter`, `boil`, `boilColor`,
-`colorJit`, `accents`, `groundFlow {y0, k}` (water / open ground: horizontal flicks instead of dabs),
+`colorJit`, `orderTol`, `accents`, `groundFlow {y0, k}` (water / open ground: horizontal flicks instead of dabs),
 `swirl {cx, cy, amount, radius, smear}` (the rewind), `strokes` / `overStrokes` (extra stroke lists or fns),
 `seed`, `drawIdx` (hold a drawing: fixed boil).
 
@@ -90,7 +90,10 @@ painted with the same brushes, impasto and varnish as the rest.
   flow by fixed-point `b = -v(p + b)`, smoothed, regularised toward identity where nothing moves), so a stroke
   stays on the cheek it was painted on. Stills and canvases use the camera's affine map; skies their own vortex.
 - The boil is a per-drawing jitter (`drawIdx = round(t * cadence)`): positions, colour and thresholds wobble a
-  little each drawing; stacking order is stable per cell.
+  little each drawing; stacking order is stable per cell. The GPU draws each layer in the order the CPU canvas saw it:
+  the first layer keeps the key order except where a stroke hides a differently coloured one on the canvas
+  (`orderTol`, default .15 RGB; `strokes.js orderFirstLayer`): scraps the canvas never saw stay out of the frame,
+  except where the canvas's capsule is wider than the GPU's ribbon (a stroke's head).
 - Inserts that split a shot (S26e, S29b) pass the parent's progress so the seeds do not pop.
 
 ## Performance

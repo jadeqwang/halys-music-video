@@ -1,5 +1,6 @@
-// INK: the production anime-cel engine for the room (S78-S81). STYLE_BIBLE "INK": clean tapered line art, flat fills in
-// Jade's fixed palette with exactly one shadow tone, painted flat-shape backgrounds, on twos with real holds.
+// INK: the room (S78-S81). STYLE_BIBLE "INK": the room is painted flat shapes with clean line art; she is NOT redrawn (v3,
+// the director): her own anime footage is composited directly (direct.js), timed on twos with real holds (sheets.js). The cel
+// engine below paints the background (bg.js) and draws the stand-in stills when no plates exist.
 //
 //   import * as INK from '../worlds/ink/index.js';
 //   await INK.init();                                   // once (scene init): sources, matte index, stand-ins
@@ -7,10 +8,10 @@
 //   const cel = await INK.cel(setup, exposure)          // cached analysis of the drawing an exposure shows
 //   INK.drawCel(g, cel, view, u)                        // fills (GPU) + lines (Canvas2D) into g
 //   const bg = await INK.background(setup, W, H, view)  // the painted background (cached per setup and size)
-// Files: source.js (plates/dev/stand-ins, mattes, hybrids) · cel.js (analysis) · render.js (fills, lines) · bg.js
-// (painted background) · props.js (screens, Earth, ΔT map, Sutro) · decals.js (the print and the patch, measured on the
-// plate) · eye.js (eyes, the eclipse wink) · expr.js (drawn acting) · xsheet.js / sheets.js (timing) · palette.js (colour)
-// · prep/ (offline: mattes.py, decals.py, register.py).
+// Files: direct.js (her footage: outline, light, rim) · source.js (plates/dev/stand-ins, mattes, hybrids) · cel.js
+// (analysis) · render.js (fills, lines) · bg.js (painted background) · props.js (screens, Earth, ΔT map, Sutro) · decals.js
+// (the patch's lettering on her footage) · xsheet.js / sheets.js (timing) · palette.js (colour) · prep/ (offline:
+// direct.py, mattes.py, decals.py, register.py).
 
 import { LRU, makeCanvas } from '../../assets.js';
 import { initSources, plateRef, standinRef, drawingInput } from './source.js';

@@ -162,7 +162,10 @@ export function placeStrokes(F, ref, cfg, drawIdx, mat, eyeMask, W) {
     lap('place');
     // coverage: the first layer must leave no holes (occlusions in a flow-advected material map can leave a few)
     if (li === 0) {
-      for (const s of layer) paintVirtual(s, F, cR, cG, cB, painted, S);
+      // the first layer is painted in placement order (cells, then hole fills); `own` keeps which stroke painted each
+      // canvas pixel last, so the GPU's order can honour what this canvas saw (orderFirstLayer)
+      const own = ownBuffer(N), tr = { own, j: 0 };
+      layer.forEach((s, j) => { tr.j = j; paintVirtual(s, F, cR, cG, cB, painted, S, tr); });
       const g0 = Math.max(2, Math.round(gA * .8));
       for (let y = 0; y < ah; y += g0) for (let x = 0; x < aw; x += g0) {
         let hole = -1;
@@ -170,9 +173,9 @@ export function placeStrokes(F, ref, cfg, drawIdx, mat, eyeMask, W) {
         if (hole < 0) continue;
         const hx = hole % aw, hy = (hole / aw) | 0, kx = Math.floor(x / g0) + 100000, ky = Math.floor(y / g0) + 100000;
         const s = makeStroke(F, J, hx, hy, Ra, Rs, rb, gb, bb, cR, cG, cB, painted, cfg, li, nL, rid, hash4(kx, ky, li, seed + 11), kx, ky, seed, bseed, ref.pool[hole], S);
-        paintVirtual(s, F, cR, cG, cB, painted, S); layer.push(s);
+        tr.j = layer.length; paintVirtual(s, F, cR, cG, cB, painted, S, tr); layer.push(s);
       }
-      layer.sort((a, b) => a.key - b.key);
+      out.l0conflicts = orderFirstLayer(layer, F, cR, cG, cB, painted, S, own, cfg.orderTol ?? .15);
     } else {
       layer.sort((a, b) => a.key - b.key);
       for (const s of layer) paintVirtual(s, F, cR, cG, cB, painted, S);
@@ -240,12 +243,44 @@ function traceStroke(F, J, x0, y0, Ra, rb, gb, bb, cR, cG, cB, painted, cfg, li,
   return { pts, c };
 }
 
+// THE FIRST LAYER'S ORDER ON THE GPU. The GPU draws a layer by key (stable per cell, overlaps at random); the later
+// layers sort before they paint the CPU canvas, so the canvas sees what the GPU draws. The first layer cannot sort first
+// (its hole fills depend on what the cells left unpainted), so the canvas saw it in placement order: where two strokes
+// of different colours overlap, the GPU could put the other one on top (a sky stroke dragged across a thin dark band
+// under a bright sky came out as cream scraps that no later layer covered, since the canvas never showed them). So the
+// GPU keeps the key order except where it would contradict the canvas: a stroke is drawn after every stroke it hides
+// on the canvas by more than `tol` (RGB, cfg.orderTol, default .15: a difference that reads as a scrap; overlaps of
+// near-equal colours keep their order). The smallest-key topological order: with no such overlap it is the key order
+// exactly; otherwise only the strokes involved move. Returns the number of constraints. (Not fixable by order: where
+// the canvas's capsule footprint is wider than the GPU's ribbon, at a stroke's head, the paint under it can show.)
+let OWN = null;
+function ownBuffer(N) { if (!OWN || OWN.length < N) OWN = new Int32Array(N); OWN.fill(-1, 0, N); return OWN; }
+function orderFirstLayer(layer, F, cR, cG, cB, painted, S, own, tol) {
+  const n = layer.length, nin = new Int32Array(n), succ = new Array(n), mark = new Int32Array(n).fill(-1);
+  let ne = 0;
+  const tr = { own, mark, j: 0, measure: true, tol2: tol * tol, hit: w => { mark[w] = tr.j; (succ[tr.j] || (succ[tr.j] = [])).push(w); nin[w]++; ne++; } };
+  for (let j = 0; j < n; j++) { tr.j = j; paintVirtual(layer[j], F, cR, cG, cB, painted, S, tr); }
+  if (!ne) { layer.sort((a, b) => a.key - b.key); return 0; }
+  // Kahn's algorithm with a binary min-heap on (key, placement index)
+  const less = (a, b) => layer[a].key < layer[b].key || (layer[a].key === layer[b].key && a < b);
+  const heap = [], push = v => { heap.push(v); let i = heap.length - 1; while (i > 0) { const p = (i - 1) >> 1; if (!less(heap[i], heap[p])) break; [heap[i], heap[p]] = [heap[p], heap[i]]; i = p; } };
+  const pop = () => { const top = heap[0], last = heap.pop(); if (heap.length) { heap[0] = last; let i = 0; for (;;) { const l = 2 * i + 1, r = l + 1; let m = i; if (l < heap.length && less(heap[l], heap[m])) m = l; if (r < heap.length && less(heap[r], heap[m])) m = r; if (m === i) break; [heap[i], heap[m]] = [heap[m], heap[i]]; i = m; } } return top; };
+  for (let j = 0; j < n; j++) if (!nin[j]) push(j);
+  const order = [];
+  while (heap.length) { const j = pop(); order.push(layer[j]); for (const w of succ[j] || []) if (--nin[w] === 0) push(w); }
+  for (let j = 0; j < n; j++) layer[j] = order[j];
+  return ne;
+}
+
 // rasterise a stroke (capsules along its polyline) into the CPU canvas at analysis res: per row, the capsule's
 // x-interval is found analytically (two end disks and the swept rectangle), so only covered pixels are touched
 const profile = (u, taper) => (.55 + .45 * sstep(0, .16, u)) * (1 - taper * sstep(.5, 1, u));
-export function paintVirtual(s, F, cR, cG, cB, painted, S) {
+// tr (optional): {own, j} records stroke j as the last painter of each pixel; {own, mark, j, measure, tol2, hit} paints
+// nothing and calls hit(o) once for each stroke o (mark[o] !== j) that the canvas shows over stroke j where their colours
+// differ by more than tol
+export function paintVirtual(s, F, cR, cG, cB, painted, S, tr = null) {
   const aw = F.aw, ah = F.ah, P = s.apts || s.pts.map(([x, y]) => [x / S, y / S]), n = P.length, taper = s.taper ?? .72;
-  const c0 = s.c0, c1 = s.c1;
+  const c0 = s.c0, c1 = s.c1, own = tr && tr.own, mark = tr && tr.mark, tj = tr ? tr.j : 0, meas = !!(tr && tr.measure), tol2 = tr ? tr.tol2 : 0;
   for (let k = 0; k < n - 1; k++) {
     const ax = P[k][0], ay = P[k][1], bx = P[k + 1][0], by = P[k + 1][1], dx = bx - ax, dy = by - ay, L2 = dx * dx + dy * dy || 1e-6, L = Math.sqrt(L2);
     const t0 = k / (n - 1), t1 = (k + 1) / (n - 1), nx = -dy / L, ny = dx / L;
@@ -268,10 +303,17 @@ export function paintVirtual(s, F, cR, cG, cB, painted, S) {
       }
       if (hi < lo) continue;
       const xa = Math.max(0, Math.ceil(lo)), xb = Math.min(aw - 1, Math.floor(hi)), o = y * aw;
-      for (let x = xa; x <= xb; x++) {
+      if (!tr) for (let x = xa; x <= xb; x++) {
         let t = ((x - ax) * dx + (y - ay) * dy) / L2; t = t < 0 ? 0 : t > 1 ? 1 : t;
         const u = t0 + (t1 - t0) * t, i = o + x;
         cR[i] = c0[0] + (c1[0] - c0[0]) * u; cG[i] = c0[1] + (c1[1] - c0[1]) * u; cB[i] = c0[2] + (c1[2] - c0[2]) * u; painted[i] = 1;
+      }
+      else for (let x = xa; x <= xb; x++) {
+        let t = ((x - ax) * dx + (y - ay) * dy) / L2; t = t < 0 ? 0 : t > 1 ? 1 : t;
+        const u = t0 + (t1 - t0) * t, i = o + x, r = c0[0] + (c1[0] - c0[0]) * u, g = c0[1] + (c1[1] - c0[1]) * u, b = c0[2] + (c1[2] - c0[2]) * u;
+        if (!meas) { cR[i] = r; cG[i] = g; cB[i] = b; painted[i] = 1; own[i] = tj; continue; }
+        const w = own[i];
+        if (w !== tj && w >= 0 && mark[w] !== tj) { const er = r - cR[i], eg = g - cG[i], eb = b - cB[i]; if (er * er + eg * eg + eb * eb > tol2) tr.hit(w); }
       }
     }
   }

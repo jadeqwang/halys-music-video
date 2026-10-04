@@ -23,6 +23,8 @@ DEFAULT = {
     # v2 (REVISION_V2 decisions 6, 8): the anime plates; the frames the x-sheets use are passed with --frames
     'P57': [1, 40, 97],
     'P58': [1, 60, 121],
+    # v3: the close-up again (the sheet's own face), shown directly: every odd frame (prep/direct.py)
+    'P59': list(range(1, 122, 2)),
 }
 # per plate (its own 960x540 coordinates): keep zone, and zones where the anime model's extra objects are ignored
 ZONES = {
@@ -31,6 +33,7 @@ ZONES = {
     'P41': {'keep': (0, 0, 960, 540), 'drop': [], 'models': ('a',)},
     'P57': {'keep': (95, 70, 600, 540), 'drop': [(170, 100, 246, 345), (760, 300, 860, 430)], 'models': ('g', 'h', 'a')},   # = P39's camera
     'P58': {'keep': (0, 0, 960, 540), 'drop': [], 'models': ('a',)},
+    'P59': {'keep': (0, 0, 960, 540), 'drop': [], 'models': ('a',)},
 }
 MODEL = {'g': 'isnet-general-use', 'h': 'u2net_human_seg', 'a': 'isnet-anime'}
 _ses = {}

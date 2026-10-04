@@ -22,18 +22,35 @@ INK = pathlib.Path(__file__).resolve().parents[1]
 OUT = INK / 'direct'
 MATTES = INK / 'mattes'
 
-# the room's ends of the range (palette.js ROOM.ink / ROOM.pearl), BGR 0..1
+# the ends of the range, BGR 0..1: the room's ink at the bottom (palette.js ROOM.ink), at the top a white that leans a
+# touch toward the monitors' pearl (ROOM.pearl is #f3efe6; the full pearl dulled her face, so only a quarter of the way)
 DARK = np.array([12, 8, 7], np.float32) / 255
-LIGHT = np.array([230, 239, 243], np.float32) / 255
+LIGHT = np.array([248, 250, 252], np.float32) / 255
 
 # per plate: zones in the plate's 960x540 frame. P57 (behind her chair, P39's camera): the chair back is in front of her
 # hips; the painted room has the same chair (P39), so the plate's chair is cut out of her matte and the room's chair shows
 # through, in front of her. The chair is what stays still (the camera is locked, she moves behind it): dark pixels inside
 # the chair zone that keep their median brightness in most frames of the take, grown 2 px over its flickering outline.
+# P59 (the close-up): the monitor's white glow behind her head shows between the strands at the edges of her hair and the
+# matte keeps some of it; bright, unsaturated, cool pixels beside her face (x outside the face band, above the shoulders)
+# are the monitor, not her. In `thin` polygons, structures thinner than ~20 px are opened out of the matte.
 ZONES = {
     'P57': {'chair': [[105, 366], [228, 369], [318, 388], [340, 418], [344, 540], [100, 540]]},
-    'P59': {},
+    'P59': {'glow': {'face_x': (338, 612), 'y_max': 375},
+            # the chair back behind her right shoulder (frame right): the matte keeps its thin orange rim as a hollow loop;
+            # thin structures there are opened away (her hair mass and shoulder are thick and stay)
+            'thin': [[[722, 340], [826, 340], [826, 488], [722, 446]]]},
 }
+
+
+def glow_mask(frame, Z):
+    H, W = frame.shape[:2]; k = W / 960
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    b, r = frame[..., 0].astype(np.int16), frame[..., 2].astype(np.int16)
+    m = (hsv[..., 2] > 190) & (hsv[..., 1] < 60) & (b >= r - 10)
+    x0, x1 = [int(v * k) for v in Z['face_x']]
+    m[:, x0:x1] = False; m[int(Z['y_max'] * k):] = False
+    return cv2.dilate(m.astype(np.uint8), np.ones((5, 5), np.uint8))
 
 
 def static_mask(src, poly960, sd_max=0.035, l_max=0.55):
@@ -47,7 +64,9 @@ def static_mask(src, poly960, sd_max=0.035, l_max=0.55):
     n, lab, st, _ = cv2.connectedComponentsWithStats(m, 8)
     if n > 1: m = (lab == 1 + np.argmax(st[1:, cv2.CC_STAT_AREA])).astype(np.uint8)
     m = cv2.morphologyEx(m, cv2.MORPH_CLOSE, np.ones((7, 7), np.uint8))
-    return cv2.dilate(m, np.ones((5, 5), np.uint8)) * (poly > 0)
+    m = cv2.dilate(m, np.ones((5, 5), np.uint8)) * (poly > 0)
+    sm = cv2.GaussianBlur(m.astype(np.float32), (0, 0), 2.5)          # a smooth, antialiased cut line
+    return np.clip((sm - 0.5) * 2.5 + 0.5, 0, 1)
 
 
 def grade(bgr):
@@ -55,7 +74,7 @@ def grade(bgr):
     loses a quarter of its chroma; her eyes, skin and the orange keep theirs), map 0..1 onto the room's ink..pearl."""
     x = bgr.astype(np.float32) / 255
     x = np.clip((x - 0.012) / 0.976, 0, 1)
-    x = x * x * (3 - 2 * x) * 0.18 + x * 0.82
+    x = x * x * (3 - 2 * x) * 0.12 + x * 0.88
     hsv = cv2.cvtColor((x * 255).astype(np.uint8), cv2.COLOR_BGR2HSV).astype(np.float32)
     h = hsv[..., 0] * 2
     blue = np.clip(1 - np.abs(h - 225) / 45, 0, 1)
@@ -79,13 +98,21 @@ def alpha_of(frame, m960, pid, cut=None):
     m = cv2.resize(m960, (W, H), interpolation=cv2.INTER_CUBIC)
     I = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY).astype(np.float32) / 255
     m = np.clip(guided(I, np.clip(m, 0, 1), 3, 2e-3), 0, 1)
+    m = cv2.GaussianBlur(m, (0, 0), 1.1)                           # a smooth contour (the matte is 960 px, the frame 1280)
     a = np.clip((m - 0.35) / 0.3, 0, 1); a = a * a * (3 - 2 * a)
     if cut is not None:
         a = a * (1 - cut)
+    if 'glow' in ZONES.get(pid, {}):
+        a = a * (1 - glow_mask(frame, ZONES[pid]['glow']))
+    for poly in ZONES.get(pid, {}).get('thin', []):
+        m = np.zeros((H, W), np.uint8); cv2.fillPoly(m, [np.int32(np.array(poly) * W / 960)], 1)
+        op = cv2.dilate(cv2.erode(a, np.ones((21, 21), np.uint8)), np.ones((21, 21), np.uint8))
+        w = cv2.GaussianBlur(m.astype(np.float32), (0, 0), 3.0)
+        a = a * (1 - w) + np.minimum(a, op) * w
     b = (a > 0.5).astype(np.uint8)
     b = cv2.morphologyEx(b, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
     if cut is not None:   # slivers of the chair's flickering rim left along the cut: open harder near the chair only
-        near = cv2.dilate(cut, np.ones((15, 15), np.uint8)) > 0
+        near = cv2.dilate((cut > 0.02).astype(np.uint8), np.ones((15, 15), np.uint8)) > 0
         b = np.where(near, cv2.morphologyEx(b, cv2.MORPH_OPEN, np.ones((7, 7), np.uint8)), b)
     n, lab, st, _ = cv2.connectedComponentsWithStats(b, 8)
     if n > 1:   # her, not specks: components above 0.4% of the largest
@@ -126,7 +153,7 @@ def run(pid, frames, force=False):
     cut = None
     if 'chair' in ZONES.get(pid, {}):
         cut = static_mask(src, ZONES[pid]['chair'])
-        cv2.imwrite(str(od / 'chair.png'), cut * 255)
+        cv2.imwrite(str(od / 'chair.png'), (cut * 255).astype(np.uint8))
     done = []
     for pf in frames:
         dst = od / f'd{pf:04d}.webp'
