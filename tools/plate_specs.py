@@ -1117,6 +1117,23 @@ PLATES.update({
                 f"the far bank. Camera static. Low golden sun at frame right, long shadows, clear air. {REAL} No blood. {PERIOD} {NOTXT}"),
         notes="S25 v2: P15's mirrored face-off, now with the melee raging on the shore behind them."),
 })
+# P62 retake: with P15's first frame the far bank stayed a line of soldiers in stances (the first frame's ranks anchored it);
+# v2 drops the first frame and describes the melee raging from the first frame, the costumes from the sheets
+PLATES["P62"]["prompt_v1"] = PLATES["P62"]["prompt"]
+PLATES["P62"]["first_frame_v1"] = PLATES["P62"].pop("first_frame")
+PLATES["P62"].update(
+    refs=["LYD", "MED"], avatar=True,
+    retake_note="takes 1-2 (first frame = P15 take 2 f1): the far bank stays a line of soldiers in fighting stances, not a melee",
+    prompt=("Medium-wide shot, camera static at waist height, in the knee-deep red-brown shallows of a river in the late afternoon: "
+            f"a symmetrical face-off. {LYD_S.format(n=1)[0].upper() + LYD_S.format(n=1)[1:]}, holding a spear, stands on the left in "
+            f"profile facing right; {MED_S.format(n=2)}, holding a spear, stands on the right in profile facing left. Exactly centred "
+            "and mirrored, full figures, shields up, spear points lowered toward each other, the gap between them in the middle of the "
+            "frame; they step slowly sideways, circling, eyes locked, and do not strike. Behind them, across the water on a gravel bank, "
+            "a raging battle fills the whole width of the frame from the very first frame: dozens of Lydians (crested bronze helmets, "
+            "crimson tunics, lion shields) and Medes (red felt caps, ochre tunics, wicker shields) locked in combat in pairs and knots, "
+            "spears thrusting, shields slamming, swords swung, men shoving, falling and getting up again, dust kicked up; it never "
+            "pauses and nobody watches the two men in the water. Low golden sun at frame right, long shadows, warm rim light, clear "
+            f"air. {REAL} No blood. {NOSING} {SHEET_ONLY} {PERIOD} {NOTXT}"))
 
 # ---------------------------------------------------------------- v2 revision, GOLD (production/REVISION_V2.md decision 5)
 # "Bronze was precious: nobody throws it away." Caught mid-action, shocked, they let go: weapons FALL from opening hands,

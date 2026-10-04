@@ -423,13 +423,13 @@
     "bronze"
    ],
    "plates": [
-    "P12"
+    "P60"
    ],
    "cues": [],
    "section": "3 · Intro B, 27.24–67.42 (B16–38), the boom, the build, first contact",
-   "picture": "Full orchestra: the duel, strikes landing on beats.",
+   "picture": "Full orchestra: the duel, strikes landing on beats, **in the middle of the battle** (both lines fight in the shallows behind them, as in S17).",
    "text": "counter",
-   "sync": ""
+   "sync": "Strikes on 51.72, 52.60, 53.47 (shields slam), 54.78"
   },
   {
    "id": "S20",
@@ -457,13 +457,13 @@
     "bronze"
    ],
    "plates": [
-    "P13"
+    "P61"
    ],
    "cues": [],
    "section": "3 · Intro B, 27.24–67.42 (B16–38), the boom, the build, first contact",
-   "picture": "The Lydian is knocked into the water; the Mede's spear comes down; he rolls clear.",
+   "picture": "The Lydian is knocked into the water; the Mede's spear comes down; he rolls clear. The battle goes on in the shallows behind them.",
    "text": "counter",
-   "sync": ""
+   "sync": "Down on the 59.60 timpani; the spear in the water on 60.90"
   },
   {
    "id": "S22",
@@ -542,6 +542,7 @@
     "bronze"
    ],
    "plates": [
+    "P62",
     "P15"
    ],
    "cues": [
@@ -562,7 +563,7 @@
     }
    ],
    "section": "4 · Verse 1, 67.42–90.03 (B39–51). Big lyrics.",
-   "picture": "The two heroes face off in the shallows, centred and mirrored; cut at 77.88 to the shore melee.",
+   "picture": "The two heroes face off in the shallows, centred and mirrored, **the melee raging on the shore behind them**; cut at 77.88 to the shore melee.",
    "text": "CARVED `LYDIANS` over left · `MEDES` over right, then `SLEW EACH OTHER ON THE SHORE` across the bottom",
    "sync": "Words 74.66–79.15"
   },

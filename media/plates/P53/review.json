@@ -1,0 +1,45 @@
+{
+ "plate": "P53",
+ "shots": "S62 (-> S63 match cut)",
+ "t_song": [
+  211.44,
+  216.44
+ ],
+ "audio_t0": 211.44,
+ "chosen": 2,
+ "chosen_why": "A long straight blade, centred and still; the owner walks off; no sun disk in frame (take 1: sun in frame with rays, shorter sword left of centre).",
+ "takes": {
+  "2": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "A dropped sword stands upright, point down in the mud at the water's edge, while its owner walks away up the bank toward home.",
+   "costume": "Correct.",
+   "identity": "Consistent.",
+   "artefacts": "The brush engine paints cream scraps on the dark far bank (renderer workaround in S62).",
+   "notes": "Chosen. Sword axis u .533, pommel v .110, waterline v .865.",
+   "sync": [
+    {
+     "song_t": 211.44,
+     "event": "'Home': 1:1 from 0.10 s in",
+     "measured_plate_t": 0.1,
+     "offset_s": 0.1,
+     "method": "manual"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P53/take2.review.jpg",
+   "contact": "media/plates/P53/take2.sheet.jpg"
+  },
+  "1": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "The same action.",
+   "costume": "Correct.",
+   "identity": "Consistent.",
+   "artefacts": "Sun in frame with rays; the sword is shorter, left of centre and wooden-looking.",
+   "notes": "Alternate.",
+   "contact": "media/plates/P53/take1.sheet.jpg"
+  }
+ },
+ "t_chosen": "2026-10-04T00:03:07"
+}

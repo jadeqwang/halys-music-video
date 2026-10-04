@@ -1,0 +1,110 @@
+{
+ "plate": "P54",
+ "shots": "S75, S76 (+ S77's first 0.6 s in lines)",
+ "t_song": [
+  259.355,
+  264.355
+ ],
+ "audio_t0": 259.355,
+ "chosen": 5,
+ "chosen_why": "One wave of falling blades and a single, clear late man (the nearest Lydian), no posing.",
+ "takes": {
+  "5": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "Battle line down its length; every hand but one opens (~1.55 s), the swords fall into the sand (~1.9 s); the nearest Lydian lets go late (~3.55 s), his sword lands ~3.7 s; serious faces.",
+   "costume": "Correct.",
+   "identity": "Consistent.",
+   "artefacts": "Late gap 1.65 s in the plate vs 0.43 s in the music (compressed); the swords stick upright in the sand.",
+   "notes": "Chosen (prompt v3).",
+   "sync": [
+    {
+     "song_t": 260.45,
+     "event": "the hands open",
+     "measured_plate_t": 1.58,
+     "offset_s": 0.485,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 260.72,
+     "event": "BLADE: the swords hit the sand",
+     "measured_plate_t": 1.9,
+     "offset_s": 0.535,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 260.83,
+     "event": "the late hand opens (held sword squeezed into one drawing)",
+     "measured_plate_t": 3.54,
+     "offset_s": 2.065,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 261.04,
+     "event": "261.05 hit: the late sword lands",
+     "measured_plate_t": 3.715,
+     "offset_s": 2.03,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 262.72,
+     "event": "still, to the boom",
+     "measured_plate_t": 5.0,
+     "offset_s": 1.635,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P54/take5.review.jpg",
+   "contact": "media/plates/P54/take5.sheet.jpg"
+  },
+  "6": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "v3: a late Lydian holds his sword out and drops it at ~2.7 s.",
+   "costume": "Correct.",
+   "identity": "Consistent.",
+   "artefacts": "Red-pink sky rather than gold.",
+   "notes": "Alternate.",
+   "contact": "media/plates/P54/take6.sheet.jpg"
+  },
+  "4": {
+   "verdict": "weak",
+   "score": 2,
+   "purpose": "v2: every blade at once.",
+   "costume": "Correct.",
+   "identity": "Consistent.",
+   "artefacts": "No late man (the named Mede dropped with the rest).",
+   "notes": "",
+   "contact": "media/plates/P54/take4.sheet.jpg"
+  },
+  "2": {
+   "verdict": "weak",
+   "score": 2,
+   "purpose": "v1: unison drop, swords flat on the sand.",
+   "costume": "Correct.",
+   "identity": "Consistent.",
+   "artefacts": "No late man.",
+   "notes": "",
+   "contact": "media/plates/P54/take2.sheet.jpg"
+  },
+  "1": {
+   "verdict": "fail",
+   "score": 1,
+   "purpose": "v1.",
+   "costume": "Correct.",
+   "identity": "Consistent.",
+   "artefacts": "The front pair turns to the camera and stands posed.",
+   "notes": "",
+   "contact": "media/plates/P54/take1.sheet.jpg"
+  },
+  "3": {
+   "verdict": "lost",
+   "score": 0,
+   "purpose": "v2",
+   "artefacts": "HTTP 502 on submit; job halys-plate-P54-20261003-223511-f790c4 still reads as running (may be billed).",
+   "notes": ""
+  }
+ },
+ "t_chosen": "2026-10-04T00:03:07"
+}

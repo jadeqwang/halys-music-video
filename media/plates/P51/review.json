@@ -1,0 +1,66 @@
+{
+ "plate": "P51",
+ "shots": "S61",
+ "t_song": [
+  208.7,
+  213.7
+ ],
+ "audio_t0": 208.7,
+ "chosen": 1,
+ "chosen_why": "Both lines at the water's edge, mirrored and equal; a clear stop and a clear drop (take 2: a medium shot, one Lydian against many Medes).",
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "Caught mid-fight at the water's edge, they stop dead (~1.4 s), the hands open (2.0-2.3 s), swords and spears fall into the shallows and onto the bank (~2.7 s).",
+   "costume": "Correct.",
+   "identity": "Consistent.",
+   "artefacts": "Drop small at army scale; MediaPipe reads the Mede's wicker shield as a face.",
+   "notes": "Chosen.",
+   "sync": [
+    {
+     "song_t": 209.1,
+     "event": "they stop dead",
+     "measured_plate_t": 1.38,
+     "offset_s": 0.98,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 209.55,
+     "event": "'your': the hands open",
+     "measured_plate_t": 2.28,
+     "offset_s": 1.43,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 209.945,
+     "event": "'blade': the weapons land",
+     "measured_plate_t": 2.66,
+     "offset_s": 1.415,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 210.18,
+     "event": "low end out: cut to S61b",
+     "measured_plate_t": 2.95,
+     "offset_s": 1.47,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P51/take1.review.jpg",
+   "contact": "media/plates/P51/take1.sheet.jpg"
+  },
+  "2": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "Medium shot: the Lydian lets go in the water.",
+   "costume": "Correct.",
+   "identity": "Consistent.",
+   "artefacts": "Unequal (one Lydian, many Medes); the drop is hard to see.",
+   "notes": "Alternate.",
+   "contact": "media/plates/P51/take2.sheet.jpg"
+  }
+ },
+ "t_chosen": "2026-10-04T00:03:07"
+}

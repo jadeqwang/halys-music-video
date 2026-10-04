@@ -30,7 +30,7 @@ const VARS = { timing: { timing: 1 }, canvas: { debugCanvas: 1 }, nomat: { _noma
 // plate time 0 = the start of the song window each plate was generated against (tools/plate_specs.py t_song)
 const T0 = { P01: 7.18, P02: 0, P03: 14.19, P04: 17.66, P05: 21.15, P06: 21.15, P07: 25.5, P08: 26.0, P09: 32.47, P10: 35.98, P11: 39.48, P12: 44.73,
   P13: 58.72, P14: 65.67, P15: 74.41, P16: 81.36, P17: 85.91, P18: 89.22, P19: 93.0, P20: 100.24, P21: 103.64, P22a: 105.85, P22b: 105.85, P23: 3.65,
-  P48: 44.06, P49: 46.49, P50: 88.28 };
+  P48: 44.06, P49: 46.49, P50: 88.28, P60: 51.27, P61: 58.72, P62: 74.41 };
 // shots that reuse a plate at another song time map song -> plate time explicitly (keys [[songT, plateT], ...])
 const KEYS = {
   S04: { P01: [[5.40, 1.78], [7.18, 0]] },              // the rewind runs the plate backwards
@@ -39,7 +39,9 @@ const KEYS = {
   S24: { P01: [[67.42, .2], [74.41, 4.4]] }, S30: { P01: [[96.89, 1.0], [100.24, 4.4]] },
   S09: { P05: [[21.15, .25], [25.5, 4.6]], P06: [[21.15, .4], [25.5, 4.75]] },
   S11: { P08: [[27.24, 1.58], [28.98, 3.32]] },
-  S21: { P13: [[58.72, .12], [59.60, 1.0], [62.20, 3.5]] },
+  // S21 (v2): P61 (take 2): the Lydian splashes down on the 59.60 timpani, the spear stabs the water on the 60.90 beat as he
+  // rolls clear, up on one knee for the 62.20 cut (P13 = v1, the fallback)
+  S21: { P61: [[58.72, .1], [59.596, 1.15], [60.895, 2.15], [62.195, 3.35]], P13: [[58.72, .12], [59.60, 1.0], [62.20, 3.5]] },
   S23: { P14: [[65.67, 1.4], [67.42, 3.15]] },            // the face is dark in the plate's first 1.6 s
   S25: { P15: [[74.41, 0], [77.88, 3.38], [81.36, 6.86]] },
   // S28 (v2): P50 (take 2) is fighting until ~1.7 s; the faces turn up left to right (the left Lydian ~1.9, the sword-bearer
@@ -57,7 +59,10 @@ const KEYS = {
   S17: { P48: [[44.73, .67], [46.057, 2.0], [46.49, 2.43]], P12: [[44.73, .79], [46.06, 2.12], [46.49, 2.55]] },
   S18: { P49: [[46.49, .7], [51.72, 5.93]], P12: [[46.49, 2.55], [47.56, 3.30], [48.91, 3.88], [49.53, 5.20], [50.63, 6.05], [51.48, 6.90], [51.72, 7.1]] },
   S26: { P16: [[81.36, .1], [84.38, 2.5], [84.83, 2.95]] },   // the flare on the cheek guard lands on "bronze" (84.38)
-  S19: { P12: [[51.72, 2.9], [52.17, 3.30], [52.60, 3.88], [53.47, 5.20], [54.35, 6.05], [54.78, 6.90], [55.22, 7.35]] },
+  // S19 (v2): P60 (take 2): the cut lands on the spear meeting the wicker shield (51.72 downbeat), the lion shield turns the
+  // next thrust on 52.60, the shields slam on the 53.47 timpani, the next turn on 54.78 (P12 = v1, the fallback)
+  S19: { P60: [[51.716, .5], [52.596, 1.62], [53.466, 2.25], [54.776, 3.86], [55.216, 4.38]],
+    P12: [[51.72, 2.9], [52.17, 3.30], [52.60, 3.88], [53.47, 5.20], [54.35, 6.05], [54.78, 6.90], [55.22, 7.35]] },
   S22: { P05: [[62.2, 2.5], [65.67, 5.97]], P06: [[62.2, 2.5], [65.67, 5.97]] },
   S15: { P11: [[39.48, .5], [40.357, 1.6], [40.358, 3.3], [41.24, 4.4]] },   // the plate itself cuts from the Lydian to the Mede
   S31: { P20: [[100.24, 0], [102.21, 2.0], [103.64, 3.4]] },
@@ -504,10 +509,12 @@ async function duelLook(f, src, pcam, o = {}) {
 // in from frame right; we paint it where v1 had it, high in the battle's dust at the top right (the haze over the melee
 // becomes sky). Until P48 is analysed: v1 (P12, the duel alone).
 const S17_SUN = { '16:9': [.86, .13], portrait: [.8, .1] };
+// from S18 on the counter sits in the top right corner: S19 / S21 keep the sun up in the dust but clear of it
+const S19_SUN = { '16:9': [.66, .12], portrait: [.6, .12] };
 // the look of the duel in the middle of the battle (P48 and its continuations P60 / P61): side light from the low sun at
 // the top right, the dust over the melee painted as sky, a warm pool on the exchange
 function battleDuelLook(f, src, pool, o = {}) {
-  const sun = S17_SUN[f.W / f.H > 1.2 ? '16:9' : 'portrait'];
+  const sun = (o.sun || S17_SUN)[f.W / f.H > 1.2 ? '16:9' : 'portrait'];
   return plateLook(src, { lightDir: [.8, -.55], lightPoint: sun, keep: .5, keepDim: .82, fromLight: .75, bg: .3, rim: .85, poolMatte: .5, body: .45,
     pool, extra: { glint: 1.1, groundFlow: { y0: o.groundY ?? .6, k: .8 },
       sky: SKY(f.t, { maxDepth: .03, soft: .03, below: .32, horizonY: .27, drama: .45, glow: 1.05, glowR: .26 }),
@@ -526,12 +533,28 @@ scene('S17', async f => {
   const src = await rp(f, 'P12', { id: 'a_duel', cam: k => ({ cx: .5, cy: .48, zoom: 1.05 + .06 * k }) }, pcam);
   await bronze(f, src, hasPlate('P12') ? await duelLook(f, src, pcam) : { ...DUEL_LIGHT, sky: SKY(f.t, { maxDepth: .006, soft: .01, below: .16, horizonY: .11 }), sun: SUN(f.t, { x: .12, y: .05, r: .03 }) });
 });
+// S19 / S21 v2 (the director's principle, decision 2: nobody fights alone): P60 and P61 continue P48's shot (its frames 97
+// and 84 as first frames), so the duel stays in the middle of the battle with S17's light. Until they are analysed: v1.
 scene('S19', async f => {
+  if (hasPlate('P60')) {
+    // full orchestra: a little sway and push; portrait holds the Mede and the clash (S17's portrait held the Lydian)
+    const wide = f.W / f.H > 1.2, cx = wide ? .5 : .6, pcam = k => ({ cx: cx + .012 * Math.sin(k * 3), cy: .5, zoom: 1.04 + .05 * k });
+    const src = await rp(f, 'P60', null, pcam);
+    await bronze(f, src, battleDuelLook(f, src, [{ x: wide ? .48 : .3, y: .42, rx: wide ? .26 : .4, ry: .32, feather: .75, k: .7, fig: true }], { sun: S19_SUN }));
+    return;
+  }
   const pcam = k => ({ cx: .5 + .015 * Math.sin(k * 3), cy: .52, zoom: 1.1 + .05 * k });
   const src = await rp(f, 'P12', { id: 'a_duel', cam: k => ({ cx: .47 + .02 * Math.sin(k * 3), cy: .46, zoom: 1.2 + .05 * k }) }, pcam);
   await bronze(f, src, hasPlate('P12') ? await duelLook(f, src, pcam) : { ...DUEL_LIGHT });
 });
 scene('S21', async f => {
+  if (hasPlate('P61')) {
+    // (portrait holds the Lydian going down and the spear stabbing the water beside him)
+    const wide = f.W / f.H > 1.2, cx = wide ? .5 : .36, pcam = k => ({ cx, cy: .52, zoom: 1.04 + .05 * k });
+    const src = await rp(f, 'P61', null, pcam);
+    await bronze(f, src, battleDuelLook(f, src, [{ x: wide ? .4 : .5, y: .55, rx: wide ? .3 : .45, ry: .35, feather: .75, k: .75, fig: true }], { groundY: .55, sun: S19_SUN }));
+    return;
+  }
   const src = await rp(f, 'P13', { id: 'a_duel', cam: k => ({ cx: .42, cy: .58, zoom: 1.5 + .1 * k }) }, k => ({ cx: .5, cy: .52, zoom: 1.04 + .05 * k }));
   await bronze(f, src, hasPlate('P13') ? plateLook(src, { lightDir: [-.6, -.8], keep: .45, rim: .8, extra: { groundFlow: { y0: .45, k: .8 } } })
     : { ...DUEL_LIGHT, pool: [{ x: .45, y: .55, rx: .3, ry: .45, feather: .7, k: .9 }] });
@@ -606,8 +629,28 @@ scene('S23', async f => {
 });
 
 // ---------------------------------------------------------------- S25: the face-off, centred and mirrored; cut at 77.88 to the shore melee
+// v2 (the director's principle, decision 2): the face-off is P62 (take 3): the same mirrored pair in the water, the battle
+// raging on the shore behind them from the first frame; LYDIANS / MEDES stay over them. The cut to P15's shore melee lands
+// exactly on 77.875 (S25b; v1 cut on the next drawing, 77.917).
+shotOverride('S25', { t1: 77.875 });
+shot({ id: 'S25b', t0: 77.875, t1: 81.36, world: 'bronze', cadence: 12, scene: 'S25', parent: 'S25', params: { label: 'S25 the shore melee (cut on 77.875)', melee: 1 } });
 scene('S25', async f => {
-  const melee = f.t >= 77.875, real = hasPlate('P15');
+  const melee = !!f.params.melee, real = hasPlate('P15');
+  if (!melee && hasPlate('P62')) {
+    // the face-off, side-lit, centred and mirrored; the plate's bright sky above v .25 becomes our sky with the sun in the
+    // top right corner (as the plate has it); a warm pool on each hero, the melee behind them in the plate's own light
+    const pcam = k => ({ cx: .5, cy: .5, zoom: 1.02 + .03 * k });
+    const src = await rp(f, 'P62', null, pcam), hzY = .25;
+    src.sky = brightSky(src, hzY);
+    const sun = (await plateSunUV(f, 'P62', pcam)) || [.96, .08];
+    await bronze(f, src, plateLook(src, { lightDir: [.8, -.5], lightPoint: sun, keep: .55, keepDim: .85, fromLight: .7, bg: .35, rim: .5, poolMatte: .5, body: 0,
+      pool: [{ x: .27, y: .45, rx: .15, ry: .45, feather: .6, k: .95, fig: true }, { x: .7, y: .45, rx: .15, ry: .45, feather: .6, k: .95, fig: true },
+        { x: .5, y: .28, rx: .5, ry: .1, feather: .8, k: .55 }],      // the melee on the bank behind them
+      extra: { exposure: 1.05, groundFlow: { y0: .52, k: .7 },
+        sky: SKY(f.t, { horizonY: hzY, below: hzY + .03, drama: .4, glow: 1.15, glowR: .3, cover: .48, vortex: .3, zenith: .3 }),
+        sun: SUN(f.t, { x: Math.min(.97, sun[0]), y: Math.max(.05, sun[1]), r: .026 }) } }));
+    return;
+  }
   const pcam = melee ? (k => ({ cx: .5, cy: .45, zoom: 1.12 + .04 * k })) : (k => ({ cx: .5, cy: .5, zoom: 1.02 + .03 * k }));
   const src = melee
     ? await rp(f, 'P15', { id: 'c_armies', cam: k => ({ cx: .73 - .03 * k, cy: .7, zoom: 3.0 }) }, real ? pcam : k => ({ cx: .5, cy: .4, zoom: 1.5 + .05 * k }))

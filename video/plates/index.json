@@ -880,5 +880,47 @@
   "src_h": 720,
   "dur": 5.042,
   "gain": 1.849
+ },
+ "P60": {
+  "n": 121,
+  "mattes": 61,
+  "depth": 61,
+  "fields": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take2.mp4",
+  "src_w": 1280,
+  "src_h": 720,
+  "dur": 5.042,
+  "gain": 1.118
+ },
+ "P61": {
+  "n": 121,
+  "mattes": 61,
+  "depth": 0,
+  "fields": 0,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take2.mp4",
+  "src_w": 1280,
+  "src_h": 720,
+  "dur": 5.042,
+  "gain": 1.0
+ },
+ "P62": {
+  "n": 121,
+  "mattes": 0,
+  "depth": 0,
+  "fields": 0,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take3.mp4",
+  "src_w": 1280,
+  "src_h": 720,
+  "dur": 5.042,
+  "gain": 1.0
  }
 }

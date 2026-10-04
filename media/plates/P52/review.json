@@ -1,0 +1,59 @@
+{
+ "plate": "P52",
+ "shots": "S61b",
+ "t_song": [
+  210.18,
+  214.18
+ ],
+ "audio_t0": 210.18,
+ "chosen": 2,
+ "chosen_why": "Golden backlight, red water, rim-lit arm; the fingers open and the sword slides point-first into the shallows (take 1: flat light, green water).",
+ "takes": {
+  "2": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "The Lydian's hand opens and his sword drops point-first into the red shallows, standing in the mud; the guard meets the surface with a splash.",
+   "costume": "Correct sleeve and scales.",
+   "identity": "n/a (hand).",
+   "artefacts": "The hand holds still for 2.8 s before it opens (the shot uses the last 1.5 s).",
+   "notes": "Chosen.",
+   "sync": [
+    {
+     "song_t": 210.42,
+     "event": "the fingers open",
+     "measured_plate_t": 2.88,
+     "offset_s": 2.64,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 211.3,
+     "event": "the guard meets the water",
+     "measured_plate_t": 3.92,
+     "offset_s": 2.8,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 211.44,
+     "event": "'Home': cut out",
+     "measured_plate_t": 4.04,
+     "offset_s": 2.78,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P52/take2.review.jpg",
+   "contact": "media/plates/P52/take2.sheet.jpg"
+  },
+  "1": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "The hand opens; the sword drops and stands guard-deep.",
+   "costume": "Correct.",
+   "identity": "n/a.",
+   "artefacts": "Flat front light, olive-green water, arm from the left.",
+   "notes": "Alternate.",
+   "contact": "media/plates/P52/take1.sheet.jpg"
+  }
+ },
+ "t_chosen": "2026-10-04T00:03:07"
+}

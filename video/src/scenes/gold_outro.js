@@ -10,9 +10,9 @@
 //                        design's clang (260.685)
 //   261.05 hit           a late one: the nearest Lydian, the only man still holding his sword, lets go; it lands on the hit
 //   -> 262.72            they stand empty-handed, facing each other; S77's pull-back starts from S76's last drawing
-// P54's own timing is loose (its late drop comes 1.6 s after the others against 0.43 s in the music), so it is retimed
+// P54's own timing is loose (its late drop comes 1.65 s after the others against 0.43 s in the music), so it is retimed
 // with keys: the fight a little faster than the plate, the main drop at plate speed on BLADE, the long held sword
-// compressed into the 0.4 s before the hit, then the stillness slowed to fill the bar.
+// squeezed into one drawing just before the hit, then the stillness slowed to fill the bar.
 
 import { scene } from '../registry.js';
 import { resolvePlate, hasPlate, plateTimeOf } from '../worlds/brush/index.js';

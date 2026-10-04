@@ -895,3 +895,61 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 * **Notes for the renderer:** S28 = plate 1.3-3.3 through the keys (fighting at the cut-in, one face per word, all up on the boom). MediaPipe locks onto the lion shield as a face from frame 45 on, so act1.js ignores the plate's faces and keys the five heads by hand.
 * **Review sheet:** `media/plates/P50/take2.review.jpg` (motion curve; the head turns are measured by frame inspection, the curve follows the bodies); 8-frame contact `media/plates/P50/take2.sheet.jpg`.
 * Take 1: pass 3: The left group is two Medes against the Lydian who also raises the sword; the turn-ups are small; more open sky.
+
+### P51 · Caught mid-fight, they let go (v2, GOLD; REVISION_V2 decision 5)
+
+* **Shots:** S61 (v2, replaces P32's rain of thrown blades). **Window:** song [208.70, 213.70], audio reference cut at t0 = 208.70 s (Halys.mp3), 5 s, 2 takes reviewed. **Spend:** $2.31.
+* **Chosen:** take 1 → `media/plates/P51/take1.mp4`; analysis in `video/plates/P51/` (frames 121, fields 121, mattes 61 with `isnet-general-use`, depth 61, gain 1.313). Both lines at the water's edge, mirrored and equal in weight, with a clear stop and a clear drop.
+* **Delivers:** a wide shot at the edge of the red river in low golden backlight. Lydians (crests, crimson, lion shields) come from the left, Medes (red caps, ochre, wicker shields) from the right, and a Lydian and a Mede are locked in the centre. They fight from 0 to 1.3 s (a sword on a shield, spear thrusts, spray). At about 1.4 s they stop dead, and the motion falls from 1.3 to 0.4 by 1.5 s. The hands open at 2.0–2.3 s. Swords and spears fall into the shallows and onto the bank by about 2.7 s, and then the men stand empty-handed.
+* **Sync keys** (song s → plate s, offset = plate − (song − t0)):
+  * 208.700 → 0.55 (+0.55 s) · "Throw": cut in mid-swing
+  * 209.100 → 1.38 (+0.98 s) · they stop dead
+  * 209.550 → 2.28 (+1.43 s) · "your": the hands open
+  * 209.945 → 2.66 (+1.42 s) · "blade": the weapons land
+  * 210.180 → 2.95 (+1.47 s) · low end out: cut to S61b
+* **Checks:** Costumes match the sheets · Equal numbers on both sides · Nobody throws.
+* **Notes for the renderer:** MediaPipe takes the Mede's wicker shield (its boss reads as a nose) for a face, so S61 paints no eyes (`eyeStrokes: 0`). The water's glare is pulled toward red ochre (`redRiver(src, .45, .85, .6)`).
+* **Review sheet:** `media/plates/P51/take1.review.jpg` (motion curve + frames at the hits); 8-frame contact `media/plates/P51/take1.sheet.jpg`.
+* Take 2: pass 3: a medium shot with one Lydian against many Medes (unequal), and the drop is hard to see.
+
+### P52 · One hand lets go (v2, GOLD; REVISION_V2 decision 5)
+
+* **Shots:** S61b, under the held "blade" (210.18–211.44). **Window:** song [210.18, 214.18], audio reference cut at t0 = 210.18 s, 4 s, 2 takes reviewed. **Spend:** $1.85.
+* **Chosen:** take 2 → `media/plates/P52/take2.mp4`; analysis in `video/plates/P52/` (frames 97, fields 97, mattes 49 with `isnet-general-use`, depth 49, gain 1.396). It has golden backlight, red water, a rim light on the arm, and the release.
+* **Delivers:** a close shot at water level. The Lydian's arm comes in from the right (crimson sleeve, bronze scales) and holds a short sword point-down, its tip in the red water. At about 2.85 s the fingers open and the sword slides down point-first. It stands in the mud, and its guard meets the surface with a small splash at about 3.9 s. The open hand stays above it.
+* **Sync keys:** 210.180 → 2.50 (+2.50 s) · 210.420 → 2.88 (+2.64 s), the fingers open · 211.300 → 3.92 (+2.80 s), the guard meets the water · 211.440 → 4.04 (+2.78 s), "Home": cut out.
+* **Checks:** Correct sleeve and scales · Anatomically correct hand · No throwing.
+* **Notes for the renderer:** In landscape the sword sits right of centre (x 0.66), clear of the lyric block on the left. In portrait it sits at x 0.8, beside the short lyric lines, and the camera tilts down with it so that the hilt comes to rest above the last line.
+* **Review sheet:** `media/plates/P52/take2.review.jpg`; contact `media/plates/P52/take2.sheet.jpg`.
+* Take 1: pass 3: flat front light, olive-green water, and the arm comes in from the left. The drop (2.3–2.8 s) is fine.
+
+### P53 · The sword stays; its owner walks home (v2, GOLD; REVISION_V2 decision 5)
+
+* **Shots:** S62 (v2, replaces P33's toss), the match cut to P34 at 215.29. **Window:** song [211.44, 216.44], audio reference cut at t0 = 211.44 s, 5 s, 2 takes reviewed. **Spend:** $2.31.
+* **Chosen:** take 2 → `media/plates/P53/take2.mp4`; analysis in `video/plates/P53/` (frames 121, fields 121, mattes 61 with `isnet-general-use`, depth 61, gain 1.0). The blade is long, straight and centred, and the sun stays out of frame.
+* **Delivers:** a low shot at the water's edge under golden clouds. A sword (steel-grey blade, bronze guard, dark grip, round pommel) stands upright and perfectly still, point down in the mud where the water laps the bank. Measured in plate uv: axis u 0.533, pommel top v 0.110, waterline v 0.865. Its owner (the Lydian: crest, crimson, scale corselet, lion shield) stands beside it. At about 0.4 s he turns and walks away up the bank toward the right without looking back, and by about 4 s he is a small full figure. Other men walk off along the horizon, and the red water reflects them.
+* **Sync:** 1:1 from 0.10 s in (211.44 → 0.10). The camera eases in until the blade is the vertical where P34's starship stands on its pad: frame x 0.5, pommel at 0.105 H, waterline at 0.917 H, settled by 214.85 (`video/data/sword_handoff.json`, read by drop2.js S63).
+* **Checks:** Costume correct · The sword never moves · No sun disk in frame.
+* **Notes for the renderer:** The brush engine paints first-layer sky colour onto the thin dark far bank under the walking men (cream scraps). The scraps are not in the reference or in the engine's CPU canvas, so no later layer covers them. S62 therefore forces the second brush layer everywhere (`T[1]` ≈ 0) and makes a sky stroke region above the far bank's crest (v 0.445). The engine itself is reported to its owner.
+* **Review sheet:** `media/plates/P53/take2.review.jpg`; contact `media/plates/P53/take2.sheet.jpg`.
+* Take 1: pass 3: the sun is in frame with rays, and the sword is shorter, left of centre and looks wooden. The walk is good.
+
+### P54 · The battle line lets go (v2, GOLD; REVISION_V2 decision 5)
+
+* **Shots:** S75, S76 (v2, replaces P38's formation and shrug). S77's pull-back starts from P54's last frame in lines (drop2.js S77 reads gold_outro.js `s76End()`). **Window:** song [259.355, 264.355], audio reference cut at t0 = 259.355 s, 5 s, 5 takes reviewed (prompts v1, v2, v3 in `tools/plate_specs.py`). The submit of take 3 came back HTTP 502, and its job (`halys-plate-P54-20261003-223511-f790c4`) still reads as running. **Spend:** $5.78, plus $1.16 if the provider bills take 3.
+* **Chosen:** take 5 (prompt v3) → `media/plates/P54/take5.mp4`; analysis in `video/plates/P54/` (frames 121, fields 121, mattes 61 with `isnet-general-use`, depth 61, gain 1.044). It has one wave of falling blades and a single, clear late man.
+* **Delivers:** the battle line seen down its length on a sandy bank in golden light, with the red river behind. Lydians stand on the left facing right and Medes on the right facing left, the nearest pair full-figure. They fight hard from 0 to 1.5 s. At about 1.55 s every hand but one opens and the swords fall point-first into the sand, where they stand at angles; all have landed by about 1.9 s, and the motion falls from 2.6 to 0.3. The nearest Lydian keeps his sword, lowers it (1.9–3.5 s) and lets go at about 3.55 s, and it lands at his feet at about 3.7 s. Then they all stand still, empty-handed, facing each other, with serious faces. Nobody shrugs or poses.
+* **Sync keys** (song s → plate s, offset = plate − (song − t0)):
+  * 259.360 → 0.20 (+0.20 s) · the hit: cut in mid-fight
+  * 260.450 → 1.58 (+0.49 s) · the hands open
+  * 260.720 → 1.90 (+0.54 s) · BLADE: the swords hit the sand (the clang is at 260.685)
+  * 260.830 → 3.54 (+2.07 s) · the held sword, squeezed into one drawing; his hand opens
+  * 261.040 → 3.715 (+2.03 s) · the 261.05 hit: the late sword lands at the frame's foot
+  * 262.720 → 5.00 (+1.64 s) · still, to the boom
+* **Checks:** Costumes correct (crests, crimson, scales; red caps, black beards, ochre, iron scales, wicker shields) · Mirrored, equal · No shrug, no smile, no posing.
+* **Notes for the renderer:** Portrait drifts onto the nearest Lydian for the late drop (cx 0.5 → 0.29, 260.45–260.8). The chops sit at y 0.4, clear of the near faces and of the sand where the blades fall. No eyes are painted, because MediaPipe takes the round shields for faces. drop2.js S74 still traces P38 for the dive's landing, so it should read gold_outro.js `s75Start()` (plate P54, plate time 0.2, the S75 camera).
+* **Review sheet:** `media/plates/P54/take5.review.jpg`; contact `media/plates/P54/take5.sheet.jpg`.
+* Take 6 (v3): pass 3 (alternate): a late Lydian holds his sword out (1.8–2.6 s) and drops it at about 2.7 s, but the sky is red-pink rather than gold.
+* Take 4 (v2): weak 2: every blade drops at once, including the near Mede who was named as the late one.
+* Take 2 (v1): weak 2: the best unison drop (swords flat on the sand), but there is no late one.
+* Take 1 (v1): fail 1: the front pair turns to face the camera and stands posed.
