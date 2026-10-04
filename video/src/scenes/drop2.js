@@ -370,21 +370,24 @@ scene('S73', async f => {
 // ================================================================ S74: the dive, lines condense into paint (GOLD)
 // 257.675 (the hit, the kick stops): down through the cloud deck (white contour layers scaled past the camera), the
 // map of Anatolia under it (1:10m coasts, the seas still Earth-blue, the Halys in orange), zooming 1100x into the bend
-// near Avanos; then the camera pitches from nadir to level as it drops into the valley, P38's front row appears in
-// lines, and the lines widen and condense into the brush engine's GOLD paint of P38's first frame (12 drawings/s, the
-// painted world's cadence). Its last frame is paint(P38 frame 1, LANDING_LOOK): S75 (259.36) continues from there.
+// near Avanos; then the camera pitches from nadir to level as it drops into the valley, S75's battle line (P54, v2)
+// appears in lines, and the lines widen and condense into the brush engine's GOLD paint of S75's first drawing (12
+// drawings/s, the painted world's cadence). Its last frame is S75's first drawing: S75 (259.36) continues from there.
 export const S74_T0 = 257.675, S74_T1 = 259.355;
 const S77_T0_ = 262.724;
 // The landing and the boom are seamless by construction: the paint is the GOLD agent's own scene (gold_outro.js S75 /
-// S76), drawn through f.drawScene on its own 12 fps drawing grid: S74 ends on the drawings before S75's first (P38 at
-// plate 1.55, cam zoom 1.03, held by their keys), S77 opens on the drawings after S76's last (plate 5.0, zoom 1.045).
-// Fallback while their scene is missing: paint(P38, LANDING_LOOK).
+// S76), drawn through f.drawScene on its own 12 fps drawing grid: S74 ends on the drawings before S75's first (held by
+// their keys), S77 opens on the drawings after S76's last. The lines under the paint trace the same plate frame through
+// the same framing: gold_outro.js s75Start() / s76End() (plate, plate time, camera and trace horizon, per aspect).
+// Fallback while their scene is missing: paint(that plate frame, LANDING_LOOK).
 export const LANDING_LOOK = {
   palette: 'gold', lightDir: [-.55, -.8], pool: [{ x: .5, y: .5, rx: .95, ry: .9, feather: .6, k: 1 }], poolFromLight: { k: .7, bg: .45 }, poolMatte: .5,
   envDim: .8, crushFloor: .05, rim: .75, glint: .9, plateKeep: .6, keepDim: .88, faceMin: .3, impasto: .5, eclipse: 0, seed: 38,
 };
-export const S74_HANDOFF = { t: S74_T1, scene: 'S75', plate: 'P38', tp: 1.55, zoom: 1.03 };
-export const S77_START = { t: S77_T0_, scene: 'S76', plate: 'P38', tp: 5.0, zoom: 1.045 };
+// (for reference, the 16:9 values of gold_outro.js s75Start() / s76End(), which the scenes below read)
+export const S74_HANDOFF = { t: S74_T1, scene: 'S75', plate: 'P54', tp: .2, zoom: 1.02 };
+export const S77_START = { t: S77_T0_, scene: 'S76', plate: 'P54', tp: 5.0, zoom: 1.04 };
+const goldEnds = async () => import('./gold_outro.js');
 const GOLDC = new Map();
 // the drawing of scene sid on its own cadence grid nearest at or before t (may lie outside the shot: their keys hold)
 async function goldFrame(f, sid, t) {
@@ -398,23 +401,23 @@ async function goldFrame(f, sid, t) {
   while (GOLDC.size > 6) GOLDC.delete(GOLDC.keys().next().value);
   return c;
 }
-// paint(P38 at plate time tp) at the drawing of song time t (12 fps), cached per drawing (the fallback)
+// paint(the handoff's plate at its plate time, through its camera) at the drawing of song time t (12 fps), cached per
+// drawing (the fallback); h = gold_outro.js s75Start() / s76End()
 const PAINTS = new Map();
-async function paintP38(f, t, tp, zoom = 1) {
-  const di = Math.round(t * 12), key = `${f.W}x${f.H}|${di}|${tp}|${zoom}`;
+async function paintLanding(f, t, h) {
+  const di = Math.round(t * 12), cam = h.cam, key = `${f.W}x${f.H}|${di}|${h.plate}|${h.tp}|${cam.cx}|${cam.cy}|${cam.zoom}`;
   if (PAINTS.has(key)) { const c = PAINTS.get(key); PAINTS.delete(key); PAINTS.set(key, c); return c; }
   const B = await import('../worlds/brush/index.js');
-  const tq = di / 12, ff = { ...f, t: tq, cad: 12, k: 0, lt: 0 }, cam = { cx: .5, cy: .5, zoom };
-  const src = await B.resolvePlate(ff, 'P38', { id: 'c_armies', cam }, cam, { keys: [[0, tp], [1e4, tp]] });
+  const tq = di / 12, ff = { ...f, t: tq, cad: 12, k: 0, lt: 0 };
+  const src = await B.resolvePlate(ff, h.plate, { id: 'c_armies', cam }, cam, { keys: [[0, h.tp], [1e4, h.tp]] });
   const c = new OffscreenCanvas(f.W, f.H), g2 = c.getContext('2d');
   await B.paint(ff, src, { ...LANDING_LOOK, target: g2, drawIdx: di });
   PAINTS.set(key, c);
   while (PAINTS.size > 6) PAINTS.delete(PAINTS.keys().next().value);
   return c;
 }
-const goldOrPaint = async (f, sid, t, tp, zoom) => (await goldFrame(f, sid, t)) || paintP38(f, t, tp, zoom);
-const P38_SRC = { plate: 'P38', standin: 'armies', win: { cx: .5, cy: .5, zoom: 1.03 } };
-const P38_SRC_END = { plate: 'P38', standin: 'armies', win: { cx: .5, cy: .5, zoom: 1.045 } };
+const goldOrPaint = async (f, sid, t, h) => (await goldFrame(f, sid, t)) || paintLanding(f, t, h);
+// the line engine's settings for the landing plate (tuned on P38 in v1; the handoff adds its own plate's horizon)
 const P38_TRACE = { shadowCut: .02, darkCut: .012, gamma: .95, gain: 1.25, subjBright: [.38, 1.0], contourW: [1.1, 2.0], contourB: 1.2, innerB: 1.05, innerHi: .16, lightDir: [-.5, -.8], dsepMin: 3, dsepMax: 9, bgSepMin: 14, bgSepMax: 26, bgGain: .35,
   sky: { horizonY: .43, below: .45, useDepth: false }, horizon: 1, horizonBand: .02, armies: 0,
   minLen: 20 };
@@ -431,7 +434,7 @@ const lodW = S => ({ A: (1 - sstep(10, 24, S)), B: sstep(4, 10, S) * (1 - sstep(
 // The dive's scale (px per km at the frame centre): from S73's last globe (the hit) to the bend's banks at tau .95.
 // Globe (perspective, north up) until S ~ 2.3 px/km, then the flat map (1:10m, rotating to put the river level),
 // switched under a cloud deck bursting past the camera; at the end the camera drops into the low deck (mist streaks)
-// and comes out in the Halys valley: P38 in lines, which condense into the GOLD paint of S75's first drawing.
+// and comes out in the Halys valley: S75's battle line (P54) in lines, which condense into S75's first drawing.
 const DIVE = { S1: 380, te: .95, sw: [.19, .28] };
 const globeS = V => V.Rs * Math.sqrt(V.D * V.D - 1) / (V.D - 1) / 6371;          // px/km at the centre of a perspective globe
 const globeRs = (S, D = 40) => S * 6371 * (D - 1) / Math.sqrt(D * D - 1);
@@ -466,8 +469,10 @@ scene('S74', async f => {
   for (const [i, tp, g] of [[0, .17, 1.15], [2, .93, 1.3]]) { const Ly = deckLayer(f, L, i, tau - tp, 1, g, .4 * i); if (Ly) layers.push(Ly); }
   const mist = sstep(.78, .92, tau) * (1 - sstep(1.0, 1.16, tau));
   if (mist > .01) layers.push(dynLayer(D.mistStreaks(W, H, t, mist, 1), { uBright: 1 }));
+  // (v2, GOLD: the valley is S75's battle line: the plate frame, framing and horizon of S75's first drawing)
+  const E75 = plateK > .01 || paintK > .002 ? (await goldEnds()).s75Start(W, H) : null;
   await drawLines(f, {
-    ...(plateK > .01 ? { src: P38_SRC, freeze: 1.55, trace: P38_TRACE, corona: false, plateU: { uBright: 1.3 * plateK } } : {}),
+    ...(plateK > .01 ? { src: { plate: E75.plate, standin: 'armies', win: E75.cam }, freeze: E75.tp, trace: { ...P38_TRACE, ...E75.trace }, corona: false, plateU: { uBright: 1.3 * plateK } } : {}),
     layers, kick: 0, phase: audio.flowPhase(t) * .8, disk: false, palette: BLUE,
     look: { glow: [.24 * (1 - paintK), .1 * (1 - paintK)], width: 1 + 2.2 * paintK, soft: .45 * paintK, flat: .5 * paintK },
   });
@@ -475,7 +480,7 @@ scene('S74', async f => {
   if (seaA > .01) await E.mapFill(f, { cx, cy, S, rot, ll0: D.BEND, k: [111.32 * Math.cos(38.72 * Math.PI / 180), 110.9], shift: L.R.shift }, { alpha: seaA });
   if (V) await E.earthFill(f, V, { alpha: globeK });
   if (paintK > .002) {
-    const pc = await goldOrPaint(f, 'S75', t, 1.55, 1.03), g = f.g;
+    const pc = await goldOrPaint(f, 'S75', t, E75), g = f.g;
     g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = paintK; g.drawImage(pc, 0, 0, W, H); g.restore();
   }
   steer(f, { kick: 0 });
@@ -493,7 +498,7 @@ shotOverride('S77', { cadence: 60 });
 const S77P = { globe: [1.3, 2.72], moon: [1.85, 2.72], bezel: [2.62, 3.3], room: [3.14, 3.37] };
 const UMBRA = { ll: [33.9, 38.4], r: 3.2, pen: 9.8, k: 1.15 };   // where the room's sim draws it
 let _moonRef = null;
-// The pull-back mirrors the dive: paint -> P38 in lines (the boom tilts up) -> up through the low deck (mist streaks
+// The pull-back mirrors the dive: paint -> P54 in lines (the boom tilts up) -> up through the low deck (mist streaks
 // inward) -> the map of Anatolia receding (nadir), the seas turning blue -> up through the high deck, which hides the
 // switch to the globe at ~2.3 px/km -> the globe settles at the monitor's size with the Moon's shadow over Anatolia.
 const S77_SW = 2.3;
@@ -516,7 +521,7 @@ scene('S77', async f => {
   const layers = [], plates = {};
   let V = null, occ = null;
   // (v2, GOLD: S76 is now P54's battle line; its lines come from the plate, plate time and framing of S76's last drawing)
-  const E76 = (await import('./gold_outro.js')).s76End(W, H);
+  const E76 = (await goldEnds()).s76End(W, H);
   if (plateK > .01) Object.assign(plates, { src: { plate: E76.plate, standin: 'armies', win: E76.cam }, freeze: E76.tp, trace: { ...P38_TRACE, ...E76.trace }, corona: false, plateU: { uBright: 1.3 * plateK }, cam: { pitch: -16 * easeIn(clamp(tau / .5)), zoom: 1 - .1 * clamp(tau / .5), pan: [0, 60 * s * clamp(tau / .5)] } });
   if (mapK > .01) { const w = lodW(S); for (const [k, key] of [['A', 'dive-A'], ['B', 'dive-B'], ['C', 'dive-C']]) if (w[k] > .01) layers.push({ mesh: staticMesh(f, key, () => L[k]), u: { ...mapU(S, rot, cx, cy), uBright: w[k] * mapK, uPulse: 0 } }); }
   // up through the low deck (mist streaks inward, a deck shrinking below) and the high deck over the switch
@@ -569,7 +574,7 @@ scene('S77', async f => {
   const seaA = (1 - sstep(7, 22, S)) * mapK;
   if (seaA > .01) await E.mapFill(fw, { cx, cy, S, rot, ll0: D.BEND, k: [111.32 * Math.cos(38.72 * Math.PI / 180), 110.9], shift: L.R.shift }, { alpha: seaA });
   if (V) await E.earthFill(fw, V, { occ, alpha: globeK });
-  if (paintK > .002) { const pc = await goldOrPaint(f, 'S76', t, 5.0, 1.045), g = fw.g; g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = paintK; g.drawImage(pc, 0, 0, W, H); g.restore(); }
+  if (paintK > .002) { const pc = await goldOrPaint(f, 'S76', t, E76), g = fw.g; g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = paintK; g.drawImage(pc, 0, 0, W, H); g.restore(); }
   // ---- into the monitor: the image shrinks into the sim panel, the bezel enters around it
   if (target) {
     const kEnd = HO.earth.r / Rf, sc = Math.exp(lerp(0, Math.log(kEnd), be));

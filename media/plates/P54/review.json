@@ -66,7 +66,8 @@
    "identity": "Consistent.",
    "artefacts": "Red-pink sky rather than gold.",
    "notes": "Alternate.",
-   "contact": "media/plates/P54/take6.sheet.jpg"
+   "contact": "media/plates/P54/rejected_take6.sheet.jpg",
+   "files": "media/plates/P54/rejected_take6.*"
   },
   "4": {
    "verdict": "weak",
@@ -76,7 +77,8 @@
    "identity": "Consistent.",
    "artefacts": "No late man (the named Mede dropped with the rest).",
    "notes": "",
-   "contact": "media/plates/P54/take4.sheet.jpg"
+   "contact": "media/plates/P54/rejected_take4.sheet.jpg",
+   "files": "media/plates/P54/rejected_take4.*"
   },
   "2": {
    "verdict": "weak",
@@ -86,7 +88,8 @@
    "identity": "Consistent.",
    "artefacts": "No late man.",
    "notes": "",
-   "contact": "media/plates/P54/take2.sheet.jpg"
+   "contact": "media/plates/P54/rejected_take2.sheet.jpg",
+   "files": "media/plates/P54/rejected_take2.*"
   },
   "1": {
    "verdict": "fail",
@@ -96,7 +99,8 @@
    "identity": "Consistent.",
    "artefacts": "The front pair turns to the camera and stands posed.",
    "notes": "",
-   "contact": "media/plates/P54/take1.sheet.jpg"
+   "contact": "media/plates/P54/rejected_take1.sheet.jpg",
+   "files": "media/plates/P54/rejected_take1.*"
   },
   "3": {
    "verdict": "lost",
@@ -106,5 +110,6 @@
    "notes": ""
   }
  },
- "t_chosen": "2026-10-04T00:03:07"
+ "t_chosen": "2026-10-04T00:03:07",
+ "rejects_renamed": "rejected takes are renamed rejected_take<N>.* so the chosen take is the only take<N>.mp4"
 }

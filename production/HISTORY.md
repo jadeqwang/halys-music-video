@@ -79,7 +79,7 @@ On-screen facts are checked in [FACTCHECK.md](FACTCHECK.md). Where the film depa
 - **Laying down arms.** Herodotus says they stopped fighting and wanted peace. The dropped swords and the walk home are our staging.
 - **The oath.** Herodotus describes cut arms and shared blood. The film shows the kings clasping right hands, each forearm with a thin fresh cut, the mediators behind. The clasp is a Greek pledge, the kings swearing in person is our inference, and nobody licks anything.
 - **Faces.** No portrait of Thales, Alyattes or Cyaxares survives, so the faces are invented; the costumes are researched ([RESEARCH §3](RESEARCH.md)). Thales is about 40, not an old sage.
-- **Thales' geometry.** The gold lines around him show things later writers credited him with (the triangle in a semicircle, measuring a pyramid by its shadow). They are not how he foretold the eclipse; nobody knows that.
+- **Thales' year.** Herodotus says only that Thales named the year, and that is all the gold figure beside him claims. It is an arc of twelve new moons between two limit strokes (Herodotus' word is οὖρος, "limit"), with the Sun going dark inside it. The plaque reads HE NAMED ONLY THE YEAR · HERODOTUS 1.74. The dim lines around him are things later writers credited him with: the triangle in a semicircle, and measuring a pyramid by its shadow. They are ornament, not how he foretold the eclipse; nobody knows that ([research note](research/THALES_METHOD.md)).
 - **The simulation.** Jade scheduling the eclipse from her terminal is, of course, fiction.
 
 ## 5. Sources

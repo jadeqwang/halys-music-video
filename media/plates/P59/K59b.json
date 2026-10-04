@@ -1,0 +1,10 @@
+{
+ "model": "google/nano-banana-pro",
+ "prompt": "Image 1 is a rough paste-up: the character sheet's drawing of the young woman's head (image 2) pasted onto a frame of her dark room at night. Redraw image 1 as ONE clean, finished anime frame, a 16:9 head-and-shoulders close-up. Keep the framing, the camera, the dark room behind her (the softly glowing monitor, the orange desk lamp on the right), her white jacket with the orange stripe, the black mock-neck top and the orange headphones around her neck. Keep HER FACE exactly as drawn in image 2 and image 1: the same soft face shape, the same large, round, bright brown eyes, the same soft, gently arched eyebrows, the same small nose, the centre-parted long straight black hair, the slight tilt of her head toward the right of the picture. Make only these small changes to her face: her eyes look straight into the camera, wide open, bright and sparkling, each with a clear white catchlight; her eyebrows stay relaxed and soft, a little raised, never frowning and never angled down toward the nose; her lips stay closed and form a soft half-smile: the corner of her mouth on the LEFT side of the picture lifts a little higher than the other corner, with the faintest dimple, and her cheeks lift very slightly. The look is warm, cute, playful and knowing, as if she is in on a joke with the viewer; never smug, never sly, never villainous. Night light: a cool pearl glow from the monitor behind her as a thin rim on her hair and shoulders, and warm orange light from the desk lamp on the right side of her hair and cheek. Japanese anime cel animation style exactly matching the character sheet: clean, crisp, tapered black line art, flat cel colours with exactly one shadow tone, no painterly texture, no soft airbrush gradients, no depth-of-field blur, no yellow cast. No text.",
+ "refs": [
+  "/tmp/claude-0/-home-user-halys-music-video/b8664d69-2871-5fba-a7df-659b9d78ccf5/scratchpad/ref/K59_guide.png",
+  "/tmp/claude-0/-home-user-halys-music-video/b8664d69-2871-5fba-a7df-659b9d78ccf5/scratchpad/ref/sheet_head_front.jpg"
+ ],
+ "out": "media/plates/P59/K59b.jpg",
+ "est_cost_usd": null
+}

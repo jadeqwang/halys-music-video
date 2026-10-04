@@ -9,7 +9,7 @@
 //
 // Timing (SHOTLIST v1): S45 153.83 (the line engine's widen; stone fills the forms from 155.75) | S45b 157.03 cut closer
 // on the boom | S46 160.70 drift | S47 164.13 the face | S48 167.55 the flock | S49 170.73 tilt up, the plinth | S50
-// 174.39 the board | S51 178.66 wind | S52 181.23 Thales walks | S53 183.34 the diagrams | S54 187.65 the glance |
+// 174.39 the board | S51 178.66 wind | S52 181.23 Thales walks | S53 183.34 the year he named | S54 187.65 the glance |
 // S55 188.51 statues gaze up | S56 193.16 Baily's beads | S57 194.86 SPARK (marble warms into gold behind a front).
 
 import { scene, shot, shotOverride } from '../registry.js';
@@ -391,7 +391,7 @@ async function s53(f, dim) {
   if (f.H > f.W * 1.02) f.type.place = { ...(f.type.place || {}), 'S53.foretold': { y: .875 } };
   // the gold figure, behind him (his matte cuts it) and under the lyric (the type layer draws after the scene)
   const L = f.layer(7);
-  thalesGeometry(L.g, f.W, f.H, f.t, { dim });
+  thalesGeometry(L.g, f.W, f.H, f.t, { dim, scratch: f.layer(8) });
   cutMatte(L, TM, st.aw, st.ah, f);
   const g = f.g; g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(L.c, 0, 0); g.restore();
 }
@@ -415,12 +415,12 @@ const ATTR = .42;                                            // the attributes' 
 function geoLayout(W, H) {
   const P = H > W * 1.02, u = (P ? W : H) / 1080;
   if (!P) return { P, u,
-    year: { x: .775 * W, y: .158 * H, R: 820 * u, span: .405, sunDrop: 96 * u, sunR: 25 * u, from: .5 },
+    year: { x: .775 * W, y: .158 * H, R: 820 * u, span: .405, sunDrop: 98 * u, sunR: 27 * u, from: .5 },
     theorem: { x: .17 * W, y: .33 * H, R: .1 * H },
     stick: { x: .785 * W, y: .89 * H, s: u },
   };
   return { P, u,                                             // portrait: the column of sky right of his head
-    year: { x: .79 * W, y: .1 * H, R: 560 * u, span: .33, sunDrop: 82 * u, sunR: 21 * u, from: .5 },
+    year: { x: .79 * W, y: .064 * H, R: 560 * u, span: .33, sunDrop: 84 * u, sunR: 22 * u, from: .5 },   // (high: clear of THALES)
     theorem: null, stick: null,                              // (no room beside his head: the year alone)
   };
 }
@@ -434,7 +434,11 @@ function elem(pts, w, closed = false) {
 export function thalesGeometry(g, W, H, t, o = {}) {
   const lay = geoLayout(W, H), u = lay.u, dim = 1 - (o.dim ?? 0) * .35;
   if (t < TG.t0) return;
-  yearFigure(g, t, lay.year, u, dim);
+  // the year is drawn whole into a scratch layer and dimmed as one (S54): dimming its parts would let the covered Sun
+  // show through the Moon
+  const S = o.scratch || (() => { const c = new OffscreenCanvas(W, H); return { c, g: c.getContext('2d') }; })();
+  yearFigure(S.g, t, lay.year, u, 1);
+  g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = dim; g.drawImage(S.c, 0, 0); g.restore();
   if (lay.theorem) theoremFigure(g, t, lay.theorem, u, dim * ATTR);
   if (lay.stick) stickFigure(g, t, lay.stick, u, dim * ATTR);
 }
@@ -446,9 +450,9 @@ function yearFigure(g, t, Y, u, dim) {
   const at = (r, a) => [cx + r * Math.cos(a), cy + r * Math.sin(a)];
   const items = [], kArc = easeInOut(seg(t, TG.arc[0], TG.arc[1]));
   const arc = []; for (let i = 0; i <= 120; i++) arc.push(at(Y.R, a0 + (a1 - a0) * i / 120));
-  items.push([elem(arc, 1.5), kArc]);
+  items.push([elem(arc, 1.8), kArc]);
   // the limits: short strokes across the arc, the left one where the compass sets down, the right one when it arrives
-  const limit = (a, k) => items.push([elem([at(Y.R - 15 * u, a), at(Y.R + 22 * u, a)], 1.9), k]);
+  const limit = (a, k) => items.push([elem([at(Y.R - 17 * u, a), at(Y.R + 25 * u, a)], 2.1), k]);
   limit(a0, sstep(TG.arc[0], TG.arc[0] + .14, t));
   limit(a1, sstep(TG.arc[1] - .04, TG.arc[1] + .1, t));
   // twelve new moons, counted in one after another (ticks with a dark new-moon disk at the tip)
@@ -456,11 +460,11 @@ function yearFigure(g, t, Y, u, dim) {
   for (let m = 1; m <= 12; m++) {
     const a = a0 + (a1 - a0) * m / 13, tm = lerp(TG.months[0], TG.months[1], (m - 1) / 11), k = sstep(tm, tm + .09, t);
     if (k <= 0) continue;
-    items.push([elem([at(Y.R, a), at(Y.R + 13 * u, a)], 1.05), k]);
-    moons.push([...at(Y.R + 13 * u + 4.4 * u, a), k]);
+    items.push([elem([at(Y.R, a), at(Y.R + 14 * u, a)], 1.1), k]);
+    moons.push([...at(Y.R + 14 * u + 5 * u, a), k]);
   }
   gildLines(g, items, u, { alpha: dim });
-  for (const [x, y, k] of moons) newMoon(g, x, y, 3.6 * u, u, k * dim);
+  for (const [x, y, k] of moons) newMoon(g, x, y, 4.2 * u, u, k * dim);
   // the Sun, inside the arc under its middle (no month is singled out: he named only the year)
   const sx = Y.x, sy = Y.y + Y.sunDrop, kSun = sstep(TG.sun, TG.sun + .14, t), tot = t >= TG.moon[1] - 1e-6;
   if (kSun > 0) sunDisk(g, sx, sy, Y.sunR, u, kSun * dim, tot);

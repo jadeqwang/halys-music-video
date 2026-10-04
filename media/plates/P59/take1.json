@@ -1,0 +1,72 @@
+{
+ "plate": "P59",
+ "take": 1,
+ "model": "bytedance/seedance-2.5",
+ "job": null,
+ "secs": 343.5,
+ "est_cost_usd": 1.156,
+ "duration_s": 5.041667,
+ "audio_refs": [
+  {
+   "src": "media/stems/halys_sd_master.wav",
+   "t0": 273.4,
+   "dur": 5.0,
+   "file": "media/plates/P59/audio_halys_sd_master_0273.40_5.00.mp3"
+  }
+ ],
+ "spec": {
+  "duration": 5,
+  "takes": 2,
+  "first_frame": "media/plates/P59/K59b_ff.jpg",
+  "audio": {
+   "t0": 273.4,
+   "src": "media/stems/halys_sd_master.wav"
+  },
+  "t_song": [
+   273.4,
+   278.4
+  ],
+  "shots": "S80, S81",
+  "sync": [
+   [
+    273.455,
+    "key 1 (plate 0.055)"
+   ],
+   [
+    274.025,
+    "key 2 (plate 0.625)"
+   ],
+   [
+    274.927,
+    "key 3, enter (plate 1.527)"
+   ],
+   [
+    276.947,
+    "the ting: the wink is shut (plate 3.547)"
+   ],
+   [
+    277.55,
+    "black, end card (plate 4.15)"
+   ]
+  ],
+  "prompt": "Anime style with clean cel shading and crisp tapered line art exactly like the first frame: flat cel colours, one shadow tone, painted flat backgrounds, no depth-of-field blur, no yellow cast. Close-up, head and shoulders, of the young woman of the first frame, facing the camera with her head tilted slightly, the dark room with the softly glowing monitor and the warm orange desk lamp behind her. The whole time she keeps the warm, playful, knowing closed-lip half-smile of the first frame, her eyebrows relaxed and soft, her eyes bright, wide open and sparkling, looking straight into the lens. Without looking away she reaches back with her right hand (the arm in the lower left of the picture) to the keyboard behind her and taps three keys blind, at 0.05 s, 0.6 s and 1.5 s, in time with the clicks in the audio: on each tap that shoulder dips a little. At 3.5 s, exactly on the bright chime in the audio, she gives the camera a cute, playful anime wink: her left eye (on the right side of the picture) closes into a soft curved arc while her other eye stays open and bright and her smile widens a little; she holds the wink a moment and opens the eye again at about 4.2 s. She never frowns, never narrows her eyes and never opens her mouth. Light: cool pearl monitor glow from behind as a thin rim on her hair, warm orange lamp light on the right side of her hair and cheek. Camera static. No text, no captions, no watermark.",
+  "notes": "From the K59b keyframe (first frame). Shown on screen (v3): matted and composited directly over the painted room."
+ },
+ "request": {
+  "prompt": "Anime style with clean cel shading and crisp tapered line art exactly like the first frame: flat cel colours, one shadow tone, painted flat backgrounds, no depth-of-field blur, no yellow cast. Close-up, head and shoulders, of the young woman of the first frame, facing the camera with her head tilted slightly, the dark room with the softly glowing monitor and the warm orange desk lamp behind her. The whole time she keeps the warm, playful, knowing closed-lip half-smile of the first frame, her eyebrows relaxed and soft, her eyes bright, wide open and sparkling, looking straight into the lens. Without looking away she reaches back with her right hand (the arm in the lower left of the picture) to the keyboard behind her and taps three keys blind, at 0.05 s, 0.6 s and 1.5 s, in time with the clicks in the audio: on each tap that shoulder dips a little. At 3.5 s, exactly on the bright chime in the audio, she gives the camera a cute, playful anime wink: her left eye (on the right side of the picture) closes into a soft curved arc while her other eye stays open and bright and her smile widens a little; she holds the wink a moment and opens the eye again at about 4.2 s. She never frowns, never narrows her eyes and never opens her mouth. Light: cool pearl monitor glow from behind as a thin rim on her hair, warm orange lamp light on the right side of her hair and cheek. Camera static. No text, no captions, no watermark.",
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "adaptive",
+  "generate_audio": false,
+  "use_virtual_avatar": false,
+  "image": "data:image/jpeg;base64...(443 KB)",
+  "reference_audios": [
+   "data:audio/mpeg;base64...(158 KB)"
+  ],
+  "fps": 24,
+  "camera_fixed": false,
+  "watermark": false,
+  "output_format": "mp4"
+ },
+ "t": "2026-10-04T00:34:36"
+}

@@ -643,15 +643,17 @@ scene('S25', async f => {
     // the face-off, side-lit, centred and mirrored; the plate's bright sky above v .25 becomes our sky with the sun in the
     // top right corner (as the plate has it); a warm pool on each hero, the melee behind them in the plate's own light
     // (portrait cannot hold both heroes: it pans from the Lydian, as LYDIANS appears, to the Mede on MEDES at 75.93)
-    const wide = f.W / f.H > 1.2, pan = smooth(seg(f.t, 74.95, 76.2));
-    const pcam = k => ({ cx: wide ? .5 : lerp(.31, .69, pan), cy: .5, zoom: 1.02 + .03 * k });
+    // the heroes in P62 (from its mattes): the Lydian's centre drifts from plate x .14 to .24, the Mede's from .82 to .74
+    const wide = f.W / f.H > 1.2, pan = smooth(seg(f.t, 74.95, 76.2)), q = clamp((f.t - 74.41) / 3.47);
+    const heroes = [lerp(.14, .24, q), lerp(.82, .74, q)];
+    const pcam = k => ({ cx: wide ? .5 : lerp(.21, .75, pan), cy: .5, zoom: 1.02 + .03 * k });
     const src = await rp(f, 'P62', null, pcam), hzY = .25;
     src.sky = brightSky(src, hzY);
     // our sun in the sky over the bank, clear of the counter (top right) and of LYDIANS / MEDES
     const sun = wide ? [.955, .165] : [.5, .11];
     await bronze(f, src, plateLook(src, { lightDir: [.8, -.5], lightPoint: sun, keep: .55, keepDim: .85, fromLight: .7, bg: .35, rim: .5, poolMatte: .5, body: 0,
-      pool: [...[.27, .7].map(u => { const c = camAt(pcam, f); return { x: (u - c.cx) * c.zoom + .5, y: .45, rx: .15 * c.zoom * (wide ? 1 : 2.2), ry: .45, feather: .6, k: .95, fig: true }; }),
-        { x: .5, y: .28, rx: .5, ry: .1, feather: .8, k: .55 }],      // the heroes (plate x .27 / .70), the melee on the bank behind them
+      pool: [...heroes.map(u => { const c = camAt(pcam, f); return { x: (u - c.cx) * c.zoom * (wide ? 1 : 2.22) + .5, y: .5, rx: .14 * c.zoom * (wide ? 1 : 2.22), ry: .45, feather: .6, k: .95, fig: true }; }),
+        { x: .5, y: .28, rx: .5, ry: .1, feather: .8, k: .55 }],      // a key on each hero, the melee on the bank behind them
       extra: { exposure: 1.05, groundFlow: { y0: .52, k: .7 },
         sky: SKY(f.t, { horizonY: hzY, below: hzY + .03, drama: .4, glow: 1.15, glowR: .3, cover: .48, vortex: .3, zenith: .3 }),
         sun: SUN(f.t, { x: sun[0], y: sun[1], r: .026 }) } }));
@@ -1037,5 +1039,5 @@ scene('S34p', async f => {
 
 // which plate each shot reads (for the report); hasPlate() decides at render time
 export const ACT1_PLATES = { S01: 'P02', S02: 'P02', S03: 'P23', S04: 'P01', S05: 'P01', S06: 'P01', S07: 'P03', S08: 'P04', S09: 'P05+P06', S10: 'P07', S11: 'P08',
-  S12: 'proc', S13: 'P09', S14: 'P10', S15: 'P11', S16: 'P01', S17: 'P48 (v1 P12)', S18: 'proc+P49 (v1 P12)', S19: 'P12', S20: 'P01', S21: 'P13', S22: 'P05+P06', S23: 'P14', S24: 'P01',
-  S25: 'P15', S26: 'P16', S27: 'P12+P17', S28: 'P50+proc (v1 P18)', S29: 'P19', S30: 'P01', S31: 'P20', S31b: 'P47 (stand-in P13)', S32: 'P21', S33: 'P22a+P22b', S34: 'proc' };
+  S12: 'proc', S13: 'P09', S14: 'P10', S15: 'P11', S16: 'P01', S17: 'P48 (v1 P12)', S18: 'proc+P49 (v1 P12)', S19: 'P60 (v1 P12)', S20: 'P01', S21: 'P61 (v1 P13)', S22: 'P05+P06', S23: 'P14', S24: 'P01',
+  S25: 'P62+P15 (v1 P15)', S26: 'P16', S27: 'P12+P17', S28: 'P50+proc (v1 P18)', S29: 'P19', S30: 'P01', S31: 'P20', S31b: 'P47 (stand-in P13)', S32: 'P21', S33: 'P22a+P22b', S34: 'proc' };

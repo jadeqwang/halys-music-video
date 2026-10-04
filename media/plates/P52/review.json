@@ -52,8 +52,10 @@
    "identity": "n/a.",
    "artefacts": "Flat front light, olive-green water, arm from the left.",
    "notes": "Alternate.",
-   "contact": "media/plates/P52/take1.sheet.jpg"
+   "contact": "media/plates/P52/rejected_take1.sheet.jpg",
+   "files": "media/plates/P52/rejected_take1.*"
   }
  },
- "t_chosen": "2026-10-04T00:03:07"
+ "t_chosen": "2026-10-04T00:03:07",
+ "rejects_renamed": "rejected takes are renamed rejected_take<N>.* so the chosen take is the only take<N>.mp4"
 }

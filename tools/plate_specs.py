@@ -1145,9 +1145,11 @@ GOLD_SUN = ("Hard, low golden sun raking in from frame right (the sun itself jus
             "shadows, warm rim light; the far bank and background in deep shadow, darker than the men. Clear air: no fog, no "
             "haze, no smoke.")
 DROP = "Nobody throws anything: the weapons simply fall straight down out of the opening hands."
+# (takes=1: each chosen take is the only take<N>.mp4 on disk; the rejects are renamed rejected_take<N>.*, so neither a
+# plates.py run without ids nor a pipeline run without a take number can replace a chosen take)
 PLATES.update({
     "P51": dict(
-        duration=5, takes=2, refs=["LYD", "MED"], avatar=True, audio=a(208.70), t_song=[208.70, 213.70], shots="S61",
+        duration=5, takes=1, refs=["LYD", "MED"], avatar=True, audio=a(208.70), t_song=[208.70, 213.70], shots="S61",
         sync=[[208.70, "'Throw': S61 cut in, mid-fight (plate 0)"], [209.945, "'blade': the weapons land (plate 1.25)"],
               [210.177, "low end out: cut to S61b (plate 1.48)"]],
         prompt=("Medium-wide shot at waist height at the edge of a red-brown clay river in warm golden evening light: the warriors "
@@ -1164,7 +1166,7 @@ PLATES.update({
                 f"motion. Camera static. {GOLD_SUN} {REAL} {SHEET_ONLY} {PERIOD} {NOTXT}"),
         notes="S61 v2: shocked mid-fight, both lines let go; weapons fall onto the bank and into the shallows (never thrown)."),
     "P52": dict(
-        duration=4, takes=2, refs=["LYD"], avatar=True, audio=a(210.18), t_song=[210.18, 214.18], shots="S61b",
+        duration=4, takes=1, refs=["LYD"], avatar=True, audio=a(210.18), t_song=[210.18, 214.18], shots="S61b",
         sync=[[210.18, "the held 'blade': S61b cut in (plate 0)"], [210.55, "the fingers open (plate ~0.4)"],
               [211.0, "the point enters the water (plate ~0.8)"], [211.44, "'Home': cut out (plate 1.26)"]],
         prompt=("Close-up at water level in a shin-deep red-brown river, in warm, low golden light. The right hand of the Lydian "
@@ -1179,7 +1181,7 @@ PLATES.update({
                 f"surface. {GOLD_SUN} {REAL} {NOSING} {SHEET_ONLY} {NOTXT}"),
         notes="S61b v2: one hand opens and its sword drops point-first into the shallows, standing in the mud (sets up S62)."),
     "P53": dict(
-        duration=5, takes=2, refs=["LYD"], avatar=True, audio=a(211.44), t_song=[211.44, 216.44], shots="S62 (-> S63 match cut)",
+        duration=5, takes=1, refs=["LYD"], avatar=True, audio=a(211.44), t_song=[211.44, 216.44], shots="S62 (-> S63 match cut)",
         sync=[[211.44, "'Home': he turns away (plate 0)"], [211.877, "beat returns (plate 0.44)"],
               [215.287, "Drop 2 kick: match cut to the rocket (plate 3.85)"]],
         prompt=("Low-angle shot from just above the mud at the edge of a red-brown river in warm golden evening light, the camera "
@@ -1197,7 +1199,7 @@ PLATES.update({
                 f"{SHEET_ONLY} {PERIOD} {NOTXT}"),
         notes="S62 v2: the upright sword (a vertical at the frame centre) stays; its owner walks home. Match cut to P34/S63."),
     "P54": dict(
-        duration=5, takes=2, refs=["LYD", "MED"], avatar=True, audio=a(259.355), t_song=[259.355, 264.355], shots="S75, S76",
+        duration=5, takes=1, refs=["LYD", "MED"], avatar=True, audio=a(259.355), t_song=[259.355, 264.355], shots="S75, S76",
         sync=[[259.355, "the hit: S75 cut in, mid-fight (plate 0)"], [259.775, "THROW DOWN chop (plate 0.42)"],
               [260.625, "BLADE: every blade drops at once (plate 1.27)"], [261.045, "hit: the late blade lands (plate 1.69)"],
               [262.724, "boom: S77 pull-back (plate 3.37)"]],
@@ -1289,7 +1291,30 @@ PLATES.update({
                 "camera, to the end; at 3.0 s the smirk deepens very slightly. She does not blink, does not wink and does not "
                 "open her mouth. Light: cool pearl monitor glow from behind as a rim on her hair, warm orange desk lamp on her "
                 "face. Camera static. No text, no captions, no watermark."),
-        notes="From the K80b keyframe (first frame). Both eyes stay open: the renderer draws the eclipse wink on 276.95."),
+        notes="From the K80b keyframe (first frame). Both eyes stay open: the renderer draws the eclipse wink on 276.95. "
+              "Superseded by P59 (v3: the K80 face read sinister)."),
+    # v3 (director: keep her in her ORIGINAL anime, composited directly, so the wink reads cute): the close-up again, from the
+    # character sheet's own face. K59b = a paste-up of the sheet's front head over P41 f22 (tilted ~7 deg), cleaned up by
+    # nano-banana-pro: relaxed brows, bright eyes, a closed-lip half-smile. No photo in K59b; the photo never goes to Seedance.
+    # The plate's own wink is used (no drawn eyelid).
+    "P59": dict(
+        duration=5, takes=2, first_frame="media/plates/P59/K59b_ff.jpg", audio=a(273.4, src="media/stems/halys_sd_master.wav"),
+        t_song=[273.4, 278.4], shots="S80, S81",
+        sync=[[273.455, "key 1 (plate 0.055)"], [274.025, "key 2 (plate 0.625)"], [274.927, "key 3, enter (plate 1.527)"],
+              [276.947, "the ting: the wink is shut (plate 3.547)"], [277.55, "black, end card (plate 4.15)"]],
+        prompt=(f"{ANIME_FF} Close-up, head and shoulders, of the young woman of the first frame, facing the camera with her head "
+                "tilted slightly, the dark room with the softly glowing monitor and the warm orange desk lamp behind her. The "
+                "whole time she keeps the warm, playful, knowing closed-lip half-smile of the first frame, her eyebrows relaxed "
+                "and soft, her eyes bright, wide open and sparkling, looking straight into the lens. Without looking away she "
+                "reaches back with her right hand (the arm in the lower left of the picture) to the keyboard behind her and taps "
+                "three keys blind, at 0.05 s, 0.6 s and 1.5 s, in time with the clicks in the audio: on each tap that shoulder "
+                "dips a little. At 3.5 s, exactly on the bright chime in the audio, she gives the camera a cute, playful anime "
+                "wink: her left eye (on the right side of the picture) closes into a soft curved arc while her other eye stays "
+                "open and bright and her smile widens a little; she holds the wink a moment and opens the eye again at about "
+                "4.2 s. She never frowns, never narrows her eyes and never opens her mouth. Light: cool pearl monitor glow from "
+                "behind as a thin rim on her hair, warm orange lamp light on the right side of her hair and cheek. Camera static. "
+                "No text, no captions, no watermark."),
+        notes="From the K59b keyframe (first frame). Shown on screen (v3): matted and composited directly over the painted room."),
 })
 
 # GOLD retakes (review 2026-10-03): the first prompt is kept in `prompt_v1`, the reason in `retake_note`.

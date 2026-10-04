@@ -1,0 +1,74 @@
+{
+ "plate": "P60",
+ "chosen": 2,
+ "takes": {
+  "1": {
+   "verdict": "pass",
+   "score": 3,
+   "purpose": "P48 continued (first frame f97): exchanges with the battle behind; came back 1470x630 (adaptive aspect).",
+   "costume": "Correct (crest, crimson, bronze scales, lion shield; red cap, black beard, ochre, iron scales, wicker shield).",
+   "identity": "The same two men as P48 / P15 (first frame).",
+   "artefacts": "Wider than 16:9; exchanges less distinct.",
+   "notes": "Alternate.",
+   "sync": [],
+   "cuts_s": [],
+   "sheet": null,
+   "contact": "media/plates/P60/take1.sheet.jpg",
+   "virtual_avatar": false,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-04T00:22:56"
+  },
+  "2": {
+   "verdict": "pass",
+   "score": 4,
+   "purpose": "S19 v2: P48 continued: the spear meets the wicker shield (0.5), the lion shield turns the Mede's thrust (1.62), shields slam with spray (2.25), the lion shield turns the next thrust (3.86), the Mede leaps back (4.6); both lines fight behind them.",
+   "costume": "Correct (crest, crimson, bronze scales, lion shield; red cap, black beard, ochre, iron scales, wicker shield).",
+   "identity": "The same two men as P48 / P15 (first frame).",
+   "artefacts": "Dust haze over the far melee (as P48).",
+   "notes": "Chosen.",
+   "sync": [
+    {
+     "song_t": 51.716,
+     "event": "cut in: the spear meets the wicker shield",
+     "expected_plate_t": null,
+     "measured_plate_t": 0.5,
+     "offset_s": null,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 52.596,
+     "event": "beat: the lion shield turns the thrust",
+     "expected_plate_t": 1.33,
+     "measured_plate_t": 1.62,
+     "offset_s": 0.29,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 53.466,
+     "event": "downbeat/timpani: shields slam",
+     "expected_plate_t": 2.2,
+     "measured_plate_t": 2.25,
+     "offset_s": 0.05,
+     "method": "manual: frame inspection (+ motion curve)"
+    },
+    {
+     "song_t": 54.776,
+     "event": "beat: the lion shield turns the next thrust",
+     "expected_plate_t": 3.51,
+     "measured_plate_t": 3.86,
+     "offset_s": 0.35,
+     "method": "manual: frame inspection (+ motion curve)"
+    }
+   ],
+   "cuts_s": [],
+   "sheet": "media/plates/P60/take2.review.jpg",
+   "contact": "media/plates/P60/take2.sheet.jpg",
+   "virtual_avatar": false,
+   "est_cost_usd": 1.156,
+   "job": null,
+   "reviewed": "2026-10-04T00:22:56",
+   "chosen": true
+  }
+ }
+}

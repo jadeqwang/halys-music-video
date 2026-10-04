@@ -59,8 +59,10 @@
    "identity": "Consistent.",
    "artefacts": "Unequal (one Lydian, many Medes); the drop is hard to see.",
    "notes": "Alternate.",
-   "contact": "media/plates/P51/take2.sheet.jpg"
+   "contact": "media/plates/P51/rejected_take2.sheet.jpg",
+   "files": "media/plates/P51/rejected_take2.*"
   }
  },
- "t_chosen": "2026-10-04T00:03:07"
+ "t_chosen": "2026-10-04T00:03:07",
+ "rejects_renamed": "rejected takes are renamed rejected_take<N>.* so the chosen take is the only take<N>.mp4"
 }

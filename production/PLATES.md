@@ -77,10 +77,11 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 | S16, S20, S24, S30, S44 | P01 (1) | the static master, plate 0–4.5 (slow/hold for S24's 7 s) |
 | S17 | P48 (1) | v2, the first exchange in the middle of the battle: the lion shield turns the thrust 46.057 → 2.00 (1:1 from 44.06; S17 = plate 0.67–2.43) |
 | S18 | P49 (2) | v2, the battle line on the horizon: silhouettes keyed above v 0.868, 1:1 from 0.70 s in (46.49 → 0.70) |
-| S19, S27 | P12 (1) | strikes 46.06 → 2.12, 47.56 → 3.30, 48.91 → 3.88, 49.53 → 5.20, 50.63 → 6.05, 51.48 → 6.90 (v1 S17/S18 also read these) |
-| S21 | P13 (2) | knock-down 59.60 → 1.00; up on one knee at 3.5 (= 62.20) |
+| S19 | P60 (2) | v2, P48's duel continued in the battle: the spear meets the wicker shield 51.716 → 0.50, the lion shield turns the thrust 52.596 → 1.62, shields slam 53.466 → 2.25, the next turn 54.776 → 3.86 |
+| S27 | P12 (1) | strikes 46.06 → 2.12, 47.56 → 3.30, 48.91 → 3.88, 49.53 → 5.20, 50.63 → 6.05, 51.48 → 6.90 (v1 S17/S18/S19 also read these) |
+| S21 | P61 (2) | v2, P48's duel continued in the battle (P13 is unused): knocked down 59.596 → 1.15, the spear in the water 60.895 → 2.15, up on one knee 62.195 → 3.35 |
 | S23, S41, S47 | P14 (2) | breathing 0–1.6, still ~1.6–2.0, the long upward gaze from 2.0 (→ 67.73) |
-| S25 | P15 (2) | face-off 0–3.375, cut on 77.88 to the shore melee 3.375–7.0 |
+| S25 | P62 (3) + P15 (2) | v2: the face-off = P62 1:1 from 74.41 (the melee raging on the bank behind them); cut on 77.875 (S25b) to P15's shore melee, plate 3.375–7.0 |
 | S26 | P16 (1) | glint 84.38 → 2.50 |
 | S27 ("light went strange") | P17 (1) | looks up 88.69 → 2.85 |
 | S28 | P50 (2) | v2, caught mid-fight (P18 is unused): fighting 0–1.7, faces up left to right 89.78 → 1.90, 90.20 → 2.25, 90.60 → 2.60, 90.87 → 2.90, all up 91.31 → 3.30 (cut to the sky, S28b) |
@@ -185,10 +186,10 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 | P09 | S13 | take3 | pass 4 | 32.47 | 1:1 from t0 | - |
 | P10 | S14 | take1 | pass 4 | 35.98 | 38.23→2.21 (-0.04) | No standing second rank; bright sky. |
 | P11 | S15 | take1 | pass 4 | 39.48 | 41.24→2.00 (+0.24) | Cut at 2.0 s (asked 2.5). |
-| P12 | S19, S27 (v2: S17 is P48, S18 P49; S36/S37 moved to P42-P46 in the 02:43 shot list) | take1 | pass 3 | 44.73 | 46.06→2.12 (+0.79); 47.56→3.30 (+0.47); 48.91→3.88 (-0.30); 49.53→5.20 (+0.40); 50.63→6.05 (+0.15); 51.48→6.90 (+0.15) | Contre-jour (sun in frame), faces in shadow; strikes ~0.1-0.8 s late. |
-| P13 | S21 | take2 | pass 4 | 58.72 | 59.60→1.00 (+0.12); 62.20→3.50 (+0.02) | - |
+| P12 | S27 (v2: S17 is P48, S18 P49, S19 P60; S36/S37 moved to P42-P46 in the 02:43 shot list) | take1 | pass 3 | 44.73 | 46.06→2.12 (+0.79); 47.56→3.30 (+0.47); 48.91→3.88 (-0.30); 49.53→5.20 (+0.40); 50.63→6.05 (+0.15); 51.48→6.90 (+0.15) | Contre-jour (sun in frame), faces in shadow; strikes ~0.1-0.8 s late. |
+| P13 | unused since v2 (S21 is P61) | take2 | pass 4 | 58.72 | 59.60→1.00 (+0.12); 62.20→3.50 (+0.02) | - |
 | P14 | S23, S36, S41, S47 | take2 | pass 4 | 65.67 | 67.73→2.00 (-0.06) | Face dark for the first 1.6 s; upward gaze ~2.8 s (S41/S47 want ~3.4 s). |
-| P15 | S25 | take2 | pass 4 | 74.41 | 77.88→3.38 (-0.10) | - |
+| P15 | S25 (v2: the shore melee after 77.88; the face-off is P62) | take2 | pass 4 | 74.41 | 77.88→3.38 (-0.10) | - |
 | P16 | S26 | take1 | pass 4 | 81.36 | 84.38→2.50 (-0.52) | Thin horizontal lens-flare streak at 2.8-3.5 s. |
 | P17 | S27 | take1 | pass 4 | 85.91 | 88.69→2.85 (+0.07) | Dapples are round spots (renderer paints the crescents). |
 | P18 | unused since v2 (S28 is P50) | take2 | pass 3 | 89.22 | 89.78→2.00 (+1.44); 91.31→3.50 (+1.41) | 2 Lydians : 4 Medes (not alternating); wave ~1.4 s late. |
@@ -226,6 +227,9 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 | P48 | S17 (v2) | take1 | pass 4 | 44.06 | 46.06→2.00 (+0.00) | Golden dust haze over the far melee (asked for clear air): the renderer paints its sky and sun into it. Take 2 renamed `rejected_take2.*`. |
 | P49 | S18 (v2) | take2 | pass 4 | 46.49 | 1:1 from 0.70 s in (46.49→0.70) | The plate's sun sits on the horizon behind the fighters: S18 keys the silhouettes and paints its own sun higher. |
 | P50 | S28 (v2) | take2 | pass 4 | 88.28 | 89.78→1.90 (+0.40); 90.20→2.25 (+0.33); 90.60→2.60 (+0.28); 90.87→2.90 (+0.31); 91.31→3.30 (+0.27) | The central Mede stays behind his wicker shield: five faces turn up, not six. |
+| P60 | S19 (v2) | take2 | pass 4 | 51.27 | 51.72→0.50; 52.60→1.62 (+0.29); 53.47→2.25 (+0.05); 54.78→3.86 (+0.35) | First frame = P48 take 1 f97 (same men, light, battle); dust haze over the far melee. |
+| P61 | S21 (v2) | take2 | pass 4 | 58.72 | 59.60→1.15 (+0.27); 60.90→2.15 (-0.03); 62.20→3.35 (-0.13) | First frame = P48 take 1 f84; dust haze over the far melee. |
+| P62 | S25 (v2) | take3 | pass 4 | 74.41 | 1:1 from t0 | Heroes wider apart than in P15 (portrait pans from one to the other); takes 1, 2 (P15 first frame: no melee) and 4 renamed `rejected_take*`. |
 | P51 | S61 (v2) | take1 | pass 4 | 208.7 | 209.10→1.38 (+0.98); 209.55→2.28 (+1.43); 209.945→2.66 (+1.42); 210.18→2.95 (+1.47) | The stop and the drop land ~1.4 s late (retimed). At army scale the drop reads mainly through the centre Lydian's sword and the empty hands. MediaPipe takes the Mede's wicker shield for a face (S61 paints no eyes). |
 | P52 | S61b (v2) | take2 | pass 4 | 210.18 | 210.18→2.50 (+2.50); 210.42→2.88 (+2.64); 211.30→3.92 (+2.80); 211.44→4.04 (+2.78) | The hand holds still for 2.8 s before it opens: S61b uses the plate's last 1.5 s. |
 | P53 | S62 (v2) | take2 | pass 4 | 211.44 | 1:1 from 0.10 s in (211.44→0.10) | The brush engine paints cream scraps onto the thin dark far bank under the walking men, so S62 forces the second brush layer everywhere. |
@@ -910,7 +914,7 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 * **Checks:** Costumes match the sheets · Equal numbers on both sides · Nobody throws.
 * **Notes for the renderer:** MediaPipe takes the Mede's wicker shield (its boss reads as a nose) for a face, so S61 paints no eyes (`eyeStrokes: 0`). The water's glare is pulled toward red ochre (`redRiver(src, .45, .85, .6)`).
 * **Review sheet:** `media/plates/P51/take1.review.jpg` (motion curve + frames at the hits); 8-frame contact `media/plates/P51/take1.sheet.jpg`.
-* Take 2: pass 3: a medium shot with one Lydian against many Medes (unequal), and the drop is hard to see.
+* Take 2: pass 3: a medium shot with one Lydian against many Medes (unequal), and the drop is hard to see. Renamed `rejected_take2.*`, so a pipeline run without a take number keeps take 1.
 
 ### P52 · One hand lets go (v2, GOLD; REVISION_V2 decision 5)
 
@@ -921,7 +925,7 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 * **Checks:** Correct sleeve and scales · Anatomically correct hand · No throwing.
 * **Notes for the renderer:** In landscape the sword sits right of centre (x 0.66), clear of the lyric block on the left. In portrait it sits at x 0.8, beside the short lyric lines, and the camera tilts down with it so that the hilt comes to rest above the last line.
 * **Review sheet:** `media/plates/P52/take2.review.jpg`; contact `media/plates/P52/take2.sheet.jpg`.
-* Take 1: pass 3: flat front light, olive-green water, and the arm comes in from the left. The drop (2.3–2.8 s) is fine.
+* Take 1: pass 3: flat front light, olive-green water, and the arm comes in from the left. The drop (2.3–2.8 s) is fine. Renamed `rejected_take1.*`.
 
 ### P53 · The sword stays; its owner walks home (v2, GOLD; REVISION_V2 decision 5)
 
@@ -932,11 +936,11 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 * **Checks:** Costume correct · The sword never moves · No sun disk in frame.
 * **Notes for the renderer:** The brush engine paints first-layer sky colour onto the thin dark far bank under the walking men (cream scraps). The scraps are not in the reference or in the engine's CPU canvas, so no later layer covers them. S62 therefore forces the second brush layer everywhere (`T[1]` ≈ 0) and makes a sky stroke region above the far bank's crest (v 0.445). The engine itself is reported to its owner.
 * **Review sheet:** `media/plates/P53/take2.review.jpg`; contact `media/plates/P53/take2.sheet.jpg`.
-* Take 1: pass 3: the sun is in frame with rays, and the sword is shorter, left of centre and looks wooden. The walk is good.
+* Take 1: pass 3: the sun is in frame with rays, and the sword is shorter, left of centre and looks wooden. The walk is good. Renamed `rejected_take1.*`.
 
 ### P54 · The battle line lets go (v2, GOLD; REVISION_V2 decision 5)
 
-* **Shots:** S75, S76 (v2, replaces P38's formation and shrug). S77's pull-back starts from P54's last frame in lines (drop2.js S77 reads gold_outro.js `s76End()`). **Window:** song [259.355, 264.355], audio reference cut at t0 = 259.355 s, 5 s, 5 takes reviewed (prompts v1, v2, v3 in `tools/plate_specs.py`). The submit of take 3 came back HTTP 502, and its job (`halys-plate-P54-20261003-223511-f790c4`) still reads as running. **Spend:** $5.78, plus $1.16 if the provider bills take 3.
+* **Shots:** S75, S76 (v2, replaces P38's formation and shrug). S77's pull-back starts from P54's last frame in lines (drop2.js S77 reads gold_outro.js `s76End()`). **Window:** song [259.355, 264.355], audio reference cut at t0 = 259.355 s, 5 s, 5 takes reviewed (prompts v1, v2, v3 in `tools/plate_specs.py`). The submit of take 3 came back HTTP 502 ("upstream request failed") and was never accepted: two hours later the relay holds no result, mirror or pending key for `halys-plate-P54-20261003-223511-f790c4`, and genlog has no line for it. **Spend:** $5.78 (5 takes), with nothing billed for take 3 as far as the logs show.
 * **Chosen:** take 5 (prompt v3) → `media/plates/P54/take5.mp4`; analysis in `video/plates/P54/` (frames 121, fields 121, mattes 61 with `isnet-general-use`, depth 61, gain 1.044). It has one wave of falling blades and a single, clear late man.
 * **Delivers:** the battle line seen down its length on a sandy bank in golden light, with the red river behind. Lydians stand on the left facing right and Medes on the right facing left, the nearest pair full-figure. They fight hard from 0 to 1.5 s. At about 1.55 s every hand but one opens and the swords fall point-first into the sand, where they stand at angles; all have landed by about 1.9 s, and the motion falls from 2.6 to 0.3. The nearest Lydian keeps his sword, lowers it (1.9–3.5 s) and lets go at about 3.55 s, and it lands at his feet at about 3.7 s. Then they all stand still, empty-handed, facing each other, with serious faces. Nobody shrugs or poses.
 * **Sync keys** (song s → plate s, offset = plate − (song − t0)):
@@ -953,3 +957,45 @@ Plate times are seconds into the chosen take; `→` keys are song → plate (see
 * Take 4 (v2): weak 2: every blade drops at once, including the near Mede who was named as the late one.
 * Take 2 (v1): weak 2: the best unison drop (swords flat on the sand), but there is no late one.
 * Take 1 (v1): fail 1: the front pair turns to face the camera and stands posed.
+* Takes 1, 2, 4 and 6 are renamed `rejected_take<N>.*`, so take 5 is the only `take*.mp4` and a pipeline run without a take number keeps it. The lost take 3 left no job record (`media/jobs/`), no relay result and no genlog line, so `plates.py --collect` cannot bring it in. The specs are set to `takes=1`, so a `plates.py` run without ids adds no takes to P51–P54.
+
+### P60 · The duel goes on, in the battle (v2, ACT1 follow-up; REVISION_V2 decision 2's principle)
+
+* **Shots:** S19. **Window:** song [51.27, 56.27], audio reference cut at t0 = 51.27 s (Halys.mp3), 5 s, 2 take(s) reviewed. **First frame:** `media/plates/P60/ff_P48t1_f097.jpg` (P48 take 1, frame 97: the same two men, light and battle as S17); first frame + audio only, no sheets.
+* **Chosen:** take 2 → `media/plates/P60/take2.mp4`; analysis in `video/plates/P60/` (frames 121, fields 121, mattes 61, depth 61, gain 1.118). Five clean exchanges with sharp stops in P48's shot; take 1 came back 1470×630 (adaptive aspect) with less distinct strikes.
+* **Delivers:** S19 v2: the spear meets the wicker shield (0.5 s), the Mede's thrust is turned by the lion shield (1.62), shield slams into shield with a burst of spray (2.25), the lion shield turns the next thrust (3.86), the Lydian thrusts low and the Mede leaps back (4.6); both lines keep fighting in the shallows behind them.
+* **Sync keys** (song s → plate s, offset = plate − (song − t0)):
+  * 51.716 → 0.50 (+0.05 s) · S19 cut in (downbeat): the spear meets the wicker shield
+  * 52.596 → 1.62 (+0.29 s) · beat: the lion shield turns the thrust
+  * 53.466 → 2.25 (+0.05 s) · downbeat + timpani: shields slam
+  * 54.776 → 3.86 (+0.35 s) · beat: the lion shield turns the next thrust
+* **Checks:** Correct (as P48) · The same men as P48 (first frame) · Dust haze over the far melee (as P48).
+* **Notes for the renderer:** S19 = plate 0.50–4.38 through the keys; same look as S17 (`battleDuelLook`), the sun moved clear of the counter.
+* **Review sheet:** `media/plates/P60/take2.review.jpg`; 8-frame contact `media/plates/P60/take2.sheet.jpg`.
+* Take 1: pass 3: 1470×630 (adaptive aspect from the first frame); the exchanges are less distinct.
+
+### P61 · Knocked into the water, in the battle (v2, ACT1 follow-up; REVISION_V2 decision 2's principle)
+
+* **Shots:** S21 (replaces P13). **Window:** song [58.72, 63.72], audio reference cut at t0 = 58.72 s (Halys.mp3), 5 s, 2 take(s) reviewed. **First frame:** `media/plates/P61/ff_P48t1_f084.jpg` (P48 take 1, frame 84).
+* **Chosen:** take 2 → `media/plates/P61/take2.mp4`; analysis in `video/plates/P61/` (frames 121, fields 121, mattes 61, depth 61, gain 1.139). The bash, the fall, the stab and the recovery all read; in take 1 the fall happens behind a wall of spray and the Lydian is hidden for about a second.
+* **Delivers:** S21 v2: the Mede's shield bash knocks the Lydian back into the water (0.5–1.15 s, splash), the spear goes up (1.5), stabs the water as he rolls clear (1.9–2.25), and he is up on one knee behind his lion shield by 3.3; both lines keep fighting behind them.
+* **Sync keys** (song s → plate s, offset = plate − (song − t0)):
+  * 59.596 → 1.15 (+0.27 s) · timpani: knocked down
+  * 60.895 → 2.15 (−0.03 s) · beat: the spear stabs the water
+  * 62.195 → 3.35 (−0.13 s) · cut out: up on one knee
+* **Checks:** Correct · The same men as P48 · Dust haze over the far melee.
+* **Notes for the renderer:** S21 = plate 0.10–3.35 through the keys; same look as S17/S19.
+* **Review sheet:** `media/plates/P61/take2.review.jpg`; 8-frame contact `media/plates/P61/take2.sheet.jpg`.
+* Take 1: pass 3: the fall is hidden behind a wall of spray.
+
+### P62 · The face-off, the melee on the shore behind (v2, ACT1 follow-up; REVISION_V2 decision 2's principle)
+
+* **Shots:** S25, the face-off before 77.88 (P15 keeps the shore melee after the cut). **Window:** song [74.41, 79.41], audio reference cut at t0 = 74.41 s (Halys.mp3), 5 s, 4 take(s) reviewed.
+* **Chosen:** take 3 → `media/plates/P62/take3.mp4`; analysis in `video/plates/P62/` (frames 121, fields 121, mattes 61, depth 61, gain 1.005). The mirrored face-off holds (circling, shields up, spears lowered, no strike) while a raging melee fills the whole far bank from the first frame.
+* **Delivers:** S25 v2: the Lydian (left, facing right) and the Mede (right, facing left) knee-deep, centred and mirrored; behind them, across the water, knots of Lydians and Medes thrust, slam shields, fall and get up, in dust, along the whole bank.
+* **Sync:** 1:1 from t0 (the face-off has no hit; LYDIANS 74.655 and MEDES 75.925 are type cues).
+* **Checks:** Correct on both heroes and the melee (crests, crimson, lion shields; red caps, ochre, wicker shields) · Match the sheets · The heroes stand wider apart than in P15 (the Lydian's centre drifts from x 0.14 to 0.24, the Mede's from 0.82 to 0.74), so the 4:5 crop pans from one to the other.
+* **Notes for the renderer:** the plate's bright sky above v 0.25 is repainted with the sun clear of the counter; the cut to P15 is the S25b insert at 77.875.
+* **Review sheet:** `media/plates/P62/take3.review.jpg`; 8-frame contact `media/plates/P62/take3.sheet.jpg`.
+* Takes 1–2 (v1 prompt, first frame = P15 take 2 frame 1): weak 2: the face-off holds, but the far bank stays a line of soldiers in stances (the first frame's ranks anchored it). Renamed `rejected_take1.*`, `rejected_take2.*`.
+* Take 4: pass 3: a denser melee, but the heroes are cropped and their poses drift. Renamed `rejected_take4.*`.
