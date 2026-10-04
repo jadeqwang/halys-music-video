@@ -29,7 +29,7 @@ LIGHT = np.array([230, 239, 243], np.float32) / 255
 # per plate: zones in the plate's 960x540 frame. P57 (behind her chair, P39's camera): the chair back is in front of her
 # hips; the painted room has the same chair (P39), so the plate's chair is cut out of her matte and the room's chair shows
 # through, in front of her. The chair is what stays still (the camera is locked, she moves behind it): dark pixels inside
-# the chair zone whose brightness barely changes over the take (temporal deviation), grown 2 px over its flickering outline.
+# the chair zone that keep their median brightness in most frames of the take, grown 2 px over its flickering outline.
 ZONES = {
     'P57': {'chair': [[105, 366], [228, 369], [318, 388], [340, 418], [344, 540], [100, 540]]},
     'P59': {},
@@ -39,9 +39,10 @@ ZONES = {
 def static_mask(src, poly960, sd_max=0.035, l_max=0.55):
     H, W = src[0].shape[:2]
     A = np.stack([cv2.cvtColor(f, cv2.COLOR_BGR2GRAY) for f in src]).astype(np.float32) / 255
-    sd, med = A.std(0), np.median(A, 0)
+    med = np.median(A, 0)
+    still = (np.abs(A - med) < sd_max * 1.7).mean(0) > 0.6     # the same in most frames (she uncovers it only now and then)
     poly = np.zeros((H, W), np.uint8); cv2.fillPoly(poly, [np.int32(np.array(poly960) * W / 960)], 1)
-    m = ((sd < sd_max) & (med < l_max) & (poly > 0)).astype(np.uint8)
+    m = (still & (med < l_max) & (poly > 0)).astype(np.uint8)
     m = cv2.morphologyEx(m, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
     n, lab, st, _ = cv2.connectedComponentsWithStats(m, 8)
     if n > 1: m = (lab == 1 + np.argmax(st[1:, cv2.CC_STAT_AREA])).astype(np.uint8)
@@ -83,6 +84,9 @@ def alpha_of(frame, m960, pid, cut=None):
         a = a * (1 - cut)
     b = (a > 0.5).astype(np.uint8)
     b = cv2.morphologyEx(b, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
+    if cut is not None:   # slivers of the chair's flickering rim left along the cut: open harder near the chair only
+        near = cv2.dilate(cut, np.ones((15, 15), np.uint8)) > 0
+        b = np.where(near, cv2.morphologyEx(b, cv2.MORPH_OPEN, np.ones((7, 7), np.uint8)), b)
     n, lab, st, _ = cv2.connectedComponentsWithStats(b, 8)
     if n > 1:   # her, not specks: components above 0.4% of the largest
         big = st[1:, cv2.CC_STAT_AREA].max()
